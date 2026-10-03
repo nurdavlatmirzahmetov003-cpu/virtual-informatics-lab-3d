@@ -15,7 +15,7 @@ const MODULES: ReadonlyArray<{ id: ModuleId; icon: LucideIcon; phase: number; to
   { id: 'algorithms', icon: Workflow, phase: 7 },
   { id: 'logic', icon: BrainCircuit, phase: 7 },
   { id: 'experiments', icon: FlaskConical, phase: 7 },
-  { id: 'studio', icon: Boxes, phase: 4 },
+  { id: 'studio', icon: Boxes, phase: 4, to: '/studio' },
   { id: 'assignments', icon: ClipboardCheck, phase: 8 },
   { id: 'results', icon: Trophy, phase: 8 },
 ];

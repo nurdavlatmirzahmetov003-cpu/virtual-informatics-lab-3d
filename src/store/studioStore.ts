@@ -50,6 +50,7 @@ interface StudioState extends PersistedStudio {
   toggleAutoRotate: () => void;
   resetCamera: () => void;
   resetAll: () => void;
+  applySuggestion: (input: { build: Build; purpose: SetupPurpose; budget: number; style: SetupStyle }) => void;
 }
 
 const DEFAULTS: PersistedStudio = {
@@ -119,6 +120,7 @@ export const useStudioStore = create<StudioState>()(
       toggleAutoRotate: () => set((s) => ({ autoRotate: !s.autoRotate })),
       resetCamera: () => set((s) => ({ cameraReset: s.cameraReset + 1 })),
       resetAll: () => set({ ...DEFAULTS, category: 'monitor' }),
+      applySuggestion: (input) => set(s => ({ build: sanitizeBuild(input.build), purpose: input.purpose, budget: clampBudget(input.budget), style: input.style, finish: { ...s.finish, ...STYLE_FINISH[input.style] }, step: 'products', cameraReset: s.cameraReset + 1 })),
     }),
     {
       name: STORAGE_KEYS.setup,

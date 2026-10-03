@@ -1654,5 +1654,73 @@
         }
       }
     }
+  },
+  "assembly": {
+    "title": "Your setup",
+    "eyebrow": "SETUP CINEMA · 3D",
+    "subtitle": "From an empty desk to a complete system. Every component takes its place.",
+    "finished": "Your build is ready. Rotate it or look inside the case.",
+    "progress": "Assembly progress",
+    "skip": "Show finished setup",
+    "controls": "Setup controls",
+    "orbit": "360° view",
+    "inside": "Inside the PC",
+    "exploded": "Components",
+    "replay": "Replay assembly",
+    "config": "Configuration",
+    "steps": {
+      "start": "Empty desk. Ready to assemble",
+      "monitorStand": "Installing the monitor stand",
+      "monitor": "Mounting the monitor",
+      "mat": "Unrolling the desk mat",
+      "keyboard": "Sliding the keyboard into place",
+      "mouse": "Placing the mouse",
+      "speakers": "Installing the speakers",
+      "headsetStand": "Installing the headset stand",
+      "headset": "Placing the headset",
+      "chair": "Rolling in the chair",
+      "pcCase": "Placing the case",
+      "sidePanel": "Opening the side glass",
+      "motherboard": "Installing the motherboard",
+      "cpu": "Seating the CPU",
+      "ram": "Installing the memory",
+      "ssd": "Installing the SSD",
+      "cooler": "Installing the cooler",
+      "psu": "Installing the power supply",
+      "gpu": "Installing the graphics card",
+      "cables": "Connecting power cables",
+      "fans": "Starting the fans",
+      "rgb": "Switching on RGB",
+      "glassClose": "Closing the glass panel",
+      "monitorOn": "Powering on the monitor",
+      "lights": "Switching on setup lighting",
+      "present": "Your setup is ready"
+    }
+  },
+  "assistant": {
+    "title": "Setup assistant",
+    "local": "Local recommendations · no API",
+    "welcome": "Describe your budget, tasks and preferred devices. I will suggest compatible catalog products you can immediately view in 3D.",
+    "exampleBudget": "Gaming computer for 800 000 tenge",
+    "exampleWhite": "White setup for 1 200 000 tenge",
+    "exampleDevices": "ASUS 300 Hz monitor and Logitech mouse",
+    "input": "Your setup request",
+    "placeholder": "For example: 800k for gaming and study…",
+    "send": "Send",
+    "result": "{purpose} · budget {budget}",
+    "overBudget": "These requirements exceed your budget by {amount}. Increase the budget or relax the device requirements.",
+    "unavailable": "Not in the catalog: {items}. This requirement was not met.",
+    "invalid": "A complete compatible build was not found. Change the budget or requirements.",
+    "apply": "Show in 3D",
+    "applied": "Build shown in 3D",
+    "privacy": "Your request is processed on this device. Prices are illustrative demo values.",
+    "reasons": {
+      "gaming": "Most of the budget goes to the GPU, balanced with the CPU, power supply and monitor.",
+      "study": "An economical system with enough memory and SSD space. A separate GPU is omitted when integrated graphics suffice.",
+      "programming": "The CPU, memory and SSD take priority for coding and multitasking.",
+      "design3d": "The CPU, GPU and memory take priority for rendering and 3D work.",
+      "streaming": "The GPU and CPU cover gaming and encoding, with a headset for audio.",
+      "universal": "A balanced budget allocation across the CPU, graphics, memory and monitor."
+    }
   }
 }

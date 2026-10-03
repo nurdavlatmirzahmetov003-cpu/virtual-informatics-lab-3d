@@ -52,10 +52,12 @@ export function PCPart({ def, children, enabled = true }: { def: PartDef; childr
     if (!g) return;
     g.visible = !pcRig.hidden.has(def.id);
     const e = pcRig.parts?.[def.id] ?? pcRig.explode;
-    const scale = 1 + ((def.magnify ?? 1) - 1) * e;
+    const installing = pcRig.parts !== null;
+    const scale = installing ? 1 : 1 + ((def.magnify ?? 1) - 1) * e;
     g.scale.setScalar(scale);
     // Magnify around the visual centre, keeping the hotspot and fly-to target aligned.
-    g.position.set(def.anchor[0] + def.explode[0] * e + def.center[0] * (1 - scale), def.anchor[1] + def.explode[1] * e + def.center[1] * (1 - scale), def.anchor[2] + def.explode[2] * e + def.center[2] * (1 - scale));
+    const move = installing ? [-0.22, 0.035, 0.025] : def.explode;
+    g.position.set(def.anchor[0] + move[0] * e + def.center[0] * (1 - scale), def.anchor[1] + move[1] * e + def.center[1] * (1 - scale), def.anchor[2] + move[2] * e + def.center[2] * (1 - scale));
     // GLBs resolve asynchronously after this wrapper mounts.
     const newlyLoaded = records.current.length === 0 || assetVersion.current !== g.userData.assetVersion;
     if (newlyLoaded) { records.current = captureMaterials(g); assetVersion.current = g.userData.assetVersion; }

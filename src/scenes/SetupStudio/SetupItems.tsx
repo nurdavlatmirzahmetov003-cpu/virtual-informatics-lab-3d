@@ -36,10 +36,11 @@ interface ProductModelProps {
   prepare?: (root: Object3D) => void;
   position?: Vec3;
   'rotation-y'?: number;
+  stretchY?: number;
 }
 
 /** A catalog model scaled to the product's real size and painted with the chosen finish. */
-function ProductModel({ product, axis, rotation, offset, paint, prepare, ...group }: ProductModelProps) {
+function ProductModel({ product, axis, rotation, offset, paint, prepare, stretchY = 1, ...group }: ProductModelProps) {
   const [root, setRoot] = useState<Object3D | null>(null);
   const size = product.modelSize ?? 0.1;
   const fit = useMemo<Fit>(() => ({ axis, size, rotation, offset, align: 'floor' }), [axis, size, rotation, offset]);
@@ -52,9 +53,9 @@ function ProductModel({ product, axis, rotation, offset, paint, prepare, ...grou
   );
   useEffect(() => {
     if (!root) return;
-    applyPaint(root, paint, { onlyDark: true });
+    applyPaint(root, paint, { onlyDark: true, preserveMarks: product.category === 'keyboard' });
     notifySetupChanged();
-  }, [root, paint]);
+  }, [root, paint, product.category]);
 
   return (
     <ModelLoader
@@ -63,6 +64,7 @@ function ProductModel({ product, axis, rotation, offset, paint, prepare, ...grou
       onLoaded={onLoaded}
       position={group.position ? [...group.position] : undefined}
       rotation-y={group['rotation-y'] ?? 0}
+      scale-y={stretchY}
     />
   );
 }
@@ -94,13 +96,18 @@ function Piece({ k, animated, from = [0, 0.22, 0], unroll, children }: { k: Piec
     const r = 1 - p;
     g.position.set(from[0] * r, from[1] * r, from[2] * r);
   });
-  return <group ref={group}>{children}</group>;
+  return <group ref={group} visible={!animated}>{children}</group>;
 }
 
 /* ── monitor ─────────────────────────────────────────────── */
 
 /** Height (fraction of the panel width) where the ultrawide GLB's stand meets the panel. */
 const STAND_SPLIT = 1.5 / 10.727;
+function monitorStretch(product: HardwareItem) {
+  const resolution = String(product.specifications.find(s => s.key === 'resolution')?.value ?? '').match(/(\d+)\s*[×x]\s*(\d+)/);
+  const aspect = resolution ? Number(resolution[1]) / Number(resolution[2]) : 21 / 9;
+  return (21 / 9) / aspect;
+}
 
 /**
  * Monitor drawn as two clipped copies of the same GLB, so the stand can be
@@ -111,7 +118,8 @@ function ClippedMonitor({ product, paint, part, onScreen }: { product: HardwareI
   const holder = useRef<Group>(null);
   const plane = useMemo(() => new Plane(new Vector3(0, part === 'stand' ? -1 : 1, 0), 0), [part]);
   const world = useMemo(() => new Vector3(), []);
-  const splitY = (product.modelSize ?? 0.6) * STAND_SPLIT;
+  const stretchY = monitorStretch(product);
+  const splitY = (product.modelSize ?? 0.6) * STAND_SPLIT * stretchY;
   const prepare = useCallback(
     (root: Object3D) => {
       onScreen?.(root);
@@ -135,7 +143,7 @@ function ClippedMonitor({ product, paint, part, onScreen }: { product: HardwareI
   });
   return (
     <group ref={holder}>
-      <ProductModel product={product} axis={0} paint={paint} prepare={prepare} />
+      <ProductModel product={product} axis={0} paint={paint} prepare={prepare} stretchY={stretchY} />
     </group>
   );
 }
@@ -147,6 +155,7 @@ function useScreenPower(animated: boolean) {
   const onScreen = useCallback(
     (root: Object3D) => {
       wallpaper(root);
+      screens.current = [];
       root.traverse((obj) => {
         const mesh = obj as Mesh;
         if (!mesh.isMesh) return;
@@ -173,7 +182,7 @@ function Monitor({ product, paint, animated }: { product: HardwareItem; paint: P
   if (!animated) {
     return (
       <group position={[...MONITOR.position]}>
-        <ProductModel product={product} axis={0} paint={paint} prepare={onScreen} />
+        <ProductModel product={product} axis={0} paint={paint} prepare={onScreen} stretchY={monitorStretch(product)} />
       </group>
     );
   }
@@ -196,7 +205,7 @@ function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish;
   const group = useRef<Group>(null);
   const applied = useRef('');
   const paint = finish.case === 'black' ? null : CASE_FINISHES[finish.case];
-  const hide = useMemo<PartId[]>(() => (build.gpu ? [] : ['gpu']), [build.gpu]);
+  const hide = useMemo<PartId[]>(() => (['motherboard', 'cpu', 'cooler', 'ram', 'gpu', 'ssd', 'psu'] as const).filter(id => !build[id === 'cooler' ? 'cooling' : id]), [build]);
   useFrame(() => {
     const chassis = group.current?.getObjectByName('asset:chassis.glb');
     if (!chassis) return;
@@ -208,7 +217,7 @@ function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish;
   });
   return (
     <group ref={group}>
-      <PCCase rig={rig} hide={hide} interactive={false} rgbColor={rgbColorOf(finish)} />
+      <PCCase rig={rig} hide={hide} interactive={false} rgbColor={rgbColorOf(finish)} build={build} />
     </group>
   );
 }

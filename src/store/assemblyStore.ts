@@ -23,6 +23,7 @@ interface AssemblyState {
   setView: (view: AssemblyView) => void;
   toggleAutoRotate: () => void;
   toggleConfig: () => void;
+  begin: () => void;
 }
 
 export const useAssemblyStore = create<AssemblyState>()((set) => ({
@@ -33,10 +34,11 @@ export const useAssemblyStore = create<AssemblyState>()((set) => ({
   view: 'orbit',
   autoRotate: true,
   configOpen: true,
+  begin: () => set((s) => ({ phase: 'assembling', runId: s.runId + 1, skipToken: 0, view: 'orbit', configOpen: false, step: { index: 0, total: 0, id: 'start' } })),
   setStep: (step) => set({ step }),
-  finish: () => set({ phase: 'done', view: 'orbit', autoRotate: true, configOpen: true }),
+  finish: () => set({ phase: 'done', view: 'orbit', autoRotate: true, configOpen: false }),
   skip: () => set((s) => ({ skipToken: s.skipToken + 1 })),
-  replay: () => set((s) => ({ phase: 'assembling', runId: s.runId + 1, view: 'orbit', step: { index: 0, total: 0, id: 'start' } })),
+  replay: () => set((s) => ({ phase: 'assembling', runId: s.runId + 1, skipToken: 0, configOpen: false, view: 'orbit', step: { index: 0, total: 0, id: 'start' } })),
   setView: (view) => set((s) => ({ view, autoRotate: view === 'orbit' ? !s.autoRotate || s.view !== 'orbit' : false })),
   toggleAutoRotate: () => set((s) => ({ autoRotate: !s.autoRotate })),
   toggleConfig: () => set((s) => ({ configOpen: !s.configOpen })),

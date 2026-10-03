@@ -85,6 +85,10 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | basis/* | three.js `examples/jsm/libs/basis` (Binomial Basis Universal) | Apache-2.0 |
 
 ## Кітапханалар
+
+### Фаза 5 параметрлік ассет
+`src/scenes/DeskScene/pc/LiquidCooler.tsx`: жоба ішінде жасалған AIO помпа, түтіктер және радиатор геометриясы. Желдеткіштері бұрын лицензияланған Lian Li `fan_frame.glb`/`fan_rotor.glb`-ні қайта қолданады; бастапқы автор мен CC BY 4.0 attribution `/credits` бетінде сақталған. Белгілі бір брендтің дәл геометриясы деп көрсетілмейді.
+
 three (MIT), @react-three/fiber/drei/postprocessing (MIT), postprocessing (Zlib), gsap (Standard "no charge" license — https://gsap.com/standard-license), zustand (MIT), react / react-router (MIT), lucide-react (ISC).
 
 ## Legacy ассеттер (`legacy/assets`, `legacy/textures`) — тек мұрағат

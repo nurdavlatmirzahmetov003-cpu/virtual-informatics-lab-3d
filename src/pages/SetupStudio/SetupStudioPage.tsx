@@ -10,6 +10,7 @@ import { StudioSummary } from './StudioSummary';
 import { sk } from './studioText';
 import { BudgetStep, PurposeStep, StyleStep } from './WizardSteps';
 import styles from './SetupStudio.module.css';
+import { SetupAssistant } from './SetupAssistant';
 
 const StudioScene = lazy(() => import('@/scenes/SetupStudio/StudioScene'));
 
@@ -36,6 +37,7 @@ function Wizard() {
         <span className={styles.eyebrow}>{t('studio.eyebrow')}</span>
         <h1 id="studio-title" className={styles.title}>{t('studio.title')}</h1>
       </header>
+      <SetupAssistant />
       <ol className={styles.stepper} aria-label={t('studio.steps.label')}>
         {STUDIO_STEPS.map((s, i) => (
           <li key={s}>

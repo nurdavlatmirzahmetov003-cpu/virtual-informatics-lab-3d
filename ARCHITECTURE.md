@@ -154,3 +154,7 @@ legacy/                     ескі ES-module прототип (python http.ser
     және 3D (`scenes/SetupStudio`, store-дан оқиды). Үйлесімділік ережесі тек қажетті бөлшектер таңдалғанда іске қосылады;
     хабарлар `studio.compat.<code>` кілттерінде параметрлермен. Өнім модельдері `modelPath` + `modelSize` (нақты өлшем)
     арқылы; бояу `lib/three/finish.ts` — тек албедо ауысады, normal/roughness/metalness карталары сақталады.
+
+20. **Құрастыру киносы.** `assembly/steps.ts` жинақтан қадамдарды сүзеді; бір GSAP `SetupAssemblyTimeline` тек `assemblyRig`-ті өзгертеді. `SetupItems` статикалық және анимацияланатын сахнаға ортақ. `PCCase` сыртқы driver (`rig="external"`) қабылдайды; `PCPart` орнатуда шынайы масштабпен side glass жағынан келеді. `AssemblyScene` камера/жарық/көлеңкелерді жүргізеді. `assemblyStore` — ephemeral phase/view/replay/skip күйі. Модель ready сигналынсыз timeline басталмайды; cleanup оны тоқтатады. UI прогресі пайызға дейін дөңгелектеніп, әр кадрдағы React рендерден құтылады.
+
+21. **Жергілікті чат.** `lib/studio/assistant.ts` → parseSetupRequest, suggestSetup, isValidSuggestion. Қолдау: kk/ru/en ақша бірліктері, мақсат, стиль, minHz, ASUS/Logitech; таңдалған талаптар қалған жинаққа дейін бюджетке резервтеледі. Әр ұсыныс каталог және compatibility қақпасынан өтеді. UI `SetupAssistant` portal арқылы bottom-sheet ата-анасынан тыс fixed терезе ретінде көрсетіледі. `studioStore.applySuggestion` ID-ларды тазартады, түстерді/мақсатты/бюджетті және 3D-ны жаңартады. LLM backend әлі жоқ; кіріс сыртқа жіберілмейді.

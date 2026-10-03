@@ -5,7 +5,7 @@ import type { ResolvedBuild } from '@/lib/studio/build';
 import { assemblyRig, resetAssemblyRig } from './assemblyRig';
 import { assemblySteps, type StepTarget } from './steps';
 
-const FINAL_SHOT: CameraStateName = 'HOME_WIDE';
+const FINAL_SHOT: CameraStateName = 'STUDIO_WIDE';
 
 function shotValues(name: CameraStateName) {
   const s = CAMERA_STATES[name];
@@ -62,6 +62,8 @@ export function SetupAssemblyTimeline({ build, ready, reduced, runId, skipToken,
     const steps = assemblySteps(buildRef.current);
     const speed = reduced ? 0.18 : 1;
     resetAssemblyRig(false);
+    callbacks.current.onProgress?.(0);
+    callbacks.current.onStep?.({ index: 0, total: steps.length, id: 'start' });
     Object.assign(assemblyRig.camera, shotValues(reduced ? FINAL_SHOT : 'ASSEMBLY_START'));
 
     const tl = gsap.timeline({
@@ -95,8 +97,8 @@ export function SetupAssemblyTimeline({ build, ready, reduced, runId, skipToken,
   }, [ready, reduced, runId]);
 
   useEffect(() => {
-    if (skipToken > 0) timeline.current?.progress(1);
-  }, [skipToken]);
+    if (skipToken > 0) timeline.current?.progress(1, false);
+  }, [skipToken, ready, runId]);
 
   return null;
 }

@@ -32,7 +32,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: 1fr;
   gap: var(--space-6);
   align-items: start;
 }
@@ -112,7 +112,7 @@
 .side {
   display: grid;
   gap: var(--space-4);
-  position: sticky;
+  position: static;
   top: calc(var(--topbar-h) + var(--space-4));
 }
 

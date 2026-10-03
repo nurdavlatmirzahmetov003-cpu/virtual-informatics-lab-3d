@@ -84,6 +84,19 @@ export const CATALOG: readonly HardwareItem[] = [
     compatibility: {},
   }),
 
+  item({
+    id: 'mon-asus-xg27aqmr', category: 'monitor', brand: 'ASUS', model: 'ROG Strix XG27AQMR',
+    priceKZT: 250_000, modelPath: M('monitor_ultrawide'), modelSize: 0.6148, colors: ['black'],
+    performanceTier: 'performance', recommendedUse: ['gaming', 'streaming'],
+    specSourceUrl: 'https://rog.asus.com/us/monitors/27-to-31-5-inches/rog-strix-xg27aqmr/spec/',
+    specifications: [
+      { key: 'diagonal', value: 27, unit: 'inch' },
+      { key: 'resolution', value: '2560 × 1440' },
+      { key: 'refresh', value: 300, unit: 'hz' },
+      { key: 'panel', value: 'Fast IPS, 1 ms GtG, DisplayHDR 600' },
+    ],
+    compatibility: {},
+  }),
   // ───────────── Keyboards ─────────────
   item({
     id: 'kb-logitech-k120', category: 'keyboard', brand: 'Logitech', model: 'K120',

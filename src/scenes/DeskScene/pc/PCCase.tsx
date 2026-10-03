@@ -24,6 +24,7 @@ import { Psu } from './Psu';
 import { RamKit } from './RamKit';
 import { usePcTextures } from './usePcTextures';
 import { HardwarePart } from './HardwareParts';
+import type { ResolvedBuild } from '@/lib/studio/build';
 
 export type PcRigMode = 'auto' | 'fixed' | 'external';
 
@@ -75,9 +76,10 @@ interface PCCaseProps {
   interactive?: boolean;
   /** RGB colour; `null` switches the lighting off. Default: the hero cyan. */
   rgbColor?: string | null;
+  build?: ResolvedBuild;
 }
 
-export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbColor }: PCCaseProps) {
+export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbColor, build }: PCCaseProps) {
   const tex = usePcTextures();
   const res = useDisposable(() => {
     const rgb = new MeshStandardMaterial({ color: '#000000', emissive: '#4fdcff', emissiveIntensity: 1, roughness: 0.4 });
@@ -132,7 +134,7 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
       <Chassis tex={tex} fan={fan} rgb={res.rgb} />
       {PARTS.map((def) => (
         <PCPart key={def.id} def={def} enabled={interactive}>
-          <HardwarePart id={def.id} fallback={content[def.id]} />
+          <HardwarePart id={def.id} fallback={content[def.id]} rgbColor={rgbColor} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />
         </PCPart>
       ))}
       <primitive object={showcaseTarget} position={[-0.2, 0.02, 0.15]} />
