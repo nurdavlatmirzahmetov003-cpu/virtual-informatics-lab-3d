@@ -1,44 +1,48 @@
-import { lazy } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { lazy, useCallback, useRef } from 'react';
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
 import { ButtonLink } from '@/components/ui/Button';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
+import { STORY_SCREENS } from '@/scenes/DeskScene/chapters';
+import { useStoryTimeline } from '@/scenes/DeskScene/useStoryTimeline';
+import { StoryOverlay } from './StoryOverlay';
 import styles from './HomePage.module.css';
 
-// Phase 2 swaps this for the cinematic DeskScene.
-const FoundationScene = lazy(() => import('@/scenes/FoundationScene/FoundationScene'));
+const DeskScene = lazy(() => import('@/scenes/DeskScene/DeskScene'));
 
 export default function HomePage() {
   const t = useT();
   useDocumentTitle();
+  const story = useRef<HTMLDivElement>(null);
+  const progressFill = useRef<HTMLDivElement>(null);
+
+  const onProgress = useCallback((p: number) => {
+    if (progressFill.current) progressFill.current.style.transform = `scaleX(${p})`;
+  }, []);
+  const { scrollToChapter } = useStoryTimeline(story, { onProgress });
 
   return (
-    <section className={styles.root}>
-      <SceneCanvas initialCamera="HOME_WIDE" label={t('home.title')}>
-        <FoundationScene />
-      </SceneCanvas>
-
-      <div className={styles.overlay}>
-        <div className={styles.copy}>
-          <span className={styles.eyebrow}>{t('home.eyebrow')}</span>
-          <h1 className={styles.title}>{t('home.title')}</h1>
-          <p className={styles.subtitle}>{t('home.subtitle')}</p>
-          <div className={styles.actions}>
-            <ButtonLink to="/labs" icon={<ArrowRight size={18} aria-hidden="true" />}>
-              {t('home.cta')}
-            </ButtonLink>
-            <ButtonLink to="/studio" variant="ghost">
-              {t('home.secondary')}
-            </ButtonLink>
-          </div>
-        </div>
-
-        <div className={styles.footer}>
-          <p className={styles.note}>{t('home.buildNote')}</p>
-          <p className={styles.hint}>{t('home.orbitHint')}</p>
+    <>
+      {/* tall scroll track; the stage stays pinned while the timeline scrubs */}
+      <div ref={story} className={styles.story} style={{ height: `${STORY_SCREENS * 100}vh` }}>
+        <div className={styles.stage}>
+          <SceneCanvas initialCamera="HOME_WIDE" label={t('home.title')} touchAction="pan-y">
+            <DeskScene />
+          </SceneCanvas>
+          <StoryOverlay onNavigate={scrollToChapter} progressRef={progressFill} />
         </div>
       </div>
-    </section>
+
+      <section className={styles.outro}>
+        <h2>{t('home.outroTitle')}</h2>
+        <p>{t('home.outroBody')}</p>
+        <div className={styles.outroActions}>
+          <ButtonLink to="/labs">{t('home.outroLabs')}</ButtonLink>
+          <ButtonLink to="/studio" variant="ghost">
+            {t('home.outroStudio')}
+          </ButtonLink>
+        </div>
+      </section>
+    </>
   );
 }

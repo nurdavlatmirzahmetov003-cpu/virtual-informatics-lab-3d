@@ -45,8 +45,15 @@ src/
     ui/  Button(Link), LanguageSwitcher, QualitySelect, LoaderOverlay
     layout/ AppShell, TopBar, PageLayout
   scenes/
-    FoundationScene/      [PLACEHOLDER] Фаза 1 пайплайн тест сахнасы
-    DeskScene/ PCScene/ HardwareExplorer/ SetupBuilder/   (бос — Фаза 2–5)
+    DeskScene/            Hero сахнасы (Фаза 2)
+      DeskScene.tsx       композиция + жарық (HDRI) + RectAreaLight init
+      layout.ts           барлық объектілердің нақты өлшемдері/орындары (м)
+      chapters.ts         5 scroll chapter: камера күйі, DOF фокусы, панель жағы, spec кілттері
+      storyRig.ts         GSAP жазатын / useFrame оқитын мутацияланатын мәндер
+      useStoryTimeline.ts БІР ScrollTrigger timeline (камера + фокус + объект хореографиясы)
+      StoryCamera.tsx     timeline кадры + сүйреп орбита + портрет view offset
+      models/             Desk, DeskMat, Monitor, Keyboard, Mouse, PCCase, Fan, Headset, Speakers, Room
+    PCScene/ HardwareExplorer/ SetupBuilder/   (бос — Фаза 2.2–5)
   labs/ NetworkLab/ AlgorithmLab/ LogicLab/ Experiments/  (бос — Фаза 7)
   pages/ Home, Labs, SetupStudio, Progress, NotFound, shared/
   services/ ai/, grading/   (бос — Фаза 6, 8)
@@ -85,6 +92,18 @@ legacy/                     ескі ES-module прототип (python http.ser
 9. **Қателер.** WebGL жоқ → `WebGLFallback` (мәтіндік ақпарат). Сахна қатесі → `SceneCanvas`
    ішіндегі ErrorBoundary + «Қайта көру» (canvas қайта құрылады).
 10. **Код бөлу.** `three`, `r3f`, `react` vendor chunk-тары (vite `advancedChunks`), беттер — lazy.
+
+11. **Scroll story engine.** Бір GSAP timeline + ScrollTrigger (`scrub: 0.9`, reduced-motion → `true`),
+    sticky stage (scroll hijacking жоқ). Timeline тек `storyRig` объектісін өзгертеді; 3D компоненттер
+    оны `useFrame`-де оқиды → scroll кезінде React қайта рендерленбейді. Chapter индексі ғана
+    `useStoryStore`-ға жарияланады (HTML панельдер үшін). `scrollToChapter(i)` timeline уақытын scroll
+    позициясына айналдырады.
+12. **Жүктеу күйі.** `SceneCanvas` → `sceneStatusStore.expected`; Suspense ішіндегі `ReadySignal` →
+    `ready`. LoaderOverlay `active || (expected && !ready)` кезінде көрінеді.
+13. **DOF.** `lib/three/sceneFocus.ts` — сахна фокус нүктесін жазады, `PostEffects` (High/Ultra) оқиды.
+14. **Уақытша модельдер.** `lib/three/geometry.ts` пен `proceduralTextures.ts` — extrude/lathe/
+    деформация + canvas текстуралар. GLB келгенде әр `models/*.tsx` файлы `ModelLoader`-мен
+    ауыстырылады, ал `layout.ts` пен `PCCase` ішіндегі аталған топтар сақталады.
 
 ## Legacy → жаңа архитектураға көшу жоспары
 

@@ -35,9 +35,11 @@
     "title": "Virtual Informatics Lab",
     "subtitle": "Explore the computer. Build. Program. Experiment.",
     "cta": "Start the lab",
-    "secondary": "Setup Studio",
-    "buildNote": "Phase 1 · Foundation: 3D scene, quality controller and navigation are ready. The realistic desk scene comes next.",
-    "orbitHint": "Drag to orbit · Wheel to zoom"
+    "secondary": "All labs",
+    "outroTitle": "Keep going",
+    "outroBody": "You have met the devices. Now head to the labs and build your own setup.",
+    "outroLabs": "Go to labs",
+    "outroStudio": "Setup Studio"
   },
   "labs": {
     "title": "Labs",
@@ -45,15 +47,42 @@
     "phase": "Phase {n}",
     "planned": "In development",
     "modules": {
-      "hardware": { "title": "Computer hardware", "desc": "3D anatomy of external and internal devices." },
-      "assembly": { "title": "Virtual PC assembly", "desc": "Install components in the right order." },
-      "network": { "title": "Computer networks", "desc": "Build a topology, configure IP, send a PING." },
-      "algorithms": { "title": "Algorithm visualizer", "desc": "Step through searching and sorting." },
-      "logic": { "title": "Logic circuits", "desc": "Wire gates and check the truth table." },
-      "experiments": { "title": "Virtual experiments", "desc": "Change values and see the result instantly." },
-      "studio": { "title": "Setup Studio 3D", "desc": "Build a full setup for your budget and see it in 3D." },
-      "assignments": { "title": "Assignments", "desc": "Practical tasks with automatic grading." },
-      "results": { "title": "My results", "desc": "Scores, achievements and progress." }
+      "hardware": {
+        "title": "Computer hardware",
+        "desc": "3D anatomy of external and internal devices."
+      },
+      "assembly": {
+        "title": "Virtual PC assembly",
+        "desc": "Install components in the right order."
+      },
+      "network": {
+        "title": "Computer networks",
+        "desc": "Build a topology, configure IP, send a PING."
+      },
+      "algorithms": {
+        "title": "Algorithm visualizer",
+        "desc": "Step through searching and sorting."
+      },
+      "logic": {
+        "title": "Logic circuits",
+        "desc": "Wire gates and check the truth table."
+      },
+      "experiments": {
+        "title": "Virtual experiments",
+        "desc": "Change values and see the result instantly."
+      },
+      "studio": {
+        "title": "Setup Studio 3D",
+        "desc": "Build a full setup for your budget and see it in 3D."
+      },
+      "assignments": {
+        "title": "Assignments",
+        "desc": "Practical tasks with automatic grading."
+      },
+      "results": {
+        "title": "My results",
+        "desc": "Scores, achievements and progress."
+      }
     }
   },
   "studio": {
@@ -78,5 +107,149 @@
     "sceneBody": "Something went wrong while rendering the scene. Try reloading the page.",
     "retry": "Try again",
     "modelFailed": "Model failed to load"
+  },
+  "story": {
+    "scrollHint": "Scroll down",
+    "dragHint": "Drag to rotate · Double-click to reset",
+    "navLabel": "Chapters",
+    "progressLabel": "Progress",
+    "specsCaption": "Specifications of the sample device in the scene",
+    "chapters": {
+      "setup": {
+        "nav": "Setup"
+      },
+      "monitor": {
+        "nav": "Monitor",
+        "eyebrow": "Output device",
+        "title": "Monitor",
+        "body": "The monitor turns each frame prepared by the graphics card into millions of pixels on screen.",
+        "fact": "Refresh rate is how many times per second the screen updates: 165 Hz = 165 frames per second.",
+        "specs": {
+          "size": {
+            "label": "Diagonal",
+            "value": "27″ (68.6 cm)"
+          },
+          "resolution": {
+            "label": "Resolution",
+            "value": "2560 × 1440 (QHD)"
+          },
+          "refresh": {
+            "label": "Refresh rate",
+            "value": "165 Hz"
+          },
+          "panel": {
+            "label": "Panel type",
+            "value": "IPS"
+          },
+          "response": {
+            "label": "Response time",
+            "value": "1 ms (GtG)"
+          },
+          "purpose": {
+            "label": "Purpose",
+            "value": "Study, programming, gaming"
+          }
+        }
+      },
+      "keyboard": {
+        "nav": "Keyboard",
+        "eyebrow": "Input device",
+        "title": "Keyboard",
+        "body": "When a key is pressed, the keyboard controller sends its code to the computer — a letter, digit or command.",
+        "fact": "A mechanical keyboard has an individual switch under every key.",
+        "specs": {
+          "switches": {
+            "label": "Switches",
+            "value": "Mechanical, linear"
+          },
+          "keycaps": {
+            "label": "Keycaps",
+            "value": "PBT, double-shot"
+          },
+          "layout": {
+            "label": "Layout",
+            "value": "TKL — 87 keys"
+          },
+          "connection": {
+            "label": "Connection",
+            "value": "USB-C / 2.4 GHz wireless"
+          },
+          "rgb": {
+            "label": "Lighting",
+            "value": "Per-key RGB, can be turned off"
+          },
+          "usage": {
+            "label": "Use",
+            "value": "Typing, coding, gaming"
+          }
+        }
+      },
+      "mouse": {
+        "nav": "Mouse",
+        "eyebrow": "Input device",
+        "title": "Mouse",
+        "body": "An optical sensor photographs the desk surface thousands of times per second to calculate movement.",
+        "fact": "DPI tells how many pixels the cursor moves when the mouse travels one inch.",
+        "specs": {
+          "sensor": {
+            "label": "Sensor",
+            "value": "Optical"
+          },
+          "dpi": {
+            "label": "DPI",
+            "value": "100 – 26,000"
+          },
+          "polling": {
+            "label": "Polling rate",
+            "value": "1000 Hz"
+          },
+          "switches": {
+            "label": "Buttons",
+            "value": "Optical switches"
+          },
+          "connectivity": {
+            "label": "Connection",
+            "value": "2.4 GHz wireless / USB-C"
+          },
+          "weight": {
+            "label": "Weight",
+            "value": "63 g"
+          }
+        }
+      },
+      "pc": {
+        "nav": "System unit",
+        "eyebrow": "The core of the computer",
+        "title": "System unit",
+        "body": "Inside the case the processor, memory, graphics card, storage and power supply work together.",
+        "fact": "Cool air enters at the front and hot air leaves at the back and top — a directed airflow.",
+        "specs": {
+          "formFactor": {
+            "label": "Form factor",
+            "value": "Mid-tower, ATX"
+          },
+          "sidePanel": {
+            "label": "Side panel",
+            "value": "Tempered glass"
+          },
+          "cooling": {
+            "label": "Cooling",
+            "value": "3 front + 1 rear, 120 mm"
+          },
+          "airflow": {
+            "label": "Airflow",
+            "value": "Front → back and top"
+          },
+          "inside": {
+            "label": "Inside",
+            "value": "Motherboard, CPU, RAM, GPU, SSD, PSU"
+          },
+          "purpose": {
+            "label": "Purpose",
+            "value": "Gaming, 3D, programming"
+          }
+        }
+      }
+    }
   }
 }

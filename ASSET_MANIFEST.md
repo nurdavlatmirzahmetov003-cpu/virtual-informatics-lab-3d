@@ -13,10 +13,18 @@
 > Ескерту: автор аттары legacy manifest-те жазылмаған — Poly Haven бетінен тексеріп толықтыру керек (CC0 атрибуция талап етпейді).
 
 ## 3D модельдер (`public/assets/models/`)
-Әзірге жоқ. Фаза 2-де қосылады.
+Әзірге GLB жоқ. Hero сахнасындағы барлық құрылғы — жобаның өз процедуралық модельдері (`src/scenes/DeskScene/models/`, лицензия мәселесі жоқ), TODO.md-де `[PLACEHOLDER]`.
 
 ## HDRI (`public/assets/hdr/`)
-Әзірге жоқ. Жарық ортасы `EnvironmentLighting` ішінде процедуралық түрде (drei Lightformer) жасалады — сыртқы файл жоқ.
+
+| Файл | Ассет | Автор | Лицензия | URL | Өзгерістер |
+|---|---|---|---|---|---|
+| studio_small_09_1k.hdr | Studio Small 09 | Sergej Majboroda (Poly Haven) | CC0 | https://polyhaven.com/a/studio_small_09 | Өзгертілмеген, 1K (1.6 MB), тек шағылыс/IBL үшін (фон ретінде көрсетілмейді) |
+
+Қосымша: `EnvironmentLighting` HDRI үстіне 3 процедуралық Lightformer (softbox жолақтар) қосады.
+
+## Процедуралық текстуралар (файл емес, canvas арқылы runtime-да)
+`src/lib/three/proceduralTextures.ts`: brushed metal, мата, перфорацияланған тор, тышқан қабығының сызықтары, монитор тұсқағазы (жобаның өз дизайны). Сыртқы ассет қолданылмайды.
 
 ## Аудио (`public/assets/audio/`)
 Әзірге жоқ.

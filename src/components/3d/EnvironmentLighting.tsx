@@ -2,55 +2,81 @@ import { Environment, Lightformer } from '@react-three/drei';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 
 interface EnvironmentLightingProps {
-  /** Scales every light; scenes tune mood without touching the rig. */
+  /** Equirectangular .hdr used for image-based reflections (not shown as background). */
+  hdri?: string;
+  /** Strength of image-based lighting on all PBR materials. */
+  environmentIntensity?: number;
+  /** Scales the direct key / fill / rim lights. */
   intensity?: number;
   background?: string;
+  /** Half-size (m) of the key light's shadow frustum — keep tight for crisp shadows. */
+  shadowExtent?: number;
+  fog?: [near: number, far: number];
 }
 
 /**
- * Studio lighting rig: an offline, procedurally generated softbox environment
- * for reflections (no CDN HDRI) + key / fill / rim lights.
- *
- * A Poly Haven HDRI can replace the Lightformers later via `files`, keeping
- * the same component API.
+ * Studio lighting rig: HDRI (or procedural softboxes) for reflections, plus
+ * Lightformer strips that give glossy surfaces long product-shot highlights,
+ * and a key / fill / rim set of direct lights.
  */
-export function EnvironmentLighting({ intensity = 1, background = '#07080c' }: EnvironmentLightingProps) {
+export function EnvironmentLighting({
+  hdri,
+  environmentIntensity = 1,
+  intensity = 1,
+  background = '#07080c',
+  shadowExtent = 3,
+  fog = [6, 16],
+}: EnvironmentLightingProps) {
   const preset = useQualityPreset();
 
   return (
     <>
       <color attach="background" args={[background]} />
-      <fog attach="fog" args={[background, 6, 16]} />
+      <fog attach="fog" args={[background, ...fog]} />
 
-      <Environment resolution={preset.environmentResolution} frames={1}>
+      <Environment
+        files={hdri}
+        resolution={preset.environmentResolution}
+        frames={1}
+        environmentIntensity={environmentIntensity}
+      >
         {/* overhead softbox */}
-        <Lightformer form="rect" intensity={2.2 * intensity} position={[0, 5, 0]} rotation-x={Math.PI / 2} scale={[6, 3, 1]} />
-        {/* key side strip */}
-        <Lightformer form="rect" intensity={3 * intensity} position={[-5, 2, 2]} rotation-y={Math.PI / 2} scale={[4, 1.2, 1]} />
+        <Lightformer form="rect" intensity={1.6} position={[0, 5, 0]} rotation-x={Math.PI / 2} scale={[6, 3, 1]} />
+        {/* key-side strip: long highlight on glass and glossy plastics */}
+        <Lightformer form="rect" intensity={2.4} position={[-5, 2, 2]} rotation-y={Math.PI / 2} scale={[4, 0.8, 1]} />
         {/* cool rim strip */}
-        <Lightformer form="rect" color="#7fdcff" intensity={1.6 * intensity} position={[5, 1.5, -2]} rotation-y={-Math.PI / 2} scale={[5, 0.6, 1]} />
-        {/* low warm bounce */}
-        <Lightformer form="ring" color="#ffd9b0" intensity={0.6 * intensity} position={[0, 1, 6]} scale={3} />
+        <Lightformer form="rect" color="#7fdcff" intensity={1.2} position={[5, 1.5, -2]} rotation-y={-Math.PI / 2} scale={[5, 0.4, 1]} />
       </Environment>
 
-      <hemisphereLight args={['#c9d6ff', '#14161c', 0.25 * intensity]} />
+      <hemisphereLight args={['#c9d6ff', '#14161c', 0.18 * intensity]} />
+      {/* key */}
       <directionalLight
         castShadow={preset.shadows}
-        position={[-3.5, 5.5, 3]}
-        intensity={2.4 * intensity}
-        color="#fff3e4"
+        position={[-2.2, 3.6, 2.4]}
+        intensity={2.2 * intensity}
+        color="#fff1e0"
         shadow-mapSize={[preset.shadowMapSize, preset.shadowMapSize]}
         shadow-bias={-0.0002}
-        shadow-normalBias={0.02}
-        shadow-camera-left={-3}
-        shadow-camera-right={3}
-        shadow-camera-top={3}
-        shadow-camera-bottom={-3}
+        shadow-normalBias={0.015}
+        shadow-camera-left={-shadowExtent}
+        shadow-camera-right={shadowExtent}
+        shadow-camera-top={shadowExtent}
+        shadow-camera-bottom={-shadowExtent}
         shadow-camera-near={0.5}
-        shadow-camera-far={16}
+        shadow-camera-far={10}
       />
-      <directionalLight position={[4, 2.5, 2]} intensity={0.5 * intensity} color="#b8ccff" />
-      <spotLight position={[2.5, 3, -3.5]} angle={0.6} penumbra={0.8} intensity={18 * intensity} color="#6fd8ff" distance={10} />
+      {/* fill */}
+      <directionalLight position={[3, 1.8, 2.5]} intensity={0.45 * intensity} color="#b8ccff" />
+      {/* rim / back light */}
+      <spotLight
+        position={[1.6, 2.6, -2.2]}
+        angle={0.55}
+        penumbra={0.9}
+        intensity={14 * intensity}
+        color="#7fd8ff"
+        distance={8}
+        decay={2}
+      />
     </>
   );
 }

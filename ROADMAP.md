@@ -17,7 +17,12 @@
   LoaderOverlay, WebGL fallback.
 - Беттер: Басты (3D), Зертханалар, Setup Studio, Нәтижелерім, 404.
 
-## Фаза 2 — Кинематографиялық Hero ⬜ ← КЕЛЕСІ (PRIORITY #1)
+## Фаза 2 — Кинематографиялық Hero 🟡 (1-бөлім дайын, 2026-10-03)
+**2.1 ✅** Үстел сахнасы (процедуралық уақытша модельдер), Poly Haven HDRI + key/fill/rim + монитор RectAreaLight + bias light,
+Neutral tone mapping, DOF (High/Ultra), бір GSAP ScrollTrigger timeline: 5 chapter (Сетап → Монитор → Пернетақта →
+Тышқан → Жүйелік блок) + ақпарат панельдері (kk/ru/en), chapter навигациясы, прогресс, сүйреп орбита, мобильді bottom sheet.
+**2.2 ⬜ ← КЕЛЕСІ** ПК ішіне кіру, exploded view, бөлшек highlight/ақпарат, GLB модельдер.
+
 - Лицензиясы таза GLB модельдер: үстел, монитор, пернетақта, тышқан, наушник, колонкалар, корпус,
   ішкі бөліктер (MB, CPU, кулер, RAM, GPU, SSD, PSU, желдеткіштер).
 - Poly Haven HDRI (1K–2K) + студиялық жарық.

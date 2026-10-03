@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useState, type ReactNode } from 'react';
+import { Suspense, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { NeutralToneMapping, SRGBColorSpace } from 'three';
 import { CAMERA_STATES, type CameraStateName } from '@/data/camera/cameraStates';
@@ -6,6 +6,7 @@ import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { usePageVisible } from '@/hooks/usePageVisible';
 import { useT } from '@/hooks/useT';
 import { detectWebGL } from '@/lib/webgl';
+import { useSceneStatus } from '@/store/sceneStatusStore';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { QualityController } from './QualityController';
 import { PostEffects } from './PostEffects';
@@ -19,6 +20,21 @@ interface SceneCanvasProps {
   /** Accessible description of what the scene shows. */
   label: string;
   className?: string;
+  /**
+   * CSS touch-action for the canvas. `none` (default) gives the scene every
+   * gesture; `pan-y` keeps vertical swipes scrolling the page (scroll stories).
+   */
+  touchAction?: 'none' | 'pan-y';
+}
+
+/** Mounted inside the scene's Suspense boundary: renders only once every asset resolved. */
+function ReadySignal() {
+  const setReady = useSceneStatus((s) => s.setReady);
+  useEffect(() => {
+    setReady(true);
+    return () => setReady(false);
+  }, [setReady]);
+  return null;
 }
 
 /**
@@ -26,20 +42,31 @@ interface SceneCanvasProps {
  * inside it; unmounting the page disposes the renderer and GPU resources,
  * so laboratories are never all resident at once.
  */
-export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, className }: SceneCanvasProps) {
+export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, className, touchAction = 'none' }: SceneCanvasProps) {
   const t = useT();
   const preset = useQualityPreset();
   const visible = usePageVisible();
   const webgl = useMemo(() => detectWebGL(), []);
   const [attempt, setAttempt] = useState(0);
   const cam = CAMERA_STATES[initialCamera];
+  const setExpected = useSceneStatus((s) => s.setExpected);
+
+  useEffect(() => {
+    if (webgl === 'none') return;
+    setExpected(true);
+    return () => setExpected(false);
+  }, [webgl, setExpected]);
 
   if (webgl === 'none') return <WebGLFallback />;
 
   return (
     <div className={[styles.root, className].filter(Boolean).join(' ')} role="img" aria-label={label}>
       <ErrorBoundary
-        onError={(error) => console.error('[SceneCanvas] render error', error)}
+        onError={(error) => {
+          console.error('[SceneCanvas] render error', error);
+          // release the loader so the error message is visible
+          setExpected(false);
+        }}
         fallback={(_, reset) => (
           <div className={styles.error} role="alert">
             <h2>{t('errors.sceneTitle')}</h2>
@@ -48,6 +75,7 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
               type="button"
               onClick={() => {
                 setAttempt((n) => n + 1);
+                setExpected(true);
                 reset();
               }}
             >
@@ -60,6 +88,7 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
           // antialias is a context attribute: remount the canvas when it changes
           key={`${attempt}-${preset.antialias ? 'aa' : 'noaa'}`}
           className={styles.canvas}
+          style={{ touchAction }}
           frameloop={visible ? 'always' : 'never'}
           dpr={preset.dpr}
           shadows={preset.shadows ? 'percentage' : false}
@@ -78,7 +107,10 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
           }}
         >
           <QualityController preset={preset} />
-          <Suspense fallback={null}>{children}</Suspense>
+          <Suspense fallback={null}>
+            {children}
+            <ReadySignal />
+          </Suspense>
           {preset.postprocessing && <PostEffects preset={preset} />}
         </Canvas>
       </ErrorBoundary>

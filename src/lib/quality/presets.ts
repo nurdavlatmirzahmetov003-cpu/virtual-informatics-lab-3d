@@ -15,6 +15,12 @@ export interface QualityPreset {
   /** MSAA samples for the post-processing composer. */
   multisampling: number;
   bloom: boolean;
+  /** Focus blur on the active object (scroll story). */
+  depthOfField: boolean;
+  /** Physical glass (extra transmission pass); otherwise alpha-blended glass. */
+  transmission: boolean;
+  /** RectAreaLight for screen light spill; otherwise a cheap point light. */
+  areaLights: boolean;
   /** Resolution of the generated environment cube map. */
   environmentResolution: number;
   /** Mesh LOD bias applied by later phases: 0 = highest detail. */
@@ -34,6 +40,9 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     postprocessing: false,
     multisampling: 0,
     bloom: false,
+    depthOfField: false,
+    transmission: false,
+    areaLights: false,
     environmentResolution: 128,
     lodBias: 2,
     maxTextureSize: 512,
@@ -48,6 +57,9 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     postprocessing: false,
     multisampling: 0,
     bloom: false,
+    depthOfField: false,
+    transmission: true,
+    areaLights: true,
     environmentResolution: 256,
     lodBias: 1,
     maxTextureSize: 1024,
@@ -62,6 +74,9 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     postprocessing: true,
     multisampling: 4,
     bloom: true,
+    depthOfField: true,
+    transmission: true,
+    areaLights: true,
     environmentResolution: 512,
     lodBias: 0,
     maxTextureSize: 2048,
@@ -76,6 +91,9 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     postprocessing: true,
     multisampling: 8,
     bloom: true,
+    depthOfField: true,
+    transmission: true,
+    areaLights: true,
     environmentResolution: 1024,
     lodBias: 0,
     maxTextureSize: 2048,
