@@ -7,7 +7,8 @@
 - 8 параметрлік тәжірибе; дұрыс/қате жауаптың түсіндірмесі, ұпай, уақыт, қате, persist.
 - 40 тапсырма тізімі, нақты құрылғы/тапсырмаға deep link, прогресс пайызы және kk/ru/en атаулар.
 - LoaderOverlay lazy; codeSplitting ортақ тәуелділіктерді WebGL-ден бөледі: 2D route-та Three/r3f eager preload жоқ.
-- 22 автоматты тест; build/lint; Chromium desktop/mobile тексерулері және скриншоттар. Legacy импорт, дәл SKU модельдері және соңғы browser/device QA ашық.
+- Progress v2: lifetime best ұпайлар 200 history лимитінен бөлек, v1 migration деректі сақтайды.
+- 23 автоматты тест; build/lint; Chromium desktop/mobile тексерулері және скриншоттар. Legacy импорт, дәл SKU модельдері және соңғы browser/device QA ашық.
 
 ## 0.8.0 — 2026-10-04 — Фаза 6: AI Көмекші
 

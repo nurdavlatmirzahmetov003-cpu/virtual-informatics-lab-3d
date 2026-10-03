@@ -20,7 +20,7 @@ export const STORAGE_KEYS = {
 export const STORAGE_VERSIONS = {
   settings: 1,
   setup: 1,
-  progress: 1,
+  progress: 2,
 } as const;
 
 /** localStorage can throw (private mode, blocked storage, quota). */
