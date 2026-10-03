@@ -1,9 +1,7 @@
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { CanvasTexture, SRGBColorSpace, type Group, type Mesh, type MeshStandardMaterial, type Object3D } from 'three';
+import type { Group } from 'three';
 import { ModelLoader } from '@/components/3d/ModelLoader';
-import { useDisposable } from '@/hooks/useDisposable';
-import { drawWallpaper } from '@/lib/three/proceduralTextures';
 import { HEADSET, KEYBOARD, MONITOR, MOUSE, SPEAKERS } from '../layout';
 import { storyRig } from '../storyRig';
 import { usePcStore } from '@/store/pcStore';
@@ -12,6 +10,7 @@ import { Keyboard as KeyboardFallback } from './Keyboard';
 import { Mouse as MouseFallback } from './Mouse';
 import { Headset as HeadsetFallback } from './Headset';
 import { Speakers as SpeakersFallback } from './Speakers';
+import { useMonitorWallpaper } from './useMonitorWallpaper';
 
 const url = (name: string) => `${import.meta.env.BASE_URL}assets/models/hardware/${name}.glb`;
 const monitorFit = { axis: 0 as const, size: 0.70, align: 'floor' as const };
@@ -22,28 +21,7 @@ const speakerFit = { axis: 1 as const, size: 0.15, align: 'floor' as const };
 
 export function Monitor() {
   const group = useRef<Group>(null);
-  const wallpaper = useDisposable(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1536; canvas.height = 672;
-    drawWallpaper(canvas);
-    const texture = new CanvasTexture(canvas);
-    texture.colorSpace = SRGBColorSpace;
-    return texture;
-  }, []);
-  const screen = useCallback((root: Object3D) => {
-    root.traverse(obj => {
-      const mesh = obj as Mesh;
-      if (!mesh.isMesh) return;
-      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-      materials.forEach(material => {
-        if (material.name !== 'Screen') return;
-        const m = material as MeshStandardMaterial;
-        m.map = wallpaper; m.emissiveMap = wallpaper;
-        m.color.set('#ffffff'); m.emissive.set('#ffffff'); m.emissiveIntensity = 0.65;
-        m.roughness = 0.27; m.metalness = 0; m.needsUpdate = true;
-      });
-    });
-  }, [wallpaper]);
+  const screen = useMonitorWallpaper();
   useFrame(() => { if (group.current) group.current.rotation.y = storyRig.monitorYaw; });
   return <ModelLoader ref={group} url={url('monitor_ultrawide')} fit={monitorFit} position={[...MONITOR.position]} onLoaded={screen} onClick={e => { e.stopPropagation(); usePcStore.getState().enterDevice('monitor'); }} fallback={<MonitorFallback />} />;
 }

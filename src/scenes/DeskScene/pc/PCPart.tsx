@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
-import { Color, type Group, type Material, type Mesh, type MeshStandardMaterial } from 'three';
+import { Color, type Group } from 'three';
+import { captureMaterials, restoreMaterials, type MatRecord } from '@/lib/three/materialFx';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { activePart, usePcStore } from '@/store/pcStore';
@@ -9,35 +10,11 @@ import { useStoryStore } from '@/store/storyStore';
 import { CHAPTER_INDEX } from '../chapters';
 import { PART_INDEX, type PartDef } from './parts';
 import { pcRig } from './pcRig';
-import styles from './Hotspot.module.css';
+import styles from '@/components/3d/Hotspot.module.css';
 
 const HIGHLIGHT = new Color('#38d6f5');
 const tint = new Color();
 const DIM = 0.72; // how much non-active parts darken
-
-interface MatRecord {
-  mat: MeshStandardMaterial;
-  color: Color;
-  emissive: Color;
-  env: number;
-}
-
-function captureMaterials(root: Group | null): MatRecord[] {
-  const list: MatRecord[] = [];
-  const seen = new Set<Material>();
-  root?.traverse(obj => {
-    const mesh = obj as Mesh;
-    if (!mesh.isMesh) return;
-    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-    for (const m of mats) {
-      const sm = m as MeshStandardMaterial;
-      if (seen.has(m) || m.userData.shared || !sm.color || !sm.emissive) continue;
-      seen.add(m);
-      list.push({ mat: sm, color: sm.color.clone(), emissive: sm.emissive.clone(), env: sm.envMapIntensity ?? 1 });
-    }
-  });
-  return list;
-}
 
 /**
  * Wraps one PC component: drives its exploded position, highlights it when
@@ -66,11 +43,7 @@ export function PCPart({ def, children }: { def: PartDef; children: ReactNode })
     records.current = captureMaterials(group.current);
     return () => {
       // restore so a remount starts clean
-      for (const r of records.current) {
-        r.mat.color.copy(r.color);
-        r.mat.emissive.copy(r.emissive);
-        r.mat.envMapIntensity = r.env;
-      }
+      restoreMaterials(records.current);
     };
   }, []);
 

@@ -9,7 +9,8 @@
     "labs": "Labs",
     "studio": "Setup Studio",
     "progress": "My results",
-    "primary": "Primary navigation"
+    "primary": "Primary navigation",
+    "explorer": "Anatomy"
   },
   "settings": {
     "language": "Language",
@@ -83,7 +84,8 @@
         "title": "My results",
         "desc": "Scores, achievements and progress."
       }
-    }
+    },
+    "available": "Available"
   },
   "studio": {
     "title": "Setup Studio 3D",
@@ -470,5 +472,908 @@
     "edits": "Adaptations: merged geometry, Meshopt compression, 1K WebP textures, scale and orientation. Removed loose cables, extracted chassis and speakers, used the headphone rest pose. Screen wallpaper is an original project design. Trademarks belong to their owners; this is an educational demonstration.",
     "environment": "Environment and materials — Poly Haven, CC0:",
     "specs": "Verified specification sources:"
+  },
+  "anatomy": {
+    "title": "Computer anatomy",
+    "eyebrow": "Hardware Explorer",
+    "lead": "Pick a device: the camera moves in and the panel shows its name, purpose, key specs, compatibility and a mini quiz.",
+    "sceneLabel": "3D scene showing computer hardware",
+    "categories": {
+      "label": "Category",
+      "external": "External devices",
+      "internal": "Internal components"
+    },
+    "view": {
+      "label": "View",
+      "scene": "3D",
+      "list": "List"
+    },
+    "sections": {
+      "names": "Name in three languages",
+      "description": "Description",
+      "purpose": "What is it for?",
+      "specs": "Key characteristics",
+      "compat": "Compatibility",
+      "quiz": "Mini quiz"
+    },
+    "tabs": {
+      "info": "Information",
+      "quiz": "Quiz"
+    },
+    "overview": "Show all",
+    "close": "Close",
+    "prev": "Previous",
+    "next": "Next",
+    "pick": "Choose a device from the list or press a number in the scene.",
+    "hint": "Drag to rotate · Scroll to zoom · Esc to show all",
+    "counter": "{index} / {total}",
+    "placeholder": "Temporary model: a realistic 3D model will be added later.",
+    "magnified": "Enlarged {factor}× for clarity.",
+    "specsCaption": "Typical values; specific models may differ.",
+    "quiz": {
+      "legend": "Question {n}",
+      "check": "Check answers",
+      "retry": "Try again",
+      "correct": "Correct!",
+      "wrong": "Not quite. The correct answer is: {answer}",
+      "score": "Score: {score} / {total}",
+      "perfect": "Excellent! Every answer is correct.",
+      "unanswered": "Answer every question first."
+    },
+    "list": {
+      "title": "All devices — text version",
+      "lead": "This view gives all the information without 3D, so it works well with a keyboard and screen readers.",
+      "open3d": "Show in 3D",
+      "toc": "Contents"
+    },
+    "noWebgl": "Your device does not support 3D, so the text version is shown.",
+    "items": {
+      "monitor": {
+        "name": "Monitor",
+        "description": "A device that shows the text, pictures and video processed by the computer. The screen is made of millions of tiny dots called pixels.",
+        "purpose": "It lets the user see the result of the computer’s work. A monitor is an output device.",
+        "specs": {
+          "diagonal": {
+            "label": "Diagonal",
+            "value": "Usually 21–34 inches (1 inch = 2.54 cm)"
+          },
+          "resolution": {
+            "label": "Resolution",
+            "value": "1920 × 1080 (Full HD), 2560 × 1440, 3840 × 2160 (4K)"
+          },
+          "refresh": {
+            "label": "Refresh rate",
+            "value": "60–240 Hz"
+          },
+          "ports": {
+            "label": "Connection",
+            "value": "HDMI, DisplayPort, USB-C"
+          }
+        },
+        "compat": "The monitor plugs into a port on the graphics card (or the graphics built into the processor), so both need the same connector, such as HDMI or DisplayPort. The graphics card must also support the monitor’s resolution and refresh rate.",
+        "quiz": {
+          "q1": {
+            "question": "What type of device is a monitor?",
+            "a": "Output device",
+            "b": "Input device",
+            "c": "Storage device",
+            "explain": "A monitor sends information from the computer out to the user."
+          },
+          "q2": {
+            "question": "What does “1920 × 1080” mean?",
+            "a": "The screen size in centimetres",
+            "b": "Frames per second",
+            "c": "The number of pixels: width × height",
+            "explain": "This is the resolution: 1920 pixels across and 1080 pixels down."
+          },
+          "q3": {
+            "question": "How many times per second does a 144 Hz monitor refresh the image?",
+            "a": "1080 times",
+            "b": "144 times",
+            "c": "60 times",
+            "explain": "1 Hz means once per second. A higher rate makes motion look smoother."
+          }
+        }
+      },
+      "keyboard": {
+        "name": "Keyboard",
+        "description": "A device for entering text, numbers and commands. When a key is pressed, the keyboard’s controller sends its code to the computer.",
+        "purpose": "For typing text, writing programs and giving commands with shortcuts (for example, Ctrl + C). A keyboard is an input device.",
+        "specs": {
+          "type": {
+            "label": "Type",
+            "value": "Membrane, mechanical"
+          },
+          "layout": {
+            "label": "Layout",
+            "value": "QWERTY; Kazakh, Russian, English"
+          },
+          "keys": {
+            "label": "Number of keys",
+            "value": "Full size — 104–105, compact (TKL) — 87"
+          },
+          "connection": {
+            "label": "Connection",
+            "value": "USB, Bluetooth, 2.4 GHz wireless"
+          }
+        },
+        "compat": "A keyboard connects through a USB port or Bluetooth. To type Kazakh letters (ә, ғ, қ, ң, ө, ұ, ү, һ, і), the Kazakh layout must be added in the operating system.",
+        "quiz": {
+          "q1": {
+            "question": "What type of device is a keyboard?",
+            "a": "Power device",
+            "b": "Input device",
+            "c": "Output device",
+            "explain": "A keyboard puts information into the computer."
+          },
+          "q2": {
+            "question": "What does the Ctrl + C shortcut do?",
+            "a": "Copies the selection",
+            "b": "Pastes",
+            "c": "Deletes the file",
+            "explain": "Ctrl + C copies and Ctrl + V pastes."
+          },
+          "q3": {
+            "question": "What is under each key of a mechanical keyboard?",
+            "a": "One shared rubber membrane",
+            "b": "A tiny speaker",
+            "c": "Its own switch",
+            "explain": "Mechanical keyboards have a switch for every key; membrane keyboards use one shared rubber layer."
+          }
+        }
+      },
+      "mouse": {
+        "name": "Mouse",
+        "description": "A pointing device that moves the cursor on the screen. Its optical sensor photographs the desk surface thousands of times per second to work out the movement.",
+        "purpose": "For selecting objects, clicking buttons, dragging and scrolling pages. A mouse is an input device.",
+        "specs": {
+          "sensor": {
+            "label": "Sensor",
+            "value": "Optical or laser"
+          },
+          "dpi": {
+            "label": "Sensitivity (DPI)",
+            "value": "Usually 800–3200, higher on gaming mice"
+          },
+          "buttons": {
+            "label": "Buttons",
+            "value": "Left, right, wheel and extra buttons"
+          },
+          "connection": {
+            "label": "Connection",
+            "value": "USB, Bluetooth, 2.4 GHz wireless"
+          }
+        },
+        "compat": "A mouse works with any modern computer through USB or Bluetooth. Setting up extra buttons may require the manufacturer’s software.",
+        "quiz": {
+          "q1": {
+            "question": "What does DPI show?",
+            "a": "The weight of the mouse",
+            "b": "The battery capacity",
+            "c": "How many pixels the cursor moves when the mouse moves 1 inch",
+            "explain": "DPI stands for dots per inch."
+          },
+          "q2": {
+            "question": "Which group of devices does a mouse belong to?",
+            "a": "Memory devices",
+            "b": "Input devices",
+            "c": "Output devices",
+            "explain": "A mouse sends the cursor position and clicks into the computer."
+          },
+          "q3": {
+            "question": "How does an optical mouse detect movement?",
+            "a": "It takes fast pictures of the surface and compares them",
+            "b": "It rolls a ball inside",
+            "c": "Using GPS",
+            "explain": "Ball mice were used in the past; today a sensor compares pictures of the surface."
+          }
+        }
+      },
+      "headset": {
+        "name": "Headset",
+        "description": "A device that plays sound only for the user. Headphones with a microphone are called a headset: it is both an output and an input device.",
+        "purpose": "For music and video, and for talking in online lessons and games, without disturbing people nearby.",
+        "specs": {
+          "type": {
+            "label": "Type",
+            "value": "Over-ear, in-ear; closed, open"
+          },
+          "freq": {
+            "label": "Frequency range",
+            "value": "Usually 20 Hz – 20 kHz"
+          },
+          "connection": {
+            "label": "Connection",
+            "value": "3.5 mm audio jack, USB, Bluetooth"
+          },
+          "mic": {
+            "label": "Microphone",
+            "value": "Built into a headset"
+          }
+        },
+        "compat": "Headphones with a 3.5 mm plug go into the audio jack of the sound card or motherboard. Some laptops share one jack for headphones and microphone, which needs a 4-contact (TRRS) plug. USB and Bluetooth headsets do not need an audio jack.",
+        "quiz": {
+          "q1": {
+            "question": "What are headphones with a microphone called?",
+            "a": "A headset",
+            "b": "A speaker",
+            "c": "A scanner",
+            "explain": "A headset both plays sound and records your voice."
+          },
+          "q2": {
+            "question": "Roughly which frequencies can people hear?",
+            "a": "1–2 Hz",
+            "b": "1–5 MHz",
+            "c": "20 Hz – 20 kHz",
+            "explain": "That is why headphones are usually designed for this range."
+          },
+          "q3": {
+            "question": "How do Bluetooth headphones connect to a computer?",
+            "a": "Through HDMI",
+            "b": "Wirelessly, by radio",
+            "c": "Only with a 3.5 mm cable",
+            "explain": "Bluetooth is short-range wireless communication."
+          }
+        }
+      },
+      "microphone": {
+        "name": "Microphone",
+        "description": "A device that turns sound waves into an electrical signal. The computer converts this signal into digital audio.",
+        "purpose": "For recording your voice, video calls, online lessons and voice control. A microphone is an input device.",
+        "specs": {
+          "type": {
+            "label": "Type",
+            "value": "Condenser, dynamic"
+          },
+          "pattern": {
+            "label": "Pickup pattern",
+            "value": "Cardioid (front), omnidirectional"
+          },
+          "connection": {
+            "label": "Connection",
+            "value": "USB, 3.5 mm, XLR (through an audio interface)"
+          },
+          "sampling": {
+            "label": "Sample rate",
+            "value": "Usually 44.1–48 kHz on USB microphones"
+          }
+        },
+        "compat": "A USB microphone plugs straight into the computer. A professional XLR microphone needs an audio interface (an external sound card), and an XLR condenser microphone also needs +48 V phantom power.",
+        "quiz": {
+          "q1": {
+            "question": "What type of device is a microphone?",
+            "a": "Storage device",
+            "b": "Input device",
+            "c": "Output device",
+            "explain": "A microphone puts sound into the computer."
+          },
+          "q2": {
+            "question": "What does a microphone turn sound into?",
+            "a": "An electrical signal",
+            "b": "Light",
+            "c": "Heat",
+            "explain": "A thin diaphragm vibrates with the sound and creates an electrical signal."
+          },
+          "q3": {
+            "question": "What do you need to connect an XLR microphone to a computer?",
+            "a": "A printer",
+            "b": "A network card",
+            "c": "An audio interface",
+            "explain": "An audio interface amplifies the XLR signal and turns it into digital data."
+          }
+        }
+      },
+      "webcam": {
+        "name": "Webcam",
+        "description": "A device that records video and sends it to the computer in real time. The lens focuses light onto a light-sensitive sensor.",
+        "purpose": "For video calls, online lessons, streaming and recording video. A webcam is an input device.",
+        "specs": {
+          "resolution": {
+            "label": "Resolution",
+            "value": "720p (1280 × 720), 1080p (1920 × 1080), 4K"
+          },
+          "fps": {
+            "label": "Frame rate",
+            "value": "30–60 frames per second"
+          },
+          "mic": {
+            "label": "Microphone",
+            "value": "Usually built in"
+          },
+          "connection": {
+            "label": "Connection",
+            "value": "USB"
+          }
+        },
+        "compat": "A webcam connects over USB. Many models follow the UVC standard, so they work without an extra driver. Laptops usually have a camera built into the screen frame.",
+        "quiz": {
+          "q1": {
+            "question": "What type of device is a webcam?",
+            "a": "Output device",
+            "b": "Power device",
+            "c": "Input device",
+            "explain": "A webcam puts video into the computer."
+          },
+          "q2": {
+            "question": "What resolution is “1080p”?",
+            "a": "640 × 480",
+            "b": "1920 × 1080",
+            "c": "1280 × 720",
+            "explain": "1080 is the number of rows of pixels; the width is 1920."
+          },
+          "q3": {
+            "question": "How is a webcam usually connected?",
+            "a": "Through USB",
+            "b": "Through SATA",
+            "c": "Into a PCIe x16 slot",
+            "explain": "SATA is for drives and PCIe x16 is for graphics cards."
+          }
+        }
+      },
+      "speaker": {
+        "name": "Speakers",
+        "description": "A device that turns an electrical signal into sound. The speaker cone vibrates and moves the air, which we hear as sound.",
+        "purpose": "So several people in a room can hear the sound: music, films, presentations. Speakers are output devices.",
+        "specs": {
+          "system": {
+            "label": "System",
+            "value": "2.0 (two speakers), 2.1 (+ subwoofer), 5.1"
+          },
+          "power": {
+            "label": "Power",
+            "value": "Usually 5–50 W for computer speakers"
+          },
+          "freq": {
+            "label": "Frequency range",
+            "value": "About 60 Hz – 20 kHz"
+          },
+          "connection": {
+            "label": "Connection",
+            "value": "3.5 mm, USB, Bluetooth"
+          }
+        },
+        "compat": "Speakers connect with a 3.5 mm cable to the audio output (the green jack). Active speakers have a built-in amplifier, so they need power from a wall socket or USB.",
+        "quiz": {
+          "q1": {
+            "question": "What type of device is a speaker?",
+            "a": "Output device",
+            "b": "Input device",
+            "c": "Storage device",
+            "explain": "Speakers send sound from the computer to the listener."
+          },
+          "q2": {
+            "question": "What does “.1” mean in a “2.1” system?",
+            "a": "One microphone",
+            "b": "One USB port",
+            "c": "A subwoofer for low (bass) sounds",
+            "explain": "2 means two main speakers and 1 means a subwoofer for bass."
+          },
+          "q3": {
+            "question": "What colour is the usual audio output for speakers?",
+            "a": "Blue",
+            "b": "Green",
+            "c": "Pink",
+            "explain": "Green is audio out, pink is the microphone and blue is line in."
+          }
+        }
+      },
+      "printer": {
+        "name": "Printer",
+        "description": "A device that prints text and pictures on paper. An inkjet printer sprays tiny drops of ink, while a laser printer fuses toner powder onto the paper with heat.",
+        "purpose": "For printing documents, reports, photos and tickets. A printer is an output device.",
+        "specs": {
+          "type": {
+            "label": "Type",
+            "value": "Inkjet, laser"
+          },
+          "resolution": {
+            "label": "Print resolution",
+            "value": "600–4800 dpi"
+          },
+          "speed": {
+            "label": "Speed",
+            "value": "Usually 10–30 pages per minute for home printers"
+          },
+          "connection": {
+            "label": "Connection",
+            "value": "USB, Wi-Fi, Ethernet"
+          }
+        },
+        "compat": "A printer connects over USB or a network (Wi-Fi, Ethernet), and its driver must be installed in the operating system. Each model only takes its own cartridges or toner.",
+        "quiz": {
+          "q1": {
+            "question": "What type of device is a printer?",
+            "a": "Processing device",
+            "b": "Output device",
+            "c": "Input device",
+            "explain": "A printer outputs information on paper. A scanner, by contrast, is an input device."
+          },
+          "q2": {
+            "question": "What does a laser printer use to put the image on paper?",
+            "a": "Toner (a fine powder)",
+            "b": "Liquid ink",
+            "c": "A pencil",
+            "explain": "The toner sticks to the paper and is fixed by heated rollers."
+          },
+          "q3": {
+            "question": "What must be installed on the computer for a printer to work?",
+            "a": "A game",
+            "b": "A browser extension",
+            "c": "A driver",
+            "explain": "A driver is a program that tells the operating system how to work with a device."
+          }
+        }
+      },
+      "motherboard": {
+        "name": "Motherboard",
+        "description": "The main circuit board that connects every part of the computer. It holds the processor socket, memory slots, expansion slots, ports and the chipset.",
+        "purpose": "It links the parts together, carrying data between them and sharing out power from the power supply.",
+        "specs": {
+          "formFactor": {
+            "label": "Form factor",
+            "value": "ATX (305 × 244 mm), Micro-ATX, Mini-ITX"
+          },
+          "socket": {
+            "label": "CPU socket",
+            "value": "For example AMD AM4, AM5, Intel LGA1700"
+          },
+          "ram": {
+            "label": "Memory slots",
+            "value": "2–4 DIMM: DDR4 or DDR5"
+          },
+          "expansion": {
+            "label": "Expansion",
+            "value": "PCIe x16, PCIe x1, M.2, SATA"
+          }
+        },
+        "compat": "The motherboard socket must match the processor and its memory slots must match the RAM type (DDR4 or DDR5). The board’s form factor must fit the case: an ATX board will not fit in a Mini-ITX case.",
+        "quiz": {
+          "q1": {
+            "question": "Where on the motherboard is the processor installed?",
+            "a": "In a SATA port",
+            "b": "In a PCIe x1 slot",
+            "c": "In the socket",
+            "explain": "The socket is a special seat made for the processor."
+          },
+          "q2": {
+            "question": "Can DDR5 memory go into a board that only has DDR4 slots?",
+            "a": "Yes, if the board is new",
+            "b": "No, the key notch and standard are different",
+            "c": "Yes, any memory fits",
+            "explain": "The notch on the module stops the wrong memory type from being inserted."
+          },
+          "q3": {
+            "question": "What size is a standard ATX motherboard?",
+            "a": "305 × 244 mm",
+            "b": "170 × 170 mm",
+            "c": "100 × 100 mm",
+            "explain": "170 × 170 mm is the Mini-ITX size."
+          }
+        }
+      },
+      "cpu": {
+        "name": "Processor (CPU)",
+        "description": "The central processing unit that carries out program instructions. Inside are the arithmetic logic unit, the control unit and fast cache memory.",
+        "purpose": "It does all the calculations and logic operations and directs the other parts of the computer. It is often called the computer’s “brain”.",
+        "specs": {
+          "cores": {
+            "label": "Cores",
+            "value": "Usually 4–16 cores"
+          },
+          "clock": {
+            "label": "Clock speed",
+            "value": "3–5.5 GHz"
+          },
+          "cache": {
+            "label": "Cache",
+            "value": "L1, L2, L3 — from a few to tens of MB"
+          },
+          "tdp": {
+            "label": "Heat output (TDP)",
+            "value": "Usually 35–170 W"
+          }
+        },
+        "compat": "A processor only fits a motherboard with the matching socket: an AM5 processor needs an AM5 board. The board’s chipset and BIOS version must support the processor, and the cooler must handle its heat (TDP).",
+        "quiz": {
+          "q1": {
+            "question": "What does CPU stand for?",
+            "a": "Central Processing Unit",
+            "b": "Computer Personal Unit",
+            "c": "Central Power Unit",
+            "explain": "It is the central unit that processes data."
+          },
+          "q2": {
+            "question": "What unit is processor clock speed measured in?",
+            "a": "Gigabytes (GB)",
+            "b": "Watts (W)",
+            "c": "Gigahertz (GHz)",
+            "explain": "1 GHz is one billion clock cycles per second."
+          },
+          "q3": {
+            "question": "What should you check first when choosing a motherboard for a processor?",
+            "a": "The size of the monitor",
+            "b": "That the socket matches",
+            "c": "The colour of the case",
+            "explain": "If the socket does not match, the processor physically will not fit."
+          }
+        }
+      },
+      "ram": {
+        "name": "Memory (RAM)",
+        "description": "Fast memory that temporarily holds the programs and data the processor is using right now. Its contents are lost when the computer is switched off.",
+        "purpose": "It feeds data to the processor much faster than a drive can. More memory lets you keep more programs and browser tabs open at once.",
+        "specs": {
+          "capacity": {
+            "label": "Capacity",
+            "value": "Usually 8–32 GB; one module is 8, 16 or 32 GB"
+          },
+          "type": {
+            "label": "Type",
+            "value": "DDR4, DDR5"
+          },
+          "speed": {
+            "label": "Speed",
+            "value": "DDR4: 2133–3600 MT/s, DDR5: 4800–6400 MT/s"
+          },
+          "channel": {
+            "label": "Mode",
+            "value": "Dual channel — two identical modules"
+          }
+        },
+        "compat": "The memory type must match the motherboard: DDR4 and DDR5 modules have the notch in different places, so they do not fit each other’s slots. For dual channel, install two identical modules in the slots named in the board’s manual.",
+        "quiz": {
+          "q1": {
+            "question": "What happens to the data in RAM when the computer is switched off?",
+            "a": "It is sent to the printer",
+            "b": "It is lost",
+            "c": "It is kept",
+            "explain": "RAM is volatile memory. Files are kept on an SSD or HDD."
+          },
+          "q2": {
+            "question": "What is RAM for?",
+            "a": "To hold the data the processor is working on for a short time",
+            "b": "To keep files for a long time",
+            "c": "To show the picture on screen",
+            "explain": "Long-term storage is the drive’s job, and showing pictures is the graphics card’s job."
+          },
+          "q3": {
+            "question": "Can a DDR4 module go into a DDR5 slot?",
+            "a": "Yes",
+            "b": "Only in a laptop",
+            "c": "No",
+            "explain": "The notch is in a different place, so the module will not go in."
+          }
+        }
+      },
+      "gpu": {
+        "name": "Graphics card (GPU)",
+        "description": "A device that processes images, 3D graphics and video and sends them to the monitor. Its graphics processor has thousands of small cores working in parallel.",
+        "purpose": "For games, 3D modelling, video editing and artificial intelligence calculations. Monitors plug into its ports.",
+        "specs": {
+          "vram": {
+            "label": "Video memory (VRAM)",
+            "value": "Usually 4–24 GB, GDDR6 or GDDR6X"
+          },
+          "bus": {
+            "label": "Interface",
+            "value": "PCIe x16"
+          },
+          "power": {
+            "label": "Power draw",
+            "value": "Usually 75–450 W; extra 8- or 16-pin power"
+          },
+          "ports": {
+            "label": "Ports",
+            "value": "HDMI, DisplayPort"
+          }
+        },
+        "compat": "A graphics card goes into the PCIe x16 slot on the motherboard. It must be short enough for the case, and the power supply needs enough wattage and the right extra power cables (8 or 16 pins).",
+        "quiz": {
+          "q1": {
+            "question": "Which motherboard slot does a graphics card go into?",
+            "a": "DIMM",
+            "b": "SATA",
+            "c": "PCIe x16",
+            "explain": "DIMM slots are for memory and SATA is for drives."
+          },
+          "q2": {
+            "question": "What is a graphics card’s own memory called?",
+            "a": "BIOS",
+            "b": "VRAM (video memory)",
+            "c": "ROM",
+            "explain": "VRAM stores textures and the frames shown on screen."
+          },
+          "q3": {
+            "question": "What else should you check when installing a powerful graphics card?",
+            "a": "The power supply wattage and the case length",
+            "b": "The colour of the mouse",
+            "c": "The keyboard language",
+            "explain": "Without enough power, the computer can shut down under load."
+          }
+        }
+      },
+      "ssd": {
+        "name": "Solid-state drive (SSD)",
+        "description": "A drive that stores data on flash memory chips. It has no moving parts, so it is fast, silent and resistant to knocks.",
+        "purpose": "For long-term storage of the operating system, programs and files. Data stays saved after the computer is switched off.",
+        "specs": {
+          "form": {
+            "label": "Form factor",
+            "value": "M.2 2280 (22 × 80 mm), 2.5 inch"
+          },
+          "interface": {
+            "label": "Interface",
+            "value": "NVMe (PCIe) or SATA"
+          },
+          "speed": {
+            "label": "Read speed",
+            "value": "SATA — up to 550 MB/s; NVMe — 3500–7000 MB/s"
+          },
+          "capacity": {
+            "label": "Capacity",
+            "value": "256 GB – 4 TB"
+          }
+        },
+        "compat": "An M.2 SSD needs an M.2 slot on the motherboard that supports its type (NVMe or SATA). A 2.5-inch SATA SSD connects to the board with a SATA cable and to the power supply with a SATA power cable.",
+        "quiz": {
+          "q1": {
+            "question": "Where does an SSD store data?",
+            "a": "On flash memory chips",
+            "b": "On a spinning magnetic disk",
+            "c": "On an optical disc",
+            "explain": "A spinning magnetic disk is how an HDD works."
+          },
+          "q2": {
+            "question": "Why is an SSD faster than an HDD?",
+            "a": "It is bigger",
+            "b": "It is heavier",
+            "c": "It has no moving mechanical parts",
+            "explain": "An HDD must wait for its head to reach the right spot; an SSD has no such wait."
+          },
+          "q3": {
+            "question": "What does “2280” mean in “M.2 2280”?",
+            "a": "A speed of 2280 MB/s",
+            "b": "22 mm wide, 80 mm long",
+            "c": "A capacity of 2280 GB",
+            "explain": "The first two digits are the width and the rest is the length, in millimetres."
+          }
+        }
+      },
+      "hdd": {
+        "name": "Hard disk drive (HDD)",
+        "description": "A drive that stores data on spinning magnetic platters. A read/write head moves just above the surface of the disk.",
+        "purpose": "For storing large amounts of data, such as photos, videos and archives, at a low price.",
+        "specs": {
+          "form": {
+            "label": "Form factor",
+            "value": "3.5 inch (desktop), 2.5 inch (laptop)"
+          },
+          "rpm": {
+            "label": "Spindle speed",
+            "value": "5400 or 7200 rpm"
+          },
+          "capacity": {
+            "label": "Capacity",
+            "value": "1–20 TB"
+          },
+          "speed": {
+            "label": "Speed",
+            "value": "About 80–250 MB/s over SATA"
+          }
+        },
+        "compat": "An HDD connects to a SATA port on the motherboard with a data cable and to the power supply with a SATA power cable. A 3.5-inch drive needs a matching bay in the case.",
+        "quiz": {
+          "q1": {
+            "question": "Where does an HDD store data?",
+            "a": "Inside the processor",
+            "b": "On spinning magnetic platters",
+            "c": "In flash memory",
+            "explain": "The direction of magnetisation stores the 0s and 1s."
+          },
+          "q2": {
+            "question": "What is the main advantage of an HDD over an SSD?",
+            "a": "A lower price per gigabyte",
+            "b": "It is faster",
+            "c": "It survives knocks better",
+            "explain": "An SSD wins on speed and shock resistance."
+          },
+          "q3": {
+            "question": "Why should you not shake a running HDD?",
+            "a": "The screen will turn off",
+            "b": "It will spin faster",
+            "c": "The head could scratch the platter and damage data",
+            "explain": "The gap between the head and the platter is thinner than a human hair."
+          }
+        }
+      },
+      "psu": {
+        "name": "Power supply unit (PSU)",
+        "description": "A device that turns 220–230 V alternating current from the wall socket into the steady DC voltages computer parts need (+12 V, +5 V, +3.3 V).",
+        "purpose": "It gives every part a steady and safe supply of power.",
+        "specs": {
+          "power": {
+            "label": "Power",
+            "value": "Usually 450–1000 W"
+          },
+          "efficiency": {
+            "label": "Efficiency",
+            "value": "80 PLUS rating: White, Bronze, Gold, Platinum"
+          },
+          "voltages": {
+            "label": "Output voltages",
+            "value": "+12 V, +5 V, +3.3 V"
+          },
+          "connectors": {
+            "label": "Connectors",
+            "value": "24-pin (board), 8-pin (CPU), PCIe (graphics), SATA"
+          }
+        },
+        "compat": "The power supply should have about 20–30 % more wattage than all the parts use together. It needs the right connectors for the graphics card and processor, and its form factor (ATX or SFX) must fit the case.",
+        "quiz": {
+          "q1": {
+            "question": "What does a power supply do?",
+            "a": "Stores data",
+            "b": "Draws the picture",
+            "c": "Turns AC from the wall into steady DC voltages",
+            "explain": "Computer parts run only on DC voltage."
+          },
+          "q2": {
+            "question": "How many pins does the main motherboard power connector have?",
+            "a": "100",
+            "b": "24",
+            "c": "4",
+            "explain": "That is why it is called the “24-pin ATX” connector."
+          },
+          "q3": {
+            "question": "What does an “80 PLUS Gold” label show?",
+            "a": "High energy efficiency",
+            "b": "That it is gold-coloured",
+            "c": "That it is 80 W",
+            "explain": "Higher efficiency means less electricity is wasted as heat."
+          }
+        }
+      },
+      "cooler": {
+        "name": "CPU cooler",
+        "description": "A cooling system that carries heat away from the processor. Heat travels through copper heat pipes into aluminium fins, and a fan blows air across them.",
+        "purpose": "It stops the processor from overheating. When too hot, the processor slows itself down or the computer shuts off to protect itself.",
+        "specs": {
+          "type": {
+            "label": "Type",
+            "value": "Air (heatsink + fan), liquid"
+          },
+          "tdp": {
+            "label": "Heat it can remove",
+            "value": "Usually 65–250 W"
+          },
+          "height": {
+            "label": "Height",
+            "value": "Tower coolers — about 150–165 mm"
+          },
+          "paste": {
+            "label": "Thermal paste",
+            "value": "Goes between the processor and the cooler base"
+          }
+        },
+        "compat": "The cooler’s mounting must fit the processor socket (for example AM5 or LGA1700) and it must be short enough for the case. It must be able to remove at least as much heat as the processor’s TDP.",
+        "quiz": {
+          "q1": {
+            "question": "What goes between the processor and the cooler base?",
+            "a": "Thermal paste",
+            "b": "Glue",
+            "c": "Water",
+            "explain": "Thermal paste fills tiny gaps and conducts heat well."
+          },
+          "q2": {
+            "question": "What metal are heat pipes usually made of?",
+            "a": "Lead",
+            "b": "Gold",
+            "c": "Copper",
+            "explain": "Copper conducts heat very well and is far cheaper than gold."
+          },
+          "q3": {
+            "question": "What happens if the processor overheats?",
+            "a": "Nothing happens",
+            "b": "It slows down or the computer shuts off",
+            "c": "It runs faster",
+            "explain": "This is a safety feature that protects the processor from damage."
+          }
+        }
+      },
+      "fans": {
+        "name": "Case fans",
+        "description": "Fans that refresh the air inside the case. Front fans pull cool air in, while rear and top fans push hot air out.",
+        "purpose": "They lower the temperature of every part, helping them run reliably and last longer.",
+        "specs": {
+          "size": {
+            "label": "Size",
+            "value": "120 mm or 140 mm"
+          },
+          "speed": {
+            "label": "Speed",
+            "value": "Usually 500–2000 rpm"
+          },
+          "connector": {
+            "label": "Connection",
+            "value": "3-pin or 4-pin (PWM) header on the motherboard"
+          },
+          "noise": {
+            "label": "Noise",
+            "value": "Usually 15–35 dB"
+          }
+        },
+        "compat": "The fan size must match the mounting spot in the case (120 or 140 mm). With a 4-pin (PWM) fan, the motherboard sets the speed automatically based on temperature.",
+        "quiz": {
+          "q1": {
+            "question": "What do the front case fans usually do?",
+            "a": "Only light up",
+            "b": "Pull cool air in",
+            "c": "Push hot air out",
+            "explain": "Hot air rises, so the rear and top fans push it out."
+          },
+          "q2": {
+            "question": "What is the advantage of a 4-pin (PWM) fan?",
+            "a": "The motherboard can control its speed",
+            "b": "It is waterproof",
+            "c": "It has more blades",
+            "explain": "Under light load the fan spins slowly and quietly."
+          },
+          "q3": {
+            "question": "What size are case fans most often?",
+            "a": "10 mm",
+            "b": "500 mm",
+            "c": "120 or 140 mm",
+            "explain": "The size is the width of the fan frame in millimetres."
+          }
+        }
+      },
+      "nic": {
+        "name": "Network card (NIC)",
+        "description": "A device that connects the computer to a local network and the internet. Every network adapter has a unique physical address called a MAC address.",
+        "purpose": "For sending and receiving data over a network: the internet, file sharing, online games.",
+        "specs": {
+          "type": {
+            "label": "Type",
+            "value": "Wired (Ethernet), wireless (Wi-Fi)"
+          },
+          "speed": {
+            "label": "Speed",
+            "value": "Ethernet: 1–2.5 Gbit/s, sometimes 10 Gbit/s"
+          },
+          "port": {
+            "label": "Port",
+            "value": "RJ-45 (for a network cable)"
+          },
+          "interface": {
+            "label": "Installation",
+            "value": "Built into the board or a separate PCIe card"
+          }
+        },
+        "compat": "Many motherboards already have a network adapter built in. A separate card goes into a free PCIe slot. The real speed also depends on the cable (for example Cat5e, Cat6) and the router.",
+        "quiz": {
+          "q1": {
+            "question": "What is the unique physical address of a network adapter called?",
+            "a": "URL",
+            "b": "E-mail",
+            "c": "MAC address",
+            "explain": "The MAC address is set at the factory; an IP address is assigned by the network."
+          },
+          "q2": {
+            "question": "Which port does an Ethernet cable plug into?",
+            "a": "3.5 mm audio",
+            "b": "RJ-45",
+            "c": "HDMI",
+            "explain": "RJ-45 is an 8-contact network socket."
+          },
+          "q3": {
+            "question": "Where does a separate network card go on the motherboard?",
+            "a": "In a PCIe slot",
+            "b": "In a DIMM slot",
+            "c": "In the processor socket",
+            "explain": "Network, sound and graphics cards are all PCIe expansion cards."
+          }
+        }
+      }
+    }
   }
 }

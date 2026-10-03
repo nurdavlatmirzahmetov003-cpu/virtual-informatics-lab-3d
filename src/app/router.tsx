@@ -9,6 +9,7 @@ const SetupStudioPage = lazy(() => import('@/pages/SetupStudio/SetupStudioPage')
 const ProgressPage = lazy(() => import('@/pages/Progress/ProgressPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFound/NotFoundPage'));
 const CreditsPage = lazy(() => import('@/pages/Credits/CreditsPage'));
+const ExplorerPage = lazy(() => import('@/pages/Explorer/ExplorerPage'));
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'labs', element: <LabsPage /> },
+      { path: 'explorer', element: <ExplorerPage /> },
       { path: 'studio', element: <SetupStudioPage /> },
       { path: 'progress', element: <ProgressPage /> },
       { path: 'credits', element: <CreditsPage /> },

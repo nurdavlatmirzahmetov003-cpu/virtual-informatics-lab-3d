@@ -37,6 +37,7 @@ src/
   data/
     camera/cameraStates.ts  аталған камера күйлері (HOME_WIDE … FINAL_SETUP)
     hardware/types.ts       HardwareItem каталог схемасы (Фаза 4)
+    hardware/anatomy.ts     анатомия құрылғылары: санат, spec кілттері, тест жауаптары (мәтін — locales)
     lessons/, assignments/  (бос — кейінгі фазалар)
   components/
     ErrorBoundary.tsx
@@ -58,9 +59,11 @@ src/
       pc/                 PCCase (құрам + PcRigController), Chassis, PCPart (exploded/highlight/hotspot),
                           Motherboard, Cpu, CpuCooler, RamKit, Gpu, NvmeSsd, Psu, parts.ts, constants.ts,
                           pcRig.ts, usePcTextures.ts
-    PCScene/ HardwareExplorer/ SetupBuilder/   (бос — Фаза 2.2–5)
+    HardwareExplorer/     Компьютер анатомиясы (Фаза 3): AnatomyScene, AnatomyItem, AnatomyCamera,
+                          AnatomyShadows, layout.ts (орындар/fit/фокус), placeholders.tsx + placeholderModels.ts
+    PCScene/ SetupBuilder/   (бос — Фаза 4–5)
   labs/ NetworkLab/ AlgorithmLab/ LogicLab/ Experiments/  (бос — Фаза 7)
-  pages/ Home, Labs, SetupStudio, Progress, NotFound, shared/
+  pages/ Home, Explorer (анатомия: панель, тест, тізім режимі), Labs, SetupStudio, Progress, Credits, NotFound, shared/
   services/ ai/, grading/   (бос — Фаза 6, 8)
 public/
   assets/ models/ textures/ hdr/ audio/
@@ -134,3 +137,10 @@ legacy/                     ескі ES-module прототип (python http.ser
 | `labs.js` желі/алгоритм/логика/тәжірибе | `labs/*` + `services/grading` | 7–8 |
 | `labs.js` vlab_progress_v1 | `STORAGE_KEYS.progress` (migrate арқылы импорт) | 8 |
 | `thumbs.js` canvas thumbnails | 3D рендерленген thumbnail-дар | 4 |
+
+18. **Компьютер анатомиясы.** Мазмұн екі қабат: `data/hardware/anatomy.ts` (id, санат, spec кілттері, дұрыс жауаптар) және
+    `locales/*.json` → `anatomy.items.<id>` (барлық мәтін). 3D орналасу бөлек (`scenes/HardwareExplorer/layout.ts`).
+    Сахна hero үстелін, бөлмесін және GLB кэшін қайта қолданады; тек белсенді санат mount болады, әр құрылғының өз
+    Suspense-і бар (санат ауысқанда сахна жыпылықтамайды). Камера overlay-лер босатқан аумақты есептеп (`freeArea`)
+    қашықтық пен `setViewOffset`-ті таңдайды. Hotspot-тар (drei Html) сахна `ready` болғаннан кейін ғана mount болады.
+    3D-сіз тізім режимі сол компоненттерді (`AnatomyDetails`, `AnatomyQuiz`) қолданады.

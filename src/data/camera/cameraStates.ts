@@ -34,6 +34,8 @@ export const CAMERA_STATE_NAMES = [
   'SSD',
   'PSU',
   'FINAL_SETUP',
+  'ANATOMY_EXTERNAL',
+  'ANATOMY_INTERNAL',
 ] as const;
 
 export type CameraStateName = (typeof CAMERA_STATE_NAMES)[number];
@@ -56,4 +58,7 @@ export const CAMERA_STATES: Record<CameraStateName, CameraState> = {
   SSD: { position: [0.52, 1.0, -0.02], target: [0.76, 0.98, -0.08], fov: 28 },
   PSU: { position: [0.42, 0.84, 0.1], target: [0.67, 0.82, -0.06], fov: 32 },
   FINAL_SETUP: { position: [-1.3, 1.46, 2.1], target: [-0.1, 0.95, 0], fov: 36 },
+  // Computer Anatomy overviews (scenes/HardwareExplorer/layout.ts)
+  ANATOMY_EXTERNAL: { position: [0, 1.5, 1.9], target: [0, 0.9, -0.04], fov: 36, minDistance: 0.25, maxDistance: 3.2 },
+  ANATOMY_INTERNAL: { position: [0, 2.0, 1.32], target: [0, 0.76, -0.01], fov: 36, minDistance: 0.18, maxDistance: 3 },
 };

@@ -9,6 +9,11 @@
 - [PLACEHOLDER] Құлаққап тұғыры — `models/HardwareDevices.tsx` (құлаққап GLB, тұғыр процедуралық цилиндр)
 - [PLACEHOLDER] Room — `Room.tsx` (бетон еден, қабырға, емен slat панель) — архитектура, GLB міндетті емес
 - [PLACEHOLDER] `CAMERA_STATES` MOTHERBOARD/CPU/GPU/RAM/SSD/PSU кадрлары қазір қолданылмайды (360° режимі `pc/parts.ts` focusDistance-ті пайдаланады) — Hardware Explorer-де қолдану немесе жою
+- [PLACEHOLDER] Microphone model must be replaced — `scenes/HardwareExplorer/placeholders.tsx` (USB үстел микрофоны: салмақты табан, тор бас, LED)
+- [PLACEHOLDER] Webcam model must be replaced — `scenes/HardwareExplorer/placeholders.tsx` (1080p клипсті камера, линза, LED)
+- [PLACEHOLDER] Printer model must be replaced — `scenes/HardwareExplorer/placeholders.tsx` (сиялы МФУ: сканер қақпағы, қағаз беру/шығару науасы, панель)
+- [PLACEHOLDER] HDD model must be replaced — `scenes/HardwareExplorer/placeholders.tsx` (3,5″ 147 × 101,6 × 26,1 мм, щеткаланған қақпақ, жапсырма, SATA)
+- [PLACEHOLDER] Network card model must be replaced — `scenes/HardwareExplorer/placeholders.tsx` (PCIe x1 желі картасы: PCB, кронштейн, RJ-45, контроллер радиаторы)
 - [PLACEHOLDER] Labs беті — модульдер «Әзірленуде» статусымен; іске асқанда сілтемеге айналады
 
 ## Фаза 2 — қалғаны
@@ -20,6 +25,16 @@
 - [ ] Бөлшек панелінде «Тапсырма орындау» батырмасы (§39) — тапсырмалар жүйесімен бірге (Фаза 3/8)
 - [ ] Брендтік логотиптерді (MSI, Cooler Master, Lian Li т.б.) текстуралардан алып тастау (Blender/Photoshop) — §6
 - [ ] Үстел декоры: Poly Haven `potted_plant_04` (жүктелген, кодта қолданылмайды); үстел бетіне `european_walnut_veneer_04`
+
+## Фаза 3 — Hardware Explorer
+- [x] `/explorer` «Компьютер анатомиясы»: 8 сыртқы + 10 ішкі құрылғы, hero GLB-лері қайта қолданылды
+- [x] Басу → камера тегіс ұшады, қалғаны күңгірттенеді, ақпарат панелі (үш тілде атау, сипаттама, мақсаты, сипаттамалар, үйлесімділік, 3 сұрақтық тест)
+- [x] Мәліметтер `src/data/hardware/anatomy.ts` (құрылым) + `locales/*.json` `anatomy.*` (мәтін)
+- [x] 3D-сіз тізім режимі (WebGL жоқ болса автоматты)
+- [ ] Микрофон, веб-камера, принтер, HDD, желі картасы үшін лицензиясы таза GLB (Sketchfab CC0/CC-BY) — жоғарыдағы `[PLACEHOLDER]`
+- [ ] Тест нәтижелерін прогреске сақтау (Фаза 8 grading/progress)
+- [ ] Virtual PC Assembly Lab (§11) — Фаза 3-тің екінші бөлігі
+- [ ] Locale-дарды namespace бойынша lazy жүктеу (index chunk 57 → 170 KB, gzip 51 KB) — Фаза 9
 
 ## Кейінгі фазалар
 - [ ] Дыбыс: store-да бар, UI тумблері дыбыс эффектілерімен бірге

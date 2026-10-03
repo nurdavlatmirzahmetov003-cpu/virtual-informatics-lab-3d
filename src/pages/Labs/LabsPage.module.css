@@ -40,6 +40,35 @@
   font-size: var(--fs-sm);
 }
 
+.item:has(.link) {
+  position: relative;
+}
+
+.item:has(.link):hover {
+  background: var(--surface-hover);
+}
+
+/* the whole row is clickable through the title link */
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.item:has(.link:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.status[data-available='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .status {
   padding: 4px 10px;
   border: 1px solid var(--border);
