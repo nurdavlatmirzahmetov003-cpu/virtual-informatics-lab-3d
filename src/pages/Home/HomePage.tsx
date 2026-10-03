@@ -1,4 +1,5 @@
 import { lazy, useCallback, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
 import { ButtonLink } from '@/components/ui/Button';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -63,6 +64,7 @@ export default function HomePage() {
             {t('home.outroStudio')}
           </ButtonLink>
         </div>
+        <Link to="/credits" className={styles.credits}>{t('credits.title')}</Link>
       </section>
     </>
   );

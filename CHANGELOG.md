@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 0.4.0 — 2026-10-03 — Фаза 2.3: лицензиясы таза GLB модельдер
+
+### Қосылды
+- 14 Sketchfab CC BY 4.0 модель (монитор, пернетақта, тышқан, корпус, аналық плата, CPU, кулер, RAM, GPU, NVMe SSD, PSU, желдеткіш, құлаққап, колонкалар) → 16 оңтайландырылған GLB `public/assets/models/hardware/` (85 MB → 6.2 MB).
+- `scripts/optimize-assets.mjs` / `validate-assets.mjs` (`npm run assets:optimize|validate`), @gltf-transform + meshoptimizer + sharp.
+- `ModelLoader` `fit` опциясы (бағыт, метрлік өлшем, туралау), инстанс материалдары, transmission fallback; процедуралық модельдер fallback болып қалды.
+- `models/HardwareDevices.tsx`, `pc/HardwareParts.tsx`, `devices.ts`: GLB интеграциясы, storyRig/PCPart анимациялары сақталды; монитор экранына жоба тұсқағазы.
+- 360° режимі перифериялар үшін (`enterDevice`, панельдердегі «360° қарау»).
+- `/credits` беті (kk/ru/en), басты беттен сілтеме.
+- Dev `/?debug` өнімділік readout.
+
+### Өзгерді
+- `PCPart`: magnify бөлшек ортасына қатысты; GLB кеш жүктелгенде материалдар қайта тіркеледі.
+- `ShadowSync`: `autoUpdate=false` әр кадрда бекітіледі.
+- Draw calls (бір өту) ~250–280 → 46–124.
+
 ## 0.3.0 — 2026-10-03 — Фаза 2.2: ПК іші, exploded view, hotspot-тар, 360°
 
 ### Қосылды

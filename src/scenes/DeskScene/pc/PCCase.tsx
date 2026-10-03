@@ -23,6 +23,7 @@ import { pcRig } from './pcRig';
 import { Psu } from './Psu';
 import { RamKit } from './RamKit';
 import { usePcTextures } from './usePcTextures';
+import { HardwarePart } from './HardwareParts';
 
 /** Resolves pcRig from the scroll story or from explore-mode toggles. Must mount first. */
 function PcRigController() {
@@ -98,7 +99,7 @@ export function PCCase() {
       <Chassis tex={tex} fan={fan} rgb={res.rgb} />
       {PARTS.map((def) => (
         <PCPart key={def.id} def={def}>
-          {content[def.id]}
+          <HardwarePart id={def.id} fallback={content[def.id]} />
         </PCPart>
       ))}
       <primitive object={showcaseTarget} position={[-0.2, 0.02, 0.15]} />

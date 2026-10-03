@@ -41,7 +41,7 @@ export type CameraStateName = (typeof CAMERA_STATE_NAMES)[number];
 export const CAMERA_STATES: Record<CameraStateName, CameraState> = {
   // Scroll chapters 1–5 (tuned against scenes/DeskScene/layout.ts)
   HOME_WIDE: { position: [-1.4, 1.5, 2.3], target: [-0.34, 0.93, 0], fov: 36, minDistance: 1.2, maxDistance: 5 },
-  MONITOR: { position: [0.02, 1.17, 0.98], target: [0.17, 1.07, -0.2], fov: 34, focusDistance: 1.2 },
+  MONITOR: { position: [0.02, 1.17, 1.2], target: [0.17, 1.07, -0.2], fov: 34, focusDistance: 1.4 },
   KEYBOARD: { position: [-0.1, 1.19, 0.87], target: [0.04, 0.77, 0.15], fov: 34, focusDistance: 0.85 },
   MOUSE: { position: [0.12, 0.98, 0.66], target: [0.238, 0.78, 0.18], fov: 28, focusDistance: 0.53 },
   PC_EXTERIOR: { position: [-0.09, 1.2, 1.09], target: [0.46, 1.0, -0.06], fov: 34, focusDistance: 1.28 },

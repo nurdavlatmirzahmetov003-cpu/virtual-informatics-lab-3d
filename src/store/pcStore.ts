@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { PartId } from '@/scenes/DeskScene/pc/parts';
+import type { DeviceId } from '@/scenes/DeskScene/devices';
 
 export type ViewMode = 'story' | 'explore';
 
@@ -13,6 +14,7 @@ interface PcState {
   storyPart: PartId | null;
   /** Part chosen by click / hotspot in explore mode. */
   selectedPart: PartId | null;
+  selectedDevice: DeviceId | null;
   hoveredPart: PartId | null;
   autoRotate: boolean;
   /** Explore mode: parts spread out (true) or assembled (false). */
@@ -21,6 +23,7 @@ interface PcState {
   resetToken: number;
   setStoryPart: (id: PartId | null) => void;
   enterExplore: (part?: PartId | null) => void;
+  enterDevice: (device: DeviceId) => void;
   exitExplore: () => void;
   selectPart: (id: PartId | null) => void;
   hoverPart: (id: PartId | null) => void;
@@ -33,14 +36,16 @@ export const usePcStore = create<PcState>()((set) => ({
   mode: 'story',
   storyPart: null,
   selectedPart: null,
+  selectedDevice: null,
   hoveredPart: null,
   autoRotate: false,
   exploded: true,
   resetToken: 0,
   setStoryPart: (storyPart) => set((s) => (s.storyPart === storyPart ? s : { storyPart })),
-  enterExplore: (part = null) => set({ mode: 'explore', selectedPart: part, hoveredPart: null, exploded: true }),
-  exitExplore: () => set({ mode: 'story', selectedPart: null, hoveredPart: null, autoRotate: false }),
-  selectPart: (selectedPart) => set({ selectedPart }),
+  enterExplore: (part = null) => set({ mode: 'explore', selectedPart: part, selectedDevice: null, hoveredPart: null, exploded: true }),
+  enterDevice: (selectedDevice) => set({ mode: 'explore', selectedDevice, selectedPart: null, hoveredPart: null, exploded: false }),
+  exitExplore: () => set({ mode: 'story', selectedPart: null, selectedDevice: null, hoveredPart: null, autoRotate: false }),
+  selectPart: (selectedPart) => set({ selectedPart, selectedDevice: null }),
   hoverPart: (hoveredPart) => set((s) => (s.hoveredPart === hoveredPart ? s : { hoveredPart })),
   toggleAutoRotate: () => set((s) => ({ autoRotate: !s.autoRotate })),
   toggleExploded: () => set((s) => ({ exploded: !s.exploded })),

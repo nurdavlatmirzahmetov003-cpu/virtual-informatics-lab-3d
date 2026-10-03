@@ -113,7 +113,7 @@
     "dragHint": "Drag to rotate · Double-click to reset",
     "navLabel": "Chapters",
     "progressLabel": "Progress",
-    "specsCaption": "Specifications of the sample device in the scene",
+    "specsCaption": "Illustrative educational specifications; the 3D asset is not a product listing.",
     "chapters": {
       "setup": {
         "nav": "Setup"
@@ -123,15 +123,15 @@
         "eyebrow": "Output device",
         "title": "Monitor",
         "body": "The monitor turns each frame prepared by the graphics card into millions of pixels on screen.",
-        "fact": "Refresh rate is how many times per second the screen updates: 165 Hz = 165 frames per second.",
+        "fact": "165 Hz means 165 screen refreshes per second. FPS measures frames produced by the GPU; they are separate metrics.",
         "specs": {
           "size": {
             "label": "Diagonal",
-            "value": "27″ (68.6 cm)"
+            "value": "UltraWide · 21:9"
           },
           "resolution": {
             "label": "Resolution",
-            "value": "2560 × 1440 (QHD)"
+            "value": "3440 × 1440"
           },
           "refresh": {
             "label": "Refresh rate",
@@ -168,11 +168,11 @@
           },
           "layout": {
             "label": "Layout",
-            "value": "TKL — 87 keys"
+            "value": "Full size"
           },
           "connection": {
             "label": "Connection",
-            "value": "USB-C / 2.4 GHz wireless"
+            "value": "USB"
           },
           "rgb": {
             "label": "Lighting",
@@ -304,11 +304,11 @@
           },
           "socket": {
             "label": "CPU socket",
-            "value": "LGA socket"
+            "value": "AMD AM4"
           },
           "slots": {
             "label": "Slots",
-            "value": "4 × DDR5, PCIe x16, M.2"
+            "value": "4 × DDR4, PCIe x16, M.2"
           }
         }
       },
@@ -361,11 +361,11 @@
           },
           "type": {
             "label": "Type",
-            "value": "DDR5"
+            "value": "DDR4"
           },
           "speed": {
             "label": "Speed",
-            "value": "6000 MT/s"
+            "value": "3200 MT/s"
           }
         }
       },
@@ -376,7 +376,7 @@
         "specs": {
           "vram": {
             "label": "Video memory",
-            "value": "12 GB GDDR6X"
+            "value": "10 GB GDDR6X"
           },
           "bus": {
             "label": "Interface",
@@ -384,7 +384,7 @@
           },
           "power": {
             "label": "Power",
-            "value": "220 W"
+            "value": "340 W"
           }
         }
       },
@@ -457,6 +457,18 @@
     "close": "Close",
     "partsLabel": "Components",
     "hint": "Drag to rotate · Wheel to zoom · Click a component",
-    "pick": "Pick a component or click a number in the scene."
+    "pick": "Pick a component or click a number in the scene.",
+    "viewSetup": "Explore setup in 360°",
+    "deviceLabel": "Device explorer",
+    "setupBody": "Drag to orbit and scroll to zoom. Select the monitor, keyboard or mouse to explore it up close.",
+    "inside": "Explore internal components"
+  },
+  "credits": {
+    "title": "Credits and licenses",
+    "body": "The model creators behind this educational 3D scene. Original assets and licenses are linked below.",
+    "license": "License",
+    "edits": "Adaptations: merged geometry, Meshopt compression, 1K WebP textures, scale and orientation. Removed loose cables, extracted chassis and speakers, used the headphone rest pose. Screen wallpaper is an original project design. Trademarks belong to their owners; this is an educational demonstration.",
+    "environment": "Environment and materials — Poly Haven, CC0:",
+    "specs": "Verified specification sources:"
   }
 }

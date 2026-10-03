@@ -1,0 +1,6 @@
+{
+  "verifiedOn": "2026-10-03",
+  "motherboard": { "url": "https://www.asus.com/motherboards-components/motherboards/prime/prime-x570-p/techspec/", "fields": ["AMD AM4", "4 × DDR4", "ATX 305 × 244 mm"] },
+  "gpu": { "url": "https://www.msi.com/Graphics-Card/GeForce-RTX-3080-GAMING-X-TRIO-10G/Specification", "fields": ["10 GB GDDR6X", "340 W", "323 × 140 × 56 mm"] },
+  "note": "Other displayed values are educational examples, not verified product listings. Build the commercial catalog separately in Phase 4."
+}

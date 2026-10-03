@@ -49,6 +49,8 @@
   margin-top: var(--space-3);
 }
 
+.credits { font-size: var(--fs-xs); color: var(--text-muted); text-decoration: underline; text-underline-offset: 4px; margin-top: 18px; }
+
 @media (max-width: 720px) {
   .stage::after {
     background:

@@ -10,6 +10,7 @@ import { RoundedBox } from '@react-three/drei';
 import type { Group, Material, MeshStandardMaterial, PointLight } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
+import { ModelLoader } from '@/components/3d/ModelLoader';
 import { extrudeFront, frameShape, roundedRectShape, tubeAlong } from '@/lib/three/geometry';
 import { Fan, type FanGeometries } from '../models/Fan';
 import { BOARD_FACE, D, FAN, GPU, H, MB, T, W } from './constants';
@@ -18,6 +19,7 @@ import type { PcTextures } from './usePcTextures';
 
 const powderCoat = { color: '#1a1c21', metalness: 0.45, roughness: 0.48 } as const;
 const smooth = (x: number) => x * x * (3 - 2 * x);
+const chassisFit = { axis: 1 as const, size: H, rotation: [0, Math.PI / 2, 0] as const };
 
 export function Chassis({ tex, fan, rgb }: { tex: PcTextures; fan: FanGeometries; rgb: Material }) {
   const preset = useQualityPreset();
@@ -91,6 +93,7 @@ export function Chassis({ tex, fan, rgb }: { tex: PcTextures; fan: FanGeometries
       )}
 
       {/* panels */}
+      <ModelLoader url={`${import.meta.env.BASE_URL}assets/models/hardware/chassis.glb`} fit={chassisFit} scale={[-0.85, 1, -0.9]} fallback={<group>
       <RoundedBox args={[T, H, D]} radius={0.0018} position-x={W / 2 - T / 2} castShadow receiveShadow>
         <meshStandardMaterial {...powderCoat} />
       </RoundedBox>
@@ -147,6 +150,7 @@ export function Chassis({ tex, fan, rgb }: { tex: PcTextures; fan: FanGeometries
       </RoundedBox>
 
       {/* rear exhaust fan */}
+      </group>} />
       <Fan size={FAN} geometries={fan} rgb={rgb} position={[0, MB.y + 0.06, -D / 2 + 0.018]} speed={6} />
 
       <group ref={cables}>

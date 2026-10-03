@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, type ReactNode } from 'react';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { Color, type Group, type Material, type Mesh, type MeshStandardMaterial } from 'three';
@@ -22,6 +22,23 @@ interface MatRecord {
   env: number;
 }
 
+function captureMaterials(root: Group | null): MatRecord[] {
+  const list: MatRecord[] = [];
+  const seen = new Set<Material>();
+  root?.traverse(obj => {
+    const mesh = obj as Mesh;
+    if (!mesh.isMesh) return;
+    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    for (const m of mats) {
+      const sm = m as MeshStandardMaterial;
+      if (seen.has(m) || m.userData.shared || !sm.color || !sm.emissive) continue;
+      seen.add(m);
+      list.push({ mat: sm, color: sm.color.clone(), emissive: sm.emissive.clone(), env: sm.envMapIntensity ?? 1 });
+    }
+  });
+  return list;
+}
+
 /**
  * Wraps one PC component: drives its exploded position, highlights it when
  * active (others dim), and makes it clickable with a numbered hotspot.
@@ -30,8 +47,11 @@ export function PCPart({ def, children }: { def: PartDef; children: ReactNode })
   const t = useT();
   const group = useRef<Group>(null);
   const records = useRef<MatRecord[]>([]);
+  const assetVersion = useRef(-1);
+  const metadata = useMemo(() => ({ pcPart: true, assetVersion: 0 }), []);
   const fx = useRef({ hi: 0, dim: 0 });
   const mode = usePcStore((s) => s.mode);
+  const device = usePcStore((s) => s.selectedDevice);
   const chapter = useStoryStore((s) => s.chapter);
   const enterExplore = usePcStore((s) => s.enterExplore);
   const selectPart = usePcStore((s) => s.selectPart);
@@ -39,27 +59,14 @@ export function PCPart({ def, children }: { def: PartDef; children: ReactNode })
   const selected = usePcStore((s) => s.selectedPart === def.id || (s.mode === 'story' && s.storyPart === def.id));
 
   // interactive only when parts are spread out (exploded chapter) or in 360° mode
-  const interactive = mode === 'explore' || chapter === CHAPTER_INDEX.exploded;
+  const interactive = mode === 'explore' ? !device : chapter === CHAPTER_INDEX.exploded;
 
   // Capture each material's original look once the children have mounted.
   useEffect(() => {
-    const list: MatRecord[] = [];
-    const seen = new Set<Material>();
-    group.current?.traverse((obj) => {
-      const mesh = obj as Mesh;
-      if (!mesh.isMesh) return;
-      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-      for (const m of mats) {
-        const sm = m as MeshStandardMaterial;
-        if (seen.has(m) || m.userData.shared || !sm.color || !sm.emissive) continue;
-        seen.add(m);
-        list.push({ mat: sm, color: sm.color.clone(), emissive: sm.emissive.clone(), env: sm.envMapIntensity ?? 1 });
-      }
-    });
-    records.current = list;
+    records.current = captureMaterials(group.current);
     return () => {
       // restore so a remount starts clean
-      for (const r of list) {
+      for (const r of records.current) {
         r.mat.color.copy(r.color);
         r.mat.emissive.copy(r.emissive);
         r.mat.envMapIntensity = r.env;
@@ -71,8 +78,13 @@ export function PCPart({ def, children }: { def: PartDef; children: ReactNode })
     const g = group.current;
     if (!g) return;
     const e = pcRig.explode;
-    g.position.set(def.anchor[0] + def.explode[0] * e, def.anchor[1] + def.explode[1] * e, def.anchor[2] + def.explode[2] * e);
-    if (def.magnify) g.scale.setScalar(1 + (def.magnify - 1) * e);
+    const scale = 1 + ((def.magnify ?? 1) - 1) * e;
+    g.scale.setScalar(scale);
+    // Magnify around the visual centre, keeping the hotspot and fly-to target aligned.
+    g.position.set(def.anchor[0] + def.explode[0] * e + def.center[0] * (1 - scale), def.anchor[1] + def.explode[1] * e + def.center[1] * (1 - scale), def.anchor[2] + def.explode[2] * e + def.center[2] * (1 - scale));
+    // GLBs resolve asynchronously after this wrapper mounts.
+    const newlyLoaded = records.current.length === 0 || assetVersion.current !== g.userData.assetVersion;
+    if (newlyLoaded) { records.current = captureMaterials(g); assetVersion.current = g.userData.assetVersion; }
 
     const active = activePart();
     const goalHi = active === def.id ? 1 : 0;
@@ -81,7 +93,7 @@ export function PCPart({ def, children }: { def: PartDef; children: ReactNode })
     const k = 1 - Math.exp(-Math.min(delta, 0.1) * 8);
     const hi = s.hi + (goalHi - s.hi) * k;
     const dim = s.dim + (goalDim - s.dim) * k;
-    if (Math.abs(hi - s.hi) < 1e-4 && Math.abs(dim - s.dim) < 1e-4) return; // settled: skip material writes
+    if (!newlyLoaded && Math.abs(hi - s.hi) < 1e-4 && Math.abs(dim - s.dim) < 1e-4) return; // settled: skip material writes
     s.hi = hi;
     s.dim = dim;
     const shade = 1 - DIM * dim;
@@ -103,6 +115,7 @@ export function PCPart({ def, children }: { def: PartDef; children: ReactNode })
   return (
     <group
       ref={group}
+      userData={metadata}
       onClick={interactive ? onClick : undefined}
       onPointerOver={
         interactive

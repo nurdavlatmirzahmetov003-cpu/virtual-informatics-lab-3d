@@ -1,0 +1,1211 @@
+[
+  {
+    "source": "monitor_ultrawide.glb",
+    "file": "monitor_ultrawide.glb",
+    "before": {
+      "bytes": 7893996,
+      "triangles": 219490
+    },
+    "after": {
+      "bytes": 490716,
+      "triangles": 76886,
+      "primitives": 3,
+      "bounds": {
+        "min": [
+          -5.36363592488732,
+          -3.8042366965653596,
+          -2.6729902532769305
+        ],
+        "max": [
+          5.363635983513349,
+          2.4252790002885156,
+          0.1941063843155919
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "keyboard_mech.glb",
+    "file": "keyboard_mech.glb",
+    "before": {
+      "bytes": 7983556,
+      "triangles": 11128
+    },
+    "after": {
+      "bytes": 238668,
+      "triangles": 8410,
+      "primitives": 2,
+      "bounds": {
+        "min": [
+          -20.298898696899414,
+          0.03755796889518637,
+          -6.130657423944188
+        ],
+        "max": [
+          20.298898696899414,
+          3.1566995287040456,
+          5.956709449315448
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [
+        "wire_Keyboard_0",
+        "usb_Keyboard_0"
+      ],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "mouse_gaming.glb",
+    "file": "mouse_gaming.glb",
+    "before": {
+      "bytes": 2177980,
+      "triangles": 72483
+    },
+    "after": {
+      "bytes": 98260,
+      "triangles": 17546,
+      "primitives": 8,
+      "bounds": {
+        "min": [
+          -3.1749010691712036,
+          0.05218092993097612,
+          -5.905126017542706
+        ],
+        "max": [
+          3.146870545380389,
+          4.130520509173365,
+          5.122394032639555
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [
+        "Cord_MousePlug_plastic_B3_0",
+        "Cord_UsbBody_RubberTop_0",
+        "Cord_UsbMetalPlate_Gold_Metal_0",
+        "Cord_UsbPlugPlastic_Plastic_USB_Blue_0",
+        "Cord.001_Cord.001_0"
+      ],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "motherboard_x570.glb",
+    "file": "motherboard_x570.glb",
+    "before": {
+      "bytes": 10183796,
+      "triangles": 34961
+    },
+    "after": {
+      "bytes": 1058312,
+      "triangles": 34961,
+      "primitives": 3,
+      "bounds": {
+        "min": [
+          -2.1104370794440843,
+          -2.0569430082229587,
+          0.09830241074653756
+        ],
+        "max": [
+          0.4904704347345037,
+          1.1744084667919168,
+          0.5976253552485208
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "cpu_am4.glb",
+    "file": "cpu_am4.glb",
+    "before": {
+      "bytes": 4040912,
+      "triangles": 42084
+    },
+    "after": {
+      "bytes": 658860,
+      "triangles": 41790,
+      "primitives": 1,
+      "bounds": {
+        "min": [
+          -0.21640622558274433,
+          -0.2282967707150405,
+          -0.008192532422834624
+        ],
+        "max": [
+          0.22072074346116086,
+          0.2282967707150405,
+          0.0435325332160234
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "ram_rgb.glb",
+    "file": "ram_rgb.glb",
+    "before": {
+      "bytes": 3828340,
+      "triangles": 2074
+    },
+    "after": {
+      "bytes": 193720,
+      "triangles": 2074,
+      "primitives": 1,
+      "bounds": {
+        "min": [
+          -0.029827427069755552,
+          -0.12143310685298003,
+          -0.7399694733632913
+        ],
+        "max": [
+          0.03220636759885748,
+          0.4573455463387299,
+          0.6064264200997901
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "cooler_tower.glb",
+    "file": "cooler_tower.glb",
+    "before": {
+      "bytes": 5517144,
+      "triangles": 93460
+    },
+    "after": {
+      "bytes": 446524,
+      "triangles": 61770,
+      "primitives": 5,
+      "bounds": {
+        "min": [
+          -0.9114050269126892,
+          -4.1589395367281,
+          -1.1087277780273643
+        ],
+        "max": [
+          2.0139760971069336,
+          0.3206689953804014,
+          1.4228968730147868
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "gpu_triple_fan.glb",
+    "file": "gpu_triple_fan.glb",
+    "before": {
+      "bytes": 4757060,
+      "triangles": 64709
+    },
+    "after": {
+      "bytes": 598056,
+      "triangles": 42281,
+      "primitives": 32,
+      "bounds": {
+        "min": [
+          -3.8482646346092224,
+          0.4722126838995353,
+          -1.4826186187565327
+        ],
+        "max": [
+          3.7899889051914215,
+          1.5467537456514757,
+          1.870048268872301
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [
+        "Object_21",
+        "Object_487",
+        "Object_491",
+        "Object_539",
+        "Object_547",
+        "Object_625",
+        "Object_801",
+        "Object_811",
+        "Object_813",
+        "Object_815"
+      ],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "ssd_m2.glb",
+    "file": "ssd_m2.glb",
+    "before": {
+      "bytes": 2835268,
+      "triangles": 782
+    },
+    "after": {
+      "bytes": 227836,
+      "triangles": 782,
+      "primitives": 1,
+      "bounds": {
+        "min": [
+          -40,
+          -11.000091555528428,
+          -0.07466049581265233
+        ],
+        "max": [
+          40,
+          11.000091555528428,
+          1.8345774570057363
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "psu.glb",
+    "file": "psu.glb",
+    "before": {
+      "bytes": 749988,
+      "triangles": 12229
+    },
+    "after": {
+      "bytes": 97944,
+      "triangles": 12143,
+      "primitives": 10,
+      "bounds": {
+        "min": [
+          -10.125914196824551,
+          -5.218674514451607,
+          -10.920435425616562
+        ],
+        "max": [
+          10.293794164320657,
+          5.281197027271958,
+          10.208486338929566
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [
+        "Object_78",
+        "Object_80",
+        "Object_82"
+      ],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "fan_120.glb",
+    "file": "fan_frame.glb",
+    "before": {
+      "bytes": 340920,
+      "triangles": 4648
+    },
+    "after": {
+      "bytes": 26496,
+      "triangles": 2352,
+      "primitives": 5,
+      "bounds": {
+        "min": [
+          0.23002902052957808,
+          0.024575932933675354,
+          -2.0254281211023226
+        ],
+        "max": [
+          1.1188510343329625,
+          0.21459403446152522,
+          -1.1549802175827608
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [
+        "Object_10"
+      ],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "fan_120.glb",
+    "file": "fan_rotor.glb",
+    "before": {
+      "bytes": 340920,
+      "triangles": 4648
+    },
+    "after": {
+      "bytes": 28796,
+      "triangles": 2296,
+      "primitives": 1,
+      "bounds": {
+        "min": [
+          0.330827764059317,
+          0.09345036910443022,
+          -1.9320852534558168
+        ],
+        "max": [
+          1.022757845386384,
+          0.1705675644102898,
+          -1.2451557257366177
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [
+        "Object_4",
+        "Object_6",
+        "Object_8",
+        "Object_12",
+        "Object_14",
+        "Object_16",
+        "Object_18",
+        "Object_20",
+        "Object_22",
+        "Object_24",
+        "Object_26",
+        "Object_28"
+      ],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "headset_gaming.glb",
+    "file": "headset_gaming.glb",
+    "before": {
+      "bytes": 17874728,
+      "triangles": 58208
+    },
+    "after": {
+      "bytes": 1238636,
+      "triangles": 58208,
+      "primitives": 4,
+      "bounds": {
+        "min": [
+          -11.229657903095262,
+          166.64381277724485,
+          -7.139516005296365
+        ],
+        "max": [
+          12.128999046529627,
+          186.62574412496016,
+          1.3244191501329796
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "speakers.glb",
+    "file": "speaker_left.glb",
+    "before": {
+      "bytes": 7433300,
+      "triangles": 57896
+    },
+    "after": {
+      "bytes": 302344,
+      "triangles": 20879,
+      "primitives": 4,
+      "bounds": {
+        "min": [
+          -0.062060454003396937,
+          -0.001181550922026535,
+          -0.05307739681339789
+        ],
+        "max": [
+          -0.016848278554449647,
+          0.070288926953261,
+          -0.0031391487227403446
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [
+        "pCylinder4_blinn1_0",
+        "polySurface3_blinn1_0",
+        "pCylinder18_blinn1_0",
+        "pCylinder19_blinn1_0",
+        "pCube6_lambert2_0",
+        "pCylinder20_blinn1_0",
+        "polySurface33_blinn3_0",
+        "polySurface34_blinn1_0",
+        "polySurface29_blinn3_0",
+        "polySurface28_blinn3_0",
+        "polySurface31_lambert3_0",
+        "polySurface25_blinn3_0",
+        "polySurface26_lambert2_0",
+        "polySurface27_blinn1_0",
+        "pCylinder21_blinn1_0",
+        "pCylinder22_blinn1_0"
+      ],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "speakers.glb",
+    "file": "speaker_right.glb",
+    "before": {
+      "bytes": 7433300,
+      "triangles": 57896
+    },
+    "after": {
+      "bytes": 303544,
+      "triangles": 20879,
+      "primitives": 4,
+      "bounds": {
+        "min": [
+          0.015330418891034536,
+          -0.0011810572181405743,
+          -0.053078165773051654
+        ],
+        "max": [
+          0.060542594339981826,
+          0.07028851351987164,
+          -0.003139712427423405
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [
+        "pCylinder4_blinn1_0",
+        "polySurface3_blinn1_0",
+        "polySurface36_lambert3_0",
+        "polySurface37_blinn1_0",
+        "polySurface38_blinn3_0",
+        "polySurface39_blinn3_0",
+        "polySurface43_blinn3_0",
+        "polySurface40_blinn3_0",
+        "polySurface41_lambert2_0",
+        "pCylinder23_blinn1_0",
+        "pCylinder24_blinn1_0",
+        "pCylinder25_blinn1_0",
+        "pCube7_lambert2_0",
+        "pCylinder26_blinn1_0",
+        "pCylinder27_blinn1_0",
+        "polySurface42_blinn1_0"
+      ],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  },
+  {
+    "source": "pc_setup_y3d.glb",
+    "file": "chassis.glb",
+    "before": {
+      "bytes": 13111576,
+      "triangles": 86272
+    },
+    "after": {
+      "bytes": 163596,
+      "triangles": 5803,
+      "primitives": 5,
+      "bounds": {
+        "min": [
+          -2.7147393343994235,
+          0.20025877129655933,
+          -4.436907710653589
+        ],
+        "max": [
+          1.057722686847889,
+          3.5756548040215885,
+          -2.637496857102211
+        ]
+      }
+    },
+    "edits": {
+      "removedNodes": [
+        "Cube_Material_0",
+        "Cube.012_Material.011_0",
+        "Cylinder_Material.009_0",
+        "Cube.018_Material.017_0",
+        "aorus case fans_aorus case fans_0",
+        "aorus case fans.001_aorus case fans_0",
+        "Cube.015_Material.016_0",
+        "Cube.016_Material.017_0",
+        "aorus case fans.002_aorus case fans_0",
+        "aorus case fans.003_aorus case fans_0",
+        "Cube.017_Material.017_0",
+        "aorus case fans.004_aorus case fans_0",
+        "aorus case fans.005_aorus case fans_0",
+        "Cube.019_Material.017_0",
+        "aorus case fans.006_aorus case fans_0",
+        "aorus case fans.007_aorus case fans_0",
+        "Cube.020_Material.020_0",
+        "Cube.021_Material.018_0",
+        "Cube.022_Material.017_0",
+        "aorus case fans.008_aorus case fans_0",
+        "aorus case fans.009_aorus case fans_0",
+        "Sphere_Material.019_0",
+        "Sphere.001_Material.019_0",
+        "IOSHIELD_IOSHIELD_0",
+        "MOBOAORUSORANGETRANS_MOBOAORUSORANGETRANS_0",
+        "Cube.025_Material.023_0",
+        "Cube.026_Material.024_0",
+        "Cube.027_Material.008_0",
+        "Cube.028_Material.026_0",
+        "Cube.029_Material.025_0",
+        "Cube.030_Material.026_0",
+        "Cube.031_Material.008_0",
+        "Cube.032_Material.026_0",
+        "Cube.033_Material.025_0",
+        "Cube.034_Material.026_0",
+        "Cube.035_Material.008_0",
+        "Cube.036_Material.026_0",
+        "Cube.037_Material.025_0",
+        "Cube.038_Material.026_0",
+        "Cube.039_Material.008_0",
+        "Cube.040_Material.026_0",
+        "Cube.041_Material.025_0",
+        "Cube.042_Material.026_0",
+        "metal-mesh-500x500.003_metal-mesh-500x500_0",
+        "Cube.043_Material.012_0",
+        "Cube.045_Material.027_0",
+        "rgb-hdd-cover-aorus-v1_rgb-hdd-cover-aorus-v1_0",
+        "maxresdefault (1)_maxresdefault (1)_0",
+        "Cylinder.001_Material.028_0",
+        "Cylinder.002_Material.029_0",
+        "Cube.044_Material.012_0",
+        "Cylinder.003_Material.031_0",
+        "Cylinder.004_Material.030_0",
+        "NVIDIA LOGO_NVIDIA LOGO_0",
+        "psuback_psuback_0",
+        "Cube.046_Material.034_0",
+        "Cube.047_Material.033_0",
+        "Cube.048_Material.035_0",
+        "Cube.049_Material.040_0",
+        "Cube.050_Material.038_0",
+        "Cube.051_Material.042_0",
+        "Cylinder.005_Material.041_0",
+        "Cylinder.011_Material.045_0",
+        "metal-mesh-500x500.004_metal-mesh-500x500_0",
+        "Text_Material.046_0",
+        "Cube.052_Material.047_0",
+        "test-aorus-m2-souris-aorus-rgb2_test-aorus-m2-souris-aorus-rgb2_0",
+        "Cube.053_Material.048_0",
+        "Cube.054_Material.049_0",
+        "Cube.055_Material.054_0",
+        "Cube.056_Material.061_0",
+        "Cylinder.006_Material.050_0",
+        "Cylinder.007_Material.051_0",
+        "Cylinder.008_Material.052_0",
+        "Plane_Material.053_0",
+        "geforcertx_Material.056_0",
+        "Cube.057_Material.059_0",
+        "Cube.059_Material.058_0",
+        "Cube.060_Material.062_0",
+        "Cube.058_Material.063_0",
+        "aorus logotranspa_aorus logotranspa_0",
+        "Cube.061_Material.064_0",
+        "Cube.062_Material.065_0",
+        "Cube.064_Material.074_0",
+        "Cube.067_Material.075_0",
+        "Cube.063_Material.074_0",
+        "Cube.065_Material.074_0",
+        "Cube.066_Material.076_0",
+        "Cube.072_Material.078_0",
+        "Cube.073_Material.079_0",
+        "Cube.076_Material.080_0",
+        "Cylinder.009_Material.081_0",
+        "Cylinder.010_Material.077_0",
+        "Cylinder.012_Material.082_0",
+        "BezierCurve.001_Material.085_0",
+        "Cube.074_Material.084_0",
+        "Cube.075_Material.086_0",
+        "BezierCurve.002_Material.087_0",
+        "Cube.077_Material.083_0",
+        "Cube.078_Material.083_0",
+        "BezierCurve_Material.088_0",
+        "Cube.079_Material.089_0",
+        "Cube.080_Material.089_0",
+        "BezierCurve.003_Material.091_0",
+        "Cube.081_Material.090_0",
+        "Cube.068_Material.092_0",
+        "Color-PewDiePie-Logo_Color-PewDiePie-Logo_0",
+        "Cube.069_Material.093_0",
+        "Cylinder.013_Material.094_0",
+        "Cylinder.014_Material.095_0",
+        "Cylinder.015_Material.096_0",
+        "Text.001_Material.097_0",
+        "Cube.088_Material.098_0",
+        "BezierCurve.004_Material.099_0",
+        "Cube.070_Material.100_0",
+        "Cube.071_Material.101_0",
+        "Cube.082_Material.101_0",
+        "Cylinder.016_Material.102_0",
+        "BezierCircle_Material.104_0",
+        "BezierCurve.005_Material.103_0",
+        "BezierCurve.006_Material.106_0",
+        "BezierCurve.007_Material.105_0",
+        "BezierCurve.008_Material.107_0",
+        "Cube.001_Material.055_0",
+        "Cube.002_Material.044_0",
+        "gallerymodel_gallerymodel_0",
+        "Cube.003_Material.001_0",
+        "bg2_bg2_0",
+        "MY SCREEN_MY SCREEN_0",
+        "gigabyte-logo_gigabyte-logo_0",
+        "gigabyte-logo.001_gigabyte-logo_0",
+        "Cube.004_Material.002_0",
+        "Cube.005_Material.003_0",
+        "Cube.006_Material.043_0",
+        "Cube.007_Material.037_0",
+        "Cube.008_Material.036_0",
+        "Cube.009_Material.039_0",
+        "Cube.010_Material.006_0",
+        "Object_8_Tastatur_Seite_0",
+        "Object_10_Tastatur_Unterseite_0",
+        "Object_12_Tastatur_Unterseite_0",
+        "Object_14_Material.004_0",
+        "Object_16_Material.004_0",
+        "Object_18_Material.004_0",
+        "Object_20_Material.004_0",
+        "Object_22_Material.004_0",
+        "Object_24_Tastatur_Seite_0",
+        "Object_26_Material.004_0",
+        "Object_28_Material.004_0",
+        "Object_30_Material.007_0",
+        "Object_32_Material.004_0",
+        "Object_34_Material.004_0",
+        "Object_36_Tastatur_Seite_0",
+        "Object_38_Tastatur_Seite_0",
+        "Object_40_Tastatur_Seite_0",
+        "Object_42_Tastatur_Seite_0",
+        "Object_44_Tastatur_Seite_0",
+        "Object_47_Material.005_0",
+        "Object_49_Tasten_2_0",
+        "Object_51_Tasten_2_0",
+        "Object_53_Tasten_2_0",
+        "Object_55_Material.057_0",
+        "Object_57_Tasten_2_0",
+        "Object_59_Material.060_0",
+        "Object_61_Tasten_2_0",
+        "Object_63_Material.060_0",
+        "Object_65_Material.066_0",
+        "Object_67_Material.067_0",
+        "Object_69_Material.066_0",
+        "Object_71_Tasten_2_0",
+        "Object_73_Material.057_0",
+        "Object_75_Material.066_0",
+        "Object_77_Material.057_0",
+        "Object_79_Material.057_0",
+        "Object_81_Material.068_0",
+        "Object_83_Tasten_2_0",
+        "Object_85_Material.068_0",
+        "Object_87_Tasten_2_0",
+        "Object_89_Material.068_0",
+        "Object_91_Material.067_0",
+        "Object_93_Material.069_0",
+        "Object_95_Tasten_2_0",
+        "Object_97_Material.005_0",
+        "Object_99_Tasten_2_0",
+        "Object_101_Material.067_0",
+        "Object_103_Material.070_0",
+        "Object_105_Tasten_2_0",
+        "Object_107_Material.070_0",
+        "Object_109_Material.069_0",
+        "Object_111_Material.067_0",
+        "Object_113_Material.068_0",
+        "Object_115_Material.057_0",
+        "Object_117_Material.068_0",
+        "Object_119_Material.057_0",
+        "Object_121_Material.066_0",
+        "Object_123_Material.057_0",
+        "Object_125_Material.066_0",
+        "Object_127_Material.057_0",
+        "Object_129_Material.066_0",
+        "Object_131_Material.060_0",
+        "Object_133_Material.060_0",
+        "Object_135_Material.060_0",
+        "Object_137_Material.005_0",
+        "Object_139_Material.005_0",
+        "Object_141_Material.069_0",
+        "Object_143_Material.068_0",
+        "Object_145_Material.066_0",
+        "Object_147_Material.066_0",
+        "Object_149_Material.005_0",
+        "Object_151_Material.068_0",
+        "Object_153_Material.066_0",
+        "Object_155_Material.068_0",
+        "Object_157_Material.066_0",
+        "Object_159_Material.066_0",
+        "Object_161_Material.066_0",
+        "Object_163_Material.066_0",
+        "Object_165_Material.066_0",
+        "Object_167_Material.060_0",
+        "Object_169_Material.060_0",
+        "Object_171_Material.005_0",
+        "Object_173_Material.057_0",
+        "Object_175_Material.069_0",
+        "Object_177_Material.068_0",
+        "Object_179_Material.060_0",
+        "Object_181_Material.057_0",
+        "Object_183_Material.070_0",
+        "Object_185_Material.057_0",
+        "Object_187_Material.057_0",
+        "Object_189_Material.069_0",
+        "Object_191_Material.057_0",
+        "Object_193_Material.057_0",
+        "Object_195_Material.057_0",
+        "Object_197_Material.057_0",
+        "Object_199_Material.057_0",
+        "Object_201_Material.057_0",
+        "Object_203_Material.060_0",
+        "Object_205_Material.066_0",
+        "Object_207_Material.057_0",
+        "Object_209_Material.070_0",
+        "Object_211_Material.067_0",
+        "Object_213_Tasten_2_0",
+        "Object_215_Material.057_0",
+        "Object_217_Material.060_0",
+        "Object_219_Material.060_0",
+        "Object_221_Material.057_0",
+        "Object_223_Material.005_0",
+        "Object_225_Material.005_0",
+        "Object_227_Material.069_0",
+        "Object_229_Material.057_0",
+        "Object_231_Material.068_0",
+        "Object_233_Material.057_0",
+        "Object_235_Material.057_0",
+        "Object_237_Material.066_0",
+        "Object_239_Material.066_0",
+        "Object_241_Material.070_0",
+        "Object_243_Material.066_0",
+        "Object_245_Material.070_0",
+        "Object_247_Material.066_0",
+        "Object_249_Material.060_0",
+        "Object_251_Material.070_0",
+        "Object_253_Material.057_0",
+        "Object_255_Material.057_0",
+        "Object_257_Material.057_0",
+        "Object_259_Material.060_0",
+        "Object_261_Material.060_0",
+        "Object_263_Material.060_0",
+        "Object_265_Material.060_0",
+        "Object_267_Tasten_2_0",
+        "Object_269_Material.070_0",
+        "Object_271_Material.070_0",
+        "Object_273_Material.067_0",
+        "Object_275_Material.005_0",
+        "Object_277_Tasten_2_0",
+        "Object_279_Tasten_2_0",
+        "Object_281_Material.069_0",
+        "Object_283_Material.068_0",
+        "Object_285_Material.068_0",
+        "Object_287_Tasten_2_0",
+        "Object_289_Material.068_0",
+        "Object_291_Material.066_0",
+        "Object_293_Material.066_0",
+        "Object_295_Tasten_2_0",
+        "Object_297_Material.067_0",
+        "Object_299_Material.066_0",
+        "Object_301_Material.060_0",
+        "Object_303_Tasten_2_0",
+        "Object_305_Material.060_0",
+        "Object_307_Tasten_2_0",
+        "Object_309_Material.057_0",
+        "Object_311_Tasten_2_0",
+        "Object_313_Tasten_2_0",
+        "Object_315_Material.005_0",
+        "Object_317_Tasten_2_0",
+        "Object_319_Tasten_2_0",
+        "Object_321_Material.068_0",
+        "Object_323_Material.057_0",
+        "Object_325_Material.066_0",
+        "Object_327_Material.057_0",
+        "Object_329_Material.066_0",
+        "Object_331_Material.060_0",
+        "Object_333_Material.060_0",
+        "Object_335_Material.005_0",
+        "Object_337_Material.068_0",
+        "Object_339_Material.066_0",
+        "Object_341_Material.068_0",
+        "Object_343_Material.066_0",
+        "Object_345_Material.066_0",
+        "Object_347_Material.066_0",
+        "Object_349_Material.066_0",
+        "Object_351_Material.060_0",
+        "Object_353_Material.060_0",
+        "Object_355_Material.057_0",
+        "Object_357_Material.069_0",
+        "Object_359_Material.066_0",
+        "Object_361_Material.057_0",
+        "Object_363_Material.057_0",
+        "Object_365_Material.057_0",
+        "Object_367_Material.069_0",
+        "Object_369_Material.060_0",
+        "Object_371_Material.070_0",
+        "Object_373_Material.070_0",
+        "Object_375_Material.067_0",
+        "Object_377_Tasten_2_0",
+        "Object_379_Material.066_0",
+        "Object_381_Material.005_0",
+        "Object_383_Material.005_0",
+        "Object_385_Material.069_0",
+        "Object_387_Material.005_0",
+        "Object_389_Material.068_0",
+        "Object_391_Material.057_0",
+        "Object_393_Material.068_0",
+        "Object_395_Material.057_0",
+        "Object_397_Material.066_0",
+        "Object_399_Material.066_0",
+        "Object_401_Material.070_0",
+        "Object_403_Material.066_0",
+        "Object_405_Material.060_0",
+        "Object_407_Material.070_0",
+        "Object_409_Material.067_0",
+        "Object_411_Tasten_2_0",
+        "Object_413_Material.066_0",
+        "Object_415_Material.057_0",
+        "Object_418_Tasten_0",
+        "Object_420_Tasten_0",
+        "Object_422_Tasten_0",
+        "Object_424_Tasten_0",
+        "Object_426_Tasten_0",
+        "Object_428_Tasten_0",
+        "Object_430_Tasten_0",
+        "Object_432_Tasten_0",
+        "Object_434_Tasten_0",
+        "Object_436_Tasten_0",
+        "Object_438_Tasten_0",
+        "Object_440_Tasten_0",
+        "Object_442_Tasten_0",
+        "Object_444_Tasten_0",
+        "Object_446_Tasten_0",
+        "Object_448_Tasten_0",
+        "Object_450_Tasten_0",
+        "Object_452_Tasten_0",
+        "Object_454_Tasten_0",
+        "Object_456_Tasten_0",
+        "Object_458_Tasten_0",
+        "Object_460_Tasten_0",
+        "Object_462_Tasten_0",
+        "Object_464_Tasten_0",
+        "Object_466_Tasten_0",
+        "Object_468_Tasten_0",
+        "Object_470_Tasten_0",
+        "Object_472_Tasten_0",
+        "Object_474_Tasten_0",
+        "Object_476_Tasten_0",
+        "Object_478_Tasten_0",
+        "Object_480_Tasten_0",
+        "Object_482_Tasten_0",
+        "Object_484_Tasten_0",
+        "Object_486_Tasten_0",
+        "Object_488_Tasten_0",
+        "Object_490_Tasten_0",
+        "Object_492_Tasten_0",
+        "Object_494_Tasten_0",
+        "Object_496_Tasten_0",
+        "Object_498_Tasten_0",
+        "Object_500_Tasten_0",
+        "Object_502_Tasten_0",
+        "Object_504_Tasten_0",
+        "Object_506_Tasten_0",
+        "Object_508_Tasten_0",
+        "Object_510_Tasten_0",
+        "Object_512_Tasten_0",
+        "Object_514_Tasten_0",
+        "Object_516_Tasten_0",
+        "Object_518_Tasten_0",
+        "Object_520_Tasten_0",
+        "Object_522_Tasten_0",
+        "Object_524_Tasten_0",
+        "Object_526_Tasten_0",
+        "Object_528_Tasten_0",
+        "Object_530_Tasten_0",
+        "Object_532_Tasten_0",
+        "Object_534_Tasten_0",
+        "Object_536_Tasten_0",
+        "Object_538_Tasten_0",
+        "Object_540_Tasten_0",
+        "Object_542_Tasten_0",
+        "Object_544_Tasten_0",
+        "Object_546_Tasten_0",
+        "Object_548_Tasten_0",
+        "Object_550_Tasten_0",
+        "Object_552_Tasten_0",
+        "Object_554_Tasten_0",
+        "Object_556_Tasten_0",
+        "Object_558_Tasten_0",
+        "Object_560_Tasten_0",
+        "Object_562_Tasten_0",
+        "Object_564_Tasten_0",
+        "Object_566_Tasten_0",
+        "Object_568_Tasten_0",
+        "Object_570_Tasten_0",
+        "Object_572_Tasten_0",
+        "Object_574_Tasten_0",
+        "Object_576_Tasten_0",
+        "Object_578_Tasten_0",
+        "Object_580_Tasten_0",
+        "Object_582_Tasten_0",
+        "Object_584_Tasten_0",
+        "Object_586_Tasten_0",
+        "Object_588_Tasten_0",
+        "Object_590_Tasten_0",
+        "Object_592_Tasten_0",
+        "Object_594_Tasten_0",
+        "Object_596_Tasten_0",
+        "Object_598_Tasten_0",
+        "Object_600_Tasten_0",
+        "Object_602_Tasten_0",
+        "Object_604_Material.071_0",
+        "Object_606_Tasten_0",
+        "Object_608_Tasten_0",
+        "Object_610_Tasten_0",
+        "Object_612_Tasten_0",
+        "Object_614_Tasten_0",
+        "Object_616_Tasten_0",
+        "Object_618_Tasten_0",
+        "Object_620_Tasten_0",
+        "Object_622_Tasten_0",
+        "Object_624_Tasten_0",
+        "Object_626_Tasten_0",
+        "Object_628_Tasten_0",
+        "Object_630_Tasten_0",
+        "Object_632_Tasten_0",
+        "Object_634_Tasten_0",
+        "Object_636_Tasten_0",
+        "Object_638_Tasten_0",
+        "Object_640_Tasten_0",
+        "Object_642_Tasten_0",
+        "Object_644_Tasten_0",
+        "Object_646_Tasten_0",
+        "Object_648_Tasten_0",
+        "Object_650_Tasten_0",
+        "Object_652_Tasten_0",
+        "Object_654_Tasten_0",
+        "Object_656_Tasten_0",
+        "Object_658_Tasten_0",
+        "Object_660_Tasten_0",
+        "Object_662_Tasten_0",
+        "Object_664_Tasten_0",
+        "Object_666_Tasten_0",
+        "Object_668_Tasten_0",
+        "Object_670_Tasten_0",
+        "Object_672_Tasten_0",
+        "Object_674_Tasten_0",
+        "Object_676_Tasten_0",
+        "Object_678_Tasten_0",
+        "Object_680_Tasten_0",
+        "Object_682_Tasten_0",
+        "Object_684_Tasten_0",
+        "Object_686_Tasten_0",
+        "Object_688_Tasten_0",
+        "Object_690_Tasten_0",
+        "Object_692_Tasten_0",
+        "Object_694_Tasten_0",
+        "Object_696_Tasten_0",
+        "Object_698_Tasten_0",
+        "Object_700_Tasten_0",
+        "Object_702_Tasten_0",
+        "Object_704_Tasten_0",
+        "Object_706_Tasten_0",
+        "Object_708_Tasten_0",
+        "Object_710_Tasten_0",
+        "Object_712_Tasten_0",
+        "Object_714_Tasten_0",
+        "Object_716_Tasten_0",
+        "Object_718_Tasten_0",
+        "Object_720_Tasten_0",
+        "Object_722_Tasten_0",
+        "Object_724_Tasten_0",
+        "Object_726_Tasten_0",
+        "Object_728_Tasten_0",
+        "Object_730_Tasten_0",
+        "Object_732_Tasten_0",
+        "Object_734_Tasten_0",
+        "Object_736_Tasten_0",
+        "Object_738_Tasten_0",
+        "Object_740_Tasten_0",
+        "Object_742_Tasten_0",
+        "Object_744_Tasten_0",
+        "Object_746_Tasten_0",
+        "Object_748_Tasten_0",
+        "Object_750_Tasten_0",
+        "Object_752_Tasten_0",
+        "Object_754_Tasten_0",
+        "Object_756_Tasten_0",
+        "Object_758_Tasten_0",
+        "Object_760_Tasten_0",
+        "Object_762_Tasten_0",
+        "Object_764_Tasten_0",
+        "Object_766_Tasten_0",
+        "Object_768_Tasten_0",
+        "Object_770_Tasten_0",
+        "Object_772_Tasten_0",
+        "Object_774_Tasten_0",
+        "Object_776_Tasten_0",
+        "Object_778_Tasten_0",
+        "Object_780_Tasten_0",
+        "Object_782_OnTheFly-bg_0",
+        "Object_784_Material.057_0",
+        "Object_786_Material.057_0",
+        "Object_788_Material.057_0",
+        "Object_790_Material.057_0",
+        "Object_792_Material.057_0",
+        "Object_794_Material.070_0",
+        "Object_796_Material.070_0",
+        "Object_798_Material.057_0",
+        "Object_800_Material.005_0",
+        "Object_802_Material.005_0",
+        "Object_804_Material.005_0",
+        "Object_806_Material.005_0",
+        "Object_808_Material.005_0",
+        "Object_810_Material.005_0",
+        "Object_812_Material.068_0",
+        "Object_814_Material.068_0",
+        "Object_816_Material.068_0",
+        "Object_818_Material.066_0",
+        "Object_820_Material.066_0",
+        "Object_822_Material.066_0",
+        "Object_824_Material.066_0",
+        "Object_826_Material.060_0",
+        "Object_828_Material.005_0",
+        "Object_830_Material.069_0",
+        "Object_832_Material.068_0",
+        "Object_834_Material.068_0",
+        "Object_836_Material.068_0",
+        "Object_838_Material.070_0",
+        "Object_840_Material.070_0",
+        "Object_842_Material.066_0",
+        "Object_844_Material.066_0",
+        "Object_846_Material.066_0",
+        "Object_848_Material.060_0",
+        "Object_850_Material.070_0",
+        "Object_852_Material.066_0",
+        "Object_854_Material.068_0",
+        "Object_856_Material.068_0",
+        "Object_858_Material.069_0",
+        "Object_860_Material.005_0",
+        "Object_862_Material.066_0",
+        "Object_864_Material.066_0",
+        "Object_866_Material.070_0",
+        "Object_868_Material.005_0",
+        "Object_870_Material.005_0",
+        "Object_872_Material.057_0",
+        "Object_874_Material.057_0",
+        "Object_876_Material.069_0",
+        "Object_878_Material.069_0",
+        "Object_880_Material.068_0",
+        "Object_882_Material.068_0",
+        "Object_884_Material.070_0",
+        "Object_886_Material.068_0",
+        "Object_888_Material.068_0",
+        "Object_890_Material.066_0",
+        "Object_892_Material.068_0",
+        "Object_894_Material.069_0",
+        "Object_896_Material.005_0",
+        "Object_898_Material.005_0",
+        "Object_900_Material.066_0",
+        "Object_902_Material.066_0",
+        "Object_904_Material.066_0",
+        "Object_906_Material.060_0",
+        "Object_908_Material.057_0",
+        "Object_910_Material.057_0",
+        "Object_912_Material.057_0",
+        "Object_914_Material.068_0",
+        "Object_916_Material.068_0",
+        "Object_918_Material.066_0",
+        "Object_920_Material.066_0",
+        "Object_922_Material.066_0",
+        "Object_924_Material.066_0",
+        "Object_926_Material.066_0",
+        "Object_928_Material.060_0",
+        "Object_930_Material.066_0",
+        "Object_932_Material.060_0",
+        "Object_934_Tasten_2_0",
+        "Object_936_Material.070_0",
+        "Object_938_Material.060_0",
+        "Object_940_Material.060_0",
+        "Object_942_Material.070_0",
+        "Object_944_Material.060_0",
+        "Object_946_Tasten_2_0",
+        "Object_948_Material.067_0",
+        "Object_950_Material.067_0",
+        "Object_952_Material.067_0",
+        "Object_954_Material.072_0",
+        "Object_956_Material.072_0",
+        "Object_958_Material.066_0",
+        "Object_960_Material.067_0",
+        "Object_962_Material.067_0",
+        "Object_964_Tasten_2_0",
+        "Object_966_Material.060_0",
+        "Object_968_Material.060_0",
+        "Object_970_Tasten_2_0",
+        "Object_972_Material.057_0",
+        "Object_974_Material.057_0",
+        "Object_976_Material.070_0",
+        "Object_978_Tasten_2_0",
+        "Object_980_Tasten_2_0",
+        "Object_982_Material.057_0",
+        "Object_984_Material.057_0",
+        "Object_986_Material.057_0",
+        "Object_988_Material.067_0",
+        "Object_990_Material.067_0",
+        "Object_992_Tasten_2_0",
+        "Object_994_Tasten_2_0",
+        "Object_996_Tasten_2_0",
+        "Object_998_Tasten_2_0",
+        "Object_1000_Material.070_0",
+        "Object_1002_Material.070_0",
+        "Object_1004_Material.070_0",
+        "Object_1006_Material.057_0",
+        "Object_1008_Material.057_0",
+        "Object_1010_Material.060_0",
+        "Object_1012_Material.070_0",
+        "Object_1014_Material.070_0",
+        "Object_1016_Material.070_0",
+        "Object_1018_Material.070_0",
+        "Object_1020_Material.057_0",
+        "Object_1022_Material.057_0",
+        "Object_1024_Material.057_0",
+        "Object_1026_Material.057_0",
+        "Object_1028_Material.057_0",
+        "Object_1030_Material.057_0",
+        "Object_1032_Material.057_0",
+        "Object_1034_Material.057_0",
+        "Object_1036_Material.057_0",
+        "Object_1038_Material.057_0",
+        "Object_1040_Tasten_2_0",
+        "Object_1042_Tasten_2_0",
+        "Object_1044_Material.057_0",
+        "Object_1046_Material.057_0",
+        "Object_1048_Material.057_0",
+        "Object_1050_Tasten_2_0",
+        "Object_1052_Material.057_0",
+        "Object_1054_Material.057_0",
+        "Object_1056_Material.073_0",
+        "Object_1058_Material.057_0",
+        "Object_1060_Material.060_0",
+        "Object_1062_Tasten_2_0",
+        "Object_1064_Tasten_2_0",
+        "Object_1066_Material.067_0",
+        "Object_1068_Material.067_0",
+        "Object_1070_Tasten_2_0",
+        "Object_1072_Tasten_2_0",
+        "Object_1074_Material.069_0"
+      ],
+      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+    }
+  }
+]

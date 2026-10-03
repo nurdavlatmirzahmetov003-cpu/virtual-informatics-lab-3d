@@ -13,6 +13,9 @@ export function ShadowSync() {
   const last = useRef('');
 
   useFrame(() => {
+    // R3F reconfiguration can restore autoUpdate after a quality/UI render.
+    // Enforce the scene's on-demand policy before every renderer pass.
+    gl.shadowMap.autoUpdate = false;
     const r = storyRig;
     const sig = [r.monitorYaw, r.keyboardLift, r.keyboardTilt, r.mouseSpin, r.mouseLift, pcRig.explode, pcRig.glassOpen]
       .map((v) => v.toFixed(4))

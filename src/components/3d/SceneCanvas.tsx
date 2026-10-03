@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { NeutralToneMapping, SRGBColorSpace } from 'three';
 import { CAMERA_STATES, type CameraStateName } from '@/data/camera/cameraStates';
@@ -12,6 +12,7 @@ import { QualityController } from './QualityController';
 import { PostEffects } from './PostEffects';
 import { WebGLFallback } from './WebGLFallback';
 import styles from './SceneCanvas.module.css';
+import { PerformanceReadout } from './PerformanceReadout';
 
 interface SceneCanvasProps {
   children: ReactNode;
@@ -48,6 +49,11 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
   const visible = usePageVisible();
   const webgl = useMemo(() => detectWebGL(), []);
   const [attempt, setAttempt] = useState(0);
+  const [metrics, setMetrics] = useState('Sampling…');
+  const [measured, setMeasured] = useState('');
+  const measure = useRef<(() => string) | null>(null);
+  const onMeasureReady = useCallback((fn: () => string) => { measure.current = fn; }, []);
+  const debug = import.meta.env.DEV && new URLSearchParams(window.location.search).has('debug');
   const cam = CAMERA_STATES[initialCamera];
   const setExpected = useSceneStatus((s) => s.setExpected);
 
@@ -107,6 +113,7 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
           }}
         >
           <QualityController preset={preset} />
+          {debug && <PerformanceReadout onSample={setMetrics} onMeasureReady={onMeasureReady} />}
           <Suspense fallback={null}>
             {children}
             <ReadySignal />
@@ -114,6 +121,8 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
           {preset.postprocessing && <PostEffects preset={preset} />}
         </Canvas>
       </ErrorBoundary>
+      {debug && <output aria-label="3D performance" style={{ position: 'absolute', right: 24, top: 78, zIndex: 20, padding: '10px 16px', background: '#05080de0', color: '#8ee8c5', font: '12px monospace', borderRadius: 12, pointerEvents: 'none' }}>{metrics}</output>}
+      {debug && <div style={{ position: 'absolute', right: 24, top: 120, zIndex: 20, maxWidth: 480, background: '#05080de0', padding: 12, fontSize: 11 }}><button onClick={() => setMeasured(measure.current?.() ?? 'Not ready')}>Measure scene</button><output aria-label="Scene benchmark" style={{ display: 'block', overflowWrap: 'anywhere' }}>{measured}</output></div>}
     </div>
   );
 }

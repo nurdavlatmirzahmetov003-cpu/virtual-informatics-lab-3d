@@ -41,7 +41,7 @@
   top: 50%;
   display: grid;
   gap: var(--space-4);
-  max-width: 600px;
+  max-width: 470px;
   transform: translateY(-46%);
 }
 
@@ -52,7 +52,7 @@
 }
 
 .title {
-  font-size: var(--fs-hero);
+  font-size: clamp(2rem, 4.2vw, 4.25rem);
   font-weight: 600;
   letter-spacing: -0.02em;
   text-wrap: balance;

@@ -245,6 +245,11 @@
   }
 
   .parts {
-    display: none;
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
   }
+
+  .parts li { flex: 0 0 auto; }
+  .parts button { white-space: nowrap; width: auto; padding: 8px; }
 }

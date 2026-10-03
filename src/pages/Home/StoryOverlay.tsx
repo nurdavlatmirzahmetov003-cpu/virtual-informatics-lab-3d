@@ -1,6 +1,5 @@
 import type { Ref } from 'react';
 import { ArrowRight, Hand, MousePointer2, Rotate3d } from 'lucide-react';
-import { ButtonLink } from '@/components/ui/Button';
 import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
 import { CHAPTERS } from '@/scenes/DeskScene/chapters';
@@ -27,6 +26,7 @@ export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
   const exploring = usePcStore((s) => s.mode === 'explore');
   const storyPart = usePcStore((s) => s.storyPart);
   const enterExplore = usePcStore((s) => s.enterExplore);
+  const enterDevice = usePcStore((s) => s.enterDevice);
 
   return (
     <div className={styles.root} data-hidden={exploring} aria-hidden={exploring}>
@@ -40,9 +40,7 @@ export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
             {t('home.cta')}
             <ArrowRight size={18} aria-hidden="true" />
           </button>
-          <ButtonLink to="/labs" variant="ghost" tabIndex={chapter === 0 ? 0 : -1}>
-            {t('home.secondary')}
-          </ButtonLink>
+          <button type="button" className={styles.exploreBtn} tabIndex={chapter === 0 ? 0 : -1} onClick={() => enterDevice('setup')}><Rotate3d size={16} />{t('explore.viewSetup')}</button>
         </div>
         <div className={styles.scrollHint} aria-hidden="true">
           <MousePointer2 size={14} />
@@ -82,6 +80,7 @@ export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
             </dl>
             <p className={styles.caption}>{t('story.specsCaption')}</p>
             <p className={styles.fact}>{t(key(`${base}.fact`))}</p>
+            {['monitor', 'keyboard', 'mouse', 'pc'].includes(c.id) && <button type="button" className={styles.exploreBtn} tabIndex={active ? 0 : -1} onClick={() => enterDevice(c.id as 'monitor' | 'keyboard' | 'mouse' | 'pc')}><Rotate3d size={16} />{t('explore.enter')}</button>}
             <p className={styles.dragHint}>
               <Hand size={14} aria-hidden="true" />
               {t('story.dragHint')}
