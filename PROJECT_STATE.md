@@ -1,9 +1,17 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
-Жаңартылды: 2026-10-03
-**Ағымдағы фаза: 3.2 PC Assembly Lab дайын; 5 және 6.1 дайын. Ортақ бағалау/progress ядросы іске қосылды. Келесі — Фаза 7 білім беру зертханалары.**
+Жаңартылды: 2026-10-04
+**Ағымдағы фаза: 3.2 PC Assembly Lab дайын; 5 және 6 (AI Көмекші: жергілікті жүйе + LLM backend + fallback) дайын. Ортақ бағалау/progress ядросы іске қосылды. Келесі — Фаза 7 білім беру зертханалары.**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
+
+## Фаза 6 — AI Көмекші (2026-10-04)
+- Логика `src/services/ai/` (UI-дан бөлек): `parse.ts` (kk/ru/en: бюджет, бірнеше мақсат, стиль, бренд→санат, Гц/4K/21:9, RAM/SSD көлемі, сымсыз, «толық сетап», «...сыз/без»), `engine.ts` (тек каталог ID, талап сүзгілері, үйлесімділік, бюджетке жақындық, `diffBuilds`), `explain.ts` (басымдық бойынша қазақша түсіндірме), `validate.ts`, `client.ts` (сервер → local fallback), `catalogDigest.ts`.
+- `lib/studio/recommend.ts` — `RecommendOptions` (қосымша мақсаттар, сүзгілер, include/exclude); `lib/studio/assistant.ts` — үйлесімділік қабаты.
+- Backend `server/ai-server.ts` (`npm run ai:server`, :8787): Anthropic/OpenAI, кілт тек `.env` (`.env.example`), body/rate limit, timeout, валидация; Vite `/api` proxy. Кілтсіз → 503 → браузер жергілікті.
+- UI: «AI Көмекші» чаты (`pages/SetupStudio/SetupAssistant.tsx`, `store/assistantStore.ts`): дереккөз белгісі, «Неге осылар?», «Setup Studio-ға жүктеу»; құрастыру бетінде «AI-мен жақсарту» (ағымдағы жинақпен айырма).
+- Тесттер: `npm run test:ai` (9/9), `npm run test:assistant` (4/4), `npm test`.
+- Тексерілді: браузерде чат (800 000 ₸ ойын+бағдарламалау → 781 000 ₸, түсіндірмелер), «Setup Studio-ға жүктеу» (баға 1 195 000 → 781 000 ₸), improve режимі (өзгерістер тізімі), сервер health/503. Құрастыру бетіндегі батырманы басу браузер терезесі артта болғандықтан көзбен тексерілмеді (3D жүктелмеді); логикасы store арқылы тексерілді. Нақты LLM кілтімен тексерілмеген.
 
 ## Жаңа дайын модуль
 `/labs/assembly` — нақты 3D drag/snap, таңдау/жарықталған ұяшық/пернетақта баламасы, реттілік пен каталог үйлесімділігі, қуат қосу, автоматты ұпай. `/progress` — сақталатын әрекеттер, ең жақсы ұпайлар, жетістіктер; анатомия quiz-і де сақталады. Файлдар: `store/pcLabStore.ts`, `store/progressStore.ts`, `lib/labs/{assessment,pcAssembly}.ts`, `hooks/useLabText.ts`, `pages/Labs/{PcAssemblyPage,ExerciseResult,Exercise.module.css}`, `scenes/PcAssemblyLab/PcLabScene.tsx`, `pages/Progress/`, router және AnatomyQuiz. Есеп: `docs/SESSION_2026-10-03_PC_LAB.md`.

@@ -15,6 +15,21 @@ export default defineConfig({
   server: {
     port: 5173,
     open: false,
+    // AI assistant backend (npm run ai:server). When it is not running the
+    // proxy answers 503 quietly and the browser stays on the local engine.
+    proxy: {
+      '/api': {
+        target: `http://localhost:${process.env.AI_PORT ?? 8787}`,
+        configure: (proxy) => {
+          proxy.on('error', (_error, _req, res) => {
+            if ('writeHead' in res && !res.headersSent) {
+              res.writeHead(503, { 'content-type': 'application/json' });
+              res.end('{"error":"ai-server-offline"}');
+            }
+          });
+        },
+      },
+    },
   },
   build: {
     target: 'es2022',

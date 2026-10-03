@@ -1,6 +1,6 @@
 import { lazy, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Boxes, Eye, List, Pause, Play, Rotate3d, RotateCcw, SkipForward, X } from 'lucide-react';
+import { ArrowLeft, Boxes, Eye, List, Pause, Play, Rotate3d, RotateCcw, SkipForward, Sparkles, X } from 'lucide-react';
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
@@ -12,6 +12,8 @@ import { useSceneStatus } from '@/store/sceneStatusStore';
 import { SetupAssemblyTimeline } from '@/scenes/SetupStudio/assembly/SetupAssemblyTimeline';
 import { resetAssemblyRig } from '@/scenes/SetupStudio/assembly/assemblyRig';
 import { SetupConfiguration } from './SetupConfiguration';
+import { SetupAssistant } from './SetupAssistant';
+import { useAssistantStore } from '@/store/assistantStore';
 import { useStudioBuild } from './useStudioBuild';
 import styles from './AssemblyPresentation.module.css';
 
@@ -52,6 +54,7 @@ export default function AssemblyPresentationPage() {
         <button onClick={a.toggleAutoRotate} aria-pressed={a.autoRotate} aria-label={t('studio.view.autoRotate')}>{a.autoRotate ? <Pause size={16} /> : <Play size={16} />}</button>
         <button onClick={a.replay}><RotateCcw size={16} />{t('assembly.replay')}</button>
         <button onClick={a.toggleConfig} aria-pressed={a.configOpen}><List size={16} />{t('assembly.config')}</button>
+        <button onClick={() => useAssistantStore.getState().openImprove(t('assistant.improve.prompt'))}><Sparkles size={16} />{t('assistant.improve.button')}</button>
       </div>
       {!a.configOpen && <div className={styles.price}><span>{t('studio.summary.total')}</span><strong>{formatKZT(price.total)}</strong><small>{t('studio.demoPrice')}</small></div>}
       {a.configOpen && <aside className={styles.configuration} aria-label={t('assembly.config')}>
@@ -59,6 +62,7 @@ export default function AssemblyPresentationPage() {
         <SetupConfiguration />
       </aside>}
       <p className={styles.hint}>{t('studio.view.hint')}</p>
+      <SetupAssistant launcher={false} />
     </>}
   </div>;
 }

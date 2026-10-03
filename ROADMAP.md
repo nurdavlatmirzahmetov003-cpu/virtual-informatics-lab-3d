@@ -45,8 +45,8 @@ Neutral tone mapping, DOF (High/Ultra), бір GSAP ScrollTrigger timeline: 5 ch
 ## Фаза 5 — Жинау анимациясы ✅
 Бос үстел → 24-ке дейін қадамдық кино жинау → 360° orbit + «360° қарау / Ішін көру / Бөлшектер / Конфигурация / Өзгерту».
 
-## Фаза 6 — AI көмекші 🟡 (6.1 жергілікті чат дайын; LLM backend әлі жоқ)
-Жергілікті детерминистік recommender (каталог ID-лары), backend endpoint (`OPENAI_API_KEY` тек серверде), fallback.
+## Фаза 6 — AI көмекші ✅ (2026-10-04)
+`src/services/ai/`: kk/ru/en талдау, catalog-only үйлесімді ұсыныс, басымдықтар (ойын: GPU > CPU > RAM > SSD; оқу/код: CPU + RAM + SSD), қазақша түсіндірме; чат «AI Көмекші», «Setup Studio-ға жүктеу», «AI-мен жақсарту»; `server/ai-server.ts` (Anthropic/OpenAI, кілт тек `.env`-те) + автоматты local fallback; `npm run test:ai`.
 
 ## Фаза 7 — Білім беру зертханалары ⬜
 Желі (PING анимациясы, авто-тексеру), алгоритмдер (≥3, қадам алға/артқа), логика (сүйреп қосу, ақиқат кестесі), тәжірибелер.

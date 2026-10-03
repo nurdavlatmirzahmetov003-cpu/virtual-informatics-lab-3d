@@ -1698,9 +1698,9 @@
     }
   },
   "assistant": {
-    "title": "Setup assistant",
+    "title": "AI assistant",
     "local": "Local recommendations · no API",
-    "welcome": "Describe your budget, tasks and preferred devices. I will suggest compatible catalog products you can immediately view in 3D.",
+    "welcome": "Tell me your budget, purpose and the devices you want. I build a compatible setup from catalog products only, explain each choice and load it into Setup Studio.",
     "exampleBudget": "Gaming computer for 800 000 tenge",
     "exampleWhite": "White setup for 1 200 000 tenge",
     "exampleDevices": "ASUS 300 Hz monitor and Logitech mouse",
@@ -1713,7 +1713,7 @@
     "invalid": "A complete compatible build was not found. Change the budget or requirements.",
     "apply": "Show in 3D",
     "applied": "Build shown in 3D",
-    "privacy": "Your request is processed on this device. Prices are illustrative demo values.",
+    "privacy": "If the AI server is connected, the request goes only to it (no API key in the browser); otherwise it is handled on this device. Prices are demo values.",
     "reasons": {
       "gaming": "Most of the budget goes to the GPU, balanced with the CPU, power supply and monitor.",
       "study": "An economical system with enough memory and SSD space. A separate GPU is omitted when integrated graphics suffice.",
@@ -1721,6 +1721,56 @@
       "design3d": "The CPU, GPU and memory take priority for rendering and 3D work.",
       "streaming": "The GPU and CPU cover gaming and encoding, with a headset for audio.",
       "universal": "A balanced budget allocation across the CPU, graphics, memory and monitor."
+    },
+    "sourceLlm": "AI server (LLM) · catalog IDs verified",
+    "sourceLocal": "Local recommender · no API needed",
+    "fallback": {
+      "unavailable": "AI server unavailable — the local engine answered.",
+      "invalid": "The AI answer failed validation — the local engine answered."
+    },
+    "thinking": "Picking from the catalog…",
+    "whyTitle": "Why these?",
+    "allParts": "All parts",
+    "load": "Load into Setup Studio",
+    "loaded": "Loaded into Setup Studio — shown in 3D",
+    "note": "AI note",
+    "improve": {
+      "button": "Improve with AI",
+      "prompt": "Improve this setup for my budget and purpose",
+      "changes": "Suggested changes",
+      "none": "Nothing to change — the setup already fits the budget and purpose.",
+      "removed": "removed",
+      "added": "added"
+    },
+    "why": {
+      "cpu": {
+        "gaming": "CPU — {model} ({cores}): enough for games, so most of the budget went to the graphics card.",
+        "study": "CPU — {model} ({cores}): fast and efficient for study, {share}% of the budget.",
+        "programming": "CPU — {model} ({cores}): compiling and multitasking scale with cores, so it comes first.",
+        "design3d": "CPU — {model} ({cores}): rendering and 3D work use every core.",
+        "streaming": "CPU — {model} ({cores}): handles the game and the stream at once.",
+        "universal": "CPU — {model} ({cores}): a balanced choice for study, code and games."
+      },
+      "gpu": {
+        "gaming": "Graphics card — {model} ({vram}): it drives FPS the most, so it gets the largest share — {share}%.",
+        "study": "Graphics card — {model} ({vram}): the budget allowed it, useful for video and 3D lessons.",
+        "programming": "Graphics card — {model} ({vram}): after CPU and memory; helps with ML and graphics.",
+        "design3d": "Graphics card — {model} ({vram}): speeds up the viewport and GPU rendering, {share}% of the budget.",
+        "streaming": "Graphics card — {model} ({vram}): runs the game and encodes the stream.",
+        "universal": "Graphics card — {model} ({vram}): a solid middle ground for games and graphics."
+      },
+      "noGpu": "No separate graphics card: the {igpu} graphics in {model} are enough for study and code; the money went to CPU and memory.",
+      "ram": {
+        "heavy": "Memory — {model}, {capacity}: enough for an IDE, browser and renders at once.",
+        "normal": "Memory — {model}, {capacity}: enough for everyday work and games."
+      },
+      "ssd": "SSD — {model}: {read} MB/s reads, so the system and apps open in seconds.",
+      "monitor": "Monitor — {model}: {resolution}, {hz} Hz.",
+      "psu": "Power supply — {model}, {watts} W: this build needs at least {need} W, with headroom.",
+      "budget": {
+        "fit": "Total — {total}, {left} left in the budget.",
+        "over": "Total — {total}: your requirements exceed the budget by {amount}."
+      }
     }
   }
 }

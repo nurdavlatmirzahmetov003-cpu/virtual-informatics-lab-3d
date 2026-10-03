@@ -34,9 +34,22 @@ const UPGRADE_ORDER: Record<SetupPurpose, readonly HardwareCategory[]> = {
   universal: ['gpu', 'cpu', 'monitor', 'ram', 'ssd', 'keyboard', 'mouse', 'chair', 'desk'],
 };
 
-function score(p: HardwareItem, purpose: SetupPurpose, style: SetupStyle) {
+/** Extra wishes from the AI assistant; the studio's own "suggest" button passes none. */
+export interface RecommendOptions {
+  /** Further purposes, weighted half as much as the main one ("gaming and programming"). */
+  secondary?: readonly SetupPurpose[];
+  /** Hard product filters per category (brand, refresh rate, capacity…). Ignored when nothing passes. */
+  allow?: Partial<Record<HardwareCategory, (p: HardwareItem) => boolean>>;
+  /** Optional categories the user asked for explicitly (kept even on a tight budget when possible). */
+  include?: readonly HardwareCategory[];
+  /** Optional categories the user does not want. */
+  exclude?: readonly HardwareCategory[];
+}
+
+function score(p: HardwareItem, purpose: SetupPurpose, style: SetupStyle, secondary: readonly SetupPurpose[] = []) {
   let s = TIER[p.performanceTier] * 10;
   if (p.recommendedUse.includes(purpose)) s += 8;
+  if (secondary.some((x) => p.recommendedUse.includes(x))) s += 4;
   if (style === 'white' && p.colors.includes('white')) s += 4;
   if (style === 'rgb' && p.rgb) s += 3;
   if (style === 'noRgb' && !p.rgb) s += 2;
@@ -46,20 +59,21 @@ function score(p: HardwareItem, purpose: SetupPurpose, style: SetupStyle) {
 const byPrice = (a: HardwareItem, b: HardwareItem) => a.priceKZT - b.priceKZT;
 
 /** Best-scoring product within the allowance, else the cheapest that qualifies. */
-function pick(candidates: HardwareItem[], allowance: number, purpose: SetupPurpose, style: SetupStyle) {
+function pick(candidates: HardwareItem[], allowance: number, purpose: SetupPurpose, style: SetupStyle, secondary: readonly SetupPurpose[]) {
   if (candidates.length === 0) return undefined;
   const affordable = candidates.filter((p) => p.priceKZT <= allowance);
   if (affordable.length === 0) return [...candidates].sort(byPrice)[0];
   return affordable.reduce((best, p) => {
-    const d = score(p, purpose, style) - score(best, purpose, style);
+    const d = score(p, purpose, style, secondary) - score(best, purpose, style, secondary);
     return d > 0 || (d === 0 && p.priceKZT > best.priceKZT) ? p : best;
   });
 }
 
 /** Optional parts that make sense for this purpose and budget. */
-function partsFor(purpose: SetupPurpose, budget: number): Set<HardwareCategory> {
+function partsFor(purposes: readonly SetupPurpose[], budget: number): Set<HardwareCategory> {
+  const purpose = purposes[0];
   const parts = new Set<HardwareCategory>(['monitor', 'keyboard', 'mouse', 'case', 'cpu', 'cooling', 'motherboard', 'ram', 'ssd', 'psu']);
-  const graphicsHeavy = purpose === 'gaming' || purpose === 'design3d' || purpose === 'streaming';
+  const graphicsHeavy = purposes.some((p) => p === 'gaming' || p === 'design3d' || p === 'streaming');
   if (graphicsHeavy || budget >= 800_000) parts.add('gpu');
   if (budget >= 500_000) parts.add(purpose === 'gaming' || purpose === 'streaming' ? 'headset' : 'speakers');
   if (budget >= 900_000) parts.add('headset').add('speakers');
@@ -76,40 +90,52 @@ const hardErrors = (build: Build) => checkCompatibility(resolveBuild(build)).fil
  * and finally drops extras — until the total fits the budget, and finally
  * spends any leftover on the parts that matter most for the purpose.
  */
-export function recommendBuild(purpose: SetupPurpose, budget: number, style: SetupStyle): Build {
-  const parts = partsFor(purpose, budget);
-  const weights = WEIGHTS[purpose];
-  const weightSum = [...parts].reduce((s, c) => s + (weights[c] ?? 0), 0);
-  const allowance = (c: HardwareCategory) => (budget * (weights[c] ?? 0)) / weightSum;
+export function recommendBuild(purpose: SetupPurpose, budget: number, style: SetupStyle, options: RecommendOptions = {}): Build {
+  const secondary = (options.secondary ?? []).filter((p) => p !== purpose);
+  const parts = partsFor([purpose, ...secondary], budget);
+  for (const c of options.include ?? []) parts.add(c);
+  for (const c of options.exclude ?? []) if (DROPPABLE.includes(c)) parts.delete(c);
+  // main purpose counts twice, each extra purpose once
+  const weightOf = (c: HardwareCategory) =>
+    ((WEIGHTS[purpose][c] ?? 0) * 2 + secondary.reduce((sum, p) => sum + (WEIGHTS[p][c] ?? 0), 0)) / (2 + secondary.length);
+  const weightSum = [...parts].reduce((s, c) => s + weightOf(c), 0);
+  const allowance = (c: HardwareCategory) => (budget * weightOf(c)) / weightSum;
+  const pool = (c: HardwareCategory) => {
+    const all = productsIn(c);
+    const allow = options.allow?.[c];
+    const kept = allow ? all.filter(allow) : all;
+    return kept.length ? kept : all;
+  };
+  const keep = new Set(options.include ?? []);
   const chosen: ResolvedBuild = {};
   const choose = (c: HardwareCategory, candidates: HardwareItem[]) => {
-    const p = pick(candidates, allowance(c), purpose, style);
+    const p = pick(candidates, allowance(c), purpose, style, secondary);
     if (p) chosen[c] = p;
   };
 
   // A tight budget cannot also carry a graphics card: start from a CPU with integrated graphics.
   const tight = budget < 700_000;
-  choose('cpu', productsIn('cpu').filter((c) => !tight || c.compatibility.integratedGraphics));
+  choose('cpu', pool('cpu').filter((c) => !tight || c.compatibility.integratedGraphics));
   const socket = chosen.cpu?.compatibility.socket;
   // Without a graphics card the CPU must have integrated graphics.
   if (chosen.cpu && !chosen.cpu.compatibility.integratedGraphics) parts.add('gpu');
-  choose('motherboard', productsIn('motherboard').filter((b) => b.compatibility.socket === socket));
+  choose('motherboard', pool('motherboard').filter((b) => b.compatibility.socket === socket));
   const memoryType = chosen.motherboard?.compatibility.memoryType;
-  choose('ram', productsIn('ram').filter((r) => r.compatibility.memoryType === memoryType));
-  if (parts.has('gpu')) choose('gpu', productsIn('gpu'));
+  choose('ram', pool('ram').filter((r) => r.compatibility.memoryType === memoryType));
+  if (parts.has('gpu')) choose('gpu', pool('gpu'));
   const gpuLength = chosen.gpu?.compatibility.lengthMm ?? 0;
   const formFactor = chosen.motherboard?.compatibility.formFactor;
-  choose('case', productsIn('case').filter((c) => (c.compatibility.maxGpuLengthMm ?? 0) >= gpuLength && (!formFactor || c.compatibility.supportsFormFactors?.includes(formFactor))));
+  choose('case', pool('case').filter((c) => (c.compatibility.maxGpuLengthMm ?? 0) >= gpuLength && (!formFactor || c.compatibility.supportsFormFactors?.includes(formFactor))));
   const maxCooler = chosen.case?.compatibility.maxCoolerHeightMm ?? Infinity;
   const heat = chosen.cpu?.compatibility.peakPowerW ?? 0;
-  choose('cooling', productsIn('cooling').filter((k) =>
+  choose('cooling', pool('cooling').filter((k) =>
     (!socket || k.compatibility.sockets?.includes(socket)) &&
     (k.compatibility.coolerHeightMm ?? 0) <= maxCooler &&
     (!k.compatibility.coolingCapacityW || k.compatibility.coolingCapacityW >= heat)));
   const { requiredW } = estimatePower(chosen);
-  choose('psu', productsIn('psu').filter((p) => (p.compatibility.psuW ?? 0) >= requiredW));
+  choose('psu', pool('psu').filter((p) => (p.compatibility.psuW ?? 0) >= requiredW));
   for (const c of ['ssd', 'monitor', 'keyboard', 'mouse', 'headset', 'speakers', 'desk', 'chair'] as const) {
-    if (parts.has(c)) choose(c, productsIn(c));
+    if (parts.has(c)) choose(c, pool(c));
   }
 
   const build: Build = {};
@@ -124,7 +150,7 @@ export function recommendBuild(purpose: SetupPurpose, budget: number, style: Set
         if (total() <= budget) break;
         const current = build[c] ? resolveBuild({ [c]: build[c] })[c] : undefined;
         if (!current) continue;
-        const cheaper = productsIn(c).filter((p) => p.priceKZT < current.priceKZT).sort(byPrice).reverse();
+        const cheaper = pool(c).filter((p) => p.priceKZT < current.priceKZT).sort(byPrice).reverse();
         for (const alt of cheaper) {
           const trial = { ...build, [c]: alt.id };
           if (hardErrors(trial).length === 0) {
@@ -141,28 +167,29 @@ export function recommendBuild(purpose: SetupPurpose, budget: number, style: Set
 
   for (const c of DROPPABLE) {
     if (total() <= budget) break;
-    if (!build[c]) continue;
+    if (!build[c] || keep.has(c)) continue;
     const trial = { ...build, [c]: null };
     if (hardErrors(trial).length === 0) build[c] = null;
   }
   // A dropped graphics card no longer needs the big power supply.
   tradeDown();
 
+  const upgradeOrder = [...new Set([...UPGRADE_ORDER[purpose], ...secondary.flatMap((p) => UPGRADE_ORDER[p])])];
   // Spend what is left: step the purpose's key parts up, fixing the PSU when a stronger part needs more power.
   for (let pass = 0; pass < 20; pass++) {
     let changed = false;
-    for (const c of UPGRADE_ORDER[purpose]) {
+    for (const c of upgradeOrder) {
       const current = build[c] ? resolveBuild({ [c]: build[c] })[c] : undefined;
       if (!current) continue;
-      const better = productsIn(c)
-        .filter((p) => score(p, purpose, style) > score(current, purpose, style) && p.priceKZT > current.priceKZT)
+      const better = pool(c)
+        .filter((p) => score(p, purpose, style, secondary) > score(current, purpose, style, secondary) && p.priceKZT > current.priceKZT)
         .sort(byPrice);
       for (const alt of better) {
         const trial: Build = { ...build, [c]: alt.id };
         const errors = hardErrors(trial);
         if (errors.length === 1 && errors[0].code === 'psuWeak') {
           const need = estimatePower(resolveBuild(trial)).requiredW;
-          const psu = productsIn('psu').filter((p) => (p.compatibility.psuW ?? 0) >= need).sort(byPrice)[0];
+          const psu = pool('psu').filter((p) => (p.compatibility.psuW ?? 0) >= need).sort(byPrice)[0];
           if (psu) trial.psu = psu.id;
         }
         const cost = Object.values(resolveBuild(trial)).reduce((sum, p) => sum + (p?.priceKZT ?? 0), 0);

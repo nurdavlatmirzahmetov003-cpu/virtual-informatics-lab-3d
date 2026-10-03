@@ -26,3 +26,19 @@
 .entry button { flex: none; padding: 9px; border-radius: 8px; color: var(--accent); background: #38d6f515; }
 .panel form small { display: block; color: var(--text-dim); font-size: .6rem; margin-top: 7px; }
 @media (max-width: 720px) { .panel { left: 10px; right: 10px; top: 112px; bottom: 10px; width: auto; } }
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: .62rem; color: var(--text-dim); }
+.badge[data-source='llm'] { color: var(--success); }
+.fallback { font-size: .66rem; color: var(--text-dim); }
+.noteBox { padding: 10px 12px; border-left: 2px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; color: var(--text); }
+.why { display: grid; gap: 6px; }
+.why h3, .changes h3 { font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); }
+.why ol { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; color: var(--text-muted); line-height: 1.55; }
+.changes ul { display: grid; gap: 6px; }
+.changes li { display: grid; gap: 2px; padding: 8px 10px; border-radius: 8px; background: #ffffff05; }
+.changes li em { font-style: normal; color: var(--text-dim); text-decoration: line-through; }
+.changes li b { color: var(--success); font-weight: 600; }
+.parts summary { cursor: pointer; font-size: .7rem; color: var(--text-muted); }
+.parts ul { margin-top: 8px; }
+.thinking { display: flex; align-items: center; gap: 8px; color: var(--text-muted); margin-top: 8px; }
+.thinking::before { content: ''; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--accent); border-right-color: transparent; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(1turn); } }

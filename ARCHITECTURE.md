@@ -161,3 +161,10 @@ legacy/                     ескі ES-module прототип (python http.ser
 20. **Құрастыру киносы.** `assembly/steps.ts` жинақтан қадамдарды сүзеді; бір GSAP `SetupAssemblyTimeline` тек `assemblyRig`-ті өзгертеді. `SetupItems` статикалық және анимацияланатын сахнаға ортақ. `PCCase` сыртқы driver (`rig="external"`) қабылдайды; `PCPart` орнатуда шынайы масштабпен side glass жағынан келеді. `AssemblyScene` камера/жарық/көлеңкелерді жүргізеді. `assemblyStore` — ephemeral phase/view/replay/skip күйі. Модель ready сигналынсыз timeline басталмайды; cleanup оны тоқтатады. UI прогресі пайызға дейін дөңгелектеніп, әр кадрдағы React рендерден құтылады.
 
 21. **Жергілікті чат.** `lib/studio/assistant.ts` → parseSetupRequest, suggestSetup, isValidSuggestion. Қолдау: kk/ru/en ақша бірліктері, мақсат, стиль, minHz, ASUS/Logitech; таңдалған талаптар қалған жинаққа дейін бюджетке резервтеледі. Әр ұсыныс каталог және compatibility қақпасынан өтеді. UI `SetupAssistant` portal арқылы bottom-sheet ата-анасынан тыс fixed терезе ретінде көрсетіледі. `studioStore.applySuggestion` ID-ларды тазартады, түстерді/мақсатты/бюджетті және 3D-ны жаңартады. LLM backend әлі жоқ; кіріс сыртқа жіберілмейді.
+
+20. **AI көмекші.** `src/services/ai/` UI-дан бөлек: `parse` (жергілікті NLU) → `AssistantRequest` → `engine.suggestSetup`
+    (`lib/studio/recommend` + талап сүзгілері + үйлесімділік) → `explain`. `client.askAssistant` алдымен `/api/ai/recommend`-ке
+    жүгінеді; LLM тек құрылымды сұрау мен каталог ID-ларын қайтарады, `validate.sanitizeLlmAnswer` серверде де, браузерде де
+    тексереді, соңғы жинақты бәрібір детерминистік engine құрады. Кілт тек `server/ai-server.ts` оқитын `.env`-те.
+    Кез келген ақауда (кілт жоқ, offline, timeout, жарамсыз жауап) — жергілікті нәтиже, 60 с серверді күтпейді.
+
