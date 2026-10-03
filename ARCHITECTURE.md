@@ -52,7 +52,12 @@ src/
       storyRig.ts         GSAP жазатын / useFrame оқитын мутацияланатын мәндер
       useStoryTimeline.ts БІР ScrollTrigger timeline (камера + фокус + объект хореографиясы)
       StoryCamera.tsx     timeline кадры + сүйреп орбита + портрет view offset
-      models/             Desk, DeskMat, Monitor, Keyboard, Mouse, PCCase, Fan, Headset, Speakers, Room
+      ExploreCamera.tsx   360° режимі: OrbitControls + бөлшекке ұшу + reset + auto-rotate
+      ShadowSync.tsx      көлеңке картасын тек қозғалыс болғанда жаңарту
+      models/             Desk, DeskMat, Monitor, Keyboard, Mouse, Fan, Headset, Speakers, Room
+      pc/                 PCCase (құрам + PcRigController), Chassis, PCPart (exploded/highlight/hotspot),
+                          Motherboard, Cpu, CpuCooler, RamKit, Gpu, NvmeSsd, Psu, parts.ts, constants.ts,
+                          pcRig.ts, usePcTextures.ts
     PCScene/ HardwareExplorer/ SetupBuilder/   (бос — Фаза 2.2–5)
   labs/ NetworkLab/ AlgorithmLab/ LogicLab/ Experiments/  (бос — Фаза 7)
   pages/ Home, Labs, SetupStudio, Progress, NotFound, shared/
@@ -104,6 +109,17 @@ legacy/                     ескі ES-module прототип (python http.ser
 14. **Уақытша модельдер.** `lib/three/geometry.ts` пен `proceduralTextures.ts` — extrude/lathe/
     деформация + canvas текстуралар. GLB келгенде әр `models/*.tsx` файлы `ModelLoader`-мен
     ауыстырылады, ал `layout.ts` пен `PCCase` ішіндегі аталған топтар сақталады.
+
+15. **ПК бөлшектері.** `pc/parts.ts` — бір дереккөз: анкер, exploded ығысу (EXPLODED камерасының экран
+    кеңістігіндегі слоттан есептеледі), визуалды орталық, фокус қашықтығы, spec кілттері. Бөлшек компоненттері
+    «board frame»-де салынады (−90° Y бұрылған топ: X = корпус Z, Z = платадан шығу бағыты).
+16. **Екі режим.** `pcStore.mode`: `story` (StoryCamera + timeline) / `explore` (ExploreCamera + OrbitControls).
+    `pcRig` әр кадрда тиісті көзден толтырылады — бөлшектер тек pcRig-ті оқиды. Камера ауысқанда
+    `cameraHandoff.target` арқылы секірусіз өтеді; explore кезінде бет scroll-ы құлыпталады.
+17. **Highlight/dim.** `PCPart` материалдардың бастапқы түсін сақтап, белсенді бөлшекке emissive tint,
+    қалғанына түс/envMap көбейткішін қолданады (тек өзгеріс кезінде). Ортақ материалдар `userData.shared = true`.
+18. **Көлеңкелер on-demand.** `QualityController` `shadowMap.autoUpdate = false` қояды; көлеңке түсіретін объектілері
+    қозғалатын сахна `gl.shadowMap.needsUpdate = true` қоюы керек (DeskScene: `ShadowSync`).
 
 ## Legacy → жаңа архитектураға көшу жоспары
 

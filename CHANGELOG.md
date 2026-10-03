@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 0.3.0 — 2026-10-03 — Фаза 2.2: ПК іші, exploded view, hotspot-тар, 360°
+
+### Қосылды
+- `src/scenes/DeskScene/pc/`: ПК 8 бөлек анимацияланатын бөлшекке бөлінді — `Motherboard`, `Cpu`, `CpuCooler`, `RamKit` (4 × DDR5), `Gpu`, `NvmeSsd`, `Psu`, алдыңғы желдеткіштер + `Chassis` (алынатын шыны, shroud, артқы желдеткіш, кабельдер). Нақты өлшемде: радиатор қабырғалары, желдеткіш қалақтары, слоттар, PCB текстуралары, жапсырмалар.
+- `PCPart` орамы: exploded орын ауыстыру, белсенді бөлшекті highlight / қалғанын dim, басу, нөмірленген hotspot (drei `Html`).
+- `parts.ts`: бөлшек тізілімі; exploded орындары EXPLODED камерасының экран кеңістігінде есептеледі; ұсақ бөлшектерге `magnify`.
+- Scroll story: Chapter 6 «Корпустың іші» (шыны шығып, жоғары көтеріледі, ішкі жарық жанады, камера ішке кіреді) және Chapter 7 «Бөлшектер» (exploded + 8 бөлшек бойынша қадамдап фокус/ақпарат).
+- 360° режимі: `ExploreCamera` (OrbitControls, damping, zoom, еденнен төмен түспейді, бөлшекке ұшу, reset, auto-rotate) + `ExploreOverlay` (Сапарға оралу / Камераны қалпына келтіру / Авто айналу / Жинау–Бөлшектеу, бөлшек панелі, Esc). Шыққанда камера сапарға тегіс оралады.
+- `pcStore`, `pcRig`, `cameraHandoff`.
+- kk/ru/en: `pc.parts.*`, `story.chapters.inside/exploded`, `explore.*`.
+- Dev: `__vil3d.bench()`, `__vil3d.scene()`.
+
+### Өнімділік
+- Көлеңке картасы тек объект қозғалғанда жаңарады (`ShadowSync`, `shadowMap.autoUpdate = false`).
+- Transmission шыны тек Ultra (Low–High: шағылысатын clear-coat шыны), `transmissionResolutionScale`.
+- RectAreaLight тек High/Ultra; hemisphere жарығы алынды; showcase/ішкі жарықтар керек кезде ғана; keycap геометриясы жеңілдетілді; айналатын желдеткіштер көлеңке түсірмейді.
+- Intel UHD: hero 51 → 18 мс (Medium), ПК жақын кадры 138 → 24–27 мс.
+
 ## 0.2.0 — 2026-10-03 — Фаза 2.1: Кинематографиялық үстел сахнасы
 
 ### Қосылды

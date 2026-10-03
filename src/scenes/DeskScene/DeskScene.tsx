@@ -13,9 +13,12 @@ import { Headset } from './models/Headset';
 import { Keyboard } from './models/Keyboard';
 import { Monitor } from './models/Monitor';
 import { Mouse } from './models/Mouse';
-import { PCCase } from './models/PCCase';
+import { PCCase } from './pc/PCCase';
 import { Room } from './models/Room';
 import { Speakers } from './models/Speakers';
+import { usePcStore } from '@/store/pcStore';
+import { ExploreCamera } from './ExploreCamera';
+import { ShadowSync } from './ShadowSync';
 import { StoryCamera } from './StoryCamera';
 
 RectAreaLightUniformsLib.init();
@@ -24,6 +27,8 @@ RectAreaLightUniformsLib.init();
 const HDRI = `${import.meta.env.BASE_URL}assets/hdr/studio_small_09_1k.hdr`;
 
 export default function DeskScene() {
+  const exploring = usePcStore((s) => s.mode === 'explore');
+
   useEffect(() => {
     sceneFocus.enabled = true;
     return () => {
@@ -35,6 +40,8 @@ export default function DeskScene() {
     <>
       <EnvironmentLighting hdri={HDRI} environmentIntensity={0.55} intensity={1} shadowExtent={1.25} fog={[3.5, 11]} />
       <StoryCamera />
+      {exploring && <ExploreCamera />}
+      <ShadowSync />
       <Room />
       <Desk />
       <DeskMat />

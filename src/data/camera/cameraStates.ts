@@ -26,6 +26,7 @@ export const CAMERA_STATE_NAMES = [
   'MOUSE',
   'PC_EXTERIOR',
   'PC_INTERIOR',
+  'EXPLODED',
   'MOTHERBOARD',
   'CPU',
   'GPU',
@@ -46,7 +47,8 @@ export const CAMERA_STATES: Record<CameraStateName, CameraState> = {
   PC_EXTERIOR: { position: [-0.09, 1.2, 1.09], target: [0.46, 1.0, -0.06], fov: 34, focusDistance: 1.28 },
   // Interior / component shots — first-pass values, tuned in the next session
   DESK: { position: [-1.0, 1.35, 1.6], target: [-0.1, 0.9, 0], fov: 36 },
-  PC_INTERIOR: { position: [0.3, 1.08, 0.12], target: [0.69, 1.0, -0.06], fov: 40, focusDistance: 0.45 },
+  PC_INTERIOR: { position: [0.06, 1.17, 0.42], target: [0.66, 1.0, -0.09], fov: 36, focusDistance: 0.85 },
+  EXPLODED: { position: [-0.5, 1.32, 0.96], target: [0.14, 1.04, -0.08], fov: 38, focusDistance: 1.1 },
   MOTHERBOARD: { position: [0.42, 1.12, -0.06], target: [0.77, 1.05, -0.14], fov: 36 },
   CPU: { position: [0.52, 1.14, -0.1], target: [0.74, 1.12, -0.15], fov: 30 },
   GPU: { position: [0.45, 0.96, 0.05], target: [0.7, 1.0, -0.12], fov: 32 },

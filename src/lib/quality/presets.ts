@@ -17,8 +17,13 @@ export interface QualityPreset {
   bloom: boolean;
   /** Focus blur on the active object (scroll story). */
   depthOfField: boolean;
-  /** Physical glass (extra transmission pass); otherwise alpha-blended glass. */
+  /**
+   * Physical glass (renders the scene a second time for refraction — ~60 ms on
+   * integrated GPUs, so Ultra only); otherwise alpha-blended reflective glass.
+   */
   transmission: boolean;
+  /** Resolution scale of the transmission (glass refraction) buffer. */
+  transmissionScale: number;
   /** RectAreaLight for screen light spill; otherwise a cheap point light. */
   areaLights: boolean;
   /** Resolution of the generated environment cube map. */
@@ -42,6 +47,7 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     bloom: false,
     depthOfField: false,
     transmission: false,
+    transmissionScale: 0.5,
     areaLights: false,
     environmentResolution: 128,
     lodBias: 2,
@@ -58,8 +64,9 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     multisampling: 0,
     bloom: false,
     depthOfField: false,
-    transmission: true,
-    areaLights: true,
+    transmission: false,
+    transmissionScale: 0.5,
+    areaLights: false,
     environmentResolution: 256,
     lodBias: 1,
     maxTextureSize: 1024,
@@ -75,7 +82,8 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     multisampling: 4,
     bloom: true,
     depthOfField: true,
-    transmission: true,
+    transmission: false,
+    transmissionScale: 0.5,
     areaLights: true,
     environmentResolution: 512,
     lodBias: 0,
@@ -93,6 +101,7 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     bloom: true,
     depthOfField: true,
     transmission: true,
+    transmissionScale: 1,
     areaLights: true,
     environmentResolution: 1024,
     lodBias: 0,

@@ -4,10 +4,13 @@
  * dimensions (metres) — not from raw boxes.
  */
 import {
+  BoxGeometry,
   BufferGeometry,
   CatmullRomCurve3,
+  CylinderGeometry,
   ExtrudeGeometry,
   LatheGeometry,
+  Matrix4,
   Path,
   Shape,
   SphereGeometry,
@@ -137,7 +140,7 @@ export function fanBladesGeometry(radius: number, count = 9, thickness = 0.0012)
  * whose top is tapered and dished like an OEM/Cherry profile keycap.
  */
 export function keycapGeometry() {
-  const g = new RoundedBoxGeometry(1, 1, 1, 3, 0.14);
+  const g = new RoundedBoxGeometry(1, 1, 1, 2, 0.14);
   const pos = g.attributes.position;
   const v = new Vector3();
   for (let i = 0; i < pos.count; i++) {
@@ -226,4 +229,42 @@ export function driverGeometry(radius: number) {
 export function tubeAlong(points: Array<[number, number, number]>, radius: number, segments = 48, radial = 10) {
   const curve = new CatmullRomCurve3(points.map((p) => new Vector3(...p)));
   return new TubeGeometry(curve, segments, radius, radial, false);
+}
+
+/**
+ * Finned heatsink: base plate + `fins` thin plates along X, merged into one
+ * geometry. Size (w × h × depth) with the base at z = 0 and fins rising to +Z.
+ */
+export function finnedHeatsink(w: number, h: number, depth: number, fins: number, base = 0.003) {
+  const parts: BufferGeometry[] = [];
+  const plate = new BoxGeometry(w, h, base);
+  plate.translate(0, 0, base / 2);
+  parts.push(plate);
+  const finT = Math.min(0.0012, (w / fins) * 0.45);
+  for (let i = 0; i < fins; i++) {
+    const f = new BoxGeometry(finT, h, depth - base);
+    f.translate(-w / 2 + finT / 2 + (i * (w - finT)) / Math.max(1, fins - 1), 0, base + (depth - base) / 2);
+    parts.push(f);
+  }
+  const merged = mergeGeometries(parts);
+  parts.forEach((p) => p.dispose());
+  return merged;
+}
+
+/** Maps a shape built in XY (+ extrusion Z) so X→Y, Y→Z, Z→X. */
+export function permuteToYZX(geo: BufferGeometry) {
+  return geo.applyMatrix4(new Matrix4().set(0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1));
+}
+
+/** Many identical cylinders (capacitors, screws) merged into one geometry. Axis +Z. */
+export function scatteredCylinders(points: Array<[number, number]>, radius: number, height: number, z0 = 0) {
+  const parts = points.map(([x, y]) => {
+    const g = new CylinderGeometry(radius, radius, height, 14);
+    g.rotateX(Math.PI / 2);
+    g.translate(x, y, z0 + height / 2);
+    return g;
+  });
+  const merged = mergeGeometries(parts);
+  parts.forEach((p) => p.dispose());
+  return merged;
 }

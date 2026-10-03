@@ -1,3 +1,4 @@
+import { Vector3 } from 'three';
 import { CAMERA_STATES, type CameraStateName } from '@/data/camera/cameraStates';
 
 /**
@@ -26,6 +27,12 @@ export interface StoryRig {
   mouseSpin: number;
   mouseLift: number;
   pcGlow: number;
+  /** PC chapters: glass panel removal, interior lighting, exploded layout (0…1). */
+  glassOpen: number;
+  interior: number;
+  explode: number;
+  /** 0 on the opening hero shot → 1 once the first chapter is reached. */
+  heroBlend: number;
   /** 0 → 1 across the whole story (progress bar, idle motion). */
   progress: number;
 }
@@ -55,5 +62,15 @@ export const storyRig: StoryRig = {
   mouseSpin: 0,
   mouseLift: 0,
   pcGlow: 0,
+  glassOpen: 0,
+  interior: 0,
+  explode: 0,
+  heroBlend: 0,
   progress: 0,
 };
+
+/**
+ * Camera hand-over between the story camera and the free 360° camera: whoever
+ * owns the camera writes its current look-at target here every frame.
+ */
+export const cameraHandoff = { target: new Vector3() };

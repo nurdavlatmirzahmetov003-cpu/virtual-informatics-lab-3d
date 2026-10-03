@@ -209,3 +209,82 @@ export function drawWallpaper(c: HTMLCanvasElement) {
   ctx.font = `600 ${Math.round(h * 0.022)}px "Manrope Variable", sans-serif`;
   ctx.fillText('09:41', w - h * 0.03, h - h * 0.02);
 }
+
+/** PCB: solder mask with faint copper traces and silkscreen outlines (sRGB colour map). */
+export function pcbTexture(base = '#14181d', w = 512, h = 640, seed = 3) {
+  const { c, ctx } = canvas(w, h);
+  const r = rng(seed);
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, w, h);
+  // copper traces under the solder mask
+  ctx.lineCap = 'round';
+  for (let i = 0; i < 220; i++) {
+    ctx.strokeStyle = `rgba(120,140,150,${0.05 + r() * 0.07})`;
+    ctx.lineWidth = 0.6 + r() * 1.4;
+    let x = r() * w;
+    let y = r() * h;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    for (let s = 0; s < 4; s++) {
+      if (r() > 0.5) x += (r() - 0.5) * 160;
+      else y += (r() - 0.5) * 160;
+      ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  // vias
+  ctx.fillStyle = 'rgba(170,175,180,0.25)';
+  for (let i = 0; i < 260; i++) {
+    ctx.beginPath();
+    ctx.arc(r() * w, r() * h, 1 + r(), 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // silkscreen component outlines
+  ctx.strokeStyle = 'rgba(225,230,235,0.28)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 40; i++) {
+    const bw = 8 + r() * 30;
+    const bh = 6 + r() * 20;
+    ctx.strokeRect(r() * (w - bw), r() * (h - bh), bw, bh);
+  }
+  return finish(c, { srgb: true });
+}
+
+/** Faint smudges / dust for glass roughness (values stay low: 0.02 – 0.14). */
+export function smudgeTexture() {
+  const { c, ctx } = canvas(512, 512);
+  const r = rng(21);
+  ctx.fillStyle = 'rgb(6,6,6)';
+  ctx.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 70; i++) {
+    const x = r() * 512;
+    const y = r() * 512;
+    const rad = 10 + r() * 60;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, rad);
+    g.addColorStop(0, `rgba(36,36,36,${0.25 + r() * 0.35})`);
+    g.addColorStop(1, 'rgba(36,36,36,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x - rad, y - rad, rad * 2, rad * 2);
+  }
+  for (let i = 0; i < 1600; i++) {
+    ctx.fillStyle = `rgba(60,60,60,${r() * 0.5})`;
+    ctx.fillRect(r() * 512, r() * 512, 1, 1);
+  }
+  return finish(c);
+}
+
+/** Generic product label: dark sticker with a title, sub-lines and an accent bar. */
+export function labelTexture(lines: string[], { w = 512, h = 160, bg = '#0d0f13', accent = '#38d6f5' } = {}) {
+  const { c, ctx } = canvas(w, h);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = accent;
+  ctx.fillRect(0, 0, w * 0.018, h);
+  ctx.textBaseline = 'middle';
+  lines.forEach((line, i) => {
+    ctx.fillStyle = i === 0 ? 'rgba(238,241,246,0.95)' : 'rgba(170,178,192,0.85)';
+    ctx.font = `${i === 0 ? 700 : 500} ${Math.round(h * (i === 0 ? 0.22 : 0.13))}px "Manrope Variable", "Segoe UI", sans-serif`;
+    ctx.fillText(line, w * 0.06, h * (0.3 + i * 0.24));
+  });
+  return finish(c, { srgb: true });
+}

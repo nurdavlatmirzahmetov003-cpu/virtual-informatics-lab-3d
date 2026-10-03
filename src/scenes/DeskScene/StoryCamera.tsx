@@ -4,8 +4,8 @@ import { Spherical, Vector3, type PerspectiveCamera } from 'three';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { framingScale } from '@/lib/three/framing';
 import { sceneFocus } from '@/lib/three/sceneFocus';
-import { CHAPTERS, STORY_TIMING } from './chapters';
-import { storyRig } from './storyRig';
+import { usePcStore } from '@/store/pcStore';
+import { cameraHandoff, storyRig } from './storyRig';
 
 const YAW_LIMIT = 0.55;
 const PITCH_LIMIT = 0.22;
@@ -14,17 +14,14 @@ const PITCH_LIMIT = 0.22;
  * info panels are a bottom sheet (subject lifted). Fractions of view height.
  */
 const PORTRAIT_SHIFT = { hero: -0.14, panels: 0.2 };
-/** Story progress range of the hero → first chapter transition. */
-const STORY_LENGTH = STORY_TIMING.firstHold + (CHAPTERS.length - 1) * (STORY_TIMING.transition + STORY_TIMING.hold);
-const HERO_EXIT = [
-  STORY_TIMING.firstHold / STORY_LENGTH,
-  (STORY_TIMING.firstHold + STORY_TIMING.transition) / STORY_LENGTH,
-] as const;
+/** Seconds to glide back from the free 360° camera to the story camera. */
+const RETURN_TIME = 1.1;
 
 /**
  * Camera for the scroll story. Position / target / FOV come from the GSAP
  * timeline (via storyRig); the user can additionally drag to orbit around
  * the current subject with inertia. Double-click resets the orbit.
+ * Idle while explore mode owns the camera; on return it glides back.
  */
 export function StoryCamera() {
   const camera = useThree((s) => s.camera) as PerspectiveCamera;
@@ -35,13 +32,14 @@ export function StoryCamera() {
 
   const drag = useRef({ active: false, x: 0, y: 0, yaw: 0, pitch: 0, yawGoal: 0, pitchGoal: 0 });
   const tmp = useRef({ target: new Vector3(), offset: new Vector3(), sph: new Spherical() });
+  const handback = useRef({ active: false, t: 0, pos: new Vector3(), target: new Vector3(), wasExplore: false });
 
   useEffect(() => () => camera.clearViewOffset(), [camera]);
 
   useEffect(() => {
     const d = drag.current;
     const down = (e: PointerEvent) => {
-      if (e.button !== 0) return;
+      if (e.button !== 0 || usePcStore.getState().mode !== 'story') return;
       d.active = true;
       d.x = e.clientX;
       d.y = e.clientY;
@@ -78,6 +76,19 @@ export function StoryCamera() {
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.1);
+    const hb = handback.current;
+    if (usePcStore.getState().mode === 'explore') {
+      hb.wasExplore = true;
+      return;
+    }
+    if (hb.wasExplore) {
+      // explore mode just ended: remember where its camera was and glide from there
+      hb.wasExplore = false;
+      hb.active = true;
+      hb.t = 0;
+      hb.pos.copy(camera.position);
+      hb.target.copy(cameraHandoff.target);
+    }
     const r = storyRig;
     const d = drag.current;
     const { target, offset, sph } = tmp.current;
@@ -98,14 +109,22 @@ export function StoryCamera() {
     sph.phi = Math.max(0.25, Math.min(1.45, sph.phi - d.pitch));
     offset.setFromSpherical(sph);
     camera.position.copy(target).add(offset);
+    if (hb.active) {
+      hb.t = Math.min(1, hb.t + dt / RETURN_TIME);
+      const e = hb.t * hb.t * (3 - 2 * hb.t);
+      camera.position.lerpVectors(hb.pos, camera.position, e);
+      target.lerpVectors(hb.target, target, e);
+      if (hb.t >= 1) hb.active = false;
+    }
     camera.lookAt(target);
+    cameraHandoff.target.copy(target);
     if (Math.abs(camera.fov - r.fov) > 0.001) {
       camera.fov = r.fov;
       camera.updateProjectionMatrix();
     }
 
     if (aspect < 0.9) {
-      const t = Math.min(1, Math.max(0, (r.progress - HERO_EXIT[0]) / (HERO_EXIT[1] - HERO_EXIT[0])));
+      const t = Math.min(1, Math.max(0, r.heroBlend));
       const shift = PORTRAIT_SHIFT.hero + (PORTRAIT_SHIFT.panels - PORTRAIT_SHIFT.hero) * t * t * (3 - 2 * t);
       camera.setViewOffset(size.width, size.height, 0, size.height * shift, size.width, size.height);
     } else if (camera.view?.enabled) {

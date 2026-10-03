@@ -22,6 +22,7 @@ export function QualityController({ preset }: QualityControllerProps) {
   const scene = useThree((s) => s.scene);
   const gl = useThree((s) => s.gl);
   const invalidate = useThree((s) => s.invalidate);
+  const get = useThree((s) => s.get);
   const autoMode = useSettingsStore((s) => s.qualityMode === 'auto');
   const degrade = useSettingsStore((s) => s.degradeAutoQuality);
   const [monitoring, setMonitoring] = useState(false);
@@ -42,9 +43,13 @@ export function QualityController({ preset }: QualityControllerProps) {
       light.shadow.map?.dispose();
       light.shadow.map = null;
     });
+    // Shadow maps are re-rendered on demand only (scenes flag movement via
+    // gl.shadowMap.needsUpdate) — saves a full extra pass every frame.
+    gl.shadowMap.autoUpdate = false;
+    gl.transmissionResolutionScale = preset.transmissionScale;
     gl.shadowMap.needsUpdate = true;
     invalidate();
-  }, [scene, gl, invalidate, preset.shadowMapSize, preset.shadows]);
+  }, [scene, gl, invalidate, preset.shadowMapSize, preset.shadows, preset.transmissionScale]);
 
   useEffect(() => {
     if (!import.meta.env.DEV) return;
@@ -54,9 +59,25 @@ export function QualityController({ preset }: QualityControllerProps) {
       quality: preset.level,
       renderer: () => ({ ...gl.info.render, memory: { ...gl.info.memory }, programs: gl.info.programs?.length }),
       contextAttributes: () => gl.getContext().getContextAttributes(),
+      scene: () => get().scene,
+      /** Dev benchmark: average ms per synchronous scene render (no post) + draw stats. */
+      bench: (frames = 30) => {
+        const { scene: sc, camera } = get();
+        gl.info.autoReset = false;
+        gl.info.reset();
+        gl.render(sc, camera);
+        const stats = { calls: gl.info.render.calls, triangles: gl.info.render.triangles };
+        gl.info.autoReset = true;
+        const ctx = gl.getContext();
+        const px = new Uint8Array(4);
+        const t0 = performance.now();
+        for (let i = 0; i < frames; i++) gl.render(sc, camera);
+        ctx.readPixels(0, 0, 1, 1, ctx.RGBA, ctx.UNSIGNED_BYTE, px); // wait for the GPU
+        return { ...stats, msPerFrame: +((performance.now() - t0) / frames).toFixed(2) };
+      },
       dpr: () => gl.getPixelRatio(),
     };
-  }, [gl, preset.level]);
+  }, [gl, get, preset.level]);
 
   if (!autoMode || !monitoring) return null;
   // Re-mount per level so each step gets a fresh measurement window.

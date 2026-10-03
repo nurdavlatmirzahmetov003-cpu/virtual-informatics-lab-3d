@@ -249,7 +249,214 @@
             "value": "Gaming, 3D, programming"
           }
         }
+      },
+      "inside": {
+        "nav": "Inside",
+        "eyebrow": "Inside the system unit",
+        "title": "Inside the case",
+        "body": "The glass panel is off. Every component plugs into the motherboard and works as one system.",
+        "fact": "Routing cables behind the motherboard tray improves airflow.",
+        "specs": {
+          "board": {
+            "label": "Motherboard",
+            "value": "ATX"
+          },
+          "cpu": {
+            "label": "Processor",
+            "value": "8 cores"
+          },
+          "ram": {
+            "label": "Memory",
+            "value": "4 × 16 GB DDR5"
+          },
+          "gpu": {
+            "label": "Graphics",
+            "value": "PCIe x16"
+          },
+          "storage": {
+            "label": "Storage",
+            "value": "M.2 NVMe"
+          },
+          "psu": {
+            "label": "Power",
+            "value": "750 W"
+          }
+        }
+      },
+      "exploded": {
+        "nav": "Components",
+        "eyebrow": "Exploded view",
+        "title": "What is a computer made of?",
+        "body": "Keep scrolling to look at the components one by one. Click any of them and the camera moves in."
       }
     }
+  },
+  "pc": {
+    "parts": {
+      "motherboard": {
+        "name": "Motherboard",
+        "short": "The main board that connects every component.",
+        "body": "The processor, memory, graphics card and storage all plug into the motherboard. Data moves between them over the board's buses.",
+        "specs": {
+          "formFactor": {
+            "label": "Form factor",
+            "value": "ATX, 305 × 244 mm"
+          },
+          "socket": {
+            "label": "CPU socket",
+            "value": "LGA socket"
+          },
+          "slots": {
+            "label": "Slots",
+            "value": "4 × DDR5, PCIe x16, M.2"
+          }
+        }
+      },
+      "cpu": {
+        "name": "Processor (CPU)",
+        "short": "The computer's \"brain\" — it performs every calculation.",
+        "body": "The processor executes program instructions billions of times per second. More cores let it run more tasks at once.",
+        "specs": {
+          "cores": {
+            "label": "Cores / threads",
+            "value": "8 / 16"
+          },
+          "clock": {
+            "label": "Clock speed",
+            "value": "4.0–5.2 GHz"
+          },
+          "tdp": {
+            "label": "Heat output (TDP)",
+            "value": "105 W"
+          }
+        }
+      },
+      "cooler": {
+        "name": "CPU cooler",
+        "short": "Removes the processor's heat with a heatsink and fan.",
+        "body": "Heat travels through copper heat pipes into aluminium fins, and the fan blows air across them.",
+        "specs": {
+          "type": {
+            "label": "Type",
+            "value": "Tower, air cooling"
+          },
+          "pipes": {
+            "label": "Heat pipes",
+            "value": "4 × copper"
+          },
+          "fan": {
+            "label": "Fan",
+            "value": "120 mm"
+          }
+        }
+      },
+      "ram": {
+        "name": "Memory (RAM)",
+        "short": "Temporarily holds running programs and their data.",
+        "body": "RAM is very fast but temporary: everything in it is lost when the computer turns off.",
+        "specs": {
+          "capacity": {
+            "label": "Capacity",
+            "value": "4 × 16 GB = 64 GB"
+          },
+          "type": {
+            "label": "Type",
+            "value": "DDR5"
+          },
+          "speed": {
+            "label": "Speed",
+            "value": "6000 MT/s"
+          }
+        }
+      },
+      "gpu": {
+        "name": "Graphics card (GPU)",
+        "short": "Processes images, 3D graphics and video.",
+        "body": "A GPU has thousands of small cores, so it computes pixels in parallel. It matters for games, 3D and AI.",
+        "specs": {
+          "vram": {
+            "label": "Video memory",
+            "value": "12 GB GDDR6X"
+          },
+          "bus": {
+            "label": "Interface",
+            "value": "PCIe 4.0 x16"
+          },
+          "power": {
+            "label": "Power",
+            "value": "220 W"
+          }
+        }
+      },
+      "ssd": {
+        "name": "NVMe SSD",
+        "short": "Fast storage that permanently keeps the OS and files.",
+        "body": "An M.2 NVMe SSD stores data in flash memory and talks over PCIe. With no moving parts it is far faster than an HDD.",
+        "specs": {
+          "form": {
+            "label": "Form factor",
+            "value": "M.2 2280"
+          },
+          "interface": {
+            "label": "Interface",
+            "value": "PCIe 4.0 NVMe"
+          },
+          "speed": {
+            "label": "Read speed",
+            "value": "~7000 MB/s"
+          }
+        }
+      },
+      "psu": {
+        "name": "Power supply (PSU)",
+        "short": "Turns mains power into the voltages components need.",
+        "body": "The PSU converts alternating current into steady 12 V, 5 V and 3.3 V and delivers it to each part through cables.",
+        "specs": {
+          "power": {
+            "label": "Power",
+            "value": "750 W"
+          },
+          "efficiency": {
+            "label": "Efficiency",
+            "value": "Gold level"
+          },
+          "cables": {
+            "label": "Cables",
+            "value": "Modular"
+          }
+        }
+      },
+      "fans": {
+        "name": "Case fans",
+        "short": "Bring cool air into the case and push hot air out.",
+        "body": "Front fans pull air in and the rear fan exhausts hot air, so components do not overheat.",
+        "specs": {
+          "size": {
+            "label": "Size",
+            "value": "120 mm"
+          },
+          "count": {
+            "label": "Count",
+            "value": "3 front + 1 rear"
+          },
+          "speed": {
+            "label": "Speed",
+            "value": "~1200 RPM"
+          }
+        }
+      }
+    }
+  },
+  "explore": {
+    "enter": "360° view",
+    "exit": "Back to the story",
+    "reset": "Reset camera",
+    "autoRotate": "Auto-rotate",
+    "assemble": "Assemble",
+    "explode": "Explode",
+    "close": "Close",
+    "partsLabel": "Components",
+    "hint": "Drag to rotate · Wheel to zoom · Click a component",
+    "pick": "Pick a component or click a number in the scene."
   }
 }

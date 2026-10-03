@@ -48,7 +48,6 @@ export function EnvironmentLighting({
         <Lightformer form="rect" color="#7fdcff" intensity={1.2} position={[5, 1.5, -2]} rotation-y={-Math.PI / 2} scale={[5, 0.4, 1]} />
       </Environment>
 
-      <hemisphereLight args={['#c9d6ff', '#14161c', 0.18 * intensity]} />
       {/* key */}
       <directionalLight
         castShadow={preset.shadows}

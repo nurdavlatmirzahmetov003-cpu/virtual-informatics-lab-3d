@@ -21,7 +21,9 @@
 **2.1 ✅** Үстел сахнасы (процедуралық уақытша модельдер), Poly Haven HDRI + key/fill/rim + монитор RectAreaLight + bias light,
 Neutral tone mapping, DOF (High/Ultra), бір GSAP ScrollTrigger timeline: 5 chapter (Сетап → Монитор → Пернетақта →
 Тышқан → Жүйелік блок) + ақпарат панельдері (kk/ru/en), chapter навигациясы, прогресс, сүйреп орбита, мобильді bottom sheet.
-**2.2 ⬜ ← КЕЛЕСІ** ПК ішіне кіру, exploded view, бөлшек highlight/ақпарат, GLB модельдер.
+**2.2 ✅** ПК 8 бөлшекке бөлінді, Chapter 6 «Корпустың іші» (шыны алынады), Chapter 7 exploded view (бөлшек бойынша фокус +
+ақпарат, highlight/dim), hotspot-тар, 360° режимі (OrbitControls, reset, auto-rotate, жинау/бөлшектеу), өнімділік оптимизациясы.
+**2.3 ⬜ ← КЕЛЕСІ** Лицензиясы таза GLB модельдер + asset пайплайн (§50 қабылдау критерийлері үшін), draw call азайту.
 
 - Лицензиясы таза GLB модельдер: үстел, монитор, пернетақта, тышқан, наушник, колонкалар, корпус,
   ішкі бөліктер (MB, CPU, кулер, RAM, GPU, SSD, PSU, желдеткіштер).

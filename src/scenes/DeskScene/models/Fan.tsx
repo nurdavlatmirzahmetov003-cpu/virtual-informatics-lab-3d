@@ -15,10 +15,12 @@ type FanProps = ThreeElements['group'] & {
   rgb?: Material;
   /** Rotor speed in rad/s. */
   speed?: number;
+  /** GPU-style fan: thin rim instead of the square case-fan frame. */
+  frameless?: boolean;
 };
 
 /** 120/140 mm case fan; axis +Z (air flows toward −Z). */
-export function Fan({ size, geometries, rgb, speed = 7, ...props }: FanProps) {
+export function Fan({ size, geometries, rgb, speed = 7, frameless = false, ...props }: FanProps) {
   const rotor = useRef<Group>(null);
   const reducedMotion = useReducedMotion();
   const depth = 0.025;
@@ -29,9 +31,16 @@ export function Fan({ size, geometries, rgb, speed = 7, ...props }: FanProps) {
 
   return (
     <group {...props}>
-      <mesh geometry={geometries.frame} position-z={-depth / 2} castShadow>
-        <meshStandardMaterial color="#121317" roughness={0.55} metalness={0.1} />
-      </mesh>
+      {frameless ? (
+        <mesh>
+          <torusGeometry args={[size * 0.49, 0.002, 8, 64]} />
+          <meshStandardMaterial color="#121317" roughness={0.5} metalness={0.3} />
+        </mesh>
+      ) : (
+        <mesh geometry={geometries.frame} position-z={-depth / 2}>
+          <meshStandardMaterial color="#121317" roughness={0.55} metalness={0.1} />
+        </mesh>
+      )}
       {/* rear struts holding the motor */}
       {[0.25, 0.75, 1.25, 1.75].map((a) => (
         <mesh key={a} position-z={-depth / 2 + 0.002} rotation-z={a * Math.PI}>
@@ -40,7 +49,7 @@ export function Fan({ size, geometries, rgb, speed = 7, ...props }: FanProps) {
         </mesh>
       ))}
       <group ref={rotor}>
-        <mesh geometry={geometries.blades} castShadow>
+        <mesh geometry={geometries.blades}>
           <meshStandardMaterial color="#17181c" roughness={0.42} metalness={0.05} side={2} />
         </mesh>
         <mesh rotation-x={Math.PI / 2}>

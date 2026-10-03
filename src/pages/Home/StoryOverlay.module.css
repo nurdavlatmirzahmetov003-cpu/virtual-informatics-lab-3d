@@ -6,6 +6,11 @@
   pointer-events: none;
 }
 
+/* explore mode replaces the story UI */
+.root[data-hidden='true'] {
+  visibility: hidden;
+}
+
 /* ---------- shared ---------- */
 .eyebrow {
   font-size: var(--fs-xs);
@@ -204,6 +209,69 @@
   gap: var(--space-2);
   font-size: 0.6875rem;
   color: var(--text-dim);
+}
+
+/* ---------- exploded view panel ---------- */
+.partList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.partChip {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: rgba(10, 12, 18, 0.6);
+  color: var(--text-muted);
+  font: 600 var(--fs-xs) / 1 var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background var(--dur-fast) linear,
+    color var(--dur-fast) linear,
+    border-color var(--dur-fast) linear;
+}
+
+.partChip:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.partChip[aria-current='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #00131c;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.exploreBtn {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background var(--dur-fast) linear;
+}
+
+.exploreBtn:hover {
+  background: rgba(56, 214, 245, 0.22);
 }
 
 /* ---------- chapter navigation ---------- */

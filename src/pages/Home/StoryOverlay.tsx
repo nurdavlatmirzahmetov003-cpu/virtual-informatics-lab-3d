@@ -1,9 +1,11 @@
 import type { Ref } from 'react';
-import { ArrowRight, Hand, MousePointer2 } from 'lucide-react';
+import { ArrowRight, Hand, MousePointer2, Rotate3d } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
 import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
 import { CHAPTERS } from '@/scenes/DeskScene/chapters';
+import { PARTS } from '@/scenes/DeskScene/pc/parts';
+import { usePcStore } from '@/store/pcStore';
 import { useStoryStore } from '@/store/storyStore';
 import styles from './StoryOverlay.module.css';
 
@@ -22,9 +24,12 @@ const key = (k: string) => k as TranslationKey;
 export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
   const t = useT();
   const chapter = useStoryStore((s) => s.chapter);
+  const exploring = usePcStore((s) => s.mode === 'explore');
+  const storyPart = usePcStore((s) => s.storyPart);
+  const enterExplore = usePcStore((s) => s.enterExplore);
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-hidden={exploring} aria-hidden={exploring}>
       {/* Chapter 1 — full setup */}
       <section className={styles.hero} data-active={chapter === 0} aria-hidden={chapter !== 0}>
         <span className={styles.eyebrow}>{t('home.eyebrow')}</span>
@@ -48,6 +53,7 @@ export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
       {/* Chapters 2–5 — device panels */}
       {CHAPTERS.slice(1).map((c, i) => {
         const index = i + 1;
+        if (c.kind !== 'device') return null;
         const active = chapter === index;
         const base = `story.chapters.${c.id}`;
         return (
@@ -80,6 +86,53 @@ export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
               <Hand size={14} aria-hidden="true" />
               {t('story.dragHint')}
             </p>
+          </article>
+        );
+      })}
+
+      {/* Exploded view — one component at a time, driven by scroll */}
+      {CHAPTERS.map((c, index) => {
+        if (c.kind !== 'exploded') return null;
+        const active = chapter === index;
+        const part = storyPart ?? PARTS[0].id;
+        const base = `pc.parts.${part}`;
+        const def = PARTS.find((p) => p.id === part) ?? PARTS[0];
+        return (
+          <article key={c.id} className={styles.panel} data-side={c.panel} data-active={active} aria-hidden={!active} aria-live="polite">
+            <span className={styles.eyebrow}>
+              {String(index + 1).padStart(2, '0')} · {t(key(`story.chapters.${c.id}.eyebrow`))}
+            </span>
+            <h2 className={styles.panelTitle}>{t(key(`${base}.name`))}</h2>
+            <p className={styles.body}>{t(key(`${base}.short`))}</p>
+            <dl className={styles.specs}>
+              {def.specs.map((s) => (
+                <div key={s} className={styles.spec}>
+                  <dt>{t(key(`${base}.specs.${s}.label`))}</dt>
+                  <dd>{t(key(`${base}.specs.${s}.value`))}</dd>
+                </div>
+              ))}
+            </dl>
+            <ol className={styles.partList} aria-label={t('explore.partsLabel')}>
+              {PARTS.map((p, k) => (
+                <li key={p.id}>
+                  <button
+                    type="button"
+                    className={styles.partChip}
+                    aria-current={p.id === part ? 'true' : undefined}
+                    tabIndex={active ? 0 : -1}
+                    onClick={() => enterExplore(p.id)}
+                    title={t(key(`pc.parts.${p.id}.name`))}
+                  >
+                    {k + 1}
+                  </button>
+                </li>
+              ))}
+            </ol>
+            <p className={styles.caption}>{t(key(`story.chapters.${c.id}.body`))}</p>
+            <button type="button" className={styles.exploreBtn} tabIndex={active ? 0 : -1} onClick={() => enterExplore(part)}>
+              <Rotate3d size={16} aria-hidden="true" />
+              {t('explore.enter')}
+            </button>
           </article>
         );
       })}
