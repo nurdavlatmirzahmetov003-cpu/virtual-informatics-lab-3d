@@ -1,52 +1,120 @@
-import type { LucideIcon } from 'lucide-react';
-import { Boxes, BrainCircuit, ClipboardCheck, Cpu, FlaskConical, Network, Trophy, Workflow, Wrench } from 'lucide-react';
+import { useMemo, type CSSProperties, type PointerEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { PageLayout } from '@/components/layout/PageLayout';
+import { ArrowUpRight, Clock3 } from 'lucide-react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
+import { EXERCISES } from '@/data/labs/exercises';
+import { bestResults, useProgressStore } from '@/store/progressStore';
+import { ModulePreview } from './ModulePreview';
+import { LAB_MODULES, type LabModule, type ModuleId } from './modules';
 import styles from './LabsPage.module.css';
 
-type ModuleId = 'hardware' | 'assembly' | 'network' | 'algorithms' | 'logic' | 'experiments' | 'studio' | 'assignments' | 'results';
+const PASS = 70;
 
-/** Module registry for the hub; `phase` is when it becomes interactive. */
-const MODULES: ReadonlyArray<{ id: ModuleId; icon: LucideIcon; phase: number; to?: string }> = [
-  { id: 'hardware', icon: Cpu, phase: 3, to: '/explorer' },
-  { id: 'assembly', icon: Wrench, phase: 3, to: '/labs/assembly' },
-  { id: 'network', icon: Network, phase: 7, to: '/labs/network' },
-  { id: 'algorithms', icon: Workflow, phase: 7, to: '/labs/algorithms' },
-  { id: 'logic', icon: BrainCircuit, phase: 7, to: '/labs/logic' },
-  { id: 'experiments', icon: FlaskConical, phase: 7, to: '/labs/experiments' },
-  { id: 'studio', icon: Boxes, phase: 4, to: '/studio' },
-  { id: 'assignments', icon: ClipboardCheck, phase: 8, to: '/assignments' },
-  { id: 'results', icon: Trophy, phase: 8, to: '/progress' },
-];
+/** Exercises counted on a card: its own, or all of them for the summary modules. */
+function exercisesOf(id: ModuleId) {
+  if (id === 'assignments' || id === 'results') return EXERCISES;
+  return EXERCISES.filter((e) => e.module === id);
+}
+
+/** Pointer position → card tilt (CSS custom properties, no re-render). */
+function tilt(e: PointerEvent<HTMLElement>) {
+  if (e.pointerType !== 'mouse') return;
+  const el = e.currentTarget;
+  const r = el.getBoundingClientRect();
+  el.style.setProperty('--rx', `${((e.clientY - r.top) / r.height - 0.5) * -6}deg`);
+  el.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 8}deg`);
+  el.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+  el.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+}
+
+function resetTilt(e: PointerEvent<HTMLElement>) {
+  e.currentTarget.style.setProperty('--rx', '0deg');
+  e.currentTarget.style.setProperty('--ry', '0deg');
+}
+
+function ModuleCard({ module, index, done, total }: { module: LabModule; index: number; done: number; total: number }) {
+  const t = useT();
+  const { id, icon: Icon, status, to, tone } = module;
+  const soon = status === 'soon';
+  const body = (
+    <>
+      <div className={styles.visual}>
+        <ModulePreview id={id} />
+      </div>
+      <div className={styles.body}>
+        <div className={styles.meta}>
+          <span className={styles.index}>{String(index + 1).padStart(2, '0')}</span>
+          <span className={styles.status} data-status={status}>
+            {soon && <Clock3 size={12} aria-hidden="true" />}
+            {t(`labs.status.${status}`)}
+          </span>
+        </div>
+        <h2 className={styles.name}>
+          <Icon size={20} strokeWidth={1.6} aria-hidden="true" />
+          {t(`labs.modules.${id}.title`)}
+        </h2>
+        <p className={styles.desc}>{t(`labs.modules.${id}.desc`)}</p>
+        {status === 'beta' && <p className={styles.note}>{t('labs.betaNote')}</p>}
+        {soon && <p className={styles.note}>{t('labs.soonNote')}</p>}
+        <div className={styles.foot}>
+          <span className={styles.tag}>{t(`labs.modules.${id}.tag`)}</span>
+          {total > 0 && !soon && (
+            <span className={styles.progress} title={t('labs.tasksDone', { done, total })}>
+              <span className={styles.bar}>
+                <span style={{ width: `${(done / total) * 100}%` }} />
+              </span>
+              {done}/{total}
+            </span>
+          )}
+          <span className={styles.cta} aria-hidden={!soon}>
+            {soon ? t('labs.soonCta') : t('labs.open')}
+            {!soon && <ArrowUpRight size={15} aria-hidden="true" />}
+          </span>
+        </div>
+      </div>
+    </>
+  );
+
+  const style = { '--tone': tone } as CSSProperties;
+  // a module that is not built yet is a card, not a link to an empty page
+  if (soon) {
+    return (
+      <li className={styles.card} data-id={id} data-status={status} style={style}>
+        <article aria-disabled="true" className={styles.inner}>
+          {body}
+        </article>
+      </li>
+    );
+  }
+  return (
+    <li className={styles.card} data-id={id} data-status={status} style={style}>
+      <Link to={to} className={styles.inner} onPointerMove={tilt} onPointerLeave={resetTilt} aria-label={`${t(`labs.modules.${id}.title`)} — ${t(`labs.status.${status}`)}`}>
+        {body}
+      </Link>
+    </li>
+  );
+}
 
 export default function LabsPage() {
   const t = useT();
+  useDocumentTitle(t('labs.title'));
+  const attempts = useProgressStore((s) => s.attempts);
+  const passed = useMemo(() => new Set(bestResults(attempts).filter((a) => a.score >= PASS).map((a) => a.exercise)), [attempts]);
+
   return (
-    <PageLayout title={t('labs.title')} subtitle={t('labs.subtitle')}>
-      <ol className={styles.list}>
-        {MODULES.map(({ id, icon: Icon, phase, to }, i) => (
-          <li key={id} className={styles.item} aria-disabled={to ? undefined : 'true'}>
-            <span className={styles.index}>{String(i + 1).padStart(2, '0')}</span>
-            <Icon className={styles.icon} size={22} strokeWidth={1.5} aria-hidden="true" />
-            <div className={styles.text}>
-              <h2 className={styles.name}>
-                {to ? (
-                  <Link to={to} className={styles.link}>
-                    {t(`labs.modules.${id}.title`)}
-                  </Link>
-                ) : (
-                  t(`labs.modules.${id}.title`)
-                )}
-              </h2>
-              <p className={styles.desc}>{t(`labs.modules.${id}.desc`)}</p>
-            </div>
-            <span className={styles.status} data-available={Boolean(to)}>
-              {to ? t('labs.available') : `${t('labs.planned')} · ${t('labs.phase', { n: phase })}`}
-            </span>
-          </li>
-        ))}
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <span className={styles.eyebrow}>{t('labs.eyebrow')}</span>
+        <h1>{t('labs.title')}</h1>
+        <p>{t('labs.subtitle')}</p>
+      </header>
+      <ol className={styles.grid}>
+        {LAB_MODULES.map((m, i) => {
+          const list = exercisesOf(m.id);
+          return <ModuleCard key={m.id} module={m} index={i} done={list.filter((e) => passed.has(e.id)).length} total={list.length} />;
+        })}
       </ol>
-    </PageLayout>
+    </div>
   );
 }

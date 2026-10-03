@@ -44,48 +44,68 @@
   },
   "labs": {
     "title": "Labs",
-    "subtitle": "Each module loads as its own 3D or interactive scene.",
+    "subtitle": "9 modules: 3D hardware, networks, algorithms, logic and your own setup. Tasks are graded automatically.",
     "phase": "Phase {n}",
     "planned": "In development",
     "modules": {
       "hardware": {
         "title": "Computer hardware",
-        "desc": "3D anatomy of external and internal devices."
+        "desc": "3D anatomy of external and internal devices.",
+        "tag": "3D · 18 devices"
       },
       "assembly": {
         "title": "Virtual PC assembly",
-        "desc": "Install components in the right order."
+        "desc": "Install components in the right order.",
+        "tag": "3D · drag & drop"
       },
       "network": {
         "title": "Computer networks",
-        "desc": "Build a topology, configure IP, send a PING."
+        "desc": "Drag devices in, cable them, set IP addresses and follow a PING packet.",
+        "tag": "8 devices · PING"
       },
       "algorithms": {
         "title": "Algorithm visualizer",
-        "desc": "Step through searching and sorting."
+        "desc": "Step through searching and sorting.",
+        "tag": "5 algorithms · step by step"
       },
       "logic": {
         "title": "Logic circuits",
-        "desc": "Wire gates and check the truth table."
+        "desc": "Wire gates and check the truth table.",
+        "tag": "6 gates · truth table"
       },
       "experiments": {
         "title": "Virtual experiments",
-        "desc": "Change values and see the result instantly."
+        "desc": "Change values and see the result instantly.",
+        "tag": "8 experiments · formulas"
       },
       "studio": {
         "title": "Setup Studio 3D",
-        "desc": "Build a full setup for your budget and see it in 3D."
+        "desc": "Build a full setup for your budget and see it in 3D.",
+        "tag": "65 products · 3D"
       },
       "assignments": {
         "title": "Assignments",
-        "desc": "Practical tasks with automatic grading."
+        "desc": "Practical tasks with automatic grading.",
+        "tag": "Auto-graded"
       },
       "results": {
         "title": "My results",
-        "desc": "Scores, achievements and progress."
+        "desc": "Scores, achievements and progress.",
+        "tag": "Scores · achievements"
       }
     },
-    "available": "Available"
+    "available": "Available",
+    "eyebrow": "Learning hub",
+    "status": {
+      "ready": "Open",
+      "beta": "Beta",
+      "soon": "Coming soon"
+    },
+    "open": "Open",
+    "soonCta": "Opens soon",
+    "soonNote": "This module is in development and will open here when ready.",
+    "betaNote": "Beta: the core works and is still being improved.",
+    "tasksDone": "{done}/{total} tasks done"
   },
   "studio": {
     "title": "Setup Studio 3D",
@@ -1772,5 +1792,230 @@
         "over": "Total — {total}: your requirements exceed the budget by {amount}."
       }
     }
+  },
+  "network": {
+    "eyebrow": "Lab · 03",
+    "title": "Computer networks",
+    "intro": "Drag devices into the workspace, cable their ports, configure IP and watch the path of a PING packet.",
+    "mode": {
+      "label": "Mode",
+      "free": "Free build",
+      "freeDesc": "No grading: build your own network and test it with PING."
+    },
+    "palette": {
+      "title": "Devices",
+      "hint": "Drag in or click",
+      "full": "Device limit: {max}"
+    },
+    "devices": {
+      "pc": "PC",
+      "laptop": "Laptop",
+      "router": "Router",
+      "switch": "Switch",
+      "server": "Server",
+      "accessPoint": "Access point",
+      "printer": "Printer",
+      "smartphone": "Smartphone"
+    },
+    "role": {
+      "host": "End device · one IP",
+      "bridge": "L2 · forwards frames",
+      "router": "L3 · joins networks"
+    },
+    "workspace": {
+      "label": "Network workspace",
+      "empty": "The workspace is empty. Drag a device from the palette.",
+      "cableHint": "Cable: press a port under a device and drag to another (or click the port, then the device). Click a cable, then ✕ to remove it.",
+      "connecting": "{name} · {port} selected — now click another device. Esc cancels.",
+      "portTitle": "{name} · {port} — {state}",
+      "portFree": "free",
+      "portUsed": "connected",
+      "cableTitle": "{a} ↔ {b} · click to remove",
+      "removeCable": "Remove cable"
+    },
+    "connectError": {
+      "sameDevice": "A device cannot connect to itself.",
+      "unknownPort": "Port not found.",
+      "portBusy": "That port is in use.",
+      "kindMismatch": "Ports do not match: Ethernet links to Ethernet, Wi-Fi to Wi-Fi.",
+      "wifiNeedsAccessPoint": "A Wi-Fi device connects only to an access point.",
+      "alreadyLinked": "These devices are already linked.",
+      "noFreePort": "No free matching port."
+    },
+    "config": {
+      "title": "Settings",
+      "empty": "Click a device to configure it.",
+      "name": "Name",
+      "ip": "IP address",
+      "mask": "Subnet mask",
+      "gateway": "Gateway",
+      "dns": "DNS server",
+      "interfaces": "Router ports: each one is a separate network",
+      "noIp": "No IP needed: a {type} forwards frames by MAC address (L2). Give IP addresses to computers and router ports.",
+      "links": "Connections",
+      "noLinks": "No cables",
+      "unplug": "Unplug",
+      "remove": "Delete device",
+      "subnet": "Network: {net}",
+      "valid": "Settings look right",
+      "optional": "optional",
+      "unused": "unused",
+      "connectTo": "Cable to",
+      "connect": "Connect"
+    },
+    "ping": {
+      "title": "PING",
+      "from": "From",
+      "to": "To",
+      "run": "Send PING",
+      "running": "Packet travelling…",
+      "need": "PING needs at least 2 devices.",
+      "stoppedAt": "Stopped at: {at}",
+      "route": "Path: {route}",
+      "replyPrefix": "The request reached {target}, but the reply could not return.",
+      "ok": "PING succeeded: {source} → {target} delivered and the reply returned.",
+      "sourceNotHost": "{source} cannot send PING: switches and access points have no IP. Choose a computer, server or phone.",
+      "noCable": "{name} has no cable — the packet cannot leave the device.",
+      "noIp": "{name} has no IP address. Enter an IP and mask in the settings.",
+      "invalidIp": "{name}: \"{ip}\" is not a valid IPv4 address (4 numbers, 0–255).",
+      "invalidMask": "{name}: mask \"{mask}\" is invalid. Example: 255.255.255.0.",
+      "reservedIp": "{name}: {ip} is a network, broadcast or reserved address and cannot be assigned.",
+      "targetNoIp": "{name} has no IP — there is nowhere to send the packet. Switches and access points only forward frames.",
+      "targetInvalidIp": "{name} has a wrong IP or mask — the packet cannot be delivered.",
+      "duplicateIp": "{ip} is used by two devices: {a} and {b}. Every IP address must be unique.",
+      "differentSubnet": "The IP addresses are in different networks: {name} is in {srcNet} and {dst} is not. Other networks are reached through a gateway (router), but {name} has no gateway.",
+      "gatewayOutsideSubnet": "{name}'s gateway {gateway} is outside its own network ({srcNet}), so it cannot be reached.",
+      "gatewayUnreachable": "{name} could not find gateway {gateway}: no router in this segment has that address. The packet stopped at {at}.",
+      "gatewayNotRouter": "{name}'s gateway {gateway} is {owner}, which is not a router and does not forward packets.",
+      "noRoute": "{router} has no port in the network of {ip} — the packet stopped at the router.",
+      "routerPortNoCable": "{router} port {port} ({net}) has no cable — the packet stopped at the router.",
+      "targetNoCable": "{target} has no cable — the packet stopped at {at}.",
+      "noPath": "There is no cable path between {from} and {target} — the packet stopped at {at}.",
+      "sameSubnetBehindRouter": "{target} ({ip}) has an address from the same network but sits behind the router. Each router side is a separate network: check the IPs.",
+      "unknownHost": "No device with {ip} was found in this network — the packet stopped at {at}."
+    },
+    "task": {
+      "label": "Task",
+      "choose": "Choose a task",
+      "goal": "Expected result",
+      "checks": "What is checked",
+      "hint": "Get a hint",
+      "hintCost": "−1 point",
+      "noHints": "No hints left",
+      "check": "Check",
+      "restart": "Start over",
+      "best": "Best: {score}/10",
+      "done": "Done",
+      "points": "{n} pts"
+    },
+    "tasks": {
+      "connect3": {
+        "title": "Connect 3 computers into one network",
+        "short": "Switch + cables",
+        "instructions": "PC1, PC2 and PC3 already have IP addresses. Drag a switch in from the palette and cable all three computers to it. Then test with PING.",
+        "expected": "All three computers share one switch and can PING each other.",
+        "hint1": "Each computer has one Ethernet port, so three cannot be linked directly — you need a switch.",
+        "hint2": "To cable: press the port under a computer and drag it to the switch.",
+        "hint3": "All IPs are 192.168.1.x with mask 255.255.255.0 — one network. Test PING PC1 → PC3."
+      },
+      "routerLan": {
+        "title": "Build a LAN with a router and a switch",
+        "short": "Router · switch · gateway",
+        "instructions": "Build a LAN from scratch: a router, a switch and at least 2 computers. Cable the router and the computers to the switch. Give the router's LAN port an IP, and the computers IPs from the same network with gateway = the router address.",
+        "expected": "The computers can PING the router and each other; the gateway is the router address.",
+        "hint1": "Drag devices in from the palette. Cables: router → switch, each computer → switch.",
+        "hint2": "Select the router and give the cabled port (e.g. Gi0/0) 192.168.0.1 / 255.255.255.0.",
+        "hint3": "Computers: 192.168.0.10, 192.168.0.11…, mask 255.255.255.0, gateway 192.168.0.1."
+      },
+      "addressing": {
+        "title": "Configure IP addresses correctly",
+        "short": "IP · mask · gateway · DNS",
+        "instructions": "The network is cabled, but PC1, PC2, LAPTOP1 and PRN1 are not configured. LAN is 192.168.10.0/24, the router (R1) is 192.168.10.1, the DNS server (SRV1) is 10.10.0.10. Give each a unique IP, mask, gateway and DNS.",
+        "expected": "All four devices can PING server SRV1.",
+        "hint1": "Use 192.168.10.2 – 192.168.10.254; .0 is the network address and .255 the broadcast.",
+        "hint2": "Mask 255.255.255.0 (/24). Gateway is the router address: 192.168.10.1.",
+        "hint3": "The server is in another network (10.10.0.0/24), so PING fails without the right gateway."
+      },
+      "repair": {
+        "title": "Repair the broken network",
+        "short": "Find 4 faults",
+        "instructions": "This network has 4 faults, so some devices cannot reach the server. Find them with PING and fix the cable, IP address, subnet and gateway.",
+        "expected": "All 5 devices can PING SRV1 and no IP repeats.",
+        "hint1": "PING SRV1 from each device and read where the packet stops and why.",
+        "hint2": "PC2 has no cable, and two computers share an IP.",
+        "hint3": "LAPTOP1 is in another network (192.168.2.x) and PRN1's gateway is not the router."
+      }
+    },
+    "rules": {
+      "threeComputers": "At least 3 computers in the workspace",
+      "allCabled": "Every computer is cabled",
+      "oneSegment": "Computers share one segment (through a switch)",
+      "addressingSame": "IPs are valid, unique and in one network",
+      "pingAll": "Computers can PING each other",
+      "devicesPresent": "A router, a switch and at least 2 computers",
+      "routerSwitch": "The router is cabled to the switch",
+      "computersOnSwitch": "Computers join the LAN through the switch",
+      "routerAddress": "Router and computer IPs are in one network",
+      "gateways": "Each device's gateway is the router address",
+      "pingRouterAll": "Computers can PING the router and each other",
+      "hostAddresses": "Each IP is valid, unique and in the LAN",
+      "masks": "The mask matches the router network",
+      "dns": "The DNS server address is right",
+      "pingServer": "Every device can PING the server",
+      "cablesLan": "Every device is cabled into the LAN",
+      "uniqueIps": "No IP address repeats",
+      "lanSubnet": "All IPs are in the router network"
+    },
+    "feedback": {
+      "pingFailed": "{source} → {target}: PING failed.",
+      "issue": {
+        "noCable": "{name} has no cable.",
+        "noIp": "{name} has no IP address.",
+        "invalidIp": "{name}: \"{ip}\" is not a valid IP.",
+        "invalidMask": "{name}: mask \"{mask}\" is invalid.",
+        "reservedIp": "{name}: {ip} is a network or broadcast address and cannot be assigned.",
+        "duplicateIp": "{ip} is used by both {other} and {name}.",
+        "gatewayInvalid": "{name}: gateway \"{gateway}\" is not a valid IP.",
+        "gatewayOutsideSubnet": "{name}: gateway {gateway} is outside the device network ({net}).",
+        "dnsInvalid": "{name}: DNS \"{dns}\" is not a valid IP.",
+        "interfaceInvalid": "{name}, port {port}: the IP or mask is invalid.",
+        "interfacesOverlap": "{name}: ports {a} and {b} share a network ({net}) — each router port needs its own network."
+      },
+      "needComputers": "Computers: {count}, at least {need} needed.",
+      "separated": "{a} and {b} are in different segments — cable both to one switch.",
+      "deviceMissing": "{name} was deleted — restore it with \"Start over\".",
+      "nothingToPing": "There is nothing to PING.",
+      "missingRouter": "No router — drag one in from the palette.",
+      "missingSwitch": "No switch — drag one in from the palette.",
+      "noRouterSwitchCable": "No router port is cabled to a switch.",
+      "notOnLan": "{name} is not on {router}'s LAN (through the switch).",
+      "routerNotConfigured": "The router port facing the switch has no IP address and mask.",
+      "wrongSubnet": "{name}: {ip} is in {net}, but it must be in {expected}.",
+      "wrongMask": "{name}: mask {mask}, expected {expected}.",
+      "wrongGateway": "{name}: gateway {gateway}, but the router is {expected}.",
+      "noGateway": "{name} has no gateway; enter the router address ({expected}).",
+      "wrongDns": "{name}: DNS {dns}, but the DNS server is {expected}.",
+      "noDns": "{name} has no DNS; the DNS server is {expected}."
+    },
+    "note": "Educational simulator: IPv4 addressing, switching and routing through one router are modelled. No real ICMP is sent; DNS is only checked as an address."
+  },
+  "grading": {
+    "result": "Result",
+    "score": "Score",
+    "time": "Time",
+    "errors": "Errors",
+    "hints": "Hints",
+    "status": "Status",
+    "completed": "Completed",
+    "incomplete": "Not completed",
+    "success": "Well done! Every check passed.",
+    "tryAgain": "Read the explanations below, fix the mistakes and check again.",
+    "why": "Why?",
+    "rulePoints": "{earned}/{points}",
+    "penalty": "Penalty: −{n} (hints and earlier checks)",
+    "saved": "Saved to My results.",
+    "openResults": "My results",
+    "ruleError": "This check could not be run.",
+    "scoring": "Scoring: up to 10 from the rules; each hint and failed check −1 (max −3). Time does not affect the score."
   }
 }

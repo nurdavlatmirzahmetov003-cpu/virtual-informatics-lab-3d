@@ -66,6 +66,10 @@
 - [x] Фаза 3.2: оқушы өзі жинайтын PC Assembly Lab + бағалау және progress persistence
 - [x] Фаза 7: network/algorithms/logic/experiments, kk/ru/en, автоматты бағалау
 - [x] Фаза 8 негізгі функциялары: 40 assignment, best scores/history/achievements/progress percentage
+- [x] Фаза 7.1: «Зертханалар» хабы (9 премиум карточка, Ашық/Бета/Жақында, прогресс); Network Lab `src/labs/NetworkLab/` + `pages/Labs/NetworkLab/` (сүйреп әкелу, порт→порт кабель, IP/mask/gateway/DNS, router порттары, PING анимациясы, тоқтаған жер/себеп); `src/services/grading/` + `GradeReportCard`; `npm run test:network` (12), `test:grading` (3)
+- [ ] Фаза 7.2: алгоритм және логика зертханаларын `services/grading`-ке көшіру (10 балдық шкала, кеңестер, ереже бойынша түсіндірме, `GradeReportCard`); тәжірибелерді де
+- [ ] Network Lab: жұмыс күйін (draft) сақтау; бірнеше router + статикалық маршрут; «Интернет» бұлты; undo
+- [ ] Network Lab: телефонда тақта кішкентай — zoom/pan немесе «планшет/десктоп ұсынылады» ескертуі
 - [ ] Дыбыс: store-да бар, UI тумблері дыбыс эффектілерімен бірге
 - [ ] Reduced-motion қолмен ауыстырғышы (қазір тек жүйе баптауы)
 - [x] README: скриншоттар, hardware/assignment/translation қосу нұсқаулары

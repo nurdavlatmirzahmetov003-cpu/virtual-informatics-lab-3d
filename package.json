@@ -17,10 +17,12 @@
     "test:assistant": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/assistant.test.mjs",
     "test:pc-lab": "node --experimental-strip-types --test scripts/pc-lab.test.mjs",
     "test:learning": "node --experimental-strip-types --test scripts/learning.test.mjs",
+    "test:network": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/network.test.mjs",
+    "test:grading": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/grading.test.mjs",
     "test:progress": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/progress.test.mjs",
     "ai:server": "node --experimental-strip-types --import ./scripts/test-resolve.mjs server/ai-server.ts",
     "test:ai": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/ai.test.mjs",
-    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab && npm run test:learning && npm run test:progress"
+    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab && npm run test:learning && npm run test:progress && npm run test:network && npm run test:grading"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",
