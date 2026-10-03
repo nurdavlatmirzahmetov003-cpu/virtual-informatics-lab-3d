@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZERTHANA — Сетап Студиясы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>window.__errs=[];window.addEventListener('error',e=>{window.__errs.push(e.message+' @ '+(e.filename||'')+':'+e.lineno)});window.addEventListener('unhandledrejection',e=>{window.__errs.push('PROMISE: '+e.reason)});</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./js/lib/three.module.js",
+    "three/addons/": "./js/lib/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- ===== ТОПБАР ===== -->
+<nav id="topbar">
+  <div class="tb-brand"><span class="brand-mark">Z</span><div><b>ZERTHANA</b><em>СЕТАП СТУДИЯСЫ</em></div></div>
+  <div class="tb-views">
+    <button class="tb-view active" data-view="studio">Студия</button>
+    <button class="tb-view" data-view="lab">Зертхана</button>
+  </div>
+</nav>
+
+<!-- ===== КӨРІНІС 1: СТУДИЯ (КОНФИГУРАТОР) ===== -->
+<div id="view-studio" class="view active">
+  <canvas id="studioCanvas"></canvas>
+
+  <!-- Жинау панелі -->
+  <aside id="builderPanel">
+    <div class="bp-head">СЕТAP ЖИНАУ <span id="bpTotal">0 ₸</span></div>
+    <div class="bp-cats" id="bpCats">
+      <button data-cat="monitor" class="active">Монитор</button>
+      <button data-cat="mouse">Тіышқан</button>
+      <button data-cat="keyboard">Пернетақта</button>
+      <button data-cat="tower">Жүйелік блок</button>
+    </div>
+    <div id="towerSub" class="bp-sub hidden"></div>
+    <div id="devCards" class="dev-cards"></div>
+    <div class="bp-colors">
+      <span>RGB ТЕМА</span>
+      <div id="colorRow">
+        <button class="csw active" data-theme="blue" style="--c:#2f7bff"></button>
+        <button class="csw" data-theme="cyan" style="--c:#22d3ee"></button>
+        <button class="csw" data-theme="purple" style="--c:#a855f7"></button>
+        <button class="csw" data-theme="red" style="--c:#ff3860"></button>
+        <button class="csw" data-theme="green" style="--c:#22ff88"></button>
+        <button class="csw" data-theme="rainbow" style="background:conic-gradient(#22d3ee,#a855f7,#f472b6,#22d3ee)"></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Баға + құрастыру -->
+  <div id="priceCard">
+    <div class="pc-list" id="priceList"></div>
+    <div id="compatList"></div>
+    <div class="pc-total"><span>БАРЛЫҒЫ</span><b id="priceTotal">0 ₸</b></div>
+    <button id="viewSetupBtn" class="btn-grad big">СЕТАПТЫ ҚҰРУ ▸</button>
+    <a class="pc-link" href="config.html" target="_blank">КОНФИГУРАЦИЯ БЕТІН АШУ ↗</a>
+  </div>
+
+  <!-- Чат-бот -->
+  <div id="chatPanel">
+    <div class="chat-head"><span class="chat-dot"></span>ZERTHANA көмекшісі<button id="chatToggle">—</button></div>
+    <div class="chat-body" id="chatBody"></div>
+    <div class="chat-input">
+      <input id="chatText" placeholder="Бюджетіңді жаз: 400 000 ₸">
+      <button id="chatSend">➤</button>
+    </div>
+  </div>
+
+  <!-- Жинау көрсеткіші -->
+  <div id="asmOverlay" class="hidden">
+    <div class="asm-ring"></div>
+    <div id="asmStep">Дайындалуда...</div>
+  </div>
+
+  <div id="studioHint">Сүйреу — 360° айналу &nbsp;·&nbsp; Доңғалақ — жақындату</div>
+</div>
+
+<!-- ===== КӨРІНІС 2: ЗЕРТХАНА (саяхат) ===== -->
+<div id="view-lab" class="view">
+<div id="journey">
+  <canvas id="scene3d"></canvas>
+
+  <div id="heroOverlay">
+    <div class="hero-badge">ИТ-ПЛАТФОРМА • ИНТЕРАКТИВТІ БІЛІМ</div>
+    <h1>Виртуалды <span class="grad">Информатика</span><br>Зертханасы</h1>
+    <p class="hero-sub">Компьютердің ішіне кіріп зертте. Тіышқанның доңғалағын айналдырып,<br>әр құрылғыны шынайы формада қара.</p>
+    <div class="scroll-hint">
+      <div class="mouse-icon"><div class="wheel"></div></div>
+      <span>Төмен айналдырыңыз</span>
+    </div>
+  </div>
+
+  <div id="infoCard" class="hidden">
+    <div class="ic-step" id="icStep">01</div>
+    <h3 id="icTitle">Монитор</h3>
+    <p id="icDesc"></p>
+    <div id="icFacts"></div>
+  </div>
+
+  <div id="progressBar"><div id="progressFill"></div></div>
+  <div id="journeyHint">Доңғалақпен айналдырыңыз &nbsp;·&nbsp; Сахнаны сүйреумен 360° бұрыңыз</div>
+</div>
+
+<div id="scrollSpace"></div>
+
+<!-- ===== ПЛАТФОРМА ===== -->
+<main id="labs">
+  <header class="labs-head">
+    <div class="brand-row">
+      <span class="brand-mark">Z</span>
+      <div>
+        <h2>Практикалық <span class="grad">модульдер</span></h2>
+        <p>Әр тапсырма автоматты бағаланады. Ұпай жинап, зертхана шебері атан.</p>
+      </div>
+    </div>
+    <div id="totalScore" class="total-score">ЖАЛПЫ ҰПАЙ <b id="totalVal">0</b><em>/ 100</em></div>
+  </header>
+
+  <div class="labs-body">
+    <nav id="labTabs">
+      <span class="nav-label">Модульдер</span>
+      <button class="tab active" data-lab="assemble"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M9 19h6M12 15v4"/></svg>Жүйені жинау</button>
+      <button class="tab" data-lab="network"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7v5M12 12l-5.5 5M12 12l5.5 5"/></svg>Желі топологиясы</button>
+      <button class="tab" data-lab="algo"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Алгоритмдер</button>
+      <button class="tab" data-lab="logic"><svg viewBox="0 0 24 24"><rect x="8" y="7" width="8" height="10" rx="2"/><path d="M4 10h4M4 14h4M16 12h4"/></svg>Логикалық элементтер</button>
+      <button class="tab" data-lab="exp"><svg viewBox="0 0 24 24"><path d="M10 3v6L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9V3M8 3h8"/></svg>Тәжірибелер</button>
+      <span class="nav-label" style="margin-top:26px">Есеп</span>
+      <button class="tab nav-plain" id="dashBtn"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>Прогресс</button>
+    </nav>
+
+    <div class="labs-content">
+      <!-- 1. КОМПЬЮТЕР ҚҰРАСТЫРУ -->
+      <section class="lab-panel active" id="lab-assemble">
+        <div class="lab-intro">
+          <span class="eyebrow">Модуль 01</span>
+          <h3>Жүйелік блокты жина</h3>
+          <p>Тапсырма: <b>ойындық жүйе жинау</b>. Талаптар: процессор ≥ 3.5 ГГц, ДДЖ ≥ 16 ГБ, SSD ≥ 512 ГБ, ойындық видеокарта, жеткілікті қуатты қорек. Бюджет: <b>350 000 ₸</b> артық емес.</p>
+        </div>
+        <div class="build-layout">
+          <div id="partsShop"></div>
+          <div>
+            <div id="buildSlotArea">
+              <div class="slot" data-slot="cpu"><span class="slot-ic">CPU</span><div><b>Процессор</b><em>таңдалмады</em></div></div>
+              <div class="slot" data-slot="cooler"><span class="slot-ic">COOL</span><div><b>Салқындатқыш</b><em>таңдалмады</em></div></div>
+              <div class="slot" data-slot="mb"><span class="slot-ic">MB</span><div><b>Аналық плата</b><em>таңдалмады</em></div></div>
+              <div class="slot" data-slot="ram"><span class="slot-ic">RAM</span><div><b>ДДЖ (RAM)</b><em>таңдалмады</em></div></div>
+              <div class="slot" data-slot="gpu"><span class="slot-ic">GPU</span><div><b>Видеокарта</b><em>таңдалмады</em></div></div>
+              <div class="slot" data-slot="ssd"><span class="slot-ic">SSD</span><div><b>SSD жинақтауыш</b><em>таңдалмады</em></div></div>
+              <div class="slot" data-slot="psu"><span class="slot-ic">PSU</span><div><b>Қоректендіру блогы</b><em>таңдалмады</em></div></div>
+            </div>
+            <div id="budgetBox">Қалды <b id="budgetVal">350 000 ₸</b></div>
+            <button id="buildBtn" class="btn-grad big">ЖИНҚА ЖӘНЕ БАҒАЛА</button>
+            <div id="buildResult"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. ЖЕЛІ ҚҰРУ -->
+      <section class="lab-panel" id="lab-network">
+        <div class="lab-intro">
+          <span class="eyebrow">Модуль 02</span>
+          <h3>Мектеп желісін құр</h3>
+          <p>Қосу керек: интернет, роутер, коммутатор, 2 компьютер, сервер, принтер. Ережелер: <b>барлық құрылғы бір желіде</b>, интернет тек <b>роутер</b> арқылы, компьютерлер мен сервер — <b>коммутаторға</b>, принтер — <b>серверге</b>.</p>
+        </div>
+        <div class="net-toolbar">
+          <button class="btn-ghost dev-btn" data-dev="internet">Интернет</button>
+          <button class="btn-ghost dev-btn" data-dev="router">Роутер</button>
+          <button class="btn-ghost dev-btn" data-dev="switch">Коммутатор</button>
+          <button class="btn-ghost dev-btn" data-dev="pc">Компьютер</button>
+          <button class="btn-ghost dev-btn" data-dev="server">Сервер</button>
+          <button class="btn-ghost dev-btn" data-dev="printer">Принтер</button>
+          <button class="btn-ghost" id="netClear">Тазалау</button>
+        </div>
+        <div id="netCanvasWrap">
+          <canvas id="netCanvas" width="1100" height="460"></canvas>
+          <div class="net-tip">Құрылғыны шерт — содан кейін екіншісін шерт: жалғанады. Қайта шертсең — ажырайды. Ұстап сүйресең — орын ауыстырады.</div>
+        </div>
+        <button id="netCheck" class="btn-grad big">ЖЕЛІНІ ТЕКСЕР</button>
+        <div id="netResult"></div>
+      </section>
+
+      <!-- 3. АЛГОРИТМДЕР -->
+      <section class="lab-panel" id="lab-algo">
+        <div class="lab-intro">
+          <span class="eyebrow">Модуль 03</span>
+          <h3>Алгоритмнің жұмысын бақыла</h3>
+          <p>«Көпіршік» сұрыптамасы — көрші сандарды салыстырып, орындарын ауыстырады. Ойнат, қадаммен жүріп, әр операцияны бақыла.</p>
+        </div>
+        <div class="algo-toolbar">
+          <select id="algoType"><option value="bubble">Көпіршік сұрыптамасы</option><option value="select">Таңдау сұрыптамасы</option></select>
+          <button class="btn-grad" id="algoPlay">Ойнату</button>
+          <button class="btn-ghost" id="algoStep">Қадам</button>
+          <button class="btn-ghost" id="algoShuffle">Араластыру</button>
+          <span class="algo-stat">Салыстыру <b id="cmpCount">0</b> &nbsp;·&nbsp; Ауыстыру <b id="swapCount">0</b></span>
+        </div>
+        <div id="algoBars"></div>
+        <div id="algoPseudo">
+          <div data-line="0">ДӘЙЕКТЕМЕ:</div>
+          <div data-line="1">әр i үшін 0-ден n-1 ге дейін:</div>
+          <div data-line="2">&nbsp;&nbsp;әр j үшін 0-ден n-i-2 ге дейін:</div>
+          <div data-line="3">&nbsp;&nbsp;&nbsp;&nbsp;егер a[j] &gt; a[j+1] онда:</div>
+          <div data-line="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a[j] мен a[j+1] ауыстыру</div>
+        </div>
+        <div class="quiz" id="algoQuiz">
+          <span class="eyebrow">Бақылау сұрағы · 5 ұпай</span>
+          <p>Көпіршік сұрыптамасының күрделілігі қандай?</p>
+          <button class="quiz-opt" data-ok="0">O(n)</button>
+          <button class="quiz-opt" data-ok="1">O(n²)</button>
+          <button class="quiz-opt" data-ok="0">O(log n)</button>
+          <div class="quiz-fb"></div>
+        </div>
+      </section>
+
+      <!-- 4. ЛОГИКАЛЫҚ СХЕМАЛАР -->
+      <section class="lab-panel" id="lab-logic">
+        <div class="lab-intro">
+          <span class="eyebrow">Модуль 04</span>
+          <h3>Логикалық элементтер</h3>
+          <p>Ақпарат компьютерде <b>0</b> мен <b>1</b> түрінде сақталады. Элементтер сигналды өңдейді: <b>AND</b>, <b>OR</b>, <b>NAND</b>, <b>XOR</b>. Тапсырма: мақсат кестесінің жауабын шығаратын элементті тап.</p>
+        </div>
+        <div class="logic-stage">
+          <div class="logic-inputs">
+            <div class="sw-box"><span>Кіріс A</span><button class="switch" id="swA">0</button></div>
+            <div class="sw-box"><span>Кіріс B</span><button class="switch" id="swB">0</button></div>
+          </div>
+          <svg id="logicWires" width="360" height="220">
+            <line x1="70" y1="55" x2="160" y2="90" class="wire"/>
+            <line x1="70" y1="165" x2="160" y2="130" class="wire"/>
+          </svg>
+          <div class="gate-box">
+            <div id="gateChip">?</div>
+            <span>Элемент</span>
+          </div>
+          <svg width="120" height="220"><line x1="0" y1="110" x2="110" y2="110" class="wire" id="outWire"/></svg>
+          <div class="bulb-box"><div id="bulb">○</div><span>Шығыс Q</span></div>
+        </div>
+        <div class="gate-palette" id="gatePalette">
+          <button data-gate="AND">AND</button>
+          <button data-gate="OR">OR</button>
+          <button data-gate="NAND">NAND</button>
+          <button data-gate="XOR">XOR</button>
+        </div>
+        <table id="truthTable">
+          <tr><th>A</th><th>B</th><th>Жауабың</th><th>Мақсат</th></tr>
+        </table>
+        <div class="quiz" id="logicQuiz">
+          <span class="eyebrow">Бақылау сұрағы · 5 ұпай</span>
+          <p>Қай элемент <b>екі сигнал да 1 болғанда ғана 1</b> шығарады?</p>
+          <button class="quiz-opt" data-ok="0">OR</button>
+          <button class="quiz-opt" data-ok="1">AND</button>
+          <button class="quiz-opt" data-ok="0">NOT</button>
+          <div class="quiz-fb"></div>
+        </div>
+      </section>
+
+      <!-- 5. ТӘЖІРИБЕЛЕР -->
+      <section class="lab-panel" id="lab-exp">
+        <div class="lab-intro">
+          <span class="eyebrow">Модуль 05</span>
+          <h3>Виртуалды тәжірибелер</h3>
+          <p>Екілік жүйе, ақпарат өлшем бірліктері және RGB түс моделі — үш эксперимент, барлығы 20 ұпай.</p>
+        </div>
+
+        <div class="exp-card">
+          <span class="eyebrow">Тәжірибе 1</span>
+          <h4>Екілік санау жүйесі</h4>
+          <p>Қосқыштарды басып, мақсат санды құр: <b class="target-num" id="binTarget">—</b></p>
+          <div class="bit-row" id="bitRow"></div>
+          <div class="bin-readout">Ондық: <b id="binValue">0</b> <span id="binStatus"></span></div>
+        </div>
+
+        <div class="exp-card">
+          <span class="eyebrow">Тәжірибе 2</span>
+          <h4>Ақпарат өлшем бірліктері</h4>
+          <p id="convTask">2 ГБ неше <b>МБ</b>?</p>
+          <div class="conv-row">
+            <input type="number" id="convAnswer" placeholder="Жауабың..."> <span>МБ</span>
+            <button class="btn-grad" id="convCheck">Тексеру</button>
+          </div>
+          <div class="quiz-fb" id="convFb"></div>
+        </div>
+
+        <div class="exp-card">
+          <span class="eyebrow">Тәжірибе 3</span>
+          <h4>RGB түс моделі</h4>
+          <p>Слайдерлермен монитордағыдай <b>көгілдір (Cyan)</b> түсті құр: R:0, G:255, B:255 (ауытқу ±30).</p>
+          <div class="rgb-row">
+            <div id="rgbPreview"></div>
+            <div class="sliders">
+              <label>R Қызыл <input type="range" id="rR" min="0" max="255" value="128"></label>
+              <label>G Жасыл <input type="range" id="rG" min="0" max="255" value="128"></label>
+              <label>B Көк <input type="range" id="rB" min="0" max="255" value="128"></label>
+            </div>
+          </div>
+          <div class="quiz-fb" id="rgbFb"></div>
+        </div>
+      </section>
+
+      <!-- ДАШБОРД -->
+      <section id="dashboard">
+        <h2>Жетістіктер</h2>
+        <div class="dash-grid">
+          <div class="dash-card" data-mod="assemble"><div class="dash-ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="11" rx="1.5"/><path d="M9 19h6M12 15v4"/></svg></div><b>Жүйені жинау</b><div class="dash-score">0/20</div><div class="dash-bar"><i></i></div></div>
+          <div class="dash-card" data-mod="network"><div class="dash-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7v5M12 12l-5.5 5M12 12l5.5 5"/></svg></div><b>Желі</b><div class="dash-score">0/20</div><div class="dash-bar"><i></i></div></div>
+          <div class="dash-card" data-mod="algo"><div class="dash-ic"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></div><b>Алгоритмдер</b><div class="dash-score">0/20</div><div class="dash-bar"><i></i></div></div>
+          <div class="dash-card" data-mod="logic"><div class="dash-ic"><svg viewBox="0 0 24 24"><rect x="8" y="7" width="8" height="10" rx="2"/><path d="M4 10h4M4 14h4M16 12h4"/></svg></div><b>Логика</b><div class="dash-score">0/20</div><div class="dash-bar"><i></i></div></div>
+          <div class="dash-card" data-mod="exp"><div class="dash-ic"><svg viewBox="0 0 24 24"><path d="M10 3v6L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9V3M8 3h8"/></svg></div><b>Тәжірибелер</b><div class="dash-score">0/20</div><div class="dash-bar"><i></i></div></div>
+        </div>
+        <button class="btn-ghost" id="resetProgress">Нәтижелерді қайта құру</button>
+      </section>
+
+      <footer>ZERTHANA PLATFORM · Виртуалды Информатика Зертханасы · 2026</footer>
+    </div>
+  </div>
+</main>
+</div><!-- /view-lab -->
+
+<script type="module" src="js/scene.js"></script>
+<script type="module" src="js/studio.js"></script>
+<script src="js/labs.js"></script>
+</body>
+</html>

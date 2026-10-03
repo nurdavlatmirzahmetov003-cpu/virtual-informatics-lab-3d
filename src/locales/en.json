@@ -1,0 +1,82 @@
+{
+  "app": {
+    "title": "Virtual Informatics Lab",
+    "short": "Informatics Lab",
+    "skipToContent": "Skip to main content"
+  },
+  "nav": {
+    "home": "Home",
+    "labs": "Labs",
+    "studio": "Setup Studio",
+    "progress": "My results",
+    "primary": "Primary navigation"
+  },
+  "settings": {
+    "language": "Language",
+    "quality": "Graphics quality",
+    "qualityAuto": "Auto",
+    "qualityDetected": "{level} (auto)"
+  },
+  "quality": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "ultra": "Ultra"
+  },
+  "loader": {
+    "title": "Loading the 3D lab",
+    "models": "3D models",
+    "textures": "Textures",
+    "environment": "Lighting",
+    "other": "Resources"
+  },
+  "home": {
+    "eyebrow": "Interactive 3D platform",
+    "title": "Virtual Informatics Lab",
+    "subtitle": "Explore the computer. Build. Program. Experiment.",
+    "cta": "Start the lab",
+    "secondary": "Setup Studio",
+    "buildNote": "Phase 1 · Foundation: 3D scene, quality controller and navigation are ready. The realistic desk scene comes next.",
+    "orbitHint": "Drag to orbit · Wheel to zoom"
+  },
+  "labs": {
+    "title": "Labs",
+    "subtitle": "Each module loads as its own 3D or interactive scene.",
+    "phase": "Phase {n}",
+    "planned": "In development",
+    "modules": {
+      "hardware": { "title": "Computer hardware", "desc": "3D anatomy of external and internal devices." },
+      "assembly": { "title": "Virtual PC assembly", "desc": "Install components in the right order." },
+      "network": { "title": "Computer networks", "desc": "Build a topology, configure IP, send a PING." },
+      "algorithms": { "title": "Algorithm visualizer", "desc": "Step through searching and sorting." },
+      "logic": { "title": "Logic circuits", "desc": "Wire gates and check the truth table." },
+      "experiments": { "title": "Virtual experiments", "desc": "Change values and see the result instantly." },
+      "studio": { "title": "Setup Studio 3D", "desc": "Build a full setup for your budget and see it in 3D." },
+      "assignments": { "title": "Assignments", "desc": "Practical tasks with automatic grading." },
+      "results": { "title": "My results", "desc": "Scores, achievements and progress." }
+    }
+  },
+  "studio": {
+    "title": "Setup Studio 3D",
+    "subtitle": "Pick a purpose and budget — the system suggests a compatible setup and you watch it assemble in 3D.",
+    "status": "This module is implemented in phases 4–6. The old prototype is preserved in legacy/."
+  },
+  "progress": {
+    "title": "My results",
+    "subtitle": "Completed labs, scores and achievements will appear here.",
+    "empty": "No results yet. Progress arrives in phase 8 and is stored on this device."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The requested page does not exist or has moved.",
+    "back": "Back to home"
+  },
+  "errors": {
+    "webglTitle": "WebGL unavailable",
+    "webglBody": "Your browser or graphics card does not support 3D graphics. Learning materials remain available as text. Try the latest Chrome, Edge or Firefox with hardware acceleration enabled.",
+    "sceneTitle": "The 3D scene failed to load",
+    "sceneBody": "Something went wrong while rendering the scene. Try reloading the page.",
+    "retry": "Try again",
+    "modelFailed": "Model failed to load"
+  }
+}

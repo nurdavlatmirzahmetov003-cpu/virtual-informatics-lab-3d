@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZERTHANA — Конфигурация</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script>window.__errs=[];window.addEventListener('error',e=>{window.__errs.push(e.message+' @ '+(e.filename||'')+':'+e.lineno)});</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./js/lib/three.module.js",
+    "three/addons/": "./js/lib/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<nav id="topbar">
+  <a class="tb-brand" href="index.html" style="text-decoration:none;color:inherit"><span class="brand-mark">Z</span><div><b>ZERTHANA</b><em>КОНФИГУРАЦИЯ</em></div></a>
+  <a class="btn-ghost" href="index.html">← Студияға оралу</a>
+</nav>
+
+<div id="view-studio" class="view active">
+  <canvas id="studioCanvas"></canvas>
+
+  <!-- Конфигурация кестесі -->
+  <aside id="configPanel">
+    <div class="bp-head">КОНФИГУРАЦИЯ <span id="cfgTheme">Көк</span></div>
+    <div class="cfg-wrap">
+      <table class="cfg-table">
+        <thead><tr><th>Бөлім</th><th>Құрылғы</th><th>Бағасы</th></tr></thead>
+        <tbody id="cfgRows"></tbody>
+      </table>
+    </div>
+    <div class="cfg-total">БАРЛЫҒЫ <b id="cfgTotal">0 ₸</b></div>
+    <div class="cfg-actions">
+      <button id="btn360" class="btn-ghost">360° айналдыру</button>
+      <button id="btnExplode" class="btn-ghost">Бөлшектер</button>
+      <button id="btnInside" class="btn-ghost">Ішіне камера</button>
+      <button id="btnReset" class="btn-ghost">Камераны қайтару</button>
+    </div>
+    <div class="cfg-note">Конфигурация студияда таңдалған және автоматты сақталады. Өзгерту үшін студияға оралыңыз.</div>
+  </aside>
+
+  <div id="studioHint">Сүйреу — 360° айналу &nbsp;·&nbsp; Доңғалақ — жақындату</div>
+</div>
+
+<script type="module" src="js/studio.js"></script>
+</body>
+</html>

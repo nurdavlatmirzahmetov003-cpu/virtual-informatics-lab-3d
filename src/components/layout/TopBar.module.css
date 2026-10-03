@@ -1,0 +1,121 @@
+.root {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-topbar);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-5);
+  height: var(--topbar-h);
+  padding: 0 var(--gutter);
+  background: linear-gradient(180deg, rgba(7, 8, 12, 0.85), rgba(7, 8, 12, 0));
+  pointer-events: none;
+}
+
+.root > * {
+  pointer-events: auto;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.mark {
+  width: 28px;
+  height: 28px;
+  padding: 5px;
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.link {
+  position: relative;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color var(--dur-fast) linear;
+}
+
+.link:hover {
+  color: var(--text);
+}
+
+.active {
+  color: var(--text);
+}
+
+.active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@media (max-width: 960px) {
+  .brandText {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .root {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: var(--topbar-h) auto;
+    height: auto;
+    row-gap: 0;
+    padding-bottom: var(--space-2);
+    background: linear-gradient(180deg, rgba(7, 8, 12, 0.95), rgba(7, 8, 12, 0.6) 80%, rgba(7, 8, 12, 0));
+  }
+
+  .controls {
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .nav {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin: 0 calc(var(--gutter) * -1);
+    padding: 0 var(--gutter);
+  }
+
+  .link {
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,48 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 48px;
+  padding: 0 var(--space-5);
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) linear,
+    border-color var(--dur-fast) linear,
+    box-shadow var(--dur-med) var(--ease-out);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.primary {
+  background: linear-gradient(180deg, #4fe0fb, var(--accent-strong));
+  color: #00131c;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+    0 10px 30px -10px var(--accent-glow);
+}
+
+.primary:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.25) inset,
+    0 14px 40px -10px var(--accent-glow);
+}
+
+.ghost {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  backdrop-filter: blur(var(--blur));
+  color: var(--text);
+}
+
+.ghost:hover {
+  background: var(--surface-hover);
+}

@@ -1,0 +1,9 @@
+.status {
+  max-width: 640px;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-muted);
+}

@@ -1,0 +1,82 @@
+/* Design tokens — single source of truth for colors, type, spacing, motion. */
+:root {
+  color-scheme: dark;
+
+  /* surfaces: deep graphite → dark glass */
+  --bg: #07080c;
+  --bg-elevated: #0d0f15;
+  --surface: rgba(18, 21, 30, 0.72);
+  --surface-strong: rgba(22, 26, 37, 0.92);
+  --surface-hover: rgba(34, 40, 56, 0.8);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* text */
+  --text: #eef1f6;
+  --text-muted: #a3abbb;
+  --text-dim: #6c7486;
+
+  /* accent: cold cyan / electric blue */
+  --accent: #38d6f5;
+  --accent-strong: #1fb8e0;
+  --accent-blue: #3b82ff;
+  --accent-glow: rgba(56, 214, 245, 0.35);
+  --accent-soft: rgba(56, 214, 245, 0.12);
+
+  --success: #3ddc97;
+  --warning: #ffb547;
+  --danger: #ff5c7a;
+
+  /* typography */
+  --font-sans: 'Manrope Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Unbounded Variable', 'Manrope Variable', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+  --fs-hero: clamp(2.1rem, 1.2rem + 3.6vw, 4.4rem);
+
+  /* spacing (4px grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --gutter: clamp(16px, 4vw, 48px);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --blur: 18px;
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.45);
+
+  /* motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur-med: 320ms;
+  --dur-slow: 700ms;
+
+  --topbar-h: 64px;
+  --z-canvas: 0;
+  --z-overlay: 10;
+  --z-topbar: 50;
+  --z-loader: 100;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-med: 0ms;
+    --dur-slow: 0ms;
+  }
+}
