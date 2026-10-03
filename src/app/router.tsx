@@ -12,6 +12,11 @@ const NotFoundPage = lazy(() => import('@/pages/NotFound/NotFoundPage'));
 const CreditsPage = lazy(() => import('@/pages/Credits/CreditsPage'));
 const ExplorerPage = lazy(() => import('@/pages/Explorer/ExplorerPage'));
 const PcAssemblyPage = lazy(() => import('@/pages/Labs/PcAssemblyPage'));
+const NetworkPage = lazy(() => import('@/pages/Labs/NetworkPage'));
+const AlgorithmsPage = lazy(() => import('@/pages/Labs/AlgorithmsPage'));
+const LogicPage = lazy(() => import('@/pages/Labs/LogicPage'));
+const ExperimentsPage = lazy(() => import('@/pages/Labs/ExperimentsPage'));
+const AssignmentsPage = lazy(() => import('@/pages/Labs/AssignmentsPage'));
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +25,11 @@ export const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: 'labs', element: <LabsPage /> },
       { path: 'labs/assembly', element: <PcAssemblyPage /> },
+      { path: 'labs/network', element: <NetworkPage /> },
+      { path: 'labs/algorithms', element: <AlgorithmsPage /> },
+      { path: 'labs/logic', element: <LogicPage /> },
+      { path: 'labs/experiments', element: <ExperimentsPage /> },
+      { path: 'assignments', element: <AssignmentsPage /> },
       { path: 'explorer', element: <ExplorerPage /> },
       { path: 'studio', element: <SetupStudioPage /> },
       { path: 'studio/summary', element: <SetupSummaryPage /> },

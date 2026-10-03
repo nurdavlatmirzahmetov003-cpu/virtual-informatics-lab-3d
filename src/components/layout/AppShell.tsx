@@ -1,14 +1,18 @@
-import { Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useT } from '@/hooks/useT';
-import { LoaderOverlay } from '@/components/ui/LoaderOverlay';
+import { useSceneStatus } from '@/store/sceneStatusStore';
 import { TopBar } from './TopBar';
 import styles from './AppShell.module.css';
+
+// Keep Three/drei out of networking, algorithms, assignments and results.
+const LoaderOverlay = lazy(() => import('@/components/ui/LoaderOverlay').then(m => ({default:m.LoaderOverlay})));
 
 export function AppShell() {
   const t = useT();
   const language = useSettingsStore((s) => s.language);
+  const sceneExpected = useSceneStatus(s=>s.expected);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -25,7 +29,7 @@ export function AppShell() {
           <Outlet />
         </Suspense>
       </main>
-      <LoaderOverlay />
+      {sceneExpected && <Suspense fallback={null}><LoaderOverlay /></Suspense>}
     </>
   );
 }

@@ -23,3 +23,8 @@ export function isAssessment(value: unknown): value is Assessment {
   return typeof a.exercise === 'string' && a.exercise.length < 100 && a.maxScore === 100 &&
     [a.score,a.seconds,a.errors,a.hints,a.completedAt].every(n => Number.isFinite(n) && n >= 0) && a.score <= 100;
 }
+
+/** Call from an exercise's submit handler. */
+export function finishAssessment(exercise:string,fraction:number,started:number,errors=0,hints=0) {
+  return assess(exercise,fraction,(Date.now()-started)/1000,errors,hints);
+}

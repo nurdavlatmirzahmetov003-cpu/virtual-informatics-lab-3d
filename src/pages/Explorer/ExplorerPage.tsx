@@ -1,6 +1,7 @@
 import { lazy, useEffect, useMemo } from 'react';
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
-import { itemsIn } from '@/data/hardware/anatomy';
+import { ANATOMY_ITEMS,itemsIn } from '@/data/hardware/anatomy';
+import { useSearchParams } from 'react-router-dom';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import { detectWebGL } from '@/lib/webgl';
@@ -85,6 +86,12 @@ export default function ExplorerPage() {
   useDocumentTitle(t('anatomy.title'));
   const webgl = useMemo(() => detectWebGL() !== 'none', []);
   const view = useAnatomyStore((s) => s.view);
+  const [params] = useSearchParams();
+  const requested = params.get('device');
+  useEffect(() => {
+    const item=ANATOMY_ITEMS.find(i=>i.id===requested);
+    if(item){const state=useAnatomyStore.getState();state.setCategory(item.category);state.select(item.id);}
+  },[requested]);
 
   // leaving the page returns to the overview
   useEffect(() => () => useAnatomyStore.getState().select(null), []);

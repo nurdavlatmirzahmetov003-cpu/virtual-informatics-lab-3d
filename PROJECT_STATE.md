@@ -1,7 +1,7 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
 Жаңартылды: 2026-10-04
-**Ағымдағы фаза: 3.2 PC Assembly Lab дайын; 5 және 6 (AI Көмекші: жергілікті жүйе + LLM backend + fallback) дайын. Ортақ бағалау/progress ядросы іске қосылды. Келесі — Фаза 7 білім беру зертханалары.**
+**Ағымдағы фаза: 3.2, 5, 6 және 7 функционалды дайын. Фаза 8: 40 тапсырма, ортақ бағалау, прогресс/жетістіктер дайын; legacy импорты ашық. Келесі — реализмді аяқтау және Фаза 9/10 оптимизация/QA.**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
 
@@ -11,7 +11,17 @@
 - Backend `server/ai-server.ts` (`npm run ai:server`, :8787): Anthropic/OpenAI, кілт тек `.env` (`.env.example`), body/rate limit, timeout, валидация; Vite `/api` proxy. Кілтсіз → 503 → браузер жергілікті.
 - UI: «AI Көмекші» чаты (`pages/SetupStudio/SetupAssistant.tsx`, `store/assistantStore.ts`): дереккөз белгісі, «Неге осылар?», «Setup Studio-ға жүктеу»; құрастыру бетінде «AI-мен жақсарту» (ағымдағы жинақпен айырма).
 - Тесттер: `npm run test:ai` (9/9), `npm run test:assistant` (4/4), `npm test`.
-- Тексерілді: браузерде чат (800 000 ₸ ойын+бағдарламалау → 781 000 ₸, түсіндірмелер), «Setup Studio-ға жүктеу» (баға 1 195 000 → 781 000 ₸), improve режимі (өзгерістер тізімі), сервер health/503. Құрастыру бетіндегі батырманы басу браузер терезесі артта болғандықтан көзбен тексерілмеді (3D жүктелмеді); логикасы store арқылы тексерілді. Нақты LLM кілтімен тексерілмеген.
+- Тексерілді: браузерде чат (800 000 ₸ ойын+бағдарламалау → 781 000 ₸, түсіндірмелер), «Setup Studio-ға жүктеу» (баға 1 195 000 → 781 000 ₸), improve режимі, сервер health/503. Кейін production `/studio/summary` батырмасы да браузерде тексерілді: «AI-мен жақсарту» → айырмалар/түсіндірмелер/1 196 000 ₸ ұсынысы. Нақты LLM кілтімен тексерілмеген.
+
+## Фаза 7/8 — Білім беру модульдері (2026-10-04)
+- `/labs/network`: 8 құрылғы түрі, 4 тапсырма, топология/IPv4/маска/gateway тексеру, порттар мен кабельдер, PING анимациясы.
+- `/labs/algorithms`: 5 алгоритм, immutable trace, алға/артқа/autoplay/жылдамдық, қозғалатын массив бағандары, pseudocode және айнымалылар.
+- `/labs/logic`: 6 вентиль, 4 тапсырма, сымдар/сигналдар/LED, барлық 4 ақиқат жолын бағалау; цикл мен жетіспейтін кіріс анықталады.
+- `/labs/experiments`: 8 модель, slider/формула/визуал, сандық жауапты бағалау (decimal comma қолдау, дискретті мәндерге дәл тексеру).
+- `/assignments`: 40 оқу тапсырмасы; `/progress`: best scores, әрекеттер, 3 жетістік, реестр бойынша орындалу пайызы. Explorer `?device=...` арқылы нақты құрылғыны ашады.
+- Логика: `lib/labs/{algorithms,network,logic,experiments}.ts`; реестр `data/labs/exercises.ts`; kk/ru/en мәтін `hooks/useEducationText.ts`; UI `pages/Labs/*Page.tsx`, `Learning.module.css`.
+- LoaderOverlay lazy; `vite.config.ts` codeSplitting ортақ React/Zustand-ты WebGL chunk-ына жұтып қоймайды. Production index.html three/r3f preload жасамайды; 3D routes өздері жүктейді.
+- Тексерулер: 22 автоматты тест, production build, lint. Chromium: LAN 100/PING, duplicate IP, AND 100/ақиқат кестесі, bubble autoplay/step 100, 300 Гц тәжірибесі 100, 40 сілтеме/монитор quiz, progress 6/40=15% және reload persist. Скриншоттар мен шектеулер: `docs/SESSION_2026-10-04_LEARNING.md`.
 
 ## Жаңа дайын модуль
 `/labs/assembly` — нақты 3D drag/snap, таңдау/жарықталған ұяшық/пернетақта баламасы, реттілік пен каталог үйлесімділігі, қуат қосу, автоматты ұпай. `/progress` — сақталатын әрекеттер, ең жақсы ұпайлар, жетістіктер; анатомия quiz-і де сақталады. Файлдар: `store/pcLabStore.ts`, `store/progressStore.ts`, `lib/labs/{assessment,pcAssembly}.ts`, `hooks/useLabText.ts`, `pages/Labs/{PcAssemblyPage,ExerciseResult,Exercise.module.css}`, `scenes/PcAssemblyLab/PcLabScene.tsx`, `pages/Progress/`, router және AnatomyQuiz. Есеп: `docs/SESSION_2026-10-03_PC_LAB.md`.
@@ -59,7 +69,7 @@
 ## Жартылай аяқталған
 - Setup Studio: нақты KZ бағалары, өнім суреттері, әр өнімге жеке GLB әлі жоқ; ішкі өлшем/сан/кулер түрі таңдауға бейімделеді; орындық процедуралық.
 - Анатомияда 5 құрылғы уақытша процедуралық: микрофон, веб-камера, принтер, HDD, желі картасы (TODO `[PLACEHOLDER]`).
-- Progress ядросы дайын; қалған зертхана тапсырмалары мен ортақ тапсырмалар тізімі қосылуы керек.
+- Progress және 40 тапсырма дайын; legacy progress импорт әлі жоқ.
 - Үстел, коврик, бөлме, артқы желдеткіш, құлаққап тұғыры — процедуралық (TODO `[PLACEHOLDER]`).
 - Брендтік логотиптер текстураларда қалды (§6).
 - Poly Haven `potted_plant_04` және walnut/leather/plaster текстуралары жүктелген, бірақ кодта қолданылмайды.
@@ -110,4 +120,4 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: Фаза 7: желі симуляторы, алгоритм визуализаторы, логикалық схема және виртуалды тәжірибелер. Бағалауды lib/labs/assessment.ts арқылы, нәтижені store/progressStore.ts арқылы сақта. Ортақ тапсырмалар тізімі мен progress пайызын қос. PC Assembly Lab дайын, қайта жасама. LLM backend optional; жергілікті чат API-сыз жұмыс істейді. Нөлден бастама.
+NEXT_ACTION: Дайын модульдерді қайта жасама. Алдымен Фаза 9/10 және реализм: қалған 5 anatomy/орындық модельдерін лицензиясы таза GLB-ге ауыстыру; ең қажет SKU-ларға жеке модель/текстура; KTX2 және Low LOD; Firefox/Safari/нақты touch QA. Legacy деректерін тек импорт ретінде, жаңа persist-ті өшірмей енгіз. AI кілтін браузерге берме; жергілікті көмекші жұмыс істейді. D:/informatics-lab, production preview :4180, dev :5180. Нөлден бастама.

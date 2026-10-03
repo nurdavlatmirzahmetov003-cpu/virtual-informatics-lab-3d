@@ -19,7 +19,7 @@
     "test:learning": "node --experimental-strip-types --test scripts/learning.test.mjs",
     "ai:server": "node --experimental-strip-types --import ./scripts/test-resolve.mjs server/ai-server.ts",
     "test:ai": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/ai.test.mjs",
-    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab"
+    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab && npm run test:learning"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

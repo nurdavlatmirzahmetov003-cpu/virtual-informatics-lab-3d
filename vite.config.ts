@@ -37,7 +37,10 @@ export default defineConfig({
     chunkSizeWarningLimit: 1200,
     rolldownOptions: {
       output: {
-        advancedChunks: {
+        codeSplitting: {
+          // Shared React/Zustand dependencies must not be absorbed into the
+          // lazy WebGL chunk, which would pull Three into every route.
+          includeDependenciesRecursively: false,
           groups: [
             { name: 'three', test: pkg('three') },
             { name: 'r3f', test: pkg('@react-three|postprocessing|three-stdlib|maath|camera-controls') },

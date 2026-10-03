@@ -2,7 +2,8 @@
 
 - [x] PC Assembly Lab: 3D drag/snap + ghost ұяшық + keyboard, order/compatibility, boot/grade
 - [x] Progress core: versioned local persistence, best scores, attempts, achievements; AnatomyQuiz connected
-- [ ] Educational labs + common assignments/progress percentage
+- [x] Educational labs: network, 5 algorithms, logic, 8 experiments; 40 assignments/progress percentage
+- [x] 2D routes: lazy LoaderOverlay + codeSplitting, Three/r3f бастапқы жүктемеден алынды
 
 ## Placeholders (фаза жабылмас бұрын ауыстырылуы тиіс)
 Барлығы `src/scenes/DeskScene/models/` ішінде, нақты өлшемдермен процедуралық түрде жасалған (BoxGeometry емес: extrude/lathe/деформацияланған сфера, InstancedMesh). §50 бойынша Hero жабылмас бұрын лицензиясы таза, оңтайландырылған GLB-ге ауыстырылуы тиіс:
@@ -20,7 +21,7 @@
 - [PLACEHOLDER] Network card model must be replaced — `scenes/HardwareExplorer/placeholders.tsx` (PCIe x1 желі картасы: PCB, кронштейн, RJ-45, контроллер радиаторы)
 - [PLACEHOLDER] Chair model must be replaced — `scenes/SetupStudio/Chair.tsx` (Setup Studio орындығы: бес жұлдызды табан, газлифт, отырғыш, арқалық, шынтақ тірегі)
 - [PLACEHOLDER] Setup Studio: бір санаттағы өнімдер ортақ GLB-ні қолданады (өлшемі өнімнің нақты өлшеміне масштабталады) — әр өнімге жеке GLB (монитор 16:9 / 21:9, TKL / толық пернетақта, AIO кулер, 2.1 колонка)
-- [PLACEHOLDER] Labs беті — модульдер «Әзірленуде» статусымен; іске асқанда сілтемеге айналады
+- [x] Labs беті — барлық модуль жұмыс істейтін сілтемеге айналды
 
 ## Фаза 2 — қалғаны
 - [x] Лицензиясы тексерілген GLB модельдер (Poly Haven, Sketchfab CC0/CC-BY, Blender) → `ASSET_MANIFEST.md`; `ModelLoader` арқылы `models/*` және `pc/*` компоненттерін ауыстыру (`layout.ts` / `parts.ts` анкерлері сақталады)
@@ -38,12 +39,12 @@
 - [x] Мәліметтер `src/data/hardware/anatomy.ts` (құрылым) + `locales/*.json` `anatomy.*` (мәтін)
 - [x] 3D-сіз тізім режимі (WebGL жоқ болса автоматты)
 - [ ] Микрофон, веб-камера, принтер, HDD, желі картасы үшін лицензиясы таза GLB (Sketchfab CC0/CC-BY) — жоғарыдағы `[PLACEHOLDER]`
-- [ ] Тест нәтижелерін прогреске сақтау (Фаза 8 grading/progress)
-- [ ] Virtual PC Assembly Lab (§11) — Фаза 3-тің екінші бөлігі
+- [x] Тест нәтижелерін прогреске сақтау (Фаза 8 grading/progress)
+- [x] Virtual PC Assembly Lab (§11) — Фаза 3-тің екінші бөлігі
 - [ ] Locale-дарды namespace бойынша lazy жүктеу (index chunk 57 → 170 KB, gzip 51 KB) — Фаза 9
 
 ## Фаза 4 — Setup Studio
-- [x] Каталог `src/data/hardware/catalog.ts`: 15 санат, 64 нақты өнім, ресми сипаттама сілтемесі + тексерілген күн
+- [x] Каталог `src/data/hardware/catalog.ts`: 15 санат, 65 нақты өнім, ресми сипаттама сілтемесі + тексерілген күн
 - [x] Конфигуратор: мақсат → бюджет → стиль → өнімдер → түстер; бюджетке сай ұсыныс (`lib/studio/recommend.ts`)
 - [x] Үйлесімділік (`lib/studio/compatibility.ts`): сокет, RAM түрі, плата пішімі, видеокарта ұзындығы, графиканың болуы, БП қуаты, кулер сокеті/биіктігі/радиаторы/жылуы
 - [x] Тірі баға, бюджет шкаласы, қуат бағасы; түс конфигураторы (корпус, RGB, үстел беті, перифериялар)
@@ -62,9 +63,11 @@
 - [ ] AI: нақты LLM кілтімен соңынан-соңына тексеру (бұл сессияда кілт жоқ — тек mock fetch және кілтсіз 503 тексерілді)
 - [ ] AI: Studio-да бірнеше мақсатты сақтау (store-да тек негізгі мақсат бар)
 - [x] Ішкі SKU бейімдеу: GPU ұзындығы, RAM саны, air/AIO кулер; барлық модель әр брендке дәл емес
-- [ ] Фаза 3.2: оқушы өзі жинайтын PC Assembly Lab + бағалау және progress persistence
+- [x] Фаза 3.2: оқушы өзі жинайтын PC Assembly Lab + бағалау және progress persistence
+- [x] Фаза 7: network/algorithms/logic/experiments, kk/ru/en, автоматты бағалау
+- [x] Фаза 8 негізгі функциялары: 40 assignment, best scores/history/achievements/progress percentage
 - [ ] Дыбыс: store-да бар, UI тумблері дыбыс эффектілерімен бірге
 - [ ] Reduced-motion қолмен ауыстырғышы (қазір тек жүйе баптауы)
-- [ ] README: скриншоттар, hardware/assignment/translation қосу нұсқаулары (Фаза 10)
+- [x] README: скриншоттар, hardware/assignment/translation қосу нұсқаулары
 - [ ] Legacy `vlab_progress_v1` / `zertthana_build_v1` деректерін импорттау (Фаза 4/8)
 - [ ] Vitest: i18n, quality detect, storage migrate, story timeline chapter boundaries

@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.10.0 — 2026-10-04 — Білім беру зертханалары және 40 тапсырма
+- Желі: 8 құрылғы түрі, 4 тапсырма, кабельдер/IP/маска/gateway, LAN PING анимациясы, бағалау.
+- Алгоритмдер: linear/binary search, bubble/selection/insertion sort; step/back/play/speed, бағандар, pseudocode/айнымалылар.
+- Логика: AND/OR/NOT/XOR/NAND/NOR, 4 схема тапсырмасы, сым/сигнал/LED, ақиқат кестесі бойынша бағалау.
+- 8 параметрлік тәжірибе; дұрыс/қате жауаптың түсіндірмесі, ұпай, уақыт, қате, persist.
+- 40 тапсырма тізімі, нақты құрылғы/тапсырмаға deep link, прогресс пайызы және kk/ru/en атаулар.
+- LoaderOverlay lazy; codeSplitting ортақ тәуелділіктерді WebGL-ден бөледі: 2D route-та Three/r3f eager preload жоқ.
+- 22 автоматты тест; build/lint; Chromium desktop/mobile тексерулері және скриншоттар. Legacy импорт, дәл SKU модельдері және соңғы browser/device QA ашық.
+
 ## 0.8.0 — 2026-10-04 — Фаза 6: AI Көмекші
 
 ### Қосылды
