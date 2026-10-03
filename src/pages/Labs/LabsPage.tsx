@@ -10,14 +10,14 @@ type ModuleId = 'hardware' | 'assembly' | 'network' | 'algorithms' | 'logic' | '
 /** Module registry for the hub; `phase` is when it becomes interactive. */
 const MODULES: ReadonlyArray<{ id: ModuleId; icon: LucideIcon; phase: number; to?: string }> = [
   { id: 'hardware', icon: Cpu, phase: 3, to: '/explorer' },
-  { id: 'assembly', icon: Wrench, phase: 3 },
+  { id: 'assembly', icon: Wrench, phase: 3, to: '/labs/assembly' },
   { id: 'network', icon: Network, phase: 7 },
   { id: 'algorithms', icon: Workflow, phase: 7 },
   { id: 'logic', icon: BrainCircuit, phase: 7 },
   { id: 'experiments', icon: FlaskConical, phase: 7 },
   { id: 'studio', icon: Boxes, phase: 4, to: '/studio' },
   { id: 'assignments', icon: ClipboardCheck, phase: 8 },
-  { id: 'results', icon: Trophy, phase: 8 },
+  { id: 'results', icon: Trophy, phase: 8, to: '/progress' },
 ];
 
 export default function LabsPage() {

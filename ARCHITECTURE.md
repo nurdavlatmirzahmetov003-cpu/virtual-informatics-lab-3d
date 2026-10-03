@@ -1,5 +1,8 @@
 # ARCHITECTURE
 
+## Student exercise core
+`lib/labs/assessment.ts` creates bounded results without time penalties. `progressStore` validates/version-persists max 200 attempts; best score per ID powers dashboard. `pcLabStore` owns order, catalog build, selection, errors/hints and boot checks. `PcLabScene` projects pointer rays onto camera-facing planes, captures pointer, snaps near anchor, and uses shared `pcRig` for install motion. Each page owns one canvas; cleanup releases the rig. `useLabText` lazily loads kk/ru/en lab text with the lab chunks.
+
 Virtual Informatics Lab 3D — Vite + React 19 + TypeScript + Three.js (React Three Fiber).
 Негізгі ТЗ: `MASTER_PROMPT.md`. Ескі прототип: `legacy/` (тек анықтама ретінде, build-ке кірмейді).
 

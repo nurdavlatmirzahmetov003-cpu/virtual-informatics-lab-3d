@@ -4,6 +4,8 @@ import { QUIZ_OPTIONS, type AnatomyItem, type QuizOption } from '@/data/hardware
 import { useT } from '@/hooks/useT';
 import { itemKey } from './anatomyText';
 import styles from './AnatomyQuiz.module.css';
+import { assess } from '@/lib/labs/assessment';
+import { useProgressStore } from '@/store/progressStore';
 
 /** Three-question check for one device. Mount with `key={item.id}` to reset per device. */
 export function AnatomyQuiz({ item }: { item: AnatomyItem }) {
@@ -12,6 +14,7 @@ export function AnatomyQuiz({ item }: { item: AnatomyItem }) {
   const [picked, setPicked] = useState<Array<QuizOption | null>>([null, null, null]);
   const [checked, setChecked] = useState(false);
   const [nudge, setNudge] = useState(false);
+  const [started,setStarted] = useState(Date.now);
   const score = picked.filter((p, i) => p === item.answers[i]).length;
 
   const check = () => {
@@ -21,10 +24,12 @@ export function AnatomyQuiz({ item }: { item: AnatomyItem }) {
     }
     setNudge(false);
     setChecked(true);
+    if (!checked) useProgressStore.getState().record(assess(`anatomy:${item.id}`,score/item.answers.length,(Date.now()-started)/1000));
   };
   const retry = () => {
     setPicked([null, null, null]);
     setChecked(false);
+    setStarted(Date.now());
   };
 
   return (

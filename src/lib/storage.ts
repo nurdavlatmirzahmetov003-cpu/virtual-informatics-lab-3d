@@ -13,13 +13,14 @@ export const STORAGE_KEYS = {
   settings: `${STORAGE_NAMESPACE}:settings`,
   /** Setup Studio configuration (store/studioStore.ts). */
   setup: `${STORAGE_NAMESPACE}:setup`,
-  // Reserved for later phases:
+  /** Student exercise attempts (store/progressStore.ts). */
   progress: `${STORAGE_NAMESPACE}:progress`,
 } as const;
 
 export const STORAGE_VERSIONS = {
   settings: 1,
   setup: 1,
+  progress: 1,
 } as const;
 
 /** localStorage can throw (private mode, blocked storage, quota). */

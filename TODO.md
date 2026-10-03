@@ -1,5 +1,9 @@
 # TODO
 
+- [x] PC Assembly Lab: 3D drag/snap + ghost ұяшық + keyboard, order/compatibility, boot/grade
+- [x] Progress core: versioned local persistence, best scores, attempts, achievements; AnatomyQuiz connected
+- [ ] Educational labs + common assignments/progress percentage
+
 ## Placeholders (фаза жабылмас бұрын ауыстырылуы тиіс)
 Барлығы `src/scenes/DeskScene/models/` ішінде, нақты өлшемдермен процедуралық түрде жасалған (BoxGeometry емес: extrude/lathe/деформацияланған сфера, InstancedMesh). §50 бойынша Hero жабылмас бұрын лицензиясы таза, оңтайландырылған GLB-ге ауыстырылуы тиіс:
 

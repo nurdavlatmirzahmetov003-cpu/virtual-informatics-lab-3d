@@ -1,5 +1,7 @@
 # ASSET MANIFEST
 
+PC Assembly Lab reuses the existing credited `hardware/*.glb` assets. Slot ghosts and pointer interaction are project code; no new third-party assets or licenses.
+
 Әр ассет үшін: атауы · дереккөз · автор · лицензия · URL · өзгерістер · оңтайландырылған файл.
 Лицензиясы тексерілмеген ешбір ассет жаңа қосымшаға (`public/`, `src/`) қосылмайды.
 
