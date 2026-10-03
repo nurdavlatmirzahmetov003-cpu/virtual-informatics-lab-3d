@@ -13,7 +13,8 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5173,
+    // PORT lets a second dev server (preview tooling, parallel sessions) run next to the default one
+    port: Number(process.env.PORT) || 5173,
     open: false,
     // AI assistant backend (npm run ai:server). When it is not running the
     // proxy answers 503 quietly and the browser stays on the local engine.
