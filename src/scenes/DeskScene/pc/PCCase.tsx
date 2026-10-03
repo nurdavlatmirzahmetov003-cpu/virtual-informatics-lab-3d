@@ -26,8 +26,16 @@ import { usePcTextures } from './usePcTextures';
 import { HardwarePart } from './HardwareParts';
 
 /** Resolves pcRig from the scroll story or from explore-mode toggles. Must mount first. */
-function PcRigController() {
+function PcRigController({ fixed }: { fixed: boolean }) {
   useFrame((_, delta) => {
+    if (fixed) {
+      // assembled, glass closed, interior lit (Setup Studio)
+      pcRig.explode = 0;
+      pcRig.glassOpen = 0;
+      pcRig.interior = 1;
+      pcRig.glow = 1;
+      return;
+    }
     const s = usePcStore.getState();
     if (s.mode === 'story') {
       pcRig.explode = storyRig.explode;
@@ -46,7 +54,16 @@ function PcRigController() {
   return null;
 }
 
-export function PCCase() {
+interface PCCaseProps {
+  /** Assembled and static instead of following the scroll story / 360° mode. */
+  fixed?: boolean;
+  /** Hotspots and part clicks (hero only). */
+  interactive?: boolean;
+  /** RGB colour; `null` switches the lighting off. Default: the hero cyan. */
+  rgbColor?: string | null;
+}
+
+export function PCCase({ fixed = false, interactive = true, rgbColor }: PCCaseProps) {
   const tex = usePcTextures();
   const res = useDisposable(() => {
     const rgb = new MeshStandardMaterial({ color: '#000000', emissive: '#4fdcff', emissiveIntensity: 1, roughness: 0.4 });
@@ -67,8 +84,10 @@ export function PCCase() {
   const [showcase, setShowcase] = useState<SpotLight | null>(null);
 
   useFrame(() => {
-    res.rgb.emissiveIntensity = 0.7 + pcRig.glow * 1.6;
-    res.ramLight.emissiveIntensity = 0.6 + pcRig.glow * 1.2;
+    const lit = rgbColor !== null;
+    if (rgbColor) res.rgb.emissive.set(rgbColor);
+    res.rgb.emissiveIntensity = lit ? 0.7 + pcRig.glow * 1.6 : 0;
+    res.ramLight.emissiveIntensity = lit ? 0.6 + pcRig.glow * 1.2 : 0;
     if (showcase) {
       showcase.intensity = pcRig.explode * 4;
       // invisible lights drop out of every shader's light loop
@@ -95,10 +114,10 @@ export function PCCase() {
 
   return (
     <group position={[...CASE_ORIGIN]}>
-      <PcRigController />
+      <PcRigController fixed={fixed} />
       <Chassis tex={tex} fan={fan} rgb={res.rgb} />
       {PARTS.map((def) => (
-        <PCPart key={def.id} def={def}>
+        <PCPart key={def.id} def={def} enabled={interactive}>
           <HardwarePart id={def.id} fallback={content[def.id]} />
         </PCPart>
       ))}

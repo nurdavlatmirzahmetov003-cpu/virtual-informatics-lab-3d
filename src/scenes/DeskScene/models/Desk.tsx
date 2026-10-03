@@ -8,6 +8,15 @@ import { useDisposable } from '@/hooks/useDisposable';
 import { roundedSlab, roundedRectShape, extrudeFlat } from '@/lib/three/geometry';
 import { DESK, DESK_TOP } from '../layout';
 
+/** Top finishes for Setup Studio; wood keeps the albedo map, solid finishes keep only grain relief. */
+export type DeskSurface = 'darkWood' | 'lightWood' | 'black' | 'white';
+const SURFACE: Record<DeskSurface, { color: string; useMap: boolean; roughness: number }> = {
+  lightWood: { color: '#d9c3a5', useMap: true, roughness: 0.85 },
+  darkWood: { color: '#6e4c33', useMap: true, roughness: 0.78 },
+  black: { color: '#1a1b1e', useMap: false, roughness: 0.62 },
+  white: { color: '#e6e6e2', useMap: false, roughness: 0.55 },
+};
+
 const TEX = `${import.meta.env.BASE_URL}assets/textures/`;
 
 function prepare(textures: Texture[], repeat: [number, number]) {
@@ -18,7 +27,8 @@ function prepare(textures: Texture[], repeat: [number, number]) {
   });
 }
 
-export function Desk() {
+export function Desk({ surface = 'lightWood' }: { surface?: DeskSurface }) {
+  const finish = SURFACE[surface];
   const [map, normalMap, roughnessMap] = useTexture(
     [`${TEX}wood_diff.jpg`, `${TEX}wood_nor.jpg`, `${TEX}wood_rough.jpg`],
     (loaded) => {
@@ -46,12 +56,13 @@ export function Desk() {
     <group>
       <mesh geometry={geo.top} position-y={DESK_TOP - DESK.thickness} castShadow receiveShadow>
         <meshStandardMaterial
-          map={map}
+          key={finish.useMap ? 'wood' : 'solid'}
+          map={finish.useMap ? map : null}
           normalMap={normalMap}
           normalScale={[0.6, 0.6]}
           roughnessMap={roughnessMap}
-          roughness={0.85}
-          color="#d9c3a5"
+          roughness={finish.roughness}
+          color={finish.color}
           envMapIntensity={0.7}
         />
       </mesh>

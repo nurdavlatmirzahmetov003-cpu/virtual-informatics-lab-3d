@@ -36,7 +36,9 @@ src/
   hooks/                  useT, useQualityPreset, useReducedMotion, usePageVisible, useDocumentTitle
   data/
     camera/cameraStates.ts  аталған камера күйлері (HOME_WIDE … FINAL_SETUP)
-    hardware/types.ts       HardwareItem каталог схемасы (Фаза 4)
+    hardware/types.ts       HardwareItem каталог схемасы
+    hardware/catalog.ts     Setup Studio каталогы (64 өнім, ресми дереккөз, demo баға)
+    studio/options.ts       студия сөздігі: санаттар, мақсат, бюджет, стиль, түстер
     hardware/anatomy.ts     анатомия құрылғылары: санат, spec кілттері, тест жауаптары (мәтін — locales)
     lessons/, assignments/  (бос — кейінгі фазалар)
   components/
@@ -61,9 +63,10 @@ src/
                           pcRig.ts, usePcTextures.ts
     HardwareExplorer/     Компьютер анатомиясы (Фаза 3): AnatomyScene, AnatomyItem, AnatomyCamera,
                           AnatomyShadows, layout.ts (орындар/fit/фокус), placeholders.tsx + placeholderModels.ts
-    PCScene/ SetupBuilder/   (бос — Фаза 4–5)
+    SetupStudio/          StudioScene (өнімге байланған модельдер + бояу), StudioCamera (360°), Chair [PLACEHOLDER]
+    PCScene/ SetupBuilder/   (бос — Фаза 5)
   labs/ NetworkLab/ AlgorithmLab/ LogicLab/ Experiments/  (бос — Фаза 7)
-  pages/ Home, Explorer (анатомия: панель, тест, тізім режимі), Labs, SetupStudio, Progress, Credits, NotFound, shared/
+  pages/ Home, Explorer (анатомия: панель, тест, тізім режимі), Labs, SetupStudio (конфигуратор + /studio/summary), Progress, Credits, NotFound, shared/
   services/ ai/, grading/   (бос — Фаза 6, 8)
 public/
   assets/ models/ textures/ hdr/ audio/
@@ -144,3 +147,10 @@ legacy/                     ескі ES-module прототип (python http.ser
     Suspense-і бар (санат ауысқанда сахна жыпылықтамайды). Камера overlay-лер босатқан аумақты есептеп (`freeArea`)
     қашықтық пен `setViewOffset`-ті таңдайды. Hotspot-тар (drei Html) сахна `ready` болғаннан кейін ғана mount болады.
     3D-сіз тізім режимі сол компоненттерді (`AnatomyDetails`, `AnatomyQuiz`) қолданады.
+
+19. **Setup Studio.** Үш қабат: деректер (`data/hardware/catalog.ts`, `data/studio/options.ts`) → бизнес-логика
+    (`lib/studio/`: `compatibility`, `pricing`, `power`, `recommend`, `build`) → күй (`store/studioStore.ts`, persist
+    `vil3d:setup` v1, migrate + merge жоғалған id-ларды тазалайды) → UI (`pages/SetupStudio`, тек оқиды және action шақырады)
+    және 3D (`scenes/SetupStudio`, store-дан оқиды). Үйлесімділік ережесі тек қажетті бөлшектер таңдалғанда іске қосылады;
+    хабарлар `studio.compat.<code>` кілттерінде параметрлермен. Өнім модельдері `modelPath` + `modelSize` (нақты өлшем)
+    арқылы; бояу `lib/three/finish.ts` — тек албедо ауысады, normal/roughness/metalness карталары сақталады.

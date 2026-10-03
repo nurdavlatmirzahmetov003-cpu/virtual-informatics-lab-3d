@@ -14,6 +14,8 @@
 - [PLACEHOLDER] Printer model must be replaced — `scenes/HardwareExplorer/placeholders.tsx` (сиялы МФУ: сканер қақпағы, қағаз беру/шығару науасы, панель)
 - [PLACEHOLDER] HDD model must be replaced — `scenes/HardwareExplorer/placeholders.tsx` (3,5″ 147 × 101,6 × 26,1 мм, щеткаланған қақпақ, жапсырма, SATA)
 - [PLACEHOLDER] Network card model must be replaced — `scenes/HardwareExplorer/placeholders.tsx` (PCIe x1 желі картасы: PCB, кронштейн, RJ-45, контроллер радиаторы)
+- [PLACEHOLDER] Chair model must be replaced — `scenes/SetupStudio/Chair.tsx` (Setup Studio орындығы: бес жұлдызды табан, газлифт, отырғыш, арқалық, шынтақ тірегі)
+- [PLACEHOLDER] Setup Studio: бір санаттағы өнімдер ортақ GLB-ні қолданады (өлшемі өнімнің нақты өлшеміне масштабталады) — әр өнімге жеке GLB (монитор 16:9 / 21:9, TKL / толық пернетақта, AIO кулер, 2.1 колонка)
 - [PLACEHOLDER] Labs беті — модульдер «Әзірленуде» статусымен; іске асқанда сілтемеге айналады
 
 ## Фаза 2 — қалғаны
@@ -35,6 +37,18 @@
 - [ ] Тест нәтижелерін прогреске сақтау (Фаза 8 grading/progress)
 - [ ] Virtual PC Assembly Lab (§11) — Фаза 3-тің екінші бөлігі
 - [ ] Locale-дарды namespace бойынша lazy жүктеу (index chunk 57 → 170 KB, gzip 51 KB) — Фаза 9
+
+## Фаза 4 — Setup Studio
+- [x] Каталог `src/data/hardware/catalog.ts`: 15 санат, 64 нақты өнім, ресми сипаттама сілтемесі + тексерілген күн
+- [x] Конфигуратор: мақсат → бюджет → стиль → өнімдер → түстер; бюджетке сай ұсыныс (`lib/studio/recommend.ts`)
+- [x] Үйлесімділік (`lib/studio/compatibility.ts`): сокет, RAM түрі, плата пішімі, видеокарта ұзындығы, графиканың болуы, БП қуаты, кулер сокеті/биіктігі/радиаторы/жылуы
+- [x] Тірі баға, бюджет шкаласы, қуат бағасы; түс конфигураторы (корпус, RGB, үстел беті, перифериялар)
+- [x] 360°: орбита, zoom, reset, авто айналу; localStorage `vil3d:setup` v1
+- [x] «Сетапты көру» → `/studio/summary` қорытынды беті
+- [ ] Қазақстан дүкендеріндегі нақты баға (қазір барлығы «Demo price»)
+- [ ] Өнім суреттері (`thumbnail`) — қазір санат иконкасы
+- [ ] Жүйелік блок ішіндегі бөлшектер таңдауға қарай өзгермейді (видеокарта ұзындығы, кулер түрі) — Фаза 5 құрастыру анимациясымен бірге
+- [ ] Legacy `zertthana_build_v1` жинағын импорттау (id-лар басқа)
 
 ## Кейінгі фазалар
 - [ ] Дыбыс: store-да бар, UI тумблері дыбыс эффектілерімен бірге

@@ -36,6 +36,7 @@ export const CAMERA_STATE_NAMES = [
   'FINAL_SETUP',
   'ANATOMY_EXTERNAL',
   'ANATOMY_INTERNAL',
+  'STUDIO_WIDE',
 ] as const;
 
 export type CameraStateName = (typeof CAMERA_STATE_NAMES)[number];
@@ -60,5 +61,7 @@ export const CAMERA_STATES: Record<CameraStateName, CameraState> = {
   FINAL_SETUP: { position: [-1.3, 1.46, 2.1], target: [-0.1, 0.95, 0], fov: 36 },
   // Computer Anatomy overviews (scenes/HardwareExplorer/layout.ts)
   ANATOMY_EXTERNAL: { position: [0, 1.5, 1.9], target: [0, 0.9, -0.04], fov: 36, minDistance: 0.25, maxDistance: 3.2 },
+  // Setup Studio start shot: whole desk, chair and PC (scenes/SetupStudio)
+  STUDIO_WIDE: { position: [-0.55, 1.62, 2.55], target: [0.05, 0.9, 0], fov: 36, minDistance: 0.35, maxDistance: 4.5 },
   ANATOMY_INTERNAL: { position: [0, 2.0, 1.32], target: [0, 0.76, -0.01], fov: 36, minDistance: 0.18, maxDistance: 3 },
 };

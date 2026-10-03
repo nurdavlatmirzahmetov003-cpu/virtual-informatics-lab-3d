@@ -11,13 +11,15 @@ export const STORAGE_NAMESPACE = 'vil3d';
 
 export const STORAGE_KEYS = {
   settings: `${STORAGE_NAMESPACE}:settings`,
-  // Reserved for later phases:
+  /** Setup Studio configuration (store/studioStore.ts). */
   setup: `${STORAGE_NAMESPACE}:setup`,
+  // Reserved for later phases:
   progress: `${STORAGE_NAMESPACE}:progress`,
 } as const;
 
 export const STORAGE_VERSIONS = {
   settings: 1,
+  setup: 1,
 } as const;
 
 /** localStorage can throw (private mode, blocked storage, quota). */

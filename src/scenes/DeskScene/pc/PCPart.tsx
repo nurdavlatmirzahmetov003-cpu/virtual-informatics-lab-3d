@@ -20,7 +20,7 @@ const DIM = 0.72; // how much non-active parts darken
  * Wraps one PC component: drives its exploded position, highlights it when
  * active (others dim), and makes it clickable with a numbered hotspot.
  */
-export function PCPart({ def, children }: { def: PartDef; children: ReactNode }) {
+export function PCPart({ def, children, enabled = true }: { def: PartDef; children: ReactNode; enabled?: boolean }) {
   const t = useT();
   const group = useRef<Group>(null);
   const records = useRef<MatRecord[]>([]);
@@ -36,7 +36,7 @@ export function PCPart({ def, children }: { def: PartDef; children: ReactNode })
   const selected = usePcStore((s) => s.selectedPart === def.id || (s.mode === 'story' && s.storyPart === def.id));
 
   // interactive only when parts are spread out (exploded chapter) or in 360° mode
-  const interactive = mode === 'explore' ? !device : chapter === CHAPTER_INDEX.exploded;
+  const interactive = enabled && (mode === 'explore' ? !device : chapter === CHAPTER_INDEX.exploded);
 
   // Capture each material's original look once the children have mounted.
   useEffect(() => {
@@ -59,7 +59,7 @@ export function PCPart({ def, children }: { def: PartDef; children: ReactNode })
     const newlyLoaded = records.current.length === 0 || assetVersion.current !== g.userData.assetVersion;
     if (newlyLoaded) { records.current = captureMaterials(g); assetVersion.current = g.userData.assetVersion; }
 
-    const active = activePart();
+    const active = enabled ? activePart() : null;
     const goalHi = active === def.id ? 1 : 0;
     const goalDim = active && active !== def.id ? 1 : 0;
     const s = fx.current;

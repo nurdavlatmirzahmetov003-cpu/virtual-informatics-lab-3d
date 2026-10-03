@@ -6,6 +6,7 @@ import { AppShell } from '@/components/layout/AppShell';
 const HomePage = lazy(() => import('@/pages/Home/HomePage'));
 const LabsPage = lazy(() => import('@/pages/Labs/LabsPage'));
 const SetupStudioPage = lazy(() => import('@/pages/SetupStudio/SetupStudioPage'));
+const SetupSummaryPage = lazy(() => import('@/pages/SetupStudio/SetupSummaryPage'));
 const ProgressPage = lazy(() => import('@/pages/Progress/ProgressPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFound/NotFoundPage'));
 const CreditsPage = lazy(() => import('@/pages/Credits/CreditsPage'));
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
       { path: 'labs', element: <LabsPage /> },
       { path: 'explorer', element: <ExplorerPage /> },
       { path: 'studio', element: <SetupStudioPage /> },
+      { path: 'studio/summary', element: <SetupSummaryPage /> },
       { path: 'progress', element: <ProgressPage /> },
       { path: 'credits', element: <CreditsPage /> },
       { path: '*', element: <NotFoundPage /> },

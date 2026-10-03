@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 0.6.0 — 2026-10-03 — Фаза 4: Setup Studio 3D
+
+### Қосылды
+- `src/data/hardware/catalog.ts` — 15 санат (монитор, пернетақта, тышқан, құлаққап, колонкалар, үстел, орындық, корпус, процессор, кулер, аналық плата, RAM, видеокарта, SSD, блок питание), 64 қазіргі өнім. Әр өнімде: id, category, brand, model, priceKZT, priceUpdatedAt, priceSource (`demo`), specifications, specSourceUrl + specCheckedAt, compatibility, modelPath, modelSize, thumbnail, colors, performanceTier, recommendedUse. Сипаттамалар өндірушінің ресми беттерінен тексерілді.
+- `src/data/studio/options.ts` — санаттар, мақсаттар, бюджет, стиль, түстер.
+- `src/lib/studio/` — `compatibility.ts` (11 ереже, қазақша түсіндірме), `pricing.ts`, `power.ts`, `recommend.ts` (бюджетке сай үйлесімді жинақ), `build.ts`.
+- `store/studioStore.ts` — persist `vil3d:setup` v1 + migrate/merge (жоғалған каталог id-ларын тазалайды).
+- `/studio`: 5 қадамды конфигуратор (мақсат, бюджет, стиль, өнімдер, түстер), өнім карточкалары (сипаттамалар, деңгей, мақсатқа сай белгісі, «Сәйкес емес» алдын ала ескерту, Demo price, ресми сілтеме), тірі баға мен бюджет шкаласы, қуат бағасы, үйлесімділік есебі; мобильдіде bottom sheet.
+- `scenes/SetupStudio/` — таңдау бірден 3D-да: өнім өлшеміне масштабталған модельдер, ақ/қара/аралас перифериялар, үстел беті (4 түрлі), корпус түсі (қара/ақ/графит/күміс), RGB (7 режим), процедуралық орындық; 360° (орбита, zoom, reset, авто айналу ±108°).
+- `/studio/summary` — «Сетапты көру» қорытынды беті.
+- `lib/three/finish.ts` — материал бояуы: normal/roughness/metalness карталары сақталады.
+
+### Өзгерді
+- `Desk` — `surface` опциясы; `PCCase` — `fixed`, `interactive`, `rgbColor`; `PCPart` — `enabled` (hero-дан қалған highlight студияда шықпайды).
+- `data/hardware/types.ts` — каталог схемасы кеңейтілді (Socket, MemoryType, SpecEntry, FinishId).
+
 ## 0.5.0 — 2026-10-03 — Фаза 3: Hardware Explorer («Компьютер анатомиясы»)
 
 ### Қосылды

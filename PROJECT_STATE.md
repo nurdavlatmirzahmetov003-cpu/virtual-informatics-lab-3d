@@ -1,12 +1,12 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
 Жаңартылды: 2026-10-03
-**Ағымдағы фаза: 3 (Hardware Explorer) — 3.1 «Компьютер анатомиясы» аяқталды; 3.2 PC Assembly Lab келесі. Фаза 2: 2.1–2.3 дайын, §50 бойынша финалдық жабу қалды**
+**Ағымдағы фаза: 4 (Setup Studio 3D) аяқталды; келесі — Фаза 5 (кинематографиялық құрастыру анимациясы). Фаза 3.2 (PC Assembly Lab) және Фаза 2 қалдықтары кейінге қалдырылды**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
 
 ## Күйі
-`/explorer` «Компьютер анатомиясы»: 8 сыртқы + 10 ішкі құрылғы 3D-да (hero GLB-лері қайта қолданылды), басқанда камера тегіс жақындайды, қалғаны күңгірттенеді, панельде үш тілде атауы, сипаттамасы, мақсаты, сипаттамалары, үйлесімділігі және 3 сұрақтық тест; 3D-сіз тізім режимі бар. Басты бетте толық scroll-кино жұмыс істейді: 7 chapter + 360° режимі. Перифериялар (монитор, пернетақта, тышқан, құлаққап, колонкалар) және ПК (корпус + 8 бөлшек) енді лицензиясы таза Sketchfab CC BY 4.0 GLB модельдері: оңтайландырылған (Meshopt, WebP 1K), барлығы 6.2 MB (шикі 85 MB). GLB жүктелмесе, бұрынғы процедуралық модель fallback. Авторлар `/credits` бетінде. `npm run typecheck`, `npm run lint`, `npm run build`, `npm run assets:validate` қатесіз; dev консолінде қате жоқ.
+`/studio` Setup Studio 3D: 15 санат × 3–6 нақты өнім (64), мақсат → бюджет → стиль → өнімдер → түстер қадамдары, «Бюджетке сай жинақ ұсыну», әр таңдау 3D сахнада бірден көрінеді, 11 үйлесімділік ережесі қазақша түсіндірмемен, тірі баға мен бюджет шкаласы, түс конфигураторы, 360° қарау, localStorage-та сақталады, «Сетапты көру» → `/studio/summary`. `/explorer` «Компьютер анатомиясы»: 8 сыртқы + 10 ішкі құрылғы 3D-да (hero GLB-лері қайта қолданылды), басқанда камера тегіс жақындайды, қалғаны күңгірттенеді, панельде үш тілде атауы, сипаттамасы, мақсаты, сипаттамалары, үйлесімділігі және 3 сұрақтық тест; 3D-сіз тізім режимі бар. Басты бетте толық scroll-кино жұмыс істейді: 7 chapter + 360° режимі. Перифериялар (монитор, пернетақта, тышқан, құлаққап, колонкалар) және ПК (корпус + 8 бөлшек) енді лицензиясы таза Sketchfab CC BY 4.0 GLB модельдері: оңтайландырылған (Meshopt, WebP 1K), барлығы 6.2 MB (шикі 85 MB). GLB жүктелмесе, бұрынғы процедуралық модель fallback. Авторлар `/credits` бетінде. `npm run typecheck`, `npm run lint`, `npm run build`, `npm run assets:validate` қатесіз; dev консолінде қате жоқ.
 
 ## Аяқталған модульдер
 - **Фаза 0–1:** аудит, legacy, Vite/React/TS/R3F негізі, router, Zustand, i18n (kk/ru/en), сапа контроллері, SceneCanvas, ModelLoader, LoaderOverlay, WebGL fallback.
@@ -35,7 +35,15 @@
   - Деректер: `src/data/hardware/anatomy.ts` + `locales/{kk,ru,en}.json` → `anatomy.*`; `anatomyStore`; камера күйлері `ANATOMY_EXTERNAL/INTERNAL`.
   - Навигацияда «Анатомия», Зертханалар бетінде «Компьютер құрылғылары» модулі ашық.
 
+- **Фаза 4 (Setup Studio 3D):**
+  - Каталог `src/data/hardware/catalog.ts` (64 өнім; сипаттамалар өндіруші беттерінен 2026-10-03 тексерілді, сілтемесі әр өнімде; барлық баға «Demo price»), схема `types.ts`, сөздік `data/studio/options.ts`.
+  - Бизнес-логика `src/lib/studio/`: `compatibility.ts` (сокет, RAM түрі, плата пішімі ↔ корпус, видеокарта ұзындығы ↔ корпус, кіріктірілген графика жоқ, БП қуаты, кулер сокеті/биіктігі/радиаторы/жылуы, міндетті бөлшек жоқ), `power.ts` (шыңдағы тұтыну, қажет БП = max(видеокарта өндірушісінің талабы, шың × 1,15)), `pricing.ts`, `recommend.ts` (салмақ бойынша бөлу → тәуелділік ретімен таңдау → бюджетке дейін төмендету → артық бөлшектерді алып тастау → қалған қаражатпен жақсарту).
+  - Күй `store/studioStore.ts` (persist `vil3d:setup` v1, migrate + merge).
+  - UI `src/pages/SetupStudio/`: `SetupStudioPage` (Wizard + StudioSummary + ViewTools), `WizardSteps`, `ProductsStep` (санат чиптері: таңдалды/міндетті/қате, карточкада «Сәйкес емес» алдын ала), `ColorsStep`, `StudioSummary`, `SetupSummaryPage` (`/studio/summary`).
+  - 3D `src/scenes/SetupStudio/`: `StudioScene` (өнім өлшеміне масштабталған GLB, перифериялар/корпус бояуы, үстел беті, RGB, тек таңдалған бөлшектер), `StudioCamera` (orbit/zoom/reset/авто айналу ±108°, overlay-ге қарай view offset), `Chair` [PLACEHOLDER].
+
 ## Жартылай аяқталған
+- Setup Studio: нақты KZ бағалары, өнім суреттері, әр өнімге жеке GLB, жүйелік блок ішінің таңдауға қарай өзгеруі жоқ; орындық процедуралық.
 - Анатомияда 5 құрылғы уақытша процедуралық: микрофон, веб-камера, принтер, HDD, желі картасы (TODO `[PLACEHOLDER]`).
 - Тест нәтижелері сақталмайды (Фаза 8).
 - Үстел, коврик, бөлме, артқы желдеткіш, құлаққап тұғыры — процедуралық (TODO `[PLACEHOLDER]`).
@@ -43,6 +51,7 @@
 - Poly Haven `potted_plant_04` және walnut/leather/plaster текстуралары жүктелген, бірақ кодта қолданылмайды.
 
 ## Тексерілгені (in-app Chromium)
+- **Фаза 4:** `/studio` 1280×720 және 375×812: 5 қадам; «Бюджетке сай жинақ ұсыну» (6 мақсат × 5 бюджет × 2 стиль — бірде-бір үйлесімсіздік жоқ; 300 000 ₸-ге толық жүйе сыймайтыны ашық көрсетіледі); i5-14400F + AM5 плата → сокет қатесі; DDR4 + AM5 → жад қатесі; RTX 5090 Astral (357,6 мм) + Fractal North (355 мм) → сыймайды; 750 Вт БП + 9950X + 5090 → қуат жетпейді; AK400 + 9950X → кулер ескертуі; карточкада «Сәйкес емес» алдын ала; түстер (ақ корпус/үстел/перифериялар, күлгін RGB) 3D-да; авто айналу, reset; бетті қайта жүктегенде конфигурация сақталды; «Сетапты көру» → қорытынды бет; hero → studio SPA навигациясы; консольде қате жоқ; hero exploded регрессиясыз. `__vil3d.bench()` студия: 173 call (көлеңкемен), 17–29 мс (1600×900 px, Intel UHD).
 - **Фаза 3.1:** `/explorer` 1200×700 және 375×812: екі санаттың жалпы көрінісі, тізімнен/hotspot-тан таңдау → камера ұшуы, dim, панель; монитор тесті (2/3 нәтиже, түсіндірмелер); CPU, PSU, HDD, желі картасы, тышқан жақын кадрлары; санат ауыстыру; Esc / «Жабу»; тізім режимі kk/ru/en (18 карточка, тест details ішінде); тіл ауыстырғанда `<title>` пен барлық мәтін ауысады; горизонталь скролл жоқ; консольде қате жоқ. Hero (exploded + highlight) регрессиясыз. `__vil3d.bench()` 1500×875 px: анатомия 71–99 call, 0,20–0,24 млн үшбұрыш, 15–19 мс; hero сол өлшемде 20–25 мс.
 - **Фаза 2.3:** GLB-мен 7 chapter скриншотпен (hero, монитор, пернетақта, тышқан, ПК іші, exploded 8 қадам); 360°: бөлшекке ұшу (PSU), «Жинау» (бөлшектер корпус ішіне дұрыс түседі), reset, «Сапарға оралу»; `/credits`; мобильді 375×812 (горизонталь скролл жоқ); консольде қате жоқ. `__vil3d.bench()` бір өту: hero 59 call / 7.8 мс, монитор 46 / 5.9 мс, ПК іші 124 / 10.4 мс, exploded 123 / 10.5 мс.
 - Desktop 1280×720: 7 chapter-дің бәрі скриншотпен; exploded қадамдары (бөлшек ауысуы, highlight/dim); hotspot басу → 360°; тізімнен GPU таңдау → камера ұшуы; reset; «Жинау» (бөлшектер орнына, шыны жабылады); «Сапарға оралу» (scroll орны сақталды: 7156 → 7156).
@@ -51,16 +60,15 @@
 - Бенчмарк: `__vil3d.bench()` (dev) — draw calls, үшбұрыштар, мс/кадр.
 
 ## Осы сессияда өзгерген файлдар
-- Жаңа: `src/pages/Explorer/*` (ExplorerPage, AnatomyPanel, AnatomyDetails, AnatomyQuiz, AnatomyListView, AnatomyControls, anatomyText + CSS), `src/scenes/HardwareExplorer/*` (AnatomyScene, AnatomyItem, AnatomyCamera, AnatomyShadows, shadowRequest, layout, placeholders, placeholderModels), `src/data/hardware/anatomy.ts`, `src/store/anatomyStore.ts`, `src/lib/three/materialFx.ts`, `src/scenes/DeskScene/models/useMonitorWallpaper.ts`
-- Өзгерген: `src/locales/{kk,ru,en}.json` (`anatomy.*`, `nav.explorer`, `labs.available`), `src/app/router.tsx`, `src/components/layout/{TopBar.tsx,TopBar.module.css}`, `src/pages/Labs/*`, `src/data/camera/cameraStates.ts`, `src/scenes/DeskScene/pc/PCPart.tsx`, `src/scenes/DeskScene/models/HardwareDevices.tsx`
-- Көшірілген: `scenes/DeskScene/pc/Hotspot.module.css` → `components/3d/Hotspot.module.css`
-- Құжаттар: PROJECT_STATE, ROADMAP, TODO, KNOWN_ISSUES, CHANGELOG, ARCHITECTURE
+- Жаңа: `src/data/hardware/catalog.ts`, `src/data/studio/options.ts`, `src/lib/studio/{build,compatibility,power,pricing,recommend}.ts`, `src/lib/three/finish.ts`, `src/store/studioStore.ts`, `src/scenes/SetupStudio/{StudioScene,StudioCamera,Chair}.tsx`, `src/pages/SetupStudio/{WizardSteps,ProductsStep,ColorsStep,StudioSummary,SetupSummaryPage,icons,studioText,useStudioBuild}.*`, `SetupStudio.module.css`, `SetupSummary.module.css`
+- Өзгерген: `src/pages/SetupStudio/SetupStudioPage.tsx` (статус бетінің орнына конфигуратор), `src/data/hardware/types.ts`, `src/scenes/DeskScene/models/Desk.tsx` (`surface`), `src/scenes/DeskScene/pc/{PCCase,PCPart}.tsx` (`fixed`, `interactive`, `rgbColor`, `enabled`), `src/data/camera/cameraStates.ts` (`STUDIO_WIDE`), `src/lib/storage.ts` (`setup` v1), `src/app/router.tsx` (`/studio/summary`), `src/locales/*.json` (`studio.*`)
+- Құжаттар: PROJECT_STATE, ROADMAP, TODO, KNOWN_ISSUES, CHANGELOG, ARCHITECTURE, ASSET_MANIFEST
 
 ## Іске қосу
 ```bash
 cd D:\informatics-lab
 npm install
-npm run dev          # http://localhost:5173  (анатомия: /explorer)
+npm run dev          # http://localhost:5173  (анатомия: /explorer, студия: /studio)
 npm run typecheck
 npm run lint
 npm run build
@@ -87,4 +95,4 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: Фаза 3.2 — (1) MASTER_PROMPT §11 Virtual PC Assembly Lab: бөлшектерді дұрыс ретпен орнату (сокет → CPU → кулер → RAM → M.2 → плата корпусқа → PSU → GPU → кабельдер), үйлесімділік тексерісі, қате әрекетке түсіндірме, анатомия деректерін (`data/hardware/anatomy.ts`) және hero GLB-лерін қайта қолдану; (2) микрофон, веб-камера, принтер, HDD, желі картасы үшін CC0/CC-BY GLB тауып, `npm run assets:optimize` арқылы қосу (TODO `[PLACEHOLDER]`); (3) Фаза 2 қалдықтары: логотиптер, үстел текстурасы, §50 тексеру.
+NEXT_ACTION: Фаза 5 — MASTER_PROMPT §15: «Сетапты көру» басылғанда `/studio/summary` орнына бос үстелден басталатын кинематографиялық құрастыру анимациясы (монитор тұғыры → монитор → коврик → пернетақта → тышқан → колонкалар → құлаққап тұғыры → корпус → бүйір панель ашылады → аналық плата → CPU → RAM → SSD → кулер → PSU → GPU → кабельдер → желдеткіштер айналады → RGB → шыны жабылады → монитор қосылады → жарық), studioStore-дағы жинақ пен түстерді қолдану, физикаға ұқсас easing (cartoon емес), соңында баяу 360° orbit + «360° қарау / Ішін көру / Бөлшектер / Конфигурация / Өзгерту» батырмалары; жүйелік блок ішіндегі бөлшектерді таңдалған өнімге сай ету (видеокарта ұзындығы, кулер түрі); §51 қабылдау тізімін тексеру.
