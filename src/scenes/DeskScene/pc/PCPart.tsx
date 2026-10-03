@@ -50,7 +50,8 @@ export function PCPart({ def, children, enabled = true }: { def: PartDef; childr
   useFrame((_, delta) => {
     const g = group.current;
     if (!g) return;
-    const e = pcRig.explode;
+    g.visible = !pcRig.hidden.has(def.id);
+    const e = pcRig.parts?.[def.id] ?? pcRig.explode;
     const scale = 1 + ((def.magnify ?? 1) - 1) * e;
     g.scale.setScalar(scale);
     // Magnify around the visual centre, keeping the hotspot and fly-to target aligned.

@@ -37,6 +37,11 @@ export const CAMERA_STATE_NAMES = [
   'ANATOMY_EXTERNAL',
   'ANATOMY_INTERNAL',
   'STUDIO_WIDE',
+  'ASSEMBLY_START',
+  'ASSEMBLY_MONITOR',
+  'ASSEMBLY_DESK',
+  'ASSEMBLY_AUDIO',
+  'ASSEMBLY_PC',
 ] as const;
 
 export type CameraStateName = (typeof CAMERA_STATE_NAMES)[number];
@@ -63,5 +68,11 @@ export const CAMERA_STATES: Record<CameraStateName, CameraState> = {
   ANATOMY_EXTERNAL: { position: [0, 1.5, 1.9], target: [0, 0.9, -0.04], fov: 36, minDistance: 0.25, maxDistance: 3.2 },
   // Setup Studio start shot: whole desk, chair and PC (scenes/SetupStudio)
   STUDIO_WIDE: { position: [-0.55, 1.62, 2.55], target: [0.05, 0.9, 0], fov: 36, minDistance: 0.35, maxDistance: 4.5 },
+  // Setup assembly (scenes/SetupStudio/assembly): empty desk → each station → hero angle (HOME_WIDE)
+  ASSEMBLY_START: { position: [-0.5, 1.62, 2.6], target: [0.05, 0.86, 0], fov: 36 },
+  ASSEMBLY_MONITOR: { position: [-0.32, 1.24, 1.2], target: [-0.06, 0.96, -0.2], fov: 36 },
+  ASSEMBLY_DESK: { position: [-0.38, 1.34, 1.02], target: [0.06, 0.78, 0.14], fov: 36 },
+  ASSEMBLY_AUDIO: { position: [-0.95, 1.26, 1.22], target: [-0.42, 0.88, -0.08], fov: 36 },
+  ASSEMBLY_PC: { position: [0.02, 1.3, 1.18], target: [0.62, 0.99, -0.06], fov: 36 },
   ANATOMY_INTERNAL: { position: [0, 2.0, 1.32], target: [0, 0.76, -0.01], fov: 36, minDistance: 0.18, maxDistance: 3 },
 };

@@ -25,10 +25,20 @@ import { RamKit } from './RamKit';
 import { usePcTextures } from './usePcTextures';
 import { HardwarePart } from './HardwareParts';
 
-/** Resolves pcRig from the scroll story or from explore-mode toggles. Must mount first. */
-function PcRigController({ fixed }: { fixed: boolean }) {
+export type PcRigMode = 'auto' | 'fixed' | 'external';
+
+/**
+ * Resolves pcRig from the scroll story / explore-mode toggles (`auto`), a
+ * static assembled pose (`fixed`), or leaves it to an outside driver
+ * (`external`, e.g. SetupAssemblyTimeline). Must mount first.
+ */
+function PcRigController({ mode, hide }: { mode: PcRigMode; hide: readonly PartId[] }) {
   useFrame((_, delta) => {
-    if (fixed) {
+    if (mode === 'external') return;
+    pcRig.parts = null;
+    pcRig.cables = pcRig.fanSpeed = pcRig.rgbPower = 1;
+    if (pcRig.hidden.size !== hide.length || hide.some((id) => !pcRig.hidden.has(id))) pcRig.hidden = new Set(hide);
+    if (mode === 'fixed') {
       // assembled, glass closed, interior lit (Setup Studio)
       pcRig.explode = 0;
       pcRig.glassOpen = 0;
@@ -54,16 +64,20 @@ function PcRigController({ fixed }: { fixed: boolean }) {
   return null;
 }
 
+const NO_PARTS: readonly PartId[] = [];
+
 interface PCCaseProps {
-  /** Assembled and static instead of following the scroll story / 360° mode. */
-  fixed?: boolean;
+  /** Who drives pcRig (default: scroll story / 360° mode). */
+  rig?: PcRigMode;
+  /** Parts left out of this build (e.g. no graphics card). */
+  hide?: readonly PartId[];
   /** Hotspots and part clicks (hero only). */
   interactive?: boolean;
   /** RGB colour; `null` switches the lighting off. Default: the hero cyan. */
   rgbColor?: string | null;
 }
 
-export function PCCase({ fixed = false, interactive = true, rgbColor }: PCCaseProps) {
+export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbColor }: PCCaseProps) {
   const tex = usePcTextures();
   const res = useDisposable(() => {
     const rgb = new MeshStandardMaterial({ color: '#000000', emissive: '#4fdcff', emissiveIntensity: 1, roughness: 0.4 });
@@ -86,8 +100,8 @@ export function PCCase({ fixed = false, interactive = true, rgbColor }: PCCasePr
   useFrame(() => {
     const lit = rgbColor !== null;
     if (rgbColor) res.rgb.emissive.set(rgbColor);
-    res.rgb.emissiveIntensity = lit ? 0.7 + pcRig.glow * 1.6 : 0;
-    res.ramLight.emissiveIntensity = lit ? 0.6 + pcRig.glow * 1.2 : 0;
+    res.rgb.emissiveIntensity = lit ? (0.7 + pcRig.glow * 1.6) * pcRig.rgbPower : 0;
+    res.ramLight.emissiveIntensity = lit ? (0.6 + pcRig.glow * 1.2) * pcRig.rgbPower : 0;
     if (showcase) {
       showcase.intensity = pcRig.explode * 4;
       // invisible lights drop out of every shader's light loop
@@ -114,7 +128,7 @@ export function PCCase({ fixed = false, interactive = true, rgbColor }: PCCasePr
 
   return (
     <group position={[...CASE_ORIGIN]}>
-      <PcRigController fixed={fixed} />
+      <PcRigController mode={rig} hide={hide} />
       <Chassis tex={tex} fan={fan} rgb={res.rgb} />
       {PARTS.map((def) => (
         <PCPart key={def.id} def={def} enabled={interactive}>

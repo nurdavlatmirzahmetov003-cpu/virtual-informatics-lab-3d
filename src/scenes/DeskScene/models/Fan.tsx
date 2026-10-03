@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useFrame, type ThreeElements } from '@react-three/fiber';
+import { pcRig } from '../pc/pcRig';
 import type { BufferGeometry, Group, Material } from 'three';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 
@@ -26,7 +27,7 @@ export function Fan({ size, geometries, rgb, speed = 7, frameless = false, ...pr
   const depth = 0.025;
 
   useFrame((_, dt) => {
-    if (rotor.current) rotor.current.rotation.z -= (reducedMotion ? speed * 0.15 : speed) * Math.min(dt, 0.05);
+    if (rotor.current) rotor.current.rotation.z -= (reducedMotion ? speed * 0.15 : speed) * pcRig.fanSpeed * Math.min(dt, 0.05);
   });
 
   return (

@@ -72,7 +72,7 @@ export function Chassis({ tex, fan, rgb }: { tex: PcTextures; fan: FanGeometries
       glass.current.visible = g < 0.995;
     }
     // cables would float when parts separate — tuck them away
-    if (cables.current) cables.current.visible = pcRig.explode < 0.02;
+    if (cables.current) cables.current.visible = pcRig.cables > 0.5 && pcRig.explode < 0.02;
     if (strip.current) strip.current.emissiveIntensity = 0.35 + 1.6 * pcRig.interior;
     if (light.current) {
       light.current.intensity = 0.08 * pcRig.glow + 0.14 * pcRig.interior;

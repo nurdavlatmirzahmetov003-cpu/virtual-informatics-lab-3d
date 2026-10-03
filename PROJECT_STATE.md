@@ -1,7 +1,7 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
 Жаңартылды: 2026-10-03
-**Ағымдағы фаза: 4 (Setup Studio 3D) аяқталды; келесі — Фаза 5 (кинематографиялық құрастыру анимациясы). Фаза 3.2 (PC Assembly Lab) және Фаза 2 қалдықтары кейінге қалдырылды**
+**Ағымдағы фаза: 5 (құрастыру анимациясы) — жартылай (3D/timeline ядросы дайын, бет пен UI жоқ). Фаза 4 аяқталған. Фаза 3.2 (PC Assembly Lab) және Фаза 2 қалдықтары кейінге қалдырылды**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
 
@@ -95,4 +95,4 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: Фаза 5 — MASTER_PROMPT §15: «Сетапты көру» басылғанда `/studio/summary` орнына бос үстелден басталатын кинематографиялық құрастыру анимациясы (монитор тұғыры → монитор → коврик → пернетақта → тышқан → колонкалар → құлаққап тұғыры → корпус → бүйір панель ашылады → аналық плата → CPU → RAM → SSD → кулер → PSU → GPU → кабельдер → желдеткіштер айналады → RGB → шыны жабылады → монитор қосылады → жарық), studioStore-дағы жинақ пен түстерді қолдану, физикаға ұқсас easing (cartoon емес), соңында баяу 360° orbit + «360° қарау / Ішін көру / Бөлшектер / Конфигурация / Өзгерту» батырмалары; жүйелік блок ішіндегі бөлшектерді таңдалған өнімге сай ету (видеокарта ұзындығы, кулер түрі); §51 қабылдау тізімін тексеру.
+NEXT_ACTION: Фаза 5-ті аяқтау (жартылай жасалды, WIP commit). Дайын: `store/assemblyStore.ts`, `scenes/SetupStudio/assembly/{assemblyRig.ts,steps.ts,SetupAssemblyTimeline.tsx,AssemblyScene.tsx}`, ортақ `SetupItems.tsx` (студия + анимацияланатын нұсқа, монитор тұғыры/экраны clipping арқылы бөлек), `setupShared.ts`, pcRig кеңейтілді (parts/hidden/cables/fanSpeed/rgbPower), PCCase `rig: auto|fixed|external` + `hide`, камера күйлері ASSEMBLY_*. Қалғаны: (1) `pages/SetupStudio/SetupViewPage.tsx` — SceneCanvas + AssemblyScene + SetupAssemblyTimeline (ready = useSceneStatus.ready, reduced = useReducedMotion), қадам жазуы + прогресс, «Өткізу», біткен соң конфигурация панелі (бөлшектер + «Барлығы — … ₸») және батырмалар «360° қарау / ПК ішін көру / Бөлшектер / Конфигурация / Өзгерту / AI-мен жақсарту (disabled)»; (2) router `/studio/view`, StudioSummary «Сетапты көру» → `/studio/view`; (3) locales `assembly.*` (қадам атаулары: monitorStand, monitor, mat, keyboard, mouse, speakers, headsetStand, headset, chair, pcCase, sidePanel, motherboard, cpu, ram, ssd, cooler, psu, gpu, cables, fans, rgb, glassClose, monitorOn, lights, present); (4) TODO: «AI-мен жақсарту» Фаза 6; (5) браузерде тексеру (студия мен hero регрессиясы, FPS), docs, commit.

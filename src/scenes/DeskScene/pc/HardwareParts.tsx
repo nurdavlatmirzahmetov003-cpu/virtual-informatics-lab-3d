@@ -5,6 +5,7 @@ import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { ModelLoader } from '@/components/3d/ModelLoader';
 import type { PartId } from './parts';
 import { FRONT_FANS, RAM } from './constants';
+import { pcRig } from './pcRig';
 
 type Fit = NonNullable<ComponentProps<typeof ModelLoader>['fit']>;
 const fits: Record<Exclude<PartId, 'fans'>, Fit> = {
@@ -24,7 +25,7 @@ const url = (name: string) => `${import.meta.env.BASE_URL}assets/models/hardware
 function HardwareFan({ y, fallback }: { y: number; fallback: ReactNode }) {
   const rotor = useRef<Group>(null);
   const reduced = useReducedMotion();
-  useFrame((_, delta) => { if (rotor.current && !reduced) rotor.current.rotation.z -= Math.min(delta, 0.05) * 8; });
+  useFrame((_, delta) => { if (rotor.current && !reduced) rotor.current.rotation.z -= Math.min(delta, 0.05) * 8 * pcRig.fanSpeed; });
   return <group position-y={y}>
     <ModelLoader url={url('fan_frame')} fit={fanFit} fallback={fallback} />
     <group ref={rotor} position-z={0.0018}><ModelLoader url={url('fan_rotor')} fit={rotorFit} castShadow={false} fallback={null} /></group>
