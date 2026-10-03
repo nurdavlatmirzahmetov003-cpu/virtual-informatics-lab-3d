@@ -5,7 +5,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { NETWORK_TASKS, NETWORK_TASK_IDS, deviceById, isHost, isNetworkTaskId, type Network, type NetworkTaskId } from '@/labs/NetworkLab';
-import { bestResults, useProgressStore } from '@/store/progressStore';
+import { useProgressStore } from '@/store/progressStore';
 import { ConfigPanel } from './ConfigPanel';
 import { Palette } from './Palette';
 import { PingBar } from './PingBar';
@@ -128,8 +128,7 @@ export default function NetworkLabPage() {
   useDocumentTitle(t('network.title'));
   const [params, setParams] = useSearchParams();
   const mode = readMode(params.get('task'));
-  const attempts = useProgressStore((s) => s.attempts);
-  const best = useMemo(() => bestResults(attempts), [attempts]);
+  const best = useProgressStore((s) => s.best);
 
   return (
     <div className={styles.page}>

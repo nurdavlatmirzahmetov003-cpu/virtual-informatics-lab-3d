@@ -4,7 +4,7 @@ import { ArrowUpRight, Clock3 } from 'lucide-react';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import { EXERCISES } from '@/data/labs/exercises';
-import { bestResults, useProgressStore } from '@/store/progressStore';
+import { useProgressStore } from '@/store/progressStore';
 import { ModulePreview } from './ModulePreview';
 import { LAB_MODULES, type LabModule, type ModuleId } from './modules';
 import styles from './LabsPage.module.css';
@@ -99,8 +99,8 @@ function ModuleCard({ module, index, done, total }: { module: LabModule; index: 
 export default function LabsPage() {
   const t = useT();
   useDocumentTitle(t('labs.title'));
-  const attempts = useProgressStore((s) => s.attempts);
-  const passed = useMemo(() => new Set(bestResults(attempts).filter((a) => a.score >= PASS).map((a) => a.exercise)), [attempts]);
+  const best = useProgressStore((s) => s.best);
+  const passed = useMemo(() => new Set(best.filter((a) => a.score >= PASS).map((a) => a.exercise)), [best]);
 
   return (
     <div className={styles.page}>
