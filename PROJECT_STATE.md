@@ -1,9 +1,17 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
 Жаңартылды: 2026-10-04
-**Ағымдағы фаза: 7.1 дайын (Зертханалар хабы, Network Lab, ортақ бағалау сервисі). Келесі — 7.2: алгоритм/логика/тәжірибе зертханаларын `services/grading`-ке көшіру; содан кейін реализм және Фаза 9/10.**
+**Ағымдағы фаза: 7.2 дайын (Алгоритм визуализациясы). 7.1 (хаб, Network Lab, `services/grading`) дайын. Келесі — 7.3: логикалық схемалар; содан кейін тәжірибелер, реализм және Фаза 9/10.**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
+
+## Фаза 7.2 — Алгоритм визуализациясы (2026-10-04)
+- Логика `src/labs/AlgorithmLab/` (UI-сыз): `searches.ts` (linear, binary), `sorts.ts` (bubble ерте тоқтаумен, selection, insertion), `recursion.ts` (fact(n), n ≤ 8, шақырулар стегі), `recorder.ts` (immutable step snapshots, өзгерген айнымалылар, көрсеткіштер), `arrays.ts` (енгізу, seed-PRNG, кездейсоқ массив), `algorithms.ts` (реестр), `quizzes.ts` (3 тапсырма).
+- UI `pages/Labs/AlgorithmLab/`: `AlgorithmLabPage` (`?algo=…&quiz=…`, ескі `?task=`), `Visualizer`, `ArrayView` (тұрақты id → тегіс ауысу, түстер, left/mid/right/i/j/min), `StackView`, `usePlayer` (ойнату/тоқтату/алға/артқа/жылдамдық/қалпына келтіру/уақыт сызығы), `QuizSection` (`GradeReportCard`).
+- Мәтін: `algorithms.*` (атаулар, псевдокод, әр оқиғаның kk/ru/en түсініктемесі, тапсырмалар).
+- Хаб: «Алгоритм визуализациясы» → «Ашық»; тапсырмалар реестрінде 3 жаңа тапсырма.
+- Тесттер: `npm run test:algorithms` (10); `npm test` толық өтеді; build/lint/typecheck таза.
+- Тексерілді (in-app Chromium 1440×900, 375×812): bubble қадамдары (8 ↔ 6 ауысуы, j көрсеткіші, swapped = true), екілік іздеу (аймақтан тыс күңгірт, 2 салыстыруда табылды), рекурсия стегі (fact(4)…fact(1), «күтуде»), автоойнату, ←, қалпына келтіру; 3 тапсырма: қате → «Сенің жауабың / Дұрыс жауап» + түсініктеме, қайта тексеріс → 9/10 және 8/10 «Орындалды», бірден дұрыс → 10/10; мобильдіде көлденең скролл жоқ; консоль қатесіз.
 
 ## Фаза 7.1 — Зертханалар хабы, Network Lab, бағалау (2026-10-04)
 - Хаб `/labs` (`pages/Labs/LabsPage.tsx`, `modules.ts`, `ModulePreview.tsx`): 9 премиум карточка, қабатты SVG превью + tilt/parallax, статус Ашық/Бета/Жақында (`soon` — сілтеме емес), модуль прогресі. Алгоритм/логика/тәжірибелер — «Бета» (жұмыс істейді, 7.2-де жаңа бағалауға көшеді).
@@ -128,4 +136,4 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: Фаза 7.2 — алгоритм визуализациясы мен логикалық схемаларды (кейін тәжірибелерді) `src/services/grading`-ке көшір: әр тапсырма `Exercise<Work>` (ережелер, 3 кеңес, /10), `GradeReportCard`, логиканы `src/labs/<Lab>/` ішіне бөл, тесттер. Network Lab-ты қайта жасама (`src/labs/NetworkLab`, `pages/Labs/NetworkLab` дайын); хаб реестрі `pages/Labs/modules.ts` — модуль дайын болғанда status-ты 'ready' ет. Одан кейін: реализм (қалған placeholder GLB), Фаза 9/10. AI кілтін браузерге берме. D:/informatics-lab, dev :5173 (бос болмаса PORT=… немесе preview autoPort). Нөлден бастама.
+NEXT_ACTION: Фаза 7.3 — Логикалық схемалар: логиканы `src/labs/LogicLab/` ішіне бөл (вентильдер, сымдар, цикл/жетіспейтін кіріс, ақиқат кестесі), UI-ды AlgorithmLab/NetworkLab үлгісімен жаса (премиум, барлық мәтін locales-та), тапсырмаларды `Exercise<Work>` + `services/grading` + `GradeReportCard` арқылы бағала, тест жаз, хабта `modules.ts` logic → 'ready'. NetworkLab пен AlgorithmLab дайын — қайта жасама. Кейін: тәжірибелер, реализм (placeholder GLB), Фаза 9/10. AI кілтін браузерге берме. D:/informatics-lab, dev :5173 (бос болмаса preview autoPort). Нөлден бастама.

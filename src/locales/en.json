@@ -65,8 +65,8 @@
       },
       "algorithms": {
         "title": "Algorithm visualizer",
-        "desc": "Step through searching and sorting.",
-        "tag": "5 algorithms · step by step"
+        "desc": "Searching, sorting and recursion step by step: pseudocode, variables and the \"why\".",
+        "tag": "6 algorithms · 3 tasks"
       },
       "logic": {
         "title": "Logic circuits",
@@ -2017,5 +2017,225 @@
     "openResults": "My results",
     "ruleError": "This check could not be run.",
     "scoring": "Scoring: up to 10 from the rules; each hint and failed check −1 (max −3). Time does not affect the score."
+  },
+  "algorithms": {
+    "names": {
+      "linear": "Linear search",
+      "binary": "Binary search",
+      "bubble": "Bubble sort",
+      "selection": "Selection sort",
+      "insertion": "Insertion sort",
+      "recursion": "Recursion: factorial"
+    },
+    "short": {
+      "linear": "One by one",
+      "binary": "Halve the range",
+      "bubble": "Neighbour pairs",
+      "selection": "Pick the minimum",
+      "insertion": "Insert in place",
+      "recursion": "Call stack"
+    },
+    "ui": {
+      "eyebrow": "Lab · 04",
+      "intro": "Play an algorithm step by step, go back, change the speed. Every step says what happens and why.",
+      "choose": "Choose an algorithm",
+      "array": "Array (2–12 integers, −99…99)",
+      "apply": "Apply",
+      "random": "Random",
+      "target": "Target",
+      "n": "n (1–8)",
+      "invalidArray": "Enter 2–12 integers (−99…99) separated by commas or spaces.",
+      "play": "Play",
+      "pause": "Pause",
+      "back": "Step back",
+      "forward": "Step forward",
+      "reset": "Reset",
+      "speed": "Speed",
+      "step": "Step {current} / {total}",
+      "timeline": "Step timeline",
+      "keys": "Keys: Space — play/pause, ← → — step",
+      "code": "Pseudocode",
+      "vars": "Variables",
+      "noVars": "No variables yet",
+      "explain": "What is happening and why?",
+      "complexity": "Complexity",
+      "stack": "Call stack",
+      "stackEmpty": "The stack is empty",
+      "stackTop": "top",
+      "done": "Done",
+      "resultFound": "Result: index {index}",
+      "resultMissing": "Result: −1 (not found)",
+      "resultSorted": "Result: sorted",
+      "resultFactorial": "Result: {n}! = {result}",
+      "arrayLabel": "Array visualisation"
+    },
+    "legend": {
+      "compare": "comparing",
+      "swap": "swapping",
+      "sorted": "sorted / in place",
+      "found": "found",
+      "min": "current min",
+      "key": "key (being inserted)",
+      "outside": "outside the search range"
+    },
+    "stats": {
+      "comparisons": "Comparisons",
+      "swaps": "Swaps",
+      "calls": "Calls",
+      "depth": "Stack depth"
+    },
+    "frame": {
+      "active": "running",
+      "waiting": "waiting for fact(n − 1)",
+      "base": "base case → 1",
+      "returning": "returns {result}"
+    },
+    "notes": {
+      "linear": {
+        "start": "Target: {target}. The array may be unsorted, so we check elements one by one from the start (n = {n}).",
+        "mismatch": "a[{i}] = {value} is not the target ({target}) — move to the next one.",
+        "found": "a[{i}] = {value} — found after {comparisons} comparisons. Answer: index {i}.",
+        "missing": "Every element checked, {target} is absent. {comparisons} comparisons → answer −1."
+      },
+      "binary": {
+        "start": "The array is sorted. The search range is the whole array: left = {left}, right = {right}. Target: {target}.",
+        "sortedFirst": "Binary search only works on sorted data, so the array was sorted first. left = {left}, right = {right}, target: {target}.",
+        "mid": "Take the middle: mid = ⌊({left} + {right}) / 2⌋ = {mid}. a[{mid}] = {value}, target: {target}.",
+        "goRight": "{value} < {target} and the array is sorted, so the target is to the right. Drop the left half: left = {left}.",
+        "goLeft": "{value} > {target} — the target is to the left. Drop the right half: right = {right}.",
+        "found": "a[{mid}] = {value} — found in just {comparisons} comparisons: each step halves the search range.",
+        "missing": "left > right — the range is empty, {target} is absent. {comparisons} comparisons → answer −1."
+      },
+      "bubble": {
+        "start": "Bubble sort compares neighbours and swaps them when out of order. After each pass the largest value \"bubbles\" to the end (n = {n}).",
+        "passStart": "Pass {pass}: check neighbour pairs from 0 up to position {last}. swapped = false.",
+        "inOrder": "a[{j}] = {a} ≤ a[{j1}] = {b} — already in order, no swap.",
+        "outOfOrder": "a[{j}] = {a} > a[{j1}] = {b} — the larger one is on the left, out of order.",
+        "swap": "{a} and {b} swapped: the larger ({a}) moved one place right. swapped = true.",
+        "passEnd": "Pass {pass} done: {value} reached its place (index {index}) and is not checked again.",
+        "early": "Pass {pass} made no swaps — the array is sorted, so we stop early.",
+        "finish": "Sorted: {comparisons} comparisons, {swaps} swaps."
+      },
+      "selection": {
+        "start": "Selection sort finds the smallest remaining value and moves it to the front each time (n = {n}).",
+        "minInit": "i = {i}: assume a[{i}] = {value} is the minimum for now (min = {i}).",
+        "newMin": "a[{j}] = {a} < {b} — a new minimum, min = {j}.",
+        "keepMin": "a[{j}] = {a} ≥ {b} — the minimum stays.",
+        "swap": "The minimum {b} goes to position i = {i}: a[{i}] ↔ a[{min}]. The left part is sorted.",
+        "noSwap": "The minimum ({value}) is already in place — no swap needed.",
+        "finish": "Sorted: {comparisons} comparisons, {swaps} swaps. The number of comparisons does not depend on the order."
+      },
+      "insertion": {
+        "start": "Insertion sort keeps the left part sorted: the first element alone is already sorted (n = {n}).",
+        "pick": "key = a[{i}] = {key}. We insert it into its place in the sorted left part.",
+        "greater": "a[{j}] = {value} > key ({key}) — {value} must shift right.",
+        "notGreater": "a[{j}] = {value} ≤ key ({key}) — stop: the key belongs just to its right.",
+        "shift": "{value} shifted right, the key ({key}) moved left.",
+        "place": "key = {key} placed at index {pos}. The first {count} elements are sorted.",
+        "placeStart": "key = {key} is the smallest so far and goes to the front (index {pos}). The first {count} elements are sorted.",
+        "finish": "Sorted: {comparisons} comparisons, {swaps} shifts. Insertion sort is very fast on nearly sorted data."
+      },
+      "recursion": {
+        "start": "fact(n) = n × fact(n − 1) and fact(1) = 1. To compute {n}!, the function calls itself with a smaller n.",
+        "call": "fact({n}) is called → a new frame goes on the stack (depth {depth}).",
+        "checkBase": "n = {n} ≤ 1 — this is the base case.",
+        "checkRecurse": "n = {n} > 1 — not the base case, so we shrink the problem.",
+        "base": "fact({n}) returns 1. The base case stops the recursion — without it the calls would never end.",
+        "recurse": "fact({n}) needs fact({n1}) first. The current frame waits.",
+        "combine": "fact({n1}) = {sub} came back → fact({n}) = {n} × {sub} = {result}. The frame leaves the stack.",
+        "finish": "Answer: {n}! = {result}. {calls} calls in total; the stack grew to {calls} frames."
+      }
+    },
+    "quiz": {
+      "title": "Mini tasks",
+      "intro": "Graded automatically: pick an answer and press Check. If it is wrong, you will see why.",
+      "check": "Check",
+      "next": "New question",
+      "hint": "Get a hint",
+      "hintCost": "−1 point",
+      "noHints": "No hints left",
+      "noChoice": "No answer selected.",
+      "wrong": "Your answer: {chosen}. Correct: {correct}.",
+      "explanation": "Explanation",
+      "options": "Answer options",
+      "best": "Best: {score}/10",
+      "nextSwap": {
+        "title": "Which elements swap next?",
+        "question": "Bubble sort, pass {pass}. Now j = {j}: a[{j}] and a[{j1}] are compared. Which two elements swap next in this pass?",
+        "expected": "Pick the next pair to be swapped.",
+        "rule": "The next swap is identified",
+        "hint1": "Bubble sort only compares neighbours: a[j] and a[j + 1].",
+        "hint2": "A swap happens only when the left number is larger (a[j] > a[j + 1]).",
+        "hint3": "Walk right from j: the first \"larger → smaller\" pair is the answer.",
+        "why": "From j = {j} the pairs are checked left to right: {trace}. The first out-of-order pair, {answer}, is swapped."
+      },
+      "binarySteps": {
+        "title": "How many steps does binary search need?",
+        "question": "In this sorted array of {n} elements, how many comparisons (mid checks) does binary search need to find {target}?",
+        "expected": "Pick the number of mid checks.",
+        "rule": "The step count is right",
+        "hint1": "Each step checks the middle: mid = ⌊(left + right) / 2⌋.",
+        "hint2": "If the target is smaller the left half stays, if larger the right half.",
+        "hint3": "Write the indices down and compute left, right, mid step by step. 15 elements need at most 4 steps.",
+        "why": "mid values: {trace} — {count} comparisons. Each step halves the range; linear search would need {linear}."
+      },
+      "bubblePass": {
+        "title": "The array after bubble sort pass 1",
+        "question": "What does the array look like after the first pass of bubble sort?",
+        "expected": "Pick the array after pass 1.",
+        "rule": "Pass 1 result is right",
+        "hint1": "One pass walks the array once left to right, comparing neighbours.",
+        "hint2": "After pass 1 the largest element is always last.",
+        "hint3": "The rest is not fully sorted yet — it is only one pass.",
+        "why": "In pass 1 neighbours are compared left to right and out-of-order pairs swap: {swaps}. The largest, {max}, bubbles to the end; the rest is not fully sorted yet: {answer}."
+      }
+    },
+    "code": {
+      "linear": {
+        "l0": "for i = 0 … n − 1:",
+        "l1": "  if a[i] = target: return i",
+        "l2": "return −1"
+      },
+      "binary": {
+        "l0": "left ← 0; right ← n − 1",
+        "l1": "while left ≤ right:",
+        "l2": "  mid ← ⌊(left + right) / 2⌋",
+        "l3": "  if a[mid] = target: return mid",
+        "l4": "  if a[mid] < target: left ← mid + 1",
+        "l5": "  else: right ← mid − 1",
+        "l6": "return −1"
+      },
+      "bubble": {
+        "l0": "for pass = 1 … n − 1:",
+        "l1": "  swapped ← false",
+        "l2": "  for j = 0 … n − pass − 1:",
+        "l3": "    if a[j] > a[j + 1]:",
+        "l4": "      a[j] ↔ a[j + 1]; swapped ← true",
+        "l5": "  if swapped = false: stop",
+        "l6": "return a"
+      },
+      "selection": {
+        "l0": "for i = 0 … n − 2:",
+        "l1": "  min ← i",
+        "l2": "  for j = i + 1 … n − 1:",
+        "l3": "    if a[j] < a[min]: min ← j",
+        "l4": "  a[i] ↔ a[min]",
+        "l5": "return a"
+      },
+      "insertion": {
+        "l0": "for i = 1 … n − 1:",
+        "l1": "  key ← a[i]; j ← i − 1",
+        "l2": "  while j ≥ 0 and a[j] > key:",
+        "l3": "    a[j + 1] ← a[j]; j ← j − 1",
+        "l4": "  a[j + 1] ← key",
+        "l5": "return a"
+      },
+      "recursion": {
+        "l0": "function fact(n):",
+        "l1": "  if n ≤ 1:",
+        "l2": "    return 1",
+        "l3": "  return n × fact(n − 1)"
+      }
+    }
   }
 }
