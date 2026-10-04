@@ -1,9 +1,17 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
 Жаңартылды: 2026-10-04
-**Ағымдағы фаза: 7.3 дайын (Логикалық схемалар). 7.1 (хаб, Network Lab, `services/grading`) және 7.2 (Алгоритм визуализациясы) дайын. Келесі — 7.4: виртуалды тәжірибелер; содан кейін реализм және Фаза 9/10.**
+**Ағымдағы фаза: 7.4 дайын (Компьютерді виртуалды жинау). 7.1 хаб/Network Lab/`services/grading`, 7.2 Алгоритмдер, 7.3 Логика дайын. Келесі — 7.5: виртуалды тәжірибелер; содан кейін реализм және Фаза 9/10.**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
+
+## Фаза 7.4 — Компьютерді виртуалды жинау (2026-10-04)
+- Логика `src/labs/AssemblyLab/` (UI-сыз): `steps.ts` (11 қадам, тәуелділіктер, мақсат слоттары, `nextStep`, `progressOf`), `session.ts` (`place()` → installed / order / slot / miss), `exercise.ts` (толықтық 5 + рет 3 + слот 2, кеңес −1 ≤ −3, `isComplete` — толық жиналса «Орындалды»). `services/grading` → міндетті емес `isComplete`.
+- Күй `store/assemblyLabStore.ts`; дыбыс `lib/audio/sfx.ts` (WebAudio, файлсыз, ауыстырғыш `settingsStore.soundEnabled`).
+- 3D `scenes/AssemblyLab/`: `layout.ts` (тақта, төсеніш, корпус, мақсаттар; тақта позалары), `Draggable.tsx` + `dragState.ts` (сүйреу, snap, қате слот), `Guides.tsx` (елес, жарқыл), `props.tsx` (төсеніш, тұғырлар, кабель орамы), `AssemblyLabScene.tsx` (PCCase external, тақта жинағы, LabRig — ПК қосылуы, LabCamera — орбита, сүйреуде өшеді, қосылғанда корпусқа бұрылады).
+- UI `pages/Labs/AssemblyLab/` (`/labs/assembly`): прогресс, уақыт, қателер, кеңестер, дыбыс, 11 қадам тізімі, хабарлама, «Кеңес: келесі қадам (−1)», нәтиже картасы, «Қайта бастау». Мәтін `pcLab.*` (kk/ru/en). Хаб карточкасы «Ашық».
+- Тесттер: `npm run test:pc-lab` (6); `npm test` толық өтеді; build/lint/typecheck таза.
+- Тексерілді (in-app Chromium 1440×900, нақты тышқанмен сүйреу): процессорсыз кулер → рет қатесі; аналық плата төсенішке жатты; CPU, кулер, RAM, NVMe тақтада; тақта жинағы корпусқа көшті; БП; видеокарта процессор сокетіне → «PCIe x16 слотына орнатылады, ал бұл — процессор сокеті»; видеокарта, диск, вентиляторлар, кабельдер → 9/10 «Орындалды», 01:32, 2 қате. Кеңес → төсеніште елес «Осында орнат», тізім мен тұғыр ерекшеленді. Толық жинағанда ПК қосылды (RGB, камера корпусқа), 10/10. Қайта бастау. Мобильді 375×812 — көлденең скролл жоқ. Консоль қатесі жоқ (Html түбірлері тұрақты mount). FPS: ≈26 мс/кадр («Төмен» авто, Intel UHD).
 
 ## Фаза 7.3 — Логикалық схемалар (2026-10-04)
 - Логика `src/labs/LogicLab/` (UI-сыз): `types.ts`, `circuit.ts` (өңдеу, сым ережелері), `simulate.ts` (evaluate, cycleNodes/Tarjan, analyze, truthTable, expression), `tasks.ts` (and, notOr, xorBasic — тек AND/OR/NOT, table — 3 кірісті көпшілік функциясы).
@@ -143,4 +151,4 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: Фаза 7.4 — Виртуалды тәжірибелер: `lib/labs/experiments.ts` пен `pages/Labs/ExperimentsPage.tsx`-ті `src/labs/ExperimentLab/` + жаңа UI-ға (премиум, мәтін тек locales-та, `useEducationText`-тен бас тарту) көшір, тапсырмаларды `Exercise<Work>` + `services/grading` + `GradeReportCard` арқылы бағала, тест жаз, хабта experiments → 'ready'. NetworkLab, AlgorithmLab, LogicLab дайын — қайта жасама. Кейін: legacy progress импорт, реализм (placeholder GLB), Фаза 9/10. AI кілтін браузерге берме. D:/informatics-lab, dev :5173 (бос болмаса preview autoPort). Нөлден бастама.
+NEXT_ACTION: Фаза 7.5 — Виртуалды тәжірибелер: `lib/labs/experiments.ts` пен `pages/Labs/ExperimentsPage.tsx`-ті `src/labs/ExperimentLab/` + жаңа UI-ға (премиум, мәтін тек locales-та, `useEducationText` пен ескі `ExerciseResult`-тен бас тарт) көшір, тапсырмаларды `Exercise<Work>` + `services/grading` + `GradeReportCard` арқылы бағала, тест жаз, хабта experiments → 'ready'. NetworkLab, AlgorithmLab, LogicLab, AssemblyLab дайын — қайта жасама. Кейін: legacy progress импорт, placeholder-лер (HDD, кабель орамы, т.б.), Фаза 9 (Assembly Lab instancing/LOD) және 10. AI кілтін браузерге берме. D:/informatics-lab, dev :5173 (бос болмаса preview autoPort). Нөлден бастама.

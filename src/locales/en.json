@@ -55,8 +55,8 @@
       },
       "assembly": {
         "title": "Virtual PC assembly",
-        "desc": "Install components in the right order.",
-        "tag": "3D · drag & drop"
+        "desc": "11 steps: build the board on the mat, mount it, drag in the rest and power the PC on.",
+        "tag": "3D · 11 steps · drag & snap"
       },
       "network": {
         "title": "Computer networks",
@@ -2016,7 +2016,8 @@
     "saved": "Saved to My results.",
     "openResults": "My results",
     "ruleError": "This check could not be run.",
-    "scoring": "Scoring: up to 10 from the rules; each hint and failed check −1 (max −3). Time does not affect the score."
+    "scoring": "Scoring: up to 10 from the rules; each hint and failed check −1 (max −3). Time does not affect the score.",
+    "successWithNotes": "Task complete! A few mistakes on the way cost some points — see why below."
   },
   "algorithms": {
     "names": {
@@ -2352,6 +2353,164 @@
         "hint2": "It can be written as Y = (A AND B) OR (A AND C) OR (B AND C).",
         "hint3": "Shorter: Y = (A AND B) OR (C AND (A OR B)) — 4 gates are enough."
       }
+    }
+  },
+  "pcLab": {
+    "ui": {
+      "eyebrow": "Lab · 02",
+      "intro": "Pick parts up with the mouse and carry them to their place. Release when the transparent ghost appears.",
+      "back": "Labs",
+      "progress": "{done}/{total} steps",
+      "time": "Time",
+      "errors": "Errors",
+      "hints": "Hints",
+      "soundOn": "Sound on",
+      "soundOff": "Sound off",
+      "hint": "Hint: next step",
+      "hintCost": "−1 point",
+      "restart": "Start over",
+      "steps": "Assembly steps",
+      "zoneBench": "on the mat",
+      "zoneCase": "in the case",
+      "controls": "Drag a part · drag empty space to orbit 360° · wheel to zoom",
+      "booted": "The PC is on! Fans spin and the RGB lights up.",
+      "result": "Result",
+      "modelNote": "Parts are licensed 3D models; the 3.5\" drive and cable bundle are procedural for now.",
+      "done": "installed",
+      "next": "suggested next step"
+    },
+    "ghost": {
+      "here": "Place here",
+      "release": "Release — it will snap in"
+    },
+    "msg": {
+      "start": "Start with the motherboard: drag it onto the anti-static mat. A transparent ghost appears near the right place.",
+      "miss": "The part went back. Carry it to where the ghost appears and release.",
+      "already": "This part is already installed.",
+      "boot": "Every part is in — the PC powers on! Fans spin and the RGB lights up."
+    },
+    "rules": {
+      "complete": "All 11 steps done",
+      "order": "Right order: each part after what it depends on",
+      "placement": "Every part went into its own slot"
+    },
+    "feedback": {
+      "missing": "Steps not done: {count}.",
+      "order": "Order mistakes: {count} (a part came before what it needs).",
+      "slot": "Wrong-slot attempts: {count}."
+    },
+    "task": {
+      "instructions": "Build the PC in 11 steps: board on the mat, then CPU, cooler, RAM and NVMe; then the board into the case and the rest.",
+      "expected": "Every part in place, cables connected — the PC powers on."
+    },
+    "steps": {
+      "motherboard": {
+        "name": "Put the motherboard on the mat",
+        "part": "Motherboard",
+        "slot": "the anti-static mat"
+      },
+      "cpu": {
+        "name": "Seat the CPU in the socket",
+        "part": "CPU",
+        "slot": "the CPU socket"
+      },
+      "cooler": {
+        "name": "Apply thermal paste, fit the cooler",
+        "part": "Cooler",
+        "slot": "the top of the CPU"
+      },
+      "ram": {
+        "name": "Insert the RAM into the DIMM slots",
+        "part": "Memory (RAM)",
+        "slot": "the DIMM slots"
+      },
+      "nvme": {
+        "name": "Fit the NVMe SSD into the M.2 slot",
+        "part": "NVMe SSD",
+        "slot": "the M.2 slot"
+      },
+      "mountBoard": {
+        "name": "Mount the board in the case",
+        "part": "Board assembly",
+        "slot": "the standoffs in the case"
+      },
+      "psu": {
+        "name": "Install the power supply",
+        "part": "Power supply",
+        "slot": "the bottom rear of the case"
+      },
+      "gpu": {
+        "name": "Install the GPU in the PCIe x16 slot",
+        "part": "Graphics card",
+        "slot": "the PCIe x16 slot"
+      },
+      "storage": {
+        "name": "Install the extra drive",
+        "part": "3.5\" hard drive",
+        "slot": "the drive bay"
+      },
+      "fans": {
+        "name": "Mount the fans",
+        "part": "Fans",
+        "slot": "the front panel"
+      },
+      "cables": {
+        "name": "Connect the cables",
+        "part": "Cables",
+        "slot": "inside the case"
+      }
+    },
+    "done": {
+      "motherboard": "The board is on the anti-static mat. The first parts are easier to fit out here, on the board itself.",
+      "cpu": "The CPU is seated: its gold triangle matches the socket mark and it drops in without force.",
+      "cooler": "A thin layer of thermal paste, then the cooler on top — heat now flows into the heatsink.",
+      "ram": "The RAM clicked into the DIMM slots — the latches closed.",
+      "nvme": "The NVMe SSD slid into the M.2 slot at an angle and was screwed down.",
+      "mountBoard": "The board is screwed onto the case standoffs. Everything else goes in inside the case.",
+      "psu": "The PSU is fixed at the bottom rear — its fan faces the bottom intake.",
+      "gpu": "The graphics card clicked into the PCIe x16 slot and was screwed to the rear panel.",
+      "storage": "The hard drive sits in the bay at the bottom front; its SATA cables come later.",
+      "fans": "Three fans on the front panel — they pull cool air into the case.",
+      "cables": "Everything is cabled: 24-pin, CPU 8-pin, graphics card, SATA and fans."
+    },
+    "order": {
+      "motherboard": "Put the board on the anti-static mat first.",
+      "cpu": "The CPU goes into the motherboard socket — put the board on the mat first.",
+      "cooler": "Install the CPU first — the cooler sits on top of it.",
+      "ram": "RAM goes into the board's DIMM slots — put the board on the mat first.",
+      "nvme": "The NVMe SSD goes into the board's M.2 slot — put the board on the mat first.",
+      "mountBoard": "Prepare the board on the mat before mounting it in the case.",
+      "psu": "The PSU can go into the case.",
+      "gpu": "The graphics card plugs into the board's PCIe x16 slot — mount the board in the case first.",
+      "storage": "The extra drive can go into the case.",
+      "fans": "The fans can be mounted in the case.",
+      "cables": "Cables come last. Still missing: {missing}."
+    },
+    "slot": {
+      "motherboard": "The board goes on the anti-static mat — static can damage its chips. That is not {where}.",
+      "cpu": "The CPU goes into the square socket in the middle of the board; that is {where}.",
+      "cooler": "The cooler sits right on the CPU (with thermal paste); that is {where}.",
+      "ram": "RAM goes into the long DIMM slots next to the CPU; that is {where}.",
+      "nvme": "The NVMe SSD goes into the M.2 slot on the board (below the CPU); that is {where}.",
+      "mountBoard": "The board mounts on the standoffs on the case's back wall; that is {where}.",
+      "psu": "The PSU goes into its bay at the bottom rear; that is {where}.",
+      "gpu": "The graphics card goes into the PCIe x16 slot; that is {where}.",
+      "storage": "The extra drive goes into the bay at the bottom front; that is {where}.",
+      "fans": "The fans mount on the front panel; that is {where}.",
+      "cables": "Cables are connected inside the case; that is {where}."
+    },
+    "hint": {
+      "motherboard": "Drag the board onto the grey anti-static mat on the desk.",
+      "cpu": "Carry the CPU to the square socket in the middle of the board.",
+      "cooler": "Put the cooler on the CPU: thermal paste carries the heat from the CPU to the cooler.",
+      "ram": "Carry the RAM sticks to the long DIMM slots next to the CPU.",
+      "nvme": "Carry the NVMe SSD to the M.2 slot below the CPU.",
+      "mountBoard": "Lift the board off the mat and carry it into the case, onto the standoffs on the back wall.",
+      "psu": "Carry the PSU to the bottom rear corner of the case.",
+      "gpu": "Carry the graphics card to the long PCIe x16 slot below the CPU.",
+      "storage": "Carry the hard drive to the bottom front, behind the fans.",
+      "fans": "Carry the fans to the front wall of the case.",
+      "cables": "Carry the cable bundle to the middle of the case — power and data go to every part."
     }
   }
 }

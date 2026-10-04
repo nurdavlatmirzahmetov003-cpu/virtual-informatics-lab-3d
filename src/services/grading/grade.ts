@@ -41,7 +41,7 @@ export function grade<W>(exercise: Exercise<W>, work: W, attempt: Attempt, now =
   const outcomes = evaluateRules(exercise, work);
   const total = outcomes.reduce((s, o) => s + o.points, 0) || 1;
   const earned = outcomes.reduce((s, o) => s + o.earned, 0);
-  const complete = outcomes.every((o) => o.passed);
+  const complete = exercise.isComplete ? exercise.isComplete(work, outcomes) : outcomes.every((o) => o.passed);
   const failedRules = outcomes.filter((o) => !o.passed).length;
 
   const raw = (earned / total) * exercise.maxScore;

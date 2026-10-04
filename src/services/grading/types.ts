@@ -44,6 +44,12 @@ export interface Exercise<Work> {
   retryPenalty?: number;
   /** Penalties never take more than this off a complete solution (default 3). */
   maxPenalty?: number;
+  /**
+   * When the exercise counts as done. Default: every rule passed. A lab can
+   * relax it — e.g. a fully assembled PC is "done" even after a few mistakes,
+   * which still cost points through the rules.
+   */
+  isComplete?: (work: Work, outcomes: RuleOutcome[]) => boolean;
 }
 
 /** One student's attempt at an exercise; immutable, updated by session helpers. */

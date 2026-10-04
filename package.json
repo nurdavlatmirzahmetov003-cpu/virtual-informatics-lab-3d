@@ -15,7 +15,7 @@
     "assets:validate": "node scripts/validate-assets.mjs",
     "test:assembly": "node --experimental-strip-types --test scripts/assembly.test.mjs",
     "test:assistant": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/assistant.test.mjs",
-    "test:pc-lab": "node --experimental-strip-types --test scripts/pc-lab.test.mjs",
+    "test:pc-lab": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/assembly-lab.test.mjs",
     "test:learning": "node --experimental-strip-types --test scripts/learning.test.mjs",
     "test:network": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/network.test.mjs",
     "test:grading": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/grading.test.mjs",

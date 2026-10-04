@@ -60,6 +60,8 @@ export function QualityController({ preset }: QualityControllerProps) {
       renderer: () => ({ ...gl.info.render, memory: { ...gl.info.memory }, programs: gl.info.programs?.length }),
       contextAttributes: () => gl.getContext().getContextAttributes(),
       scene: () => get().scene,
+      camera: () => get().camera,
+      controls: () => get().controls,
       /** Dev benchmark: average ms per synchronous scene render (no post) + draw stats. */
       bench: (frames = 30) => {
         const { scene: sc, camera } = get();

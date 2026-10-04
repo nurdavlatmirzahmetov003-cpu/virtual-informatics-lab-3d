@@ -61,7 +61,8 @@ export function GradeReportCard({ report }: { report: GradeReport }) {
         </div>
       </dl>
 
-      <p className={styles.summary}>{t(done ? 'grading.success' : 'grading.tryAgain')}</p>
+      {/* a lab may count the task as done even with a few mistakes on the way */}
+      <p className={styles.summary}>{t(done ? (report.outcomes.every((o) => o.passed) ? 'grading.success' : 'grading.successWithNotes') : 'grading.tryAgain')}</p>
       {report.penalty > 0 && <p className={styles.penalty}>{t('grading.penalty', { n: report.penalty })}</p>}
 
       <ol className={styles.rules}>
