@@ -68,7 +68,9 @@
 - [x] Фаза 8 негізгі функциялары: 40 assignment, best scores/history/achievements/progress percentage
 - [x] Фаза 7.1: «Зертханалар» хабы (9 премиум карточка, Ашық/Бета/Жақында, прогресс); Network Lab `src/labs/NetworkLab/` + `pages/Labs/NetworkLab/` (сүйреп әкелу, порт→порт кабель, IP/mask/gateway/DNS, router порттары, PING анимациясы, тоқтаған жер/себеп); `src/services/grading/` + `GradeReportCard`; `npm run test:network` (12), `test:grading` (3)
 - [x] Фаза 7.2: Алгоритм визуализациясы — `src/labs/AlgorithmLab/` (6 алгоритм, step snapshots, 3 seed-генерацияланатын тапсырма) + `pages/Labs/AlgorithmLab/`; `npm run test:algorithms` (10)
-- [ ] Фаза 7.3: логикалық схемаларды `src/labs/LogicLab/` + `services/grading`-ке көшіру; кейін тәжірибелерді
+- [x] Фаза 7.3: Логикалық схемалар — `src/labs/LogicLab/` (симуляция, цикл, талдау, ақиқат кестесі, өрнек, 4 тапсырма) + `pages/Labs/LogicLab/` (ANSI гейттер); `npm run test:logic` (10)
+- [ ] Фаза 7.4: виртуалды тәжірибелерді `src/labs/ExperimentLab/` + `services/grading`-ке көшіру
+- [ ] Logic Lab: схеманы сақтау/жүктеу; триггерлер (SR/D) және уақыт диаграммасы; half/full adder тапсырмалары
 - [ ] Algorithm Lab: ең қысқа жол (Dijkstra/BFS) визуализациясы (§22 «if appropriate»); quick sort / merge sort; рекурсия ағашы (fib)
 - [ ] Network Lab: жұмыс күйін (draft) сақтау; бірнеше router + статикалық маршрут; «Интернет» бұлты; undo
 - [ ] Network Lab: телефонда тақта кішкентай — zoom/pan немесе «планшет/десктоп ұсынылады» ескертуі

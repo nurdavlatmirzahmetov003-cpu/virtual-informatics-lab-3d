@@ -1,9 +1,16 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
 Жаңартылды: 2026-10-04
-**Ағымдағы фаза: 7.2 дайын (Алгоритм визуализациясы). 7.1 (хаб, Network Lab, `services/grading`) дайын. Келесі — 7.3: логикалық схемалар; содан кейін тәжірибелер, реализм және Фаза 9/10.**
+**Ағымдағы фаза: 7.3 дайын (Логикалық схемалар). 7.1 (хаб, Network Lab, `services/grading`) және 7.2 (Алгоритм визуализациясы) дайын. Келесі — 7.4: виртуалды тәжірибелер; содан кейін реализм және Фаза 9/10.**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
+
+## Фаза 7.3 — Логикалық схемалар (2026-10-04)
+- Логика `src/labs/LogicLab/` (UI-сыз): `types.ts`, `circuit.ts` (өңдеу, сым ережелері), `simulate.ts` (evaluate, cycleNodes/Tarjan, analyze, truthTable, expression), `tasks.ts` (and, notOr, xorBasic — тек AND/OR/NOT, table — 3 кірісті көпшілік функциясы).
+- UI `pages/Labs/LogicLab/`: `LogicLabPage` (`?task=and|notOr|xorBasic|table|free`, ескі `xor/nand` сілтемелері), `Board` (ANSI гейттер, сүйреу, сым сүйреу/басу, ✕/Delete, ауыстырғыштар, LED, сигнал түстері), `Palette`, `TruthTable` (қазіргі жол, бассаң кірістер қойылады, «Берілген Y» бағаны), `SidePanel` (тапсырма + `GradeReportCard`, өрнек, ескертулер).
+- Мәтін: `logic.*` (kk/ru/en). Хаб: «Логикалық схемалар» → «Ашық».
+- Тесттер: `npm run test:logic` (10); `npm test` толық өтеді; build/lint/typecheck таза.
+- Тексерілді (in-app Chromium 1440×900, 375×812): AND схемасын сүйреп жинау → A/B ауыстыру → сымдар мен LED жанады, кесте 0 0 0 1, «Y = A AND B»; OR-мен тексеру → 6/10, екі қате комбинация көрсетілді; G1 ↔ NOT циклі → «Тұйық цикл: G2 → G1», Y анықталмаған; көлденең сымның жоғалуы түзетілді (сүзгі аймағы); table тапсырмасында «Берілген Y» бағаны мен сәйкессіздік; 6 гейттің ANSI пішіні; мобильдіде көлденең скролл жоқ; консоль қатесіз.
 
 ## Фаза 7.2 — Алгоритм визуализациясы (2026-10-04)
 - Логика `src/labs/AlgorithmLab/` (UI-сыз): `searches.ts` (linear, binary), `sorts.ts` (bubble ерте тоқтаумен, selection, insertion), `recursion.ts` (fact(n), n ≤ 8, шақырулар стегі), `recorder.ts` (immutable step snapshots, өзгерген айнымалылар, көрсеткіштер), `arrays.ts` (енгізу, seed-PRNG, кездейсоқ массив), `algorithms.ts` (реестр), `quizzes.ts` (3 тапсырма).
@@ -136,4 +143,4 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: Фаза 7.3 — Логикалық схемалар: логиканы `src/labs/LogicLab/` ішіне бөл (вентильдер, сымдар, цикл/жетіспейтін кіріс, ақиқат кестесі), UI-ды AlgorithmLab/NetworkLab үлгісімен жаса (премиум, барлық мәтін locales-та), тапсырмаларды `Exercise<Work>` + `services/grading` + `GradeReportCard` арқылы бағала, тест жаз, хабта `modules.ts` logic → 'ready'. NetworkLab пен AlgorithmLab дайын — қайта жасама. Кейін: тәжірибелер, реализм (placeholder GLB), Фаза 9/10. AI кілтін браузерге берме. D:/informatics-lab, dev :5173 (бос болмаса preview autoPort). Нөлден бастама.
+NEXT_ACTION: Фаза 7.4 — Виртуалды тәжірибелер: `lib/labs/experiments.ts` пен `pages/Labs/ExperimentsPage.tsx`-ті `src/labs/ExperimentLab/` + жаңа UI-ға (премиум, мәтін тек locales-та, `useEducationText`-тен бас тарту) көшір, тапсырмаларды `Exercise<Work>` + `services/grading` + `GradeReportCard` арқылы бағала, тест жаз, хабта experiments → 'ready'. NetworkLab, AlgorithmLab, LogicLab дайын — қайта жасама. Кейін: legacy progress импорт, реализм (placeholder GLB), Фаза 9/10. AI кілтін браузерге берме. D:/informatics-lab, dev :5173 (бос болмаса preview autoPort). Нөлден бастама.
