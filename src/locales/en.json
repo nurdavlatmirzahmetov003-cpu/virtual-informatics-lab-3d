@@ -70,8 +70,8 @@
       },
       "logic": {
         "title": "Logic circuits",
-        "desc": "Wire gates and check the truth table.",
-        "tag": "6 gates · truth table"
+        "desc": "Build circuits from ANSI-symbol gates, flip the switches and watch the signals and the truth table.",
+        "tag": "6 gates · 4 tasks"
       },
       "experiments": {
         "title": "Virtual experiments",
@@ -2235,6 +2235,122 @@
         "l1": "  if n ≤ 1:",
         "l2": "    return 1",
         "l3": "  return n × fact(n − 1)"
+      }
+    }
+  },
+  "logic": {
+    "ui": {
+      "eyebrow": "Lab · 05",
+      "intro": "Drag gates in, wire outputs to inputs and flip A/B/C. Wires carrying 1 glow and the truth table fills itself.",
+      "choose": "Choose a task",
+      "free": "Free build",
+      "freeDesc": "3 inputs, all gates, no grading",
+      "palette": "Gates",
+      "paletteHint": "Drag in or click",
+      "paletteFull": "Gate limit: {max}",
+      "onlyAllowed": "This task allows only: {gates}",
+      "board": "Circuit workspace",
+      "wireHint": "Wire: press a gate output on the right and drag to another gate input on the left (or click the output, then the gate). Select a wire or gate and press Delete or ✕.",
+      "connecting": "{name} output selected — now click an input or gate. Esc cancels.",
+      "removeWire": "Delete wire",
+      "removeGate": "Delete gate",
+      "switch": "{name} = {value} — click to toggle",
+      "ledOn": "Y = 1 — the LED is on",
+      "ledOff": "Y = 0 — the LED is off",
+      "ledUnknown": "Y is undefined",
+      "pinTitle": "{name}: input {pin}",
+      "outTitle": "{name}: output",
+      "table": "Truth table",
+      "tableHint": "Click a row to set the switches to it.",
+      "yours": "Your Y",
+      "expected": "Given Y",
+      "current": "current",
+      "mismatch": "mismatch",
+      "expression": "Your circuit",
+      "expressionNone": "Y is not fully defined yet",
+      "warnings": "Warnings",
+      "noWarnings": "No warnings",
+      "task": "Task",
+      "goal": "Expected result",
+      "checks": "What is checked",
+      "check": "Check",
+      "hint": "Get a hint",
+      "hintCost": "−1 point",
+      "noHints": "No hints left",
+      "restart": "Start over",
+      "points": "{n} pts",
+      "best": "Best: {score}/10",
+      "note": "Combinational simulator: signals propagate instantly; delays and memory (flip-flops) are not modelled.",
+      "moreWarnings": "…and {count} more warnings"
+    },
+    "gates": {
+      "AND": "1 when both inputs are 1",
+      "OR": "1 when at least one is 1",
+      "NOT": "Inverts the input",
+      "XOR": "1 when the inputs differ",
+      "NAND": "AND, inverted",
+      "NOR": "OR, inverted"
+    },
+    "connectError": {
+      "sameNode": "A gate's output cannot feed its own input — that would be a loop.",
+      "notSource": "The Y LED has no output — start the wire at a gate or switch output.",
+      "notTarget": "A switch has no input — wire to a gate input or to Y.",
+      "noFreePin": "This gate has no free input. Drop exactly on an input pin to replace its wire.",
+      "badPin": "A wire cannot connect here."
+    },
+    "rules": {
+      "complete": "The circuit is complete: Y wired, no open inputs or loops",
+      "behaviour": "Y is right for all {rows} combinations",
+      "allowed": "Only {allowed} gates are used"
+    },
+    "feedback": {
+      "row": "{combo}: expected Y = {expected}, your circuit gives Y = {actual}.",
+      "rowUndefined": "{combo}: expected Y = {expected}, but the output is undefined (an open input or a loop).",
+      "moreRows": "…and {count} more combinations differ.",
+      "forbidden": "A forbidden gate is used: {gates}. Only {allowed} are allowed here.",
+      "issue": {
+        "cycle": "Feedback loop: {gates}. The signal comes back into the same gate, so the circuit has no stable value. Delete one wire of the loop.",
+        "pinOpen": "{gate} ({type}) has an unconnected input: {pins} — its output is undefined.",
+        "outputOpen": "Nothing is wired to the {output} LED — the circuit has no output.",
+        "unused": "The output of {gate} ({type}) goes nowhere — it does not affect Y."
+      }
+    },
+    "tasks": {
+      "and": {
+        "title": "Y = A AND B",
+        "short": "One gate",
+        "instructions": "Build \"Y = A AND B\": the LED lights only when both A and B are 1.",
+        "expected": "Of the 4 combinations, Y = 1 only for A = 1, B = 1.",
+        "hint1": "Drag an AND gate in from the palette.",
+        "hint2": "Wire A to AND input 1 and B to input 2.",
+        "hint3": "Wire the AND output to the Y LED, then test with the switches."
+      },
+      "notOr": {
+        "title": "Y = NOT(A) OR B",
+        "short": "NOT + OR",
+        "instructions": "Build \"Y = NOT(A) OR B\": invert A first, then combine it with B through OR.",
+        "expected": "Y is 0 only for A = 1, B = 0 and 1 in the other three rows.",
+        "hint1": "You need two gates: NOT and OR.",
+        "hint2": "A → NOT input; NOT output → OR input 1.",
+        "hint3": "B → OR input 2, OR output → Y. Only the row 1 0 should give 0."
+      },
+      "xorBasic": {
+        "title": "Y = A XOR B (AND, OR, NOT only)",
+        "short": "XOR without XOR",
+        "instructions": "XOR gives 1 when the inputs differ. Build it without an XOR gate — using only AND, OR and NOT.",
+        "expected": "Y = 1 only when A ≠ B (rows 0 1 and 1 0).",
+        "hint1": "\"Different\" means: \"A = 1 and B = 0\" OR \"A = 0 and B = 1\".",
+        "hint2": "Formula: Y = (A AND NOT B) OR (NOT A AND B). Two NOTs, two ANDs and one OR.",
+        "hint3": "One output can feed several inputs: wire A to both an AND and a NOT."
+      },
+      "table": {
+        "title": "Circuit from a truth table",
+        "short": "3 inputs · 8 rows",
+        "instructions": "Build a circuit that matches the \"Given Y\" column below. Inputs A, B, C; Y must match all 8 rows.",
+        "expected": "Your Y column matches the given one in all 8 rows.",
+        "hint1": "Look at the table: Y = 1 when at least two inputs are 1 (majority vote).",
+        "hint2": "It can be written as Y = (A AND B) OR (A AND C) OR (B AND C).",
+        "hint3": "Shorter: Y = (A AND B) OR (C AND (A OR B)) — 4 gates are enough."
       }
     }
   }

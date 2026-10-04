@@ -24,6 +24,7 @@ export default function ProgressPage() {
     if(!exercise)return id;
     if(exercise.module==='assembly')return l('assemblyTitle');
     if(exercise.module==='hardware')return `${t('labs.modules.hardware.title')} · ${t(`anatomy.items.${exercise.task}.name` as Parameters<typeof t>[0])}`;
+    if(exercise.module==='logic')return `${t('labs.modules.logic.title')} · ${t(`logic.tasks.${exercise.task}.title` as Parameters<typeof t>[0])}`;
     if(exercise.module==='algorithms')return `${t('labs.modules.algorithms.title')} · ${t(`algorithms.quiz.${exercise.task}.title` as Parameters<typeof t>[0])}`;
     if(exercise.module==='network')return `${t('labs.modules.network.title')} · ${t(`network.tasks.${exercise.task}.title` as Parameters<typeof t>[0])}`;
     return `${t(`labs.modules.${exercise.module}.title` as Parameters<typeof t>[0])} · ${education(exercise.task==='router'?'routerTask':exercise.task as EducationKey)}`;

@@ -25,7 +25,7 @@ export const LAB_MODULES: readonly LabModule[] = [
   { id: 'assembly', icon: Wrench, status: 'ready', to: '/labs/assembly', tone: '#ffb547', size: 'normal' },
   { id: 'network', icon: Network, status: 'ready', to: '/labs/network', tone: '#3ddc97', size: 'normal' },
   { id: 'algorithms', icon: Workflow, status: 'ready', to: '/labs/algorithms', tone: '#a78bfa', size: 'normal' },
-  { id: 'logic', icon: BrainCircuit, status: 'beta', to: '/labs/logic', tone: '#ff7ab6', size: 'normal' },
+  { id: 'logic', icon: BrainCircuit, status: 'ready', to: '/labs/logic', tone: '#ff7ab6', size: 'normal' },
   { id: 'experiments', icon: FlaskConical, status: 'beta', to: '/labs/experiments', tone: '#7dd3fc', size: 'normal' },
   { id: 'studio', icon: Boxes, status: 'ready', to: '/studio', tone: '#3b82ff', size: 'wide' },
   { id: 'assignments', icon: ClipboardCheck, status: 'ready', to: '/assignments', tone: '#facc15', size: 'normal' },
