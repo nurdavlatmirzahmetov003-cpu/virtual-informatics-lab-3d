@@ -75,8 +75,8 @@
       },
       "experiments": {
         "title": "Virtual experiments",
-        "desc": "Change values and see the result instantly.",
-        "tag": "8 experiments · formulas"
+        "desc": "9 interactive experiments: CPU heat, RAM, drives, ping, bits, the instruction cycle, RGB, resolution, Hz.",
+        "tag": "9 experiments · realistic models"
       },
       "studio": {
         "title": "Setup Studio 3D",
@@ -105,7 +105,8 @@
     "soonCta": "Opens soon",
     "soonNote": "This module is in development and will open here when ready.",
     "betaNote": "Beta: the core works and is still being improved.",
-    "tasksDone": "{done}/{total} tasks done"
+    "tasksDone": "{done}/{total} tasks done",
+    "assignmentsIntro": "Choose an exercise and complete it in the lab. Results are saved automatically."
   },
   "studio": {
     "title": "Setup Studio 3D",
@@ -2511,6 +2512,421 @@
       "storage": "Carry the hard drive to the bottom front, behind the fans.",
       "fans": "Carry the fans to the front wall of the case.",
       "cables": "Carry the cable bundle to the middle of the case — power and data go to every part."
+    }
+  },
+  "experiments": {
+    "ui": {
+      "eyebrow": "Lab · 06",
+      "intro": "Change a value and see the result at once. Each experiment has a goal, an interactive model, a conclusion and a mini quiz.",
+      "choose": "Choose an experiment",
+      "done": "done",
+      "loading": "Loading the experiment…",
+      "what": "What are we exploring?",
+      "observed": "What did we see, and why?",
+      "simNote": "This is an educational simulation: figures are close to typical real devices, but they are not measurements.",
+      "quiz": "Mini quiz",
+      "check": "Check",
+      "again": "Try again",
+      "noAnswer": "No answer selected.",
+      "quizExpected": "Answer every question correctly.",
+      "reset": "Restart",
+      "back": "Back",
+      "forward": "Forward",
+      "play": "Play",
+      "pause": "Pause",
+      "step": "Step {current} / {total}"
+    },
+    "cpuTemp": {
+      "title": "CPU load and temperature",
+      "short": "Load · cooler · throttling",
+      "intro": "The harder a CPU works, the more power it draws and the hotter it gets. Change the load and the cooler to see how the temperature rises and what happens at the limit.",
+      "load": "Load",
+      "cooler": "Cooler",
+      "coolers": {
+        "stock": "Stock",
+        "tower": "Tower",
+        "liquid": "Liquid"
+      },
+      "power": "Power",
+      "temp": "Temperature",
+      "clock": "Clock",
+      "throttle": "Throttling",
+      "throttleOn": "Yes",
+      "throttleOff": "No",
+      "tjmax": "Tjmax {t} °C — limit",
+      "time": "time, s",
+      "chart": "Temperature, °C (after the load starts)",
+      "result": {
+        "ok": "{temp} °C — normal. The cooler removes all {power} W of heat and the CPU runs at {clock} GHz.",
+        "hot": "{temp} °C — hot but below the limit. As power ({power} W) rises so does temperature: a cooler can only remove heat so fast.",
+        "throttle": "Throttling! The cooler cannot keep up: the CPU hit {temp} °C and protects itself by cutting power to {power} W and the clock to {clock} GHz (~{lost}% slower)."
+      },
+      "q1": {
+        "prompt": "What happens to the CPU at 100% load with the stock cooler?",
+        "o1": "It stays below 50 °C",
+        "o2": "It hits the limit and throttles — lowering its clock",
+        "o3": "The computer switches off at once",
+        "o4": "Nothing changes",
+        "why": "With the stock cooler it would reach {would} °C — above Tjmax ({tjmax} °C). The CPU protects itself by dropping to {clock} GHz."
+      },
+      "q2": {
+        "prompt": "With the tower cooler, how does power change when load goes from 50% to 100%?",
+        "why": "Power grows with load: {half} W → {full} W, so temperature rises too: {t1} → {t2} °C."
+      },
+      "q3": {
+        "prompt": "Why does the temperature curve rise more slowly with liquid cooling?",
+        "o1": "Water heats the CPU faster",
+        "o2": "Water lowers the CPU clock",
+        "o3": "Water and the radiator store a lot of heat (high thermal inertia)",
+        "why": "Water and a big radiator soak up heat, so the temperature climbs slowly: a time constant of ~{liquid} s versus ~{stock} s for the stock cooler."
+      }
+    },
+    "memory": {
+      "title": "RAM usage",
+      "short": "Programs · swap",
+      "intro": "RAM is the \"desk\" open programs work on. Open and close programs to see memory fill up and where data that does not fit goes.",
+      "capacity": "RAM size",
+      "programs": "Programs",
+      "apps": {
+        "browser": "Browser (15 tabs)",
+        "code": "VS Code",
+        "office": "Word",
+        "discord": "Discord",
+        "photoshop": "Photoshop",
+        "obs": "OBS (stream)",
+        "game": "Modern game",
+        "blender": "Blender (render)"
+      },
+      "os": "Operating system",
+      "used": "Used",
+      "free": "Free",
+      "swap": "Swap (on disk)",
+      "state": "State",
+      "swapZone": "swap file (SSD)",
+      "level": {
+        "ok": "OK",
+        "high": "Nearly full",
+        "swap": "Swapping",
+        "critical": "Very slow"
+      },
+      "result": {
+        "ok": "{used} / {cap} GB used, {free} GB free — everything fits in RAM and the computer is fast.",
+        "high": "RAM is nearly full ({used} / {cap} GB). One more big program and swapping starts.",
+        "swap": "RAM ran out: {swap} GB was pushed to the swap file on disk. An SSD is ~1000× slower than RAM, so programs stutter.",
+        "critical": "{swap} GB of swap — over half the RAM. The computer constantly reads and writes the disk and crawls: close programs or add RAM."
+      },
+      "q1": {
+        "prompt": "16 GB of RAM. A game, browser, OBS and Discord are open ({used} GB with the OS). Will it swap?",
+        "o1": "Yes — the data does not fit in RAM",
+        "o2": "No — everything fits",
+        "o3": "RAM grows by itself",
+        "why": "That is {used} GB for 16 GB of RAM: the extra {swap} GB goes to the swap file."
+      },
+      "q2": {
+        "prompt": "What is swap?",
+        "o1": "An extra CPU core",
+        "o2": "Graphics card memory",
+        "o3": "Temporarily keeping data that does not fit in RAM on the disk",
+        "o4": "A file downloaded from the internet",
+        "why": "Swap is a special file on disk used when RAM runs out. Reaching it is about {times}× slower than RAM, so heavy swapping slows the computer down."
+      },
+      "q3": {
+        "prompt": "Same programs ({used} GB) but 32 GB of RAM. How much swap?",
+        "why": "{used} GB fits fully in 32 GB with {free} GB free — no swap needed."
+      }
+    },
+    "storage": {
+      "title": "Drive speed",
+      "short": "HDD · SATA SSD · NVMe",
+      "intro": "We copy the same data to four drives. Compare how the drive type and file size affect copy time.",
+      "size": "Size",
+      "workload": "Files",
+      "workloads": {
+        "big": "1 big file",
+        "small": "Many small files"
+      },
+      "start": "Start copying",
+      "speed": "{speed} MB/s",
+      "drives": {
+        "hdd": "HDD 7200 rpm",
+        "sata": "SATA SSD",
+        "nvme3": "NVMe SSD (PCIe 3.0)",
+        "nvme4": "NVMe SSD (PCIe 4.0)"
+      },
+      "units": {
+        "s": "s",
+        "min": "min",
+        "h": "h"
+      },
+      "scaled": "The animation is sped up: the slowest drive takes 7 seconds and the others scale with it. Real times are on the right.",
+      "result": {
+        "big": "With one big file NVMe (PCIe 4.0) is about {times}× faster than the HDD: a hard disk spins and moves a head, while an SSD is electronic memory with no mechanics.",
+        "small": "With many small files the gap is even bigger — about {times}×: the HDD moves its head for every file (~10 ms), an SSD has nothing to move."
+      },
+      "q1": {
+        "prompt": "About how long does copying a 10 GB file to the HDD ({speed} MB/s) take?",
+        "why": "10 GB = 10,000 MB; 10,000 ÷ {speed} ≈ {seconds} s — about a minute."
+      },
+      "q2": {
+        "prompt": "How many times faster does a PCIe 4.0 NVMe SSD copy a big file than the HDD?",
+        "why": "{nvme} MB/s ÷ {hdd} MB/s ≈ {ratio}×."
+      },
+      "q3": {
+        "prompt": "Why is an HDD so slow with many small files?",
+        "o1": "The mechanical head has to move for every file",
+        "o2": "Small files are actually bigger",
+        "o3": "An HDD cannot store small files",
+        "why": "With a big file the HDD gives {seq} MB/s, but each head move takes ~10 ms with small files, so it drops to ~{small} MB/s."
+      }
+    },
+    "latency": {
+      "title": "Network latency (ping)",
+      "short": "Distance · link type",
+      "intro": "We send a packet from Almaty to another city and measure the time until the reply comes back (RTT). Change the distance and the link.",
+      "to": "To",
+      "link": "Link",
+      "places": {
+        "almaty": "Almaty",
+        "city": "Within Almaty",
+        "astana": "Astana",
+        "moscow": "Moscow",
+        "frankfurt": "Frankfurt",
+        "newYork": "New York"
+      },
+      "links": {
+        "fiber": "Optical fibre",
+        "cable": "Cable (DSL)",
+        "wifi": "Wi-Fi",
+        "mobile": "4G",
+        "satellite": "Geostationary satellite"
+      },
+      "send": "Send PING",
+      "diagram": "Packet path",
+      "rtt": "RTT (ping)",
+      "hops": "Routers",
+      "breakdown": "Delay breakdown",
+      "parts": {
+        "prop": "Propagation",
+        "routers": "Routers",
+        "access": "Last mile"
+      },
+      "result": {
+        "distance": "Ping ≈ {rtt} ms. About {prop} ms is the signal travelling the fibre there and back: light in fibre goes ~200,000 km/s, so a farther city means a longer ping.",
+        "access": "Ping ≈ {rtt} ms. The distance is short, so most of the delay ({access} ms) is the last mile: Wi-Fi, DSL or 4G add their own.",
+        "satellite": "Ping ≈ {rtt} ms — huge! A geostationary satellite is 35,786 km up: the signal goes up and down twice ({access} ms), so city distance hardly matters."
+      },
+      "q1": {
+        "prompt": "Roughly what is the ping from Almaty to Astana (~970 km) over fibre?",
+        "why": "The cable route is ~1260 km; there and back ~{prop} ms plus routers and access ≈ {rtt} ms."
+      },
+      "q2": {
+        "prompt": "Why is satellite internet ping so large (~600 ms)?",
+        "o1": "The satellite compresses data",
+        "o2": "The signal travels 35,786 km up and back",
+        "o3": "The satellite switches off at night",
+        "why": "A geostationary satellite is {km} km up. Even at light speed, going up and down twice takes ~{ms} ms."
+      },
+      "q3": {
+        "prompt": "What matters most for online games?",
+        "o1": "Low ping (little delay)",
+        "o2": "The highest monitor resolution",
+        "o3": "Drive capacity",
+        "why": "In a game every action goes to the server and back: going from 20 ms to 150 ms ping is noticeable. Latency, not bandwidth (Mbit/s), decides it."
+      }
+    },
+    "binaryData": {
+      "title": "Sending binary data",
+      "short": "Text → bytes → bits",
+      "intro": "Computers only understand 0 and 1. Type some text: each character becomes a number (code), then bytes and bits, sent down a \"wire\" one bit at a time.",
+      "input": "Text",
+      "placeholder": "e.g. Hi or Сәлем",
+      "speed": "Line speed",
+      "speeds": {
+        "s9600": "9600 bit/s (modem)",
+        "s115200": "115,200 bit/s (UART)",
+        "s100000000": "100 Mbit/s (internet)"
+      },
+      "send": "Send",
+      "table": "Encoding table",
+      "char": "Char",
+      "code": "Code",
+      "bytes": "Bytes",
+      "bits": "Bits",
+      "received": "Received",
+      "total": "Total",
+      "bitUnit": "bits",
+      "byteTotal": "Bytes",
+      "time": "Send time",
+      "slow": "The wire animation is slowed to {bps} bits per second. The real time is below.",
+      "result": {
+        "ascii": "{chars} characters = {bytes} bytes = {bits} bits. Latin letters and digits fit in one byte (8 bits) in ASCII.",
+        "utf8": "{chars} characters = {bytes} bytes = {bits} bits. Here {wide} characters (Cyrillic) take two bytes each in UTF-8 — so a word of the same length needs more bits."
+      },
+      "q1": {
+        "prompt": "What is the ASCII code of \"A\" (decimal)?",
+        "why": "\"A\" = {code}, in binary {bits}."
+      },
+      "q2": {
+        "prompt": "How many bits does the word \"Сәлем\" take in UTF-8?",
+        "why": "Cyrillic letters take 2 bytes in UTF-8: 5 × 2 = {bytes} bytes = {bits} bits."
+      },
+      "q3": {
+        "prompt": "How is \"H\" (code 72) written in binary?",
+        "why": "72 = 64 + 8 → {bits}."
+      }
+    },
+    "cpuCycle": {
+      "title": "The CPU instruction cycle",
+      "short": "Fetch → Decode → Execute",
+      "intro": "A CPU runs a program one instruction at a time: it fetches it from memory, decodes it and executes it. A tiny program adds or subtracts a and b — follow it step by step.",
+      "op": "Operation",
+      "memory": "Memory (RAM)",
+      "stages": {
+        "fetch": "1. Fetch",
+        "decode": "2. Decode",
+        "execute": "3. Execute",
+        "halt": "Halted"
+      },
+      "note": {
+        "fetch": "Fetch: PC = {addr}; the instruction \"{instr}\" is read from memory into IR. PC moves on to {pc}.",
+        "decodeLOAD": "Decode: LOAD — load the number in cell [{addr}] into ACC.",
+        "decodeADD": "Decode: ADD — add the number in cell [{addr}] to ACC.",
+        "decodeSUB": "Decode: SUB — subtract the number in cell [{addr}] from ACC.",
+        "decodeSTORE": "Decode: STORE — write ACC to cell [{addr}].",
+        "execLOAD": "Execute: [{addr}] = {value} is read, so ACC = {value}.",
+        "execADD": "Execute: the ALU adds {before} + {value} = {acc}.",
+        "execSUB": "Execute: the ALU subtracts {before} − {value} = {acc}.",
+        "execSTORE": "Execute: ACC = {acc} is written to cell [{addr}].",
+        "halt": "HALT — the program has ended. The result is in memory: [7] = {out}."
+      },
+      "result": "In {steps} steps the CPU computed {a} {op} {b} = {result}. Every instruction goes through the same cycle: fetch → decode → execute. PC holds the next address, IR the current instruction, ACC the result.",
+      "q1": {
+        "prompt": "In what order does the CPU handle each instruction?",
+        "o1": "Fetch → Decode → Execute",
+        "o2": "Execute → Fetch → Decode",
+        "o3": "Decode → Execute → Fetch",
+        "why": "First the instruction is fetched, then decoded to see what to do, and only then executed."
+      },
+      "q2": {
+        "prompt": "With a = 5, b = 3 and ADD, what is ACC at the end?",
+        "why": "LOAD [5] → ACC = 5, ADD [6] → ACC = {result}, STORE writes it to memory."
+      },
+      "q3": {
+        "prompt": "What is PC after fetching the second instruction (address 1)?",
+        "why": "During fetch PC moves straight to the next address: 1 + 1 = {pc}."
+      }
+    },
+    "rgb": {
+      "title": "The RGB colour model",
+      "short": "R · G · B → HEX",
+      "intro": "Every screen pixel is three tiny lights: red, green and blue. Set each from 0 to 255 and see how a colour is made.",
+      "channels": {
+        "r": "R — red",
+        "g": "G — green",
+        "b": "B — blue"
+      },
+      "presets": "Presets",
+      "pixel": "A pixel up close: 3 sub-pixels",
+      "mixing": "Additive mixing",
+      "bits": "Per pixel",
+      "colour": {
+        "black": "Black",
+        "white": "White",
+        "grey": "Grey",
+        "red": "Red",
+        "green": "Green",
+        "blue": "Blue",
+        "yellow": "Yellow",
+        "cyan": "Cyan",
+        "magenta": "Magenta",
+        "mixed": "A mixed colour"
+      },
+      "result": {
+        "black": "{hex}: all three lights are off — black. On a screen, black is no light at all.",
+        "white": "{hex}: all three are fully on — the eye sees white.",
+        "grey": "{hex}: R, G and B are nearly equal — grey. Higher values make it lighter.",
+        "red": "{hex}: the red sub-pixel dominates (R = {r}).",
+        "green": "{hex}: the green sub-pixel dominates (G = {g}).",
+        "blue": "{hex}: the blue sub-pixel dominates (B = {b}).",
+        "yellow": "{hex}: red + green = yellow. Adding light (additive mixing) makes colours brighter.",
+        "cyan": "{hex}: green + blue = cyan.",
+        "magenta": "{hex}: red + blue = magenta.",
+        "mixed": "{hex}: R = {r}, G = {g}, B = {b}. HEX writes these three numbers in base 16: two digits per channel."
+      },
+      "q1": {
+        "prompt": "What is the HEX code of R = 255, G = 165, B = 0?",
+        "why": "255 = FF, 165 = A5, 0 = 00 → {hex} (orange)."
+      },
+      "q2": {
+        "prompt": "What colour is R = 255, G = 255, B = 0?",
+        "why": "On a screen colours add as light: red + green = yellow."
+      },
+      "q3": {
+        "prompt": "How many colours are possible with 8 bits (0–255) per channel?",
+        "why": "256 × 256 × 256 = {total} colours (24-bit colour)."
+      }
+    },
+    "resolution": {
+      "title": "Screen resolution",
+      "short": "HD · Full HD · 2K · 4K",
+      "intro": "Resolution is the number of pixels on the screen. On a screen of the same size, more pixels means smaller pixels and a smoother picture. Compare a magnified 5 × 5 mm patch.",
+      "preset": "Resolution",
+      "diagonal": "Screen diagonal",
+      "names": {
+        "hd": "HD",
+        "fhd": "Full HD",
+        "qhd": "2K (QHD)",
+        "uhd": "4K (UHD)"
+      },
+      "pixels": "Pixels",
+      "mp": "Total",
+      "pitch": "Pixel size",
+      "patch": "Each square is a {mm} × {mm} mm patch of a {diagonal}″ screen showing the letter \"A\".",
+      "result": {
+        "sharp": "{ppi} PPI — very sharp: each pixel is {pitch} mm and the eye cannot pick them out ({mp} MP).",
+        "good": "{ppi} PPI — good clarity: each pixel is {pitch} mm, smooth at a normal distance ({mp} MP).",
+        "coarse": "{ppi} PPI — large pixels ({pitch} mm); up close letters show \"staircase\" edges ({mp} MP)."
+      },
+      "q1": {
+        "prompt": "How many pixels does a Full HD (1920 × 1080) screen have?",
+        "why": "1920 × 1080 = {pixels} pixels (≈ 2.1 MP)."
+      },
+      "q2": {
+        "prompt": "How many times more pixels does 4K (3840 × 2160) have than Full HD?",
+        "why": "Both width and height double: 2 × 2 = {ratio}×."
+      },
+      "q3": {
+        "prompt": "A 27″ screen at 2560 × 1440 — roughly what pixel density (PPI)?",
+        "why": "√(2560² + 1440²) ÷ 27 ≈ {ppi} PPI."
+      }
+    },
+    "refresh": {
+      "title": "Refresh rate",
+      "short": "60 · 144 · 240 Hz",
+      "intro": "A monitor redraws the picture 60, 144 or 240 times a second. Compare a ball moving at the same speed on three screens: at a low rate it moves in big jumps.",
+      "speed": "Motion speed",
+      "slow": "Slow motion",
+      "jumpAt": "Jump at {hz} Hz",
+      "note": "Your own monitor has a fixed rate, so we show it in slow motion. The faint marks are previous frames.",
+      "reduced": "Animation is off (reduced motion is on): the trail shows the position at each frame.",
+      "result": {
+        "compare": "Between frames the ball jumps {j60} px at 60 Hz, {j144} px at 144 Hz and {j240} px at 240 Hz. A frame lasts {f60} ms at 60 Hz and {f240} ms at 240 Hz — a higher rate means smoother motion and less delay."
+      },
+      "q1": {
+        "prompt": "How long does one frame last on a 144 Hz monitor?",
+        "why": "1000 ms ÷ 144 ≈ {ms} ms."
+      },
+      "q2": {
+        "prompt": "An object moves at 1200 px/s. How many pixels does it jump between frames at 60 Hz?",
+        "why": "1200 ÷ 60 = {px} px. At 240 Hz it is only {px240} px — hence smoother motion."
+      },
+      "q3": {
+        "prompt": "What is needed to get the full benefit of a 144 Hz monitor?",
+        "o1": "The game must render at least 144 frames per second (FPS)",
+        "o2": "A bigger drive",
+        "o3": "A longer HDMI cable",
+        "why": "A monitor only shows the frames the GPU produces: at 60 FPS a 144 Hz screen just repeats frames."
+      }
     }
   }
 }

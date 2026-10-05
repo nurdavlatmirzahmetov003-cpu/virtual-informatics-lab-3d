@@ -16,15 +16,15 @@
     "test:assembly": "node --experimental-strip-types --test scripts/assembly.test.mjs",
     "test:assistant": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/assistant.test.mjs",
     "test:pc-lab": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/assembly-lab.test.mjs",
-    "test:learning": "node --experimental-strip-types --test scripts/learning.test.mjs",
     "test:network": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/network.test.mjs",
     "test:grading": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/grading.test.mjs",
     "test:algorithms": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/algorithms.test.mjs",
     "test:logic": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/logic.test.mjs",
+    "test:experiments": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/experiments.test.mjs",
     "test:progress": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/progress.test.mjs",
     "ai:server": "node --experimental-strip-types --import ./scripts/test-resolve.mjs server/ai-server.ts",
     "test:ai": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/ai.test.mjs",
-    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab && npm run test:learning && npm run test:progress && npm run test:network && npm run test:grading && npm run test:algorithms && npm run test:logic"
+    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab && npm run test:progress && npm run test:network && npm run test:grading && npm run test:algorithms && npm run test:logic && npm run test:experiments"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

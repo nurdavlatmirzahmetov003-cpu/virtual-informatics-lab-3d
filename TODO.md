@@ -70,7 +70,9 @@
 - [x] Фаза 7.2: Алгоритм визуализациясы — `src/labs/AlgorithmLab/` (6 алгоритм, step snapshots, 3 seed-генерацияланатын тапсырма) + `pages/Labs/AlgorithmLab/`; `npm run test:algorithms` (10)
 - [x] Фаза 7.3: Логикалық схемалар — `src/labs/LogicLab/` (симуляция, цикл, талдау, ақиқат кестесі, өрнек, 4 тапсырма) + `pages/Labs/LogicLab/` (ANSI гейттер); `npm run test:logic` (10)
 - [x] Фаза 7.4: Компьютерді виртуалды жинау — `src/labs/AssemblyLab/` + `scenes/AssemblyLab/` + `pages/Labs/AssemblyLab/`, `store/assemblyLabStore.ts`, `lib/audio/sfx.ts`; `npm run test:pc-lab` (6)
-- [ ] Фаза 7.5: виртуалды тәжірибелерді `src/labs/ExperimentLab/` + `services/grading`-ке көшіру
+- [x] Фаза 7.5: Виртуалды тәжірибелер — `src/labs/Experiments/` (9 модель + `quiz.ts`) + `pages/Labs/ExperimentLab/` (lazy), `npm run test:experiments` (10); ескі `ExperimentsPage`, `lib/labs/experiments.ts`, `useEducationText`, `ExerciseResult` алынды
+- [ ] Ескі прогресті импорттау (legacy localStorage → progressStore v2)
+- [ ] Фаза 9: Assembly Lab instancing/LOD, KTX2; Фаза 10: QA
 - [ ] [PLACEHOLDER] Assembly Lab cable bundle must be replaced — `scenes/AssemblyLab/props.tsx` `CableBundle` (процедуралық орам: 24-pin, 8-pin, SATA)
 - [ ] [PLACEHOLDER] Assembly Lab 3.5″ HDD — `scenes/HardwareExplorer/placeholders.tsx` `Hdd` қайта қолданылады (анатомиядағы HDD placeholder-імен бірге ауыстыру)
 - [ ] Assembly Lab: термопаста жағу анимациясы, бұрандалар, кабельдерді жеке-жеке жалғау; телефонда үлкенірек бөлшек белгілері

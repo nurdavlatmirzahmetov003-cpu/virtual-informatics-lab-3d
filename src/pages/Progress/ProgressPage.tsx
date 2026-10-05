@@ -6,12 +6,10 @@ import { useProgressStore } from '@/store/progressStore';
 import { Link } from 'react-router-dom';
 import styles from './Progress.module.css';
 import { EXERCISES } from '@/data/labs/exercises';
-import { useEducationText,type EducationKey } from '@/hooks/useEducationText';
 
 export default function ProgressPage() {
   const t = useT();
   const l = useLabText();
-  const education = useEducationText();
   const lang = useSettingsStore(s=>s.language);
   const attempts=useProgressStore(s=>s.attempts);
   const best=useProgressStore(s=>s.best);
@@ -27,7 +25,7 @@ export default function ProgressPage() {
     if(exercise.module==='logic')return `${t('labs.modules.logic.title')} · ${t(`logic.tasks.${exercise.task}.title` as Parameters<typeof t>[0])}`;
     if(exercise.module==='algorithms')return `${t('labs.modules.algorithms.title')} · ${t(`algorithms.quiz.${exercise.task}.title` as Parameters<typeof t>[0])}`;
     if(exercise.module==='network')return `${t('labs.modules.network.title')} · ${t(`network.tasks.${exercise.task}.title` as Parameters<typeof t>[0])}`;
-    return `${t(`labs.modules.${exercise.module}.title` as Parameters<typeof t>[0])} · ${education(exercise.task==='router'?'routerTask':exercise.task as EducationKey)}`;
+    return `${t(`labs.modules.${exercise.module}.title` as Parameters<typeof t>[0])} · ${t(`experiments.${exercise.task}.title` as Parameters<typeof t>[0])}`;
   };
   return (
     <PageLayout title={l('resultsTitle')} subtitle={l('resultsIntro')}>

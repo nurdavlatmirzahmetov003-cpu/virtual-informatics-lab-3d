@@ -1,9 +1,16 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
-Жаңартылды: 2026-10-04
-**Ағымдағы фаза: 7.4 дайын (Компьютерді виртуалды жинау). 7.1 хаб/Network Lab/`services/grading`, 7.2 Алгоритмдер, 7.3 Логика дайын. Келесі — 7.5: виртуалды тәжірибелер; содан кейін реализм және Фаза 9/10.**
+Жаңартылды: 2026-10-05
+**Ағымдағы фаза: 7.5 дайын (Виртуалды тәжірибелер). 7.1 хаб/Network Lab/`services/grading`, 7.2 Алгоритмдер, 7.3 Логика, 7.4 ПК жинау дайын — Фаза 7 зертханалары толық. Келесі — legacy прогресс импорты, placeholder-лер, Фаза 9/10.**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
+
+## Фаза 7.5 — Виртуалды тәжірибелер (2026-10-05)
+- Логика `src/labs/Experiments/` (UI-сыз): `cpuTemp`, `memory`, `storage`, `latency`, `binary`, `cpuCycle`, `rgb`, `resolution`, `refresh` + `quiz.ts` (сұрақтар → `Exercise<QuizWork>`, 4+3+3) + `index.ts` (`EXPERIMENT_IDS`). Шынайы мәндер: HDD ~160, SATA ~530, NVMe 3500/7000 МБ/с; талшықта 200 км/мс; Tjmax 95 °C; RAM ~100 нс.
+- UI `pages/Labs/ExperimentLab/` (`/labs/experiments?exp=…`, ескі `?task=`): 9 қойынды, әр тәжірибе жеке lazy chunk; `parts.tsx` (`ExperimentFrame`: кіріспе → интерактив → қорытынды → «оқу симуляциясы» → тапсырма), `Quiz.tsx` (`GradeReportCard`, progress). prefers-reduced-motion қолдауы.
+- Алынды: ескі `ExperimentsPage`, `ExerciseResult`, `Exercise.module.css`, `lib/labs/experiments.ts`, `useEducationText`, `learning.test.mjs`. Assignments/Progress беттері тапсырма атауын `experiments.<id>.title`-дан алады. Хаб «Виртуалды тәжірибелер» — «Ашық».
+- Тесттер: `npm run test:experiments` (10); `npm test` толық өтеді; build/lint/typecheck таза.
+- Тексерілді (in-app Chromium 1440×900, 375×812): 9 тәжірибе жүктеледі, шикі кілт жоқ; CPU — боксты кулерде 100% жүктеме → 95 °C, троттлинг; RAM — ойын + OBS + Photoshop (16 ГБ) → своп 1,6 ГБ, жолақта тек RAM-нан асқан бөлігі штрихталған; диск жарысы — NVMe бірінші, HDD ең баяу; RGB тапсырмасы 2 дұрыс + 1 қате → 7/10, қате сұраққа түсініктеме; мобильдіде көлденең скролл жоқ; консоль қатесіз.
 
 ## Фаза 7.4 — Компьютерді виртуалды жинау (2026-10-04)
 - Логика `src/labs/AssemblyLab/` (UI-сыз): `steps.ts` (11 қадам, тәуелділіктер, мақсат слоттары, `nextStep`, `progressOf`), `session.ts` (`place()` → installed / order / slot / miss), `exercise.ts` (толықтық 5 + рет 3 + слот 2, кеңес −1 ≤ −3, `isComplete` — толық жиналса «Орындалды»). `services/grading` → міндетті емес `isComplete`.
@@ -151,4 +158,4 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: Фаза 7.5 — Виртуалды тәжірибелер: `lib/labs/experiments.ts` пен `pages/Labs/ExperimentsPage.tsx`-ті `src/labs/ExperimentLab/` + жаңа UI-ға (премиум, мәтін тек locales-та, `useEducationText` пен ескі `ExerciseResult`-тен бас тарт) көшір, тапсырмаларды `Exercise<Work>` + `services/grading` + `GradeReportCard` арқылы бағала, тест жаз, хабта experiments → 'ready'. NetworkLab, AlgorithmLab, LogicLab, AssemblyLab дайын — қайта жасама. Кейін: legacy progress импорт, placeholder-лер (HDD, кабель орамы, т.б.), Фаза 9 (Assembly Lab instancing/LOD) және 10. AI кілтін браузерге берме. D:/informatics-lab, dev :5173 (бос болмаса preview autoPort). Нөлден бастама.
+NEXT_ACTION: Фаза 7 зертханалары (NetworkLab, AlgorithmLab, LogicLab, AssemblyLab, Experiments) дайын — қайта жасама. Келесі: (1) legacy localStorage прогресін progressStore v2-ге импорттау; (2) TODO `[PLACEHOLDER]` ассеттері (үстел, коврик, 3,5″ HDD, кабель орамы т.б.) мен GLB логотиптерін тазалау; (3) Фаза 9 — Assembly Lab instancing/LOD, KTX2, аудармалар chunk-ын бөлу; (4) Фаза 10 — QA, a11y, e2e. AI кілтін браузерге берме (тек сервер `.env`). D:/informatics-lab, dev :5173 (бос болмаса preview autoPort). Нөлден бастама.

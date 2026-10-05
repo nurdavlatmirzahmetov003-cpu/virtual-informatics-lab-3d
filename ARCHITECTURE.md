@@ -68,7 +68,7 @@ src/
                           AnatomyShadows, layout.ts (орындар/fit/фокус), placeholders.tsx + placeholderModels.ts
     SetupStudio/          StudioScene (өнімге байланған модельдер + бояу), StudioCamera (360°), Chair [PLACEHOLDER]
     PCScene/ SetupBuilder/   (бос — Фаза 5)
-  labs/ NetworkLab/ AlgorithmLab/ LogicLab/ Experiments/  (бос — Фаза 7)
+  labs/ NetworkLab/ AlgorithmLab/ LogicLab/ AssemblyLab/ Experiments/  (UI-сыз логика + тесттер)
   pages/ Home, Explorer (анатомия: панель, тест, тізім режимі), Labs, SetupStudio (конфигуратор + /studio/summary), Progress, Credits, NotFound, shared/
   services/ ai/, grading/   (бос — Фаза 6, 8)
 public/
@@ -130,6 +130,8 @@ legacy/                     ескі ES-module прототип (python http.ser
 18. **Көлеңкелер on-demand.** `QualityController` `shadowMap.autoUpdate = false` қояды; көлеңке түсіретін объектілері
     қозғалатын сахна `gl.shadowMap.needsUpdate = true` қоюы керек (DeskScene: `ShadowSync`).
 
+32. **Виртуалды тәжірибелер.** `src/labs/Experiments/` — әр тәжірибе бір модуль: тұрақтылар (шынайы типтік мәндер), таза модель функциялары, `conclusion()` (locale кілті + params) және `questions()`/`exercise()`. `quiz.ts` сұрақтарды `Exercise<QuizWork>`-ке айналдырады (бір сұрақ — бір ереже, id `experiment:<id>`). `index.ts` — `EXPERIMENT_IDS` реестрі (`data/labs/exercises.ts` пен бет ортақ қолданады). UI `pages/Labs/ExperimentLab/`: `ExperimentLabPage` (`React.lazy` картасы — әр тәжірибе жеке chunk), `parts.tsx` (Slider, Segmented, Stat, LineChart, `ExperimentFrame`: кіріспе → интерактив → қорытынды → симуляция белгісі → Quiz), `Quiz.tsx`. Анимациялар `useReducedMotion`-ды тексереді; әр кадрда тек анимацияланатын бөлік (мыс. `Lanes`) re-render болады.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |
@@ -168,7 +170,7 @@ legacy/                     ескі ES-module прототип (python http.ser
     тексереді, соңғы жинақты бәрібір детерминистік engine құрады. Кілт тек `server/ai-server.ts` оқитын `.env`-те.
     Кез келген ақауда (кілт жоқ, offline, timeout, жарамсыз жауап) — жергілікті нәтиже, 60 с серверді күтпейді.
 
-23. **Оқу зертханалары.** `lib/labs/{pcAssembly,algorithms,network,logic,experiments,assessment}.ts` — UI-дан тәуелсіз есептеу/тексеру. Algorithm trace immutable, logic графы truth table арқылы, network BFS/IPv4 арқылы тексеріледі. `pages/Labs/` параметрлік UI және SVG/CSS визуалдары; PC assembly лицензияланған 3D кэшін пайдаланады. `useEducationText`/`useLabText` үш тілдегі оқу мәтіндерімен тек модульде жүктеледі.
+23. **Оқу зертханалары.** `lib/labs/assessment.ts` және `src/labs/*` — UI-дан тәуелсіз есептеу/тексеру. Algorithm trace immutable, logic графы truth table арқылы, network BFS/IPv4 арқылы тексеріледі. `pages/Labs/` параметрлік UI және SVG/CSS визуалдары; PC assembly лицензияланған 3D кэшін пайдаланады. `useLabText` үш тілдегі оқу мәтіндерімен тек модульде жүктеледі.
 
 24. **Тапсырма/прогресс.** `data/labs/exercises.ts` — 40 тұрақты ID және deep link. `progressStore` v2 local persistence, валидация, соңғы 200 әрекет пен lifetime best массиві бөлек; v1 миграциясы ұпайларды тарихтан қалпына келтіреді. `AssignmentsPage` пен `ProgressPage` бір реестрді қолданады; anatomy quiz және барлық lab нәтижесі ортақ Assessment. Орындалу = реестрдегі passed best scores / 40; legacy import бөлек болашақ қадам.
 
