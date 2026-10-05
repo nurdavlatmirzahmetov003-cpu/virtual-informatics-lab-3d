@@ -19,9 +19,10 @@ function FeedbackText({ item }: { item: Feedback }) {
 
 /**
  * Result of an automatically graded exercise — score, time, errors, hints,
- * status and, per rule, why it failed. Shared by every lab.
+ * status and, per rule, why it failed. Shared by every lab. `compact` is for
+ * quizzes that already explain each answer in place: no per-rule list.
  */
-export function GradeReportCard({ report }: { report: GradeReport }) {
+export function GradeReportCard({ report, compact = false }: { report: GradeReport; compact?: boolean }) {
   const t = useT();
   const done = report.status === 'completed';
   return (
@@ -62,29 +63,33 @@ export function GradeReportCard({ report }: { report: GradeReport }) {
       </dl>
 
       {/* a lab may count the task as done even with a few mistakes on the way */}
-      <p className={styles.summary}>{t(done ? (report.outcomes.every((o) => o.passed) ? 'grading.success' : 'grading.successWithNotes') : 'grading.tryAgain')}</p>
+      {!compact && (
+        <p className={styles.summary}>{t(done ? (report.outcomes.every((o) => o.passed) ? 'grading.success' : 'grading.successWithNotes') : 'grading.tryAgain')}</p>
+      )}
       {report.penalty > 0 && <p className={styles.penalty}>{t('grading.penalty', { n: report.penalty })}</p>}
 
-      <ol className={styles.rules}>
-        {report.outcomes.map((o) => (
-          <li key={o.id} data-passed={o.passed}>
-            <div className={styles.rule}>
-              {o.passed ? <CircleCheck size={16} aria-hidden="true" /> : <CircleX size={16} aria-hidden="true" />}
-              <span>{t(tk(o.label.key), o.label.params)}</span>
-              <b>{t('grading.rulePoints', { earned: o.earned, points: o.points })}</b>
-            </div>
-            {!o.passed && o.feedback.length > 0 && (
-              <ul className={styles.feedback} aria-label={t('grading.why')}>
-                {o.feedback.map((f, i) => (
-                  <li key={i}>
-                    <FeedbackText item={f} />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ol>
+      {!compact && (
+        <ol className={styles.rules}>
+          {report.outcomes.map((o) => (
+            <li key={o.id} data-passed={o.passed}>
+              <div className={styles.rule}>
+                {o.passed ? <CircleCheck size={16} aria-hidden="true" /> : <CircleX size={16} aria-hidden="true" />}
+                <span>{t(tk(o.label.key), o.label.params)}</span>
+                <b>{t('grading.rulePoints', { earned: o.earned, points: o.points })}</b>
+              </div>
+              {!o.passed && o.feedback.length > 0 && (
+                <ul className={styles.feedback} aria-label={t('grading.why')}>
+                  {o.feedback.map((f, i) => (
+                    <li key={i}>
+                      <FeedbackText item={f} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ol>
+      )}
 
       <p className={styles.saved}>
         {t('grading.saved')} <Link to="/progress">{t('grading.openResults')} →</Link>

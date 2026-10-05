@@ -1,20 +1,22 @@
-import { useMemo, type CSSProperties, type PointerEvent } from 'react';
+import type { CSSProperties, PointerEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Clock3 } from 'lucide-react';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
-import { EXERCISES } from '@/data/labs/exercises';
-import { useProgressStore } from '@/store/progressStore';
+import { isLabId, type ProgressSummary } from '@/services/progress';
+import { useProgressSummary } from '@/store/progressStore';
 import { ModulePreview } from './ModulePreview';
 import { LAB_MODULES, type LabModule, type ModuleId } from './modules';
 import styles from './LabsPage.module.css';
 
-const PASS = 70;
-
-/** Exercises counted on a card: its own, or all of them for the summary modules. */
-function exercisesOf(id: ModuleId) {
-  if (id === 'assignments' || id === 'results') return EXERCISES;
-  return EXERCISES.filter((e) => e.module === id);
+/** Tasks counted on a card: a lab's own, or all of them for the summary modules. */
+function countsOf(id: ModuleId, summary: ProgressSummary) {
+  if (isLabId(id)) {
+    const lab = summary.labs.find((l) => l.lab === id)!;
+    return { done: lab.completed, total: lab.total };
+  }
+  if (id === 'assignments' || id === 'results') return { done: summary.totals.completed, total: summary.totals.tasks };
+  return { done: 0, total: 0 };
 }
 
 /** Pointer position → card tilt (CSS custom properties, no re-render). */
@@ -99,8 +101,7 @@ function ModuleCard({ module, index, done, total }: { module: LabModule; index: 
 export default function LabsPage() {
   const t = useT();
   useDocumentTitle(t('labs.title'));
-  const best = useProgressStore((s) => s.best);
-  const passed = useMemo(() => new Set(best.filter((a) => a.score >= PASS).map((a) => a.exercise)), [best]);
+  const summary = useProgressSummary();
 
   return (
     <div className={styles.page}>
@@ -111,8 +112,8 @@ export default function LabsPage() {
       </header>
       <ol className={styles.grid}>
         {LAB_MODULES.map((m, i) => {
-          const list = exercisesOf(m.id);
-          return <ModuleCard key={m.id} module={m} index={i} done={list.filter((e) => passed.has(e.id)).length} total={list.length} />;
+          const { done, total } = countsOf(m.id, summary);
+          return <ModuleCard key={m.id} module={m} index={i} done={done} total={total} />;
         })}
       </ol>
     </div>

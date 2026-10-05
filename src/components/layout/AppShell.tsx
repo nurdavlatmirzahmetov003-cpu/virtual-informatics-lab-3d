@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useT } from '@/hooks/useT';
 import { useSceneStatus } from '@/store/sceneStatusStore';
+import { AchievementToaster } from '@/components/achievements/AchievementToaster';
 import { TopBar } from './TopBar';
 import styles from './AppShell.module.css';
 
@@ -30,6 +31,7 @@ export function AppShell() {
         </Suspense>
       </main>
       {sceneExpected && <Suspense fallback={null}><LoaderOverlay /></Suspense>}
+      <AchievementToaster />
     </>
   );
 }

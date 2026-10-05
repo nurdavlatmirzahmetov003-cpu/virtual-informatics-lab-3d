@@ -4,7 +4,7 @@ import {
   renameDevice, updateHostConfig, updateInterface,
   type ConnectError, type DeviceType, type Endpoint, type HostConfig, type InterfaceConfig, type Network, type NetworkTaskId, type PingResult,
 } from '@/labs/NetworkLab';
-import { grade, startAttempt, takeHint, toAssessment, type Attempt, type GradeReport } from '@/services/grading';
+import { grade, startAttempt, takeHint, type Attempt, type GradeReport } from '@/services/grading';
 import { useProgressStore } from '@/store/progressStore';
 
 export type Selection = { kind: 'device'; id: string } | { kind: 'link'; id: string } | null;
@@ -90,7 +90,7 @@ export function useNetworkLab(task: NetworkTaskId | null) {
         const s = latest.current;
         if (!s.attempt || !exercise) return;
         const { report, attempt } = grade(exercise, s.network, s.attempt);
-        useProgressStore.getState().record(toAssessment(report));
+        useProgressStore.getState().record(report);
         setState((current) => ({ ...current, attempt, report }));
       },
       restart: () => setState(initial(task)),

@@ -3,7 +3,7 @@ import {
   FREE_INPUTS, LOGIC_TASKS, addGate, baseCircuit, connect, connectToNode, moveNode, removeGate, removeWire,
   type Bit, type Circuit, type ConnectError, type GateType, type LogicTaskId,
 } from '@/labs/LogicLab';
-import { grade, startAttempt, takeHint, toAssessment, type Attempt, type GradeReport } from '@/services/grading';
+import { grade, startAttempt, takeHint, type Attempt, type GradeReport } from '@/services/grading';
 import { useProgressStore } from '@/store/progressStore';
 
 export type Selection = { kind: 'node'; id: string } | { kind: 'wire'; id: string } | null;
@@ -65,7 +65,7 @@ export function useLogicLab(task: LogicTaskId | null) {
         const s = latest.current;
         if (!s.attempt || !exercise) return;
         const { report, attempt } = grade(exercise, s.circuit, s.attempt);
-        useProgressStore.getState().record(toAssessment(report));
+        useProgressStore.getState().record(report);
         setState((cur) => ({ ...cur, attempt, report }));
       },
       restart: () => setState(initial(task)),

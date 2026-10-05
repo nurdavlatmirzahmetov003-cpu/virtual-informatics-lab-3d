@@ -1,10 +1,12 @@
-import { useId, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { CheckCircle2, RotateCcw, XCircle } from 'lucide-react';
 import { QUIZ_OPTIONS, type AnatomyItem, type QuizOption } from '@/data/hardware/anatomy';
 import { useT } from '@/hooks/useT';
 import { itemKey } from './anatomyText';
 import styles from './AnatomyQuiz.module.css';
-import { assess } from '@/lib/labs/assessment';
+import { anatomyExercise } from '@/data/hardware/anatomyQuiz';
+import { grade, startAttempt, type GradeReport } from '@/services/grading';
+import { GradeReportCard } from '@/components/grading/GradeReportCard';
 import { useProgressStore } from '@/store/progressStore';
 
 /** Three-question check for one device. Mount with `key={item.id}` to reset per device. */
@@ -14,7 +16,9 @@ export function AnatomyQuiz({ item }: { item: AnatomyItem }) {
   const [picked, setPicked] = useState<Array<QuizOption | null>>([null, null, null]);
   const [checked, setChecked] = useState(false);
   const [nudge, setNudge] = useState(false);
-  const [started,setStarted] = useState(Date.now);
+  const exercise = useMemo(() => anatomyExercise(item), [item]);
+  const [attempt, setAttempt] = useState(() => startAttempt(exercise.id));
+  const [report, setReport] = useState<GradeReport | null>(null);
   const score = picked.filter((p, i) => p === item.answers[i]).length;
 
   const check = () => {
@@ -24,12 +28,18 @@ export function AnatomyQuiz({ item }: { item: AnatomyItem }) {
     }
     setNudge(false);
     setChecked(true);
-    if (!checked) useProgressStore.getState().record(assess(`anatomy:${item.id}`,score/item.answers.length,(Date.now()-started)/1000));
+    if (checked) return;
+    const answers = Object.fromEntries(picked.map((p, i) => [`q${i + 1}`, p === null ? null : QUIZ_OPTIONS.indexOf(p)]));
+    const r = grade(exercise, { answers }, attempt);
+    setAttempt(r.attempt);
+    setReport(r.report);
+    useProgressStore.getState().record(r.report);
   };
+  // a retry continues the same attempt, so earlier mistakes still count
   const retry = () => {
     setPicked([null, null, null]);
     setChecked(false);
-    setStarted(Date.now());
+    setReport(null);
   };
 
   return (
@@ -78,6 +88,8 @@ export function AnatomyQuiz({ item }: { item: AnatomyItem }) {
           </fieldset>
         );
       })}
+
+      {report && <GradeReportCard report={report} compact />}
 
       <div className={styles.actions} aria-live="polite">
         {checked ? (

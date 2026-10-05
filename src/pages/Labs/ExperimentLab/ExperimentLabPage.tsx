@@ -41,7 +41,7 @@ export default function ExperimentLabPage() {
   const [params, setParams] = useSearchParams();
   const raw = params.get('exp') ?? params.get('task');
   const id: ExperimentId = isExperimentId(raw) ? raw : 'cpuTemp';
-  const best = useProgressStore((s) => s.best);
+  const exercises = useProgressStore((s) => s.exercises);
   const View = VIEWS[id];
 
   return (
@@ -55,7 +55,8 @@ export default function ExperimentLabPage() {
       <nav className={styles.tabs} aria-label={t('experiments.ui.choose')}>
         {EXPERIMENT_IDS.map((e) => {
           const Icon = ICONS[e];
-          const score = best.find((a) => a.exercise === `experiment:${e}`)?.score;
+          const p = exercises[`experiment:${e}`];
+          const done = p?.completedAt !== undefined;
           return (
             <button key={e} type="button" className={styles.tab} aria-pressed={e === id} onClick={() => setParams({ exp: e }, { replace: true })}>
               <Icon size={18} strokeWidth={1.7} aria-hidden="true" />
@@ -63,7 +64,7 @@ export default function ExperimentLabPage() {
                 <b>{t(tk(`experiments.${e}.title`))}</b>
                 <small>{t(tk(`experiments.${e}.short`))}</small>
               </span>
-              {score !== undefined && score >= 70 && <CircleCheck size={14} className={styles.tabDone} aria-label={t('experiments.ui.done')} />}
+              {done && <CircleCheck size={14} className={styles.tabDone} aria-label={t('experiments.ui.done')} />}
             </button>
           );
         })}

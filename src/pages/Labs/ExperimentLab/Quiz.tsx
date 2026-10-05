@@ -4,7 +4,7 @@ import { GradeReportCard } from '@/components/grading/GradeReportCard';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import type { OptionLabel, Question, QuizWork } from '@/labs/Experiments/quiz';
-import { grade, startAttempt, toAssessment, type Exercise, type GradeReport } from '@/services/grading';
+import { grade, startAttempt, type Exercise, type GradeReport } from '@/services/grading';
 import { useProgressStore } from '@/store/progressStore';
 import styles from './ExperimentLab.module.css';
 
@@ -27,7 +27,7 @@ export function Quiz({ experiment, questions, exercise }: { experiment: string; 
 
   const check = () => {
     const r = grade(exercise, { answers }, attempt);
-    useProgressStore.getState().record(toAssessment(r.report));
+    useProgressStore.getState().record(r.report);
     setAttempt(r.attempt);
     setReport(r.report);
   };

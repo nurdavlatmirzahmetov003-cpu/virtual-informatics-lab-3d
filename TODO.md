@@ -71,7 +71,10 @@
 - [x] Фаза 7.3: Логикалық схемалар — `src/labs/LogicLab/` (симуляция, цикл, талдау, ақиқат кестесі, өрнек, 4 тапсырма) + `pages/Labs/LogicLab/` (ANSI гейттер); `npm run test:logic` (10)
 - [x] Фаза 7.4: Компьютерді виртуалды жинау — `src/labs/AssemblyLab/` + `scenes/AssemblyLab/` + `pages/Labs/AssemblyLab/`, `store/assemblyLabStore.ts`, `lib/audio/sfx.ts`; `npm run test:pc-lab` (6)
 - [x] Фаза 7.5: Виртуалды тәжірибелер — `src/labs/Experiments/` (9 модель + `quiz.ts`) + `pages/Labs/ExperimentLab/` (lazy), `npm run test:experiments` (10); ескі `ExperimentsPage`, `lib/labs/experiments.ts`, `useEducationText`, `ExerciseResult` алынды
-- [ ] Ескі прогресті импорттау (legacy localStorage → progressStore v2)
+- [x] Фаза 8: бағалау және прогресс — `services/progress` (catalog, records, migrate v1/v2→v3, summary, achievements, transfer, repository), `store/progressStore.ts`, `pages/Tasks/`, `pages/Progress/` (ActivityChart, DataPanel), `components/achievements/AchievementToaster`; Hardware Explorer тесті `services/grading`-ке көшті; `npm run test:progress` (12), `test:grading` (4)
+- [x] Ескі прототип прогресі (`vlab_progress_v1`) мен v1/v2 деректерін импорттау
+- [ ] Supabase/PostgreSQL `ProgressRepository` (сервер + auth; кілт тек серверде)
+- [ ] Мұғалім режимі: бірнеше оқушының экспорт файлын бір кестеге жинау
 - [ ] Фаза 9: Assembly Lab instancing/LOD, KTX2; Фаза 10: QA
 - [ ] [PLACEHOLDER] Assembly Lab cable bundle must be replaced — `scenes/AssemblyLab/props.tsx` `CableBundle` (процедуралық орам: 24-pin, 8-pin, SATA)
 - [ ] [PLACEHOLDER] Assembly Lab 3.5″ HDD — `scenes/HardwareExplorer/placeholders.tsx` `Hdd` қайта қолданылады (анатомиядағы HDD placeholder-імен бірге ауыстыру)

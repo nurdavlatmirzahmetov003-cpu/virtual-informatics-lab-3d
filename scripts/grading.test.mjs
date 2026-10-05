@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { formatDuration, grade, startAttempt, takeHint, toAssessment } from '../src/services/grading/index.ts';
+import { formatDuration, grade, makeChoiceQuiz, startAttempt, takeHint } from '../src/services/grading/index.ts';
+import { fromReport } from '../src/services/progress/records.ts';
 
 /** A tiny exercise on a plain object: the service knows nothing about networks. */
 const exercise = {
@@ -51,9 +52,28 @@ test('a throwing rule fails safely; progress bridge keeps the numbers', () => {
   const { report } = grade(broken, { a: 1, b: true }, startAttempt(broken.id, 0), 61_000);
   assert.equal(report.outcomes.at(-1).feedback[0].key, 'grading.ruleError');
   assert.equal(report.score, 8, '10 of 12 points → 8/10');
-  const saved = toAssessment(report);
-  assert.equal(saved.score, 80);
-  assert.equal(saved.maxScore, 100);
+  const saved = fromReport(report, 61_000);
+  assert.equal(saved.score, 8);
+  assert.equal(saved.maxScore, 10);
+  assert.equal(saved.percent, 80);
   assert.equal(saved.seconds, 61);
+  assert.equal(saved.status, 'incomplete');
   assert.equal(formatDuration(3725), '1:02:05');
+});
+
+test('choice quizzes are graded like any exercise: points per question, why on wrong, nudge on empty', () => {
+  const quiz = makeChoiceQuiz({
+    id: 'anatomy:cpu', type: 'anatomy', instructions: { key: 'i' }, expectedResult: { key: 'e' },
+    questions: ['q1', 'q2', 'q3'].map((id) => ({ id, prompt: { key: id }, options: [{ text: 'a' }, { text: 'b' }], correct: 1, why: { key: `${id}.why` } })),
+  });
+  assert.equal(quiz.maxScore, 10);
+  assert.deepEqual(quiz.gradingRules.map((r) => r.points), [4, 3, 3]);
+  const { report } = grade(quiz, { answers: { q1: 1, q2: 0, q3: null } }, startAttempt(quiz.id, 0), 5_000);
+  assert.equal(report.score, 4);
+  assert.equal(report.status, 'incomplete');
+  assert.equal(report.outcomes[1].feedback[0].key, 'q2.why');
+  assert.equal(report.outcomes[2].feedback[0].key, 'grading.noAnswer');
+  const full = grade(quiz, { answers: { q1: 1, q2: 1, q3: 1 } }, startAttempt(quiz.id, 0), 5_000).report;
+  assert.equal(full.score, 10);
+  assert.equal(full.status, 'completed');
 });

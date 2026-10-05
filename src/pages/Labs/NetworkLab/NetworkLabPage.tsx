@@ -128,7 +128,7 @@ export default function NetworkLabPage() {
   useDocumentTitle(t('network.title'));
   const [params, setParams] = useSearchParams();
   const mode = readMode(params.get('task'));
-  const best = useProgressStore((s) => s.best);
+  const exercises = useProgressStore((s) => s.exercises);
 
   return (
     <div className={styles.page}>
@@ -140,16 +140,18 @@ export default function NetworkLabPage() {
 
       <nav className={styles.modes} aria-label={t('network.task.choose')}>
         {NETWORK_TASK_IDS.map((id, i) => {
-          const score = best.find((a) => a.exercise === NETWORK_TASKS[id].id)?.score;
+          const p = exercises[NETWORK_TASKS[id].id];
+          const score = p?.best.score;
+          const done = p?.completedAt !== undefined;
           return (
             <button key={id} type="button" className={styles.modeCard} aria-pressed={mode === id} onClick={() => setParams({ task: id })}>
               <span className={styles.modeIndex}>{String(i + 1).padStart(2, '0')}</span>
               <b>{t(tk(`network.tasks.${id}.title`))}</b>
               <small>{t(tk(`network.tasks.${id}.short`))}</small>
               {score !== undefined && (
-                <span className={styles.modeScore} data-done={score >= 70}>
-                  {score >= 70 && <CircleCheck size={12} aria-hidden="true" />}
-                  {t('network.task.best', { score: Math.round(score / 10) })}
+                <span className={styles.modeScore} data-done={done}>
+                  {done && <CircleCheck size={12} aria-hidden="true" />}
+                  {t('network.task.best', { score: score })}
                 </span>
               )}
             </button>

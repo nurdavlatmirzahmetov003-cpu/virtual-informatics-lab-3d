@@ -16,7 +16,7 @@ const NetworkLabPage = lazy(() => import('@/pages/Labs/NetworkLab/NetworkLabPage
 const AlgorithmLabPage = lazy(() => import('@/pages/Labs/AlgorithmLab/AlgorithmLabPage'));
 const LogicLabPage = lazy(() => import('@/pages/Labs/LogicLab/LogicLabPage'));
 const ExperimentLabPage = lazy(() => import('@/pages/Labs/ExperimentLab/ExperimentLabPage'));
-const AssignmentsPage = lazy(() => import('@/pages/Labs/AssignmentsPage'));
+const TasksPage = lazy(() => import('@/pages/Tasks/TasksPage'));
 
 export const router = createBrowserRouter([
   {
@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
       { path: 'labs/algorithms', element: <AlgorithmLabPage /> },
       { path: 'labs/logic', element: <LogicLabPage /> },
       { path: 'labs/experiments', element: <ExperimentLabPage /> },
-      { path: 'assignments', element: <AssignmentsPage /> },
+      { path: 'assignments', element: <TasksPage /> },
       { path: 'explorer', element: <ExplorerPage /> },
       { path: 'studio', element: <SetupStudioPage /> },
       { path: 'studio/summary', element: <SetupSummaryPage /> },

@@ -3,7 +3,7 @@ import {
   ASSEMBLY_EXERCISE, isComplete, newAssembly, nextStep, place, type AssemblyState, type StepId, type TargetId,
 } from '@/labs/AssemblyLab';
 import { playSfx } from '@/lib/audio/sfx';
-import { grade, startAttempt, takeHint, toAssessment, type Attempt, type GradeReport } from '@/services/grading';
+import { grade, startAttempt, takeHint, type Attempt, type GradeReport } from '@/services/grading';
 import { useProgressStore } from './progressStore';
 
 export type MessageTone = 'info' | 'ok' | 'warn' | 'hint';
@@ -84,7 +84,7 @@ export const useAssemblyLabStore = create<AssemblyLabState>()((set, get) => ({
     set(patch);
     if (outcome === 'installed' && isComplete(r.state)) {
       const { report, attempt } = grade(ASSEMBLY_EXERCISE, r.state, s.attempt);
-      useProgressStore.getState().record(toAssessment(report));
+      useProgressStore.getState().record(report);
       set({ report, attempt, bootAt: now + 700, message: { key: 'pcLab.msg.boot', tone: 'ok' } });
       window.setTimeout(() => playSfx('boot'), 700);
     }

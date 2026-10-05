@@ -394,8 +394,77 @@
   },
   "progress": {
     "title": "My results",
-    "subtitle": "Completed labs, scores and achievements will appear here.",
-    "empty": "No results yet. Progress arrives in phase 8 and is stored on this device."
+    "subtitle": "Scores, progress per laboratory, recent activity and achievements. Data is stored in this browser.",
+    "eyebrow": "Progress",
+    "stats": {
+      "labs": "Labs completed",
+      "average": "Average score",
+      "points": "Total points",
+      "percent": "Progress",
+      "labsHint": "{done} of {total} fully completed",
+      "averageHint": "Using the best result of each task",
+      "pointsHint": "out of {max}",
+      "percentHint": "{done} / {total} tasks completed",
+      "none": "—"
+    },
+    "labs": {
+      "title": "By laboratory",
+      "row": "{done}/{total} completed",
+      "avg": "average {avg}%",
+      "noScore": "no score yet"
+    },
+    "activity": {
+      "title": "Last 14 days",
+      "subtitle": "Graded attempts per day",
+      "tooltip": "{date}: {n} attempts, {done} completed",
+      "empty": "No activity in the last 14 days.",
+      "total": "{n} attempts in total",
+      "date": "Date",
+      "attempts": "Attempts",
+      "completed": "Completed",
+      "table": "As a table"
+    },
+    "recent": {
+      "title": "Recent activity",
+      "empty": "Complete your first task to see results here.",
+      "legacy": "Old prototype",
+      "retired": "Retired task",
+      "meta": "{time} · {errors} errors · {hints} hints",
+      "tasks": "Go to tasks"
+    },
+    "achievements": {
+      "title": "Achievements",
+      "count": "{n} of {total} unlocked",
+      "unlockedAt": "Unlocked {date}",
+      "locked": "Not unlocked yet",
+      "progress": "{current} / {target}"
+    },
+    "data": {
+      "title": "Manage data",
+      "desc": "Progress is stored in this browser (localStorage) with a versioned schema. Export it as JSON to show a teacher or to move it to another device.",
+      "export": "Export JSON",
+      "import": "Import JSON",
+      "reset": "Clear progress",
+      "exported": "File downloaded: {name}",
+      "imported": "{n} new attempts added.",
+      "importedNone": "Every attempt in the file is already here — nothing changed.",
+      "errors": {
+        "tooLarge": "The file is too large.",
+        "notJson": "This is not a JSON file.",
+        "wrongFile": "This is not a progress export of this lab.",
+        "empty": "The file has no results.",
+        "read": "The file could not be read."
+      },
+      "importTitle": "Import progress",
+      "importBody": "The file has {attempts} attempts across {tasks} tasks. They are added to your results — nothing is deleted and your best scores are kept.",
+      "importConfirm": "Import",
+      "resetTitle": "Clear progress?",
+      "resetBody": "All scores, attempts and achievements will be removed from this browser. This cannot be undone. Export to JSON first.",
+      "resetConfirm": "Yes, clear",
+      "cancel": "Cancel",
+      "resetDone": "Progress cleared.",
+      "schema": "Storage schema: v{v}"
+    }
   },
   "notFound": {
     "title": "Page not found",
@@ -2018,7 +2087,8 @@
     "openResults": "My results",
     "ruleError": "This check could not be run.",
     "scoring": "Scoring: up to 10 from the rules; each hint and failed check −1 (max −3). Time does not affect the score.",
-    "successWithNotes": "Task complete! A few mistakes on the way cost some points — see why below."
+    "successWithNotes": "Task complete! A few mistakes on the way cost some points — see why below.",
+    "noAnswer": "No answer selected."
   },
   "algorithms": {
     "names": {
@@ -2926,6 +2996,110 @@
         "o2": "A bigger drive",
         "o3": "A longer HDMI cable",
         "why": "A monitor only shows the frames the GPU produces: at 60 FPS a 144 Hz screen just repeats frames."
+      }
+    }
+  },
+  "tasks": {
+    "eyebrow": "Assessment",
+    "intro": "Every lab task in one place. Open a task and complete it — score, time, errors and hints are counted automatically and your best result is kept.",
+    "assemblyTitle": "Assemble a complete computer",
+    "anatomySummary": "3 questions on the device’s purpose, specifications and connection.",
+    "anatomyInstructions": "Explore the device in 3D and answer 3 questions.",
+    "quizExpected": "Correct answers to all three questions.",
+    "status": {
+      "notStarted": "Not started",
+      "inProgress": "In progress",
+      "completed": "Completed"
+    },
+    "filter": {
+      "status": "By status",
+      "lab": "By laboratory",
+      "all": "All",
+      "allLabs": "All laboratories",
+      "label": "Filter tasks"
+    },
+    "next": {
+      "eyebrow": "Recommended next task",
+      "continue": "Continue",
+      "start": "Start",
+      "reason": {
+        "continue": "You started this task but have not finished it yet.",
+        "sameLab": "The next task in the lab you worked in last.",
+        "order": "The next task in the learning order."
+      },
+      "allDone": "Every task is complete! See your results on the “My results” page.",
+      "results": "Go to results"
+    },
+    "overview": "Completed: {done} / {total}",
+    "best": "Best: {score}/{max}",
+    "attempts": "{n} attempts",
+    "maxScore": "{max} points",
+    "labProgress": "{done}/{total} completed",
+    "empty": "No tasks match this filter.",
+    "expected": "Expected result"
+  },
+  "achievements": {
+    "toast": {
+      "eyebrow": "Achievement unlocked",
+      "close": "Close",
+      "open": "All achievements"
+    },
+    "items": {
+      "firstStep": {
+        "name": "First step",
+        "condition": "Complete any task."
+      },
+      "firstComputer": {
+        "name": "First computer",
+        "condition": "Fully assemble a computer in the virtual lab."
+      },
+      "perfectBuild": {
+        "name": "Perfect Build",
+        "condition": "Assemble the computer for 10/10 with no mistakes and no hints."
+      },
+      "hardwareExpert": {
+        "name": "Hardware expert",
+        "condition": "Pass the tests of {target} devices in the Hardware Explorer."
+      },
+      "networkMaster": {
+        "name": "Network master",
+        "condition": "Complete all {target} network lab tasks."
+      },
+      "algorithmExplorer": {
+        "name": "Algorithm explorer",
+        "condition": "Complete all {target} algorithm tasks."
+      },
+      "logicEngineer": {
+        "name": "Logic engineer",
+        "condition": "Complete all {target} logic circuit tasks."
+      },
+      "experimenter": {
+        "name": "Experimenter",
+        "condition": "Complete the tasks of all {target} virtual experiments."
+      },
+      "lab100": {
+        "name": "100% lab",
+        "condition": "Score 100% on every task of one laboratory."
+      },
+      "selfMade": {
+        "name": "On my own",
+        "condition": "Complete {target} tasks without hints."
+      },
+      "persistent": {
+        "name": "Persistent",
+        "condition": "Finish a task on the 3rd attempt or later — mistakes teach too."
+      },
+      "allRounder": {
+        "name": "All-rounder",
+        "condition": "Complete at least one task in all {target} laboratories."
+      },
+      "halfway": {
+        "name": "Halfway",
+        "condition": "Complete half of all tasks — {target}."
+      },
+      "graduate": {
+        "name": "Lab graduate",
+        "condition": "Complete all {target} tasks."
       }
     }
   }

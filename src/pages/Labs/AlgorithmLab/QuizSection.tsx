@@ -4,7 +4,7 @@ import { GradeReportCard } from '@/components/grading/GradeReportCard';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { QUIZZES, QUIZ_IDS, makeQuiz, optionLabel, type QuizId, type QuizVariant } from '@/labs/AlgorithmLab';
-import { grade, startAttempt, takeHint, toAssessment, type Attempt, type GradeReport } from '@/services/grading';
+import { grade, startAttempt, takeHint, type Attempt, type GradeReport } from '@/services/grading';
 import { useProgressStore } from '@/store/progressStore';
 import styles from './AlgorithmLab.module.css';
 
@@ -48,7 +48,7 @@ function QuizCard({ quiz }: { quiz: QuizId }) {
 
   const check = () => {
     const r = grade(exercise, { variant, choice }, attempt);
-    useProgressStore.getState().record(toAssessment(r.report));
+    useProgressStore.getState().record(r.report);
     setState({ ...state, attempt: r.attempt, report: r.report });
   };
 
@@ -126,7 +126,7 @@ function QuizCard({ quiz }: { quiz: QuizId }) {
 
 export function QuizSection({ quiz, onQuiz }: { quiz: QuizId; onQuiz: (q: QuizId) => void }) {
   const t = useT();
-  const best = useProgressStore((s) => s.best);
+  const exercises = useProgressStore((s) => s.exercises);
   return (
     <section className={styles.quiz} id="quiz" aria-labelledby="quiz-title">
       <header className={styles.quizHead}>
@@ -135,14 +135,16 @@ export function QuizSection({ quiz, onQuiz }: { quiz: QuizId; onQuiz: (q: QuizId
       </header>
       <div className={styles.quizTabs} role="tablist">
         {QUIZ_IDS.map((q, i) => {
-          const score = best.find((a) => a.exercise === QUIZZES[q].id)?.score;
+          const p = exercises[QUIZZES[q].id];
+          const score = p?.best.score;
+          const done = p?.completedAt !== undefined;
           return (
             <button key={q} type="button" role="tab" aria-selected={q === quiz} onClick={() => onQuiz(q)}>
               <span>{String(i + 1).padStart(2, '0')}</span>
               <b>{t(tk(`algorithms.quiz.${q}.title`))}</b>
               {score !== undefined && (
-                <small data-done={score >= 70}>
-                  {score >= 70 && <CircleCheck size={12} aria-hidden="true" />} {t('algorithms.quiz.best', { score: Math.round(score / 10) })}
+                <small data-done={done}>
+                  {done && <CircleCheck size={12} aria-hidden="true" />} {t('algorithms.quiz.best', { score: score })}
                 </small>
               )}
             </button>

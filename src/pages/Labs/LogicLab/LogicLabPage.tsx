@@ -72,7 +72,7 @@ export default function LogicLabPage() {
   const [params, setParams] = useSearchParams();
   const raw = params.get('task');
   const mode: Mode = raw === 'free' ? 'free' : isLogicTaskId(raw) ? raw : (raw && LEGACY[raw]) || 'and';
-  const best = useProgressStore((s) => s.best);
+  const exercises = useProgressStore((s) => s.exercises);
 
   return (
     <div className={styles.page}>
@@ -83,15 +83,17 @@ export default function LogicLabPage() {
       </header>
       <nav className={styles.modes} aria-label={t('logic.ui.choose')}>
         {LOGIC_TASK_IDS.map((id, i) => {
-          const score = best.find((a) => a.exercise === LOGIC_TASKS[id].id)?.score;
+          const p = exercises[LOGIC_TASKS[id].id];
+          const score = p?.best.score;
+          const done = p?.completedAt !== undefined;
           return (
             <button key={id} type="button" className={styles.modeCard} aria-pressed={mode === id} onClick={() => setParams({ task: id }, { replace: true })}>
               <span>{String(i + 1).padStart(2, '0')}</span>
               <b>{t(tk(`logic.tasks.${id}.title`))}</b>
               <small>{t(tk(`logic.tasks.${id}.short`))}</small>
               {score !== undefined && (
-                <em data-done={score >= 70}>
-                  {score >= 70 && <CircleCheck size={12} aria-hidden="true" />} {t('logic.ui.best', { score: Math.round(score / 10) })}
+                <em data-done={done}>
+                  {done && <CircleCheck size={12} aria-hidden="true" />} {t('logic.ui.best', { score: score })}
                 </em>
               )}
             </button>

@@ -1,9 +1,17 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
 Жаңартылды: 2026-10-05
-**Ағымдағы фаза: 7.5 дайын (Виртуалды тәжірибелер). 7.1 хаб/Network Lab/`services/grading`, 7.2 Алгоритмдер, 7.3 Логика, 7.4 ПК жинау дайын — Фаза 7 зертханалары толық. Келесі — legacy прогресс импорты, placeholder-лер, Фаза 9/10.**
+**Ағымдағы фаза: 8 дайын (Бағалау және прогресс). Фаза 7 зертханалары (хаб, Network, Алгоритмдер, Логика, ПК жинау, Тәжірибелер) толық. Келесі — Фаза 9 (оптимизация), placeholder-лер, Фаза 10 (QA).**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
+
+## Фаза 8 — Бағалау және прогресс (2026-10-05)
+- Біртұтас бағалау: 6 зертхананың 39 тапсырмасы `services/grading` арқылы; Hardware Explorer тесті де (`makeChoiceQuiz`, `data/hardware/anatomyQuiz.ts`, `GradeReportCard compact`). Ескі `lib/labs/assessment.ts`, `toAssessment`, `data/labs/exercises.ts`, `useLabText`, `AssignmentsPage`, `Learning.module.css` алынды.
+- `services/progress/`: `catalog` (тапсырмалар, оқу реті), `records` (ең жақсы нәтиже, әрекеттер, merge), `migrate` (v1/v2 → v3, прототип `vlab_progress_v1`), `summary` (күйлер, ұпайлар, `recommendNext`, `activityByDay`), `achievements` (14), `transfer` (JSON экспорт/импорт), `repository` (`ProgressRepository`, localStorage + backup/corrupt, басқа қойынды). Схема нұсқасы — `lib/storage.ts` `STORAGE_VERSIONS.progress = 3`.
+- `store/progressStore.ts` (`record(report)`, `importSnapshot`, `reset`, `toasts`, `useProgressSummary`); `components/achievements/AchievementToaster` (AppShell).
+- Беттер: `pages/Tasks/TasksPage` (`/assignments?status=&lab=`), `pages/Progress/` (`ProgressPage`, `ActivityChart`, `DataPanel`, `dates.ts`). Хабтағы карточкалар прогресі `useProgressSummary`-ден. Мәтін: `tasks.*`, `progress.*`, `achievements.*`, `grading.noAnswer` (kk/ru/en).
+- Тесттер: `npm run test:progress` (12), `test:grading` (4); `npm test` 80/80; build/lint/typecheck таза.
+- Тексерілді (in-app Chromium 1440×900, 375×812): бар v2 деректері v3-ке көшті (`vil3d:progress:backup-v2` жасалды); Монитор тесті 1 қатемен → 6/10 «Орындалмады», қайта → 9/10 «Орындалды» (−1 қайталау), тарих пен ең жақсы нәтиже сақталды; store арқылы 10/10 жинақ → «Алғашқы компьютер», «Perfect Build», «100% зертхана» хабарламалары кезекпен; нәтижелер беті (көрсеткіштер, түсті жолақтар, 14 күн, жетістіктер, тарих); тазалау диалогы (Болдырмау); JSON импорт → «1 жаңа әрекет қосылды», бөтен файл → қате; мобильдіде көлденең скролл жоқ; консоль қатесіз. Тексеруден кейін браузердегі деректер бастапқы күйге қайтарылды.
 
 ## Фаза 7.5 — Виртуалды тәжірибелер (2026-10-05)
 - Логика `src/labs/Experiments/` (UI-сыз): `cpuTemp`, `memory`, `storage`, `latency`, `binary`, `cpuCycle`, `rgb`, `resolution`, `refresh` + `quiz.ts` (сұрақтар → `Exercise<QuizWork>`, 4+3+3) + `index.ts` (`EXPERIMENT_IDS`). Шынайы мәндер: HDD ~160, SATA ~530, NVMe 3500/7000 МБ/с; талшықта 200 км/мс; Tjmax 95 °C; RAM ~100 нс.
@@ -158,4 +166,4 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: Фаза 7 зертханалары (NetworkLab, AlgorithmLab, LogicLab, AssemblyLab, Experiments) дайын — қайта жасама. Келесі: (1) legacy localStorage прогресін progressStore v2-ге импорттау; (2) TODO `[PLACEHOLDER]` ассеттері (үстел, коврик, 3,5″ HDD, кабель орамы т.б.) мен GLB логотиптерін тазалау; (3) Фаза 9 — Assembly Lab instancing/LOD, KTX2, аудармалар chunk-ын бөлу; (4) Фаза 10 — QA, a11y, e2e. AI кілтін браузерге берме (тек сервер `.env`). D:/informatics-lab, dev :5173 (бос болмаса preview autoPort). Нөлден бастама.
+NEXT_ACTION: Фаза 7 зертханалары мен Фаза 8 (бағалау, прогресс, жетістіктер, `services/progress`) дайын — қайта жасама. Келесі: (1) Фаза 9 — Assembly Lab instancing/LOD, KTX2, аудармалар chunk-ын бөлу, бандл өлшемі; (2) TODO `[PLACEHOLDER]` ассеттері (үстел, коврик, 3,5″ HDD, кабель орамы т.б.) мен GLB логотиптерін тазалау; (3) Фаза 10 — QA (Firefox/Safari, touch), a11y, e2e; (4) кейін: Supabase/PostgreSQL `ProgressRepository` (тек сервер арқылы, кілт `.env`-те). AI кілтін браузерге берме. D:/informatics-lab, dev :5173 (бос болмаса preview autoPort). Нөлден бастама.
