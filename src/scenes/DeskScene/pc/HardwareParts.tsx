@@ -24,18 +24,46 @@ const fanFit: Fit = { axis: 0, size: 0.12, rotation: [Math.PI / 2, 0, 0] };
 const rotorFit: Fit = { axis: 0, size: 0.0935, rotation: [Math.PI / 2, 0, 0] };
 const url = (name: string) => `${import.meta.env.BASE_URL}assets/models/hardware/${name}.glb`;
 
-export function HardwareFan({ y, fallback }: { y: number; fallback: ReactNode }) {
+/**
+ * A row of 120 mm fans along Y. Deliberately not instanced (measured in
+ * Phase 9 on Intel UHD / D3D11): instanced copies need their own shader
+ * variants (+7 programs, ≈ 0.7 s more compiling at load) and spinning
+ * rotors would rewrite the instance buffer every frame, which stalled the
+ * GPU (74 → 54 FPS) — all to save 13 draw calls for 3 fans and 2–4 RAM sticks.
+ */
+export function HardwareFans({ ys, fallback }: { ys: readonly number[]; fallback: ReactNode }) {
+  const frames = useMemo(() => ys.map((y) => [0, y, 0] as const), [ys]);
+  return (
+    <>
+      {frames.map((p, i) => <ModelLoader key={i} url={url('fan_frame')} fit={fanFit} position={[...p]} fallback={i === 0 ? fallback : null} />)}
+      {ys.map((y) => (
+        <Rotor key={y} y={y} />
+      ))}
+    </>
+  );
+}
+
+function Rotor({ y }: { y: number }) {
   const rotor = useRef<Group>(null);
   const reduced = useReducedMotion();
-  useFrame((_, delta) => { if (rotor.current && !reduced) rotor.current.rotation.z -= Math.min(delta, 0.05) * 8 * pcRig.fanSpeed; });
-  return <group position-y={y}>
-    <ModelLoader url={url('fan_frame')} fit={fanFit} fallback={fallback} />
-    <group ref={rotor} position-z={0.0018}><ModelLoader url={url('fan_rotor')} fit={rotorFit} castShadow={false} fallback={null} /></group>
-  </group>;
+  useFrame((_, delta) => {
+    if (rotor.current && !reduced) rotor.current.rotation.z -= Math.min(delta, 0.05) * 8 * pcRig.fanSpeed;
+  });
+  return (
+    <group ref={rotor} position={[0, y, 0.0018]}>
+      <ModelLoader url={url('fan_rotor')} fit={rotorFit} castShadow={false} fallback={null} />
+    </group>
+  );
+}
+
+/** 2 or 4 identical modules in the DIMM slots (one cached file, see HardwareFans on instancing). */
+function RamSticks({ count, fallback }: { count: number; fallback: ReactNode }) {
+  const positions = useMemo(() => Array.from({ length: Math.min(4, count) }, (_, i) => [0, 0, RAM.pitch * (count === 2 ? i * 2 + 1 : i)] as const), [count]);
+  return <>{positions.map((p, i) => <ModelLoader key={i} url={url(files.ram)} fit={fits.ram} position={[...p]} fallback={i === 0 ? fallback : null} />)}</>;
 }
 
 /** Licensed PBR components; PCPart retains ownership of all choreography. */
-export function HardwarePart({ id, fallback, product, rgbColor }: { id: PartId; fallback: ReactNode; product?: HardwareItem; rgbColor?: string | null }) {
+export function HardwarePart({ id, fallback, product, rgbColor, deferDetail = false }: { id: PartId; fallback: ReactNode; product?: HardwareItem; rgbColor?: string | null; deferDetail?: boolean }) {
   const fit = useMemo(() => {
     if (id === 'fans') return null;
     const base = fits[id];
@@ -46,11 +74,11 @@ export function HardwarePart({ id, fallback, product, rgbColor }: { id: PartId; 
     }
     return base;
   }, [id, product]);
-  if (id === 'fans') return <>{FRONT_FANS.ys.map((y, i) => <HardwareFan key={y} y={y} fallback={i === 0 ? <group position-y={-y}>{fallback}</group> : null} />)}</>;
+  if (id === 'fans') return <HardwareFans ys={FRONT_FANS.ys} fallback={fallback} />;
   if (id === 'cooler' && product?.compatibility.radiatorMm) return <LiquidCooler radiatorMm={product.compatibility.radiatorMm} rgbColor={rgbColor} />;
   if (id === 'ram') {
     const count = product ? Number(product.model.match(/\((\d+)\s*[×x]/)?.[1] ?? 2) : RAM.count;
-    return <>{Array.from({ length: Math.min(4, count) }, (_, i) => <ModelLoader key={i} url={url(files.ram)} fit={fits.ram} position-z={RAM.pitch * (count === 2 ? i * 2 + 1 : i)} fallback={i === 0 ? fallback : null} />)}</>;
+    return <RamSticks count={count} fallback={fallback} />;
   }
-  return <ModelLoader url={url(files[id])} fit={fit!} fallback={fallback} />;
+  return <ModelLoader url={url(files[id])} fit={fit!} fallback={fallback} deferDetail={deferDetail} />;
 }

@@ -13,6 +13,7 @@
     "postinstall": "node scripts/copy-decoders.mjs",
     "assets:optimize": "node scripts/optimize-assets.mjs",
     "assets:validate": "node scripts/validate-assets.mjs",
+    "perf": "node scripts/perf-measure.mjs",
     "test:assembly": "node --experimental-strip-types --test scripts/assembly.test.mjs",
     "test:assistant": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/assistant.test.mjs",
     "test:pc-lab": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/assembly-lab.test.mjs",

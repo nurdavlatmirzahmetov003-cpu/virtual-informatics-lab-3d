@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { DEFAULT_LANGUAGE, isLanguage, type Language } from '@/lib/i18n';
+import { DEFAULT_LANGUAGE, isLanguage, loadLanguage, type Language } from '@/lib/i18n';
 import { isQualityMode, stepQuality, type QualityLevel, type QualityMode } from '@/lib/quality/presets';
 import { detectQuality } from '@/lib/quality/detect';
 import { STORAGE_KEYS, STORAGE_VERSIONS, safeStorage } from '@/lib/storage';
@@ -44,7 +44,11 @@ export const useSettingsStore = create<SettingsState>()(
     (set, get) => ({
       ...DEFAULTS,
       autoQuality: detectQuality(),
-      setLanguage: (language) => set({ language }),
+      // switch once the dictionary is here (offline: switch anyway, Kazakh fills the gaps)
+      setLanguage: (language) => {
+        const apply = () => set({ language });
+        void loadLanguage(language).then(apply, apply);
+      },
       setQualityMode: (qualityMode) => set({ qualityMode }),
       degradeAutoQuality: () => {
         const current = get().autoQuality;

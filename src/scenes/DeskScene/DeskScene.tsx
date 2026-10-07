@@ -46,7 +46,7 @@ export default function DeskScene() {
       <Mouse />
       <Speakers />
       <Headset />
-      <PCCase />
+      <PCCase deferDetail />
     </>
   );
 }

@@ -41,7 +41,7 @@
 - [ ] Микрофон, веб-камера, принтер, HDD, желі картасы үшін лицензиясы таза GLB (Sketchfab CC0/CC-BY) — жоғарыдағы `[PLACEHOLDER]`
 - [x] Тест нәтижелерін прогреске сақтау (Фаза 8 grading/progress)
 - [x] Virtual PC Assembly Lab (§11) — Фаза 3-тің екінші бөлігі
-- [ ] Locale-дарды namespace бойынша lazy жүктеу (index chunk 57 → 170 KB, gzip 51 KB) — Фаза 9
+- [x] Locale-дарды lazy жүктеу — ru/en жеке chunk, тек таңдалғанда (Фаза 9)
 
 ## Фаза 4 — Setup Studio
 - [x] Каталог `src/data/hardware/catalog.ts`: 15 санат, 65 нақты өнім, ресми сипаттама сілтемесі + тексерілген күн
@@ -75,7 +75,9 @@
 - [x] Ескі прототип прогресі (`vlab_progress_v1`) мен v1/v2 деректерін импорттау
 - [ ] Supabase/PostgreSQL `ProgressRepository` (сервер + auth; кілт тек серверде)
 - [ ] Мұғалім режимі: бірнеше оқушының экспорт файлын бір кестеге жинау
-- [ ] Фаза 9: Assembly Lab instancing/LOD, KTX2; Фаза 10: QA
+- [x] Фаза 9: оптимизация — адаптивті текстуралар, `_lod1` + screen-size LOD, Low/телефон light сахна, hero first, reference counting dispose, контекст жоғалуы, `scripts/perf-measure.mjs`
+- [ ] KTX2: UASTC (GPU жады −75 %, жүктеу ×3–4) немесе ETC1S (сапа төмен) — пайдаланушымен шешу
+- [ ] Фаза 10: QA (Firefox/Safari/нақты телефон, a11y, e2e)
 - [ ] [PLACEHOLDER] Assembly Lab cable bundle must be replaced — `scenes/AssemblyLab/props.tsx` `CableBundle` (процедуралық орам: 24-pin, 8-pin, SATA)
 - [ ] [PLACEHOLDER] Assembly Lab 3.5″ HDD — `scenes/HardwareExplorer/placeholders.tsx` `Hdd` қайта қолданылады (анатомиядағы HDD placeholder-імен бірге ауыстыру)
 - [ ] Assembly Lab: термопаста жағу анимациясы, бұрандалар, кабельдерді жеке-жеке жалғау; телефонда үлкенірек бөлшек белгілері

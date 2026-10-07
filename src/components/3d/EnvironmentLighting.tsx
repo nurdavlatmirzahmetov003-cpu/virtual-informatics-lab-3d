@@ -1,5 +1,6 @@
 import { Environment, Lightformer } from '@react-three/drei';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
+import { useRetainedEnvironment } from '@/lib/three/modelAssets';
 
 interface EnvironmentLightingProps {
   /** Equirectangular .hdr used for image-based reflections (not shown as background). */
@@ -28,6 +29,7 @@ export function EnvironmentLighting({
   fog = [6, 16],
 }: EnvironmentLightingProps) {
   const preset = useQualityPreset();
+  useRetainedEnvironment(hdri);
 
   return (
     <>

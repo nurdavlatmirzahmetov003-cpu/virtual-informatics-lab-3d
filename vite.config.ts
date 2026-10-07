@@ -44,7 +44,10 @@ export default defineConfig({
           groups: [
             { name: 'three', test: pkg('three') },
             { name: 'r3f', test: pkg('@react-three|postprocessing|three-stdlib|maath|camera-controls') },
-            { name: 'react', test: pkg('react|react-dom|react-router|react-router-dom|scheduler') },
+            // Vite's preload helper lives with React: react-router and the lazy
+            // locale chunks both use it, and outside this group it would create
+            // a react ⇄ useT import cycle (evaluation order breaks at startup)
+            { name: 'react', test: (id: string) => pkg('react|react-dom|react-router|react-router-dom|scheduler').test(id) || /vite\/preload-helper/.test(id) },
           ],
         },
       },

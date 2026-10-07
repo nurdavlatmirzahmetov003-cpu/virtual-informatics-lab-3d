@@ -57,7 +57,10 @@ export function detectQuality(profile: DeviceProfile = readDeviceProfile()): Qua
   const renderer = profile.gpu?.renderer ?? '';
 
   if (SOFTWARE.test(renderer)) return 'low';
-  if (profile.mobile) return profile.cores >= 8 && (profile.memoryGB ?? 4) >= 6 ? 'medium' : 'low';
+  // Phones get the light scene (light models, ≤ 512 px textures, no shadows):
+  // a few MB instead of ~10, cool and smooth on a small screen. Tablets are
+  // not "mobile" here and get Medium. The user can always pick a higher level.
+  if (profile.mobile) return 'low';
   if (profile.memoryGB !== undefined && profile.memoryGB <= 2) return 'low';
   if (WEAK_GPU.test(renderer)) return 'medium';
   if (STRONG_GPU.test(renderer)) return 'high';

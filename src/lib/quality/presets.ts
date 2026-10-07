@@ -28,9 +28,12 @@ export interface QualityPreset {
   areaLights: boolean;
   /** Resolution of the generated environment cube map. */
   environmentResolution: number;
-  /** Mesh LOD bias applied by later phases: 0 = highest detail. */
+  /** 0: light model only when small on screen (< ~55 px); 1: < 90 px; 2 (Low): light models only. */
   lodBias: number;
-  /** Max texture size requested from the asset pipeline. */
+  /**
+   * Longest texture side uploaded to the GPU. GLB textures are ≤ 1024 px from
+   * the pipeline and the desk wood is 2048 px, so only Low (512) downsizes.
+   */
   maxTextureSize: 512 | 1024 | 2048;
   contactShadowResolution: number;
 }
@@ -69,7 +72,7 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     areaLights: false,
     environmentResolution: 256,
     lodBias: 1,
-    maxTextureSize: 1024,
+    maxTextureSize: 2048,
     contactShadowResolution: 512,
   },
   high: {

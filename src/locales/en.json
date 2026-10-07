@@ -477,7 +477,9 @@
     "sceneTitle": "The 3D scene failed to load",
     "sceneBody": "Something went wrong while rendering the scene. Try reloading the page.",
     "retry": "Try again",
-    "modelFailed": "Model failed to load"
+    "modelFailed": "Model failed to load",
+    "contextLostTitle": "3D view paused",
+    "contextLostBody": "The graphics context was lost (driver restart or low GPU memory). The scene recovers by itself — otherwise press Retry."
   },
   "story": {
     "scrollHint": "Scroll down",

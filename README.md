@@ -107,3 +107,11 @@ npm run dev               # Vite /api/* сұрауларын серверге pr
 
 ## Анимация
 `scenes/SetupStudio/assembly/steps.ts` таңдалған жинаққа қарай қадамдарды сүзеді. Бір GSAP timeline `assemblyRig`-ті өзгертеді; `SetupItems`, `PCPart`, камера және жарық оны `useFrame` арқылы оқиды. Replay күйді бос үстелге қайтарады, Skip соңғы қалыпқа өткізеді. Жүйелік reduced-motion қысқа нұсқаны қосады.
+
+## Өнімділікті өлшеу (Фаза 9)
+```bash
+npm run build && npm run preview
+node scripts/perf-measure.mjs http://localhost:4173 > result.json
+node scripts/perf-summary.mjs result.json
+```
+Опциялар: `--quality=low|medium|high|ultra`, `--mobile`, `--throttle=20` (Мбит/с), `--pages=/,/studio`, `--shots=dir`, `--profile`, `--fail=<файл>`, `--no-webgl`, `--lose-context`. Production бетінде `?debug` → `window.__vil3d` өлшеу ілгектері.

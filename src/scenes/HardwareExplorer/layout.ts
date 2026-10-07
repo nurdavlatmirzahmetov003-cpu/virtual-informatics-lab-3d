@@ -74,9 +74,9 @@ export const PLACEMENTS: Record<AnatomyCategory, readonly AnatomyPlacement[]> = 
       height: 0.15,
       distance: 0.5,
       models: [
-        { file: 'speaker_left', fit: speakerFit, rotationY: SPEAKERS.left.yaw },
+        { file: 'speakers#speaker_left', fit: speakerFit, rotationY: SPEAKERS.left.yaw },
         {
-          file: 'speaker_right',
+          file: 'speakers#speaker_right',
           fit: speakerFit,
           rotationY: SPEAKERS.right.yaw,
           position: [SPEAKERS.right.position[0] - SPEAKERS.left.position[0], 0, SPEAKERS.right.position[2] - SPEAKERS.left.position[2]],
@@ -110,7 +110,8 @@ export const PLACEMENTS: Record<AnatomyCategory, readonly AnatomyPlacement[]> = 
 
 export const OVERVIEW = { external: 'ANATOMY_EXTERNAL', internal: 'ANATOMY_INTERNAL' } as const;
 
-export const modelUrl = (file: string) => `${import.meta.env.BASE_URL}assets/models/hardware/${file}.glb`;
+/** `speakers#speaker_left` → …/speakers.glb#speaker_left (one node of a shared file). */
+export const modelUrl = (file: string) => `${import.meta.env.BASE_URL}assets/models/hardware/${file.replace(/(#|$)/, '.glb$1')}`;
 
 /** Centre of an item for hotspots and camera focus (world). */
 export function itemCenter(p: AnatomyPlacement): [number, number, number] {

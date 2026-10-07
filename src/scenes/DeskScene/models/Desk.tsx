@@ -5,6 +5,8 @@
 import { useTexture } from '@react-three/drei';
 import { RepeatWrapping, SRGBColorSpace, type Texture } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
+import { useQualityPreset } from '@/hooks/useQualityPreset';
+import { useSceneTextures } from '@/lib/three/modelAssets';
 import { roundedSlab, roundedRectShape, extrudeFlat } from '@/lib/three/geometry';
 import { DESK, DESK_TOP } from '../layout';
 
@@ -19,6 +21,10 @@ const SURFACE: Record<DeskSurface, { color: string; useMap: boolean; roughness: 
 
 const TEX = `${import.meta.env.BASE_URL}assets/textures/`;
 
+const WOOD = [`${TEX}wood_diff.jpg`, `${TEX}wood_nor.webp`, `${TEX}wood_rough.jpg`];
+/** Low preset (phones): 512 px copies — the GPU would shrink the 2K ones anyway. */
+const WOOD_LOW = WOOD.map((u) => u.replace(/\.(\w+)$/, '_512.$1'));
+
 function prepare(textures: Texture[], repeat: [number, number]) {
   textures.forEach((t) => {
     t.wrapS = t.wrapT = RepeatWrapping;
@@ -29,13 +35,17 @@ function prepare(textures: Texture[], repeat: [number, number]) {
 
 export function Desk({ surface = 'lightWood' }: { surface?: DeskSurface }) {
   const finish = SURFACE[surface];
+  const preset = useQualityPreset();
+  const wood = preset.maxTextureSize <= 512 ? WOOD_LOW : WOOD;
   const [map, normalMap, roughnessMap] = useTexture(
-    [`${TEX}wood_diff.jpg`, `${TEX}wood_nor.jpg`, `${TEX}wood_rough.jpg`],
+    wood,
     (loaded) => {
       loaded[0].colorSpace = SRGBColorSpace;
       prepare(loaded, [1.6, 0.75]);
     },
   );
+
+  useSceneTextures(wood, [map, normalMap, roughnessMap], preset.maxTextureSize);
 
   const geo = useDisposable(
     () => ({

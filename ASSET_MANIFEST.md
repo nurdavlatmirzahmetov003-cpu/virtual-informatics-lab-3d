@@ -9,12 +9,14 @@ PC Assembly Lab reuses the existing credited `hardware/*.glb` assets. Slot ghost
 
 | Файл | Ассет | Дереккөз / Автор | Лицензия | URL | Өзгерістер |
 |---|---|---|---|---|---|
-| wood_diff.jpg, wood_nor.jpg, wood_rough.jpg | Wood Table 001 | Poly Haven | CC0 | https://polyhaven.com/a/wood_table_001 | legacy/textures-тен көшірілді; 2048², JPG. Фаза 9-да KTX2 + 1K-ға түсіру |
-| floor_diff.jpg, floor_rough.jpg | Concrete Floor Painted | Poly Haven | CC0 | https://polyhaven.com/a/concrete_floor_painted | legacy/textures-тен көшірілді; 1024², JPG |
+| wood_diff.jpg, wood_nor.webp, wood_rough.jpg (+ `_512` нұсқалары) | Wood Table 001 | Poly Haven | CC0 | https://polyhaven.com/a/wood_table_001 | legacy/textures-тен көшірілді; 2048², JPG. Фаза 9-да KTX2 + 1K-ға түсіру |
+| floor_diff.jpg, floor_rough.webp (+ `_512` нұсқалары) | Concrete Floor Painted | Poly Haven | CC0 | https://polyhaven.com/a/concrete_floor_painted | legacy/textures-тен көшірілді; 1024², JPG |
 
 > Ескерту: автор аттары legacy manifest-те жазылмаған — Poly Haven бетінен тексеріп толықтыру керек (CC0 атрибуция талап етпейді).
 
-### Poly Haven (2026-10-03 жүктелді, кодта әлі қолданылмайды) — `public/assets/textures/polyhaven/<asset>/`
+Фаза 9: `wood_nor` пен `floor_rough` WebP-ге (PSNR ≥ 42 дБ, −40–50 %); 512 px нұсқалар Low/телефон үшін (`npm run assets:optimize`). Түпнұсқа JPG-лер `assets-src/textures/`-те.
+
+### Poly Haven (2026-10-03 жүктелді, кодта әлі қолданылмайды) — `assets-src/library/textures/polyhaven/<asset>/` (Фаза 9-да build-тен шығарылды)
 
 | Файлдар | Ассет | Автор | Лицензия | URL | Мақсаты / өзгерістер |
 |---|---|---|---|---|---|
@@ -28,12 +30,12 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 
 | Файл | Ассет | Автор | Лицензия | URL | Мақсаты / өзгерістер |
 |---|---|---|---|---|---|
-| models/polyhaven/potted_plant_04/potted_plant_04_1k.gltf (+ .bin, textures/) | Potted Plant 04 | James Ray Cock (Poly Haven) | CC0 | https://polyhaven.com/a/potted_plant_04 | Үстел декоры. 6 097 полигон, 1K текстуралар, 2.1 MB. Кодта әлі қолданылмайды |
+| assets-src/library/models/polyhaven/potted_plant_04/potted_plant_04_1k.gltf (+ .bin, textures/) | Potted Plant 04 | James Ray Cock (Poly Haven) | CC0 | https://polyhaven.com/a/potted_plant_04 | Үстел декоры. 6 097 полигон, 1K текстуралар, 2.1 MB. Кодта әлі қолданылмайды |
 
 ### Sketchfab — жүктелген шикі файлдар (2026-10-03, `assets-src/sketchfab/`, git-ке кірмейді)
 Барлығы **CC BY 4.0** (https://creativecommons.org/licenses/by/4.0/): коммерциялық қолдануға болады, **автор атын көрсету міндетті** (сайттағы «Credits» беті + осы файл). Пайдаланушының Sketchfab аккаунты арқылы ресми «Download → GLB» архивінен жүктелді, өзгертілмеген. Оңтайландырылған нұсқалары `public/assets/models/hardware/` ішінде (`npm run assets:optimize`, есеп: `optimization-report.json`, тексеру: `npm run assets:validate`). Сайттағы атрибуция: `/credits` беті (`src/data/assets/hardware.json`).
 
-**Өзгерістер (CC BY 4.0 талабы бойынша көрсетіледі):** flatten + prune + dedup + weld + join; Meshopt қысу (16-бит позиция); текстуралар WebP, ең көбі 1024 px, сапа 88; монитор (35 %), кулер, GPU, CPU, тышқан (65 %) полигон саны meshopt simplify арқылы азайтылды; кабельдер алынды (пернетақта `wire/usb`, тышқан `Cord`); PSU-дың бос бұрандалары алынды; GPU-дың мөлдір көмекші mesh-тері алынды; құлаққаптың қаңқасы (skin/анимация) алынып, тыныш поза сақталды; колонкалар сол/оң екі файлға бөлінді; желдеткіш рамаға (`fan_frame`) және айналатын роторға (`fan_rotor`) бөлінді; «Gaming Desktop PC» жинағынан тек корпус қабығы (`chassis.glb`) алынды — ішкі бөлшектер бөлек модельдерден. Шикі файлдар өзгертілмеген.
+**Өзгерістер (CC BY 4.0 талабы бойынша көрсетіледі):** flatten + prune + dedup + weld + join; Meshopt қысу (16-бит позиция); текстуралар WebP, ең көбі 1024 px, сапа 88, өлшемі адаптивті (PSNR ≥ 45 дБ; Фаза 9); ауыр модельдерге `_lod1.glb` (жеңіл деңгей, ≤ 256 px); колонкалар бір `speakers.glb`-де екі node; монитор (35 %), кулер, GPU, CPU, тышқан (65 %) полигон саны meshopt simplify арқылы азайтылды; кабельдер алынды (пернетақта `wire/usb`, тышқан `Cord`); PSU-дың бос бұрандалары алынды; GPU-дың мөлдір көмекші mesh-тері алынды; құлаққаптың қаңқасы (skin/анимация) алынып, тыныш поза сақталды; колонкалар сол/оң екі файлға бөлінді; желдеткіш рамаға (`fan_frame`) және айналатын роторға (`fan_rotor`) бөлінді; «Gaming Desktop PC» жинағынан тек корпус қабығы (`chassis.glb`) алынды — ішкі бөлшектер бөлек модельдерден. Шикі файлдар өзгертілмеген.
 
 | Шикі файл | Бөлшек | Модель | Автор | URL | Көлемі / полигон / текстура | Оңтайландырылған файл |
 |---|---|---|---|---|---|---|
@@ -50,7 +52,7 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | ssd_m2.glb | NVMe SSD | m2ssd_Painter | Igor.Jop | https://sketchfab.com/3d-models/m2ssd-painter-ccda7c201091445087c02692444641c2 | 2.8 MB, 0.8k, 2K | `hardware/ssd_m2.glb` 0.23 MB, 0.8k △ |
 | fan_120.glb | Корпус желдеткіші | Lian Li UNI FAN SL120 RGB BLACK | DIEKO | https://sketchfab.com/3d-models/lian-li-uni-fan-sl120-rgb-black-5abd0d8e89ea4241b7216f4b6d5a2ca4 | 0.34 MB, 4.6k, текстурасыз | `hardware/fan_frame.glb` 0.03 MB, 2.4k △<br>`hardware/fan_rotor.glb` 0.03 MB, 2.3k △ |
 | headset_gaming.glb | Құлаққап | Headphones Free Model by Oscar Creative | OSCAR CREATIVO | https://sketchfab.com/3d-models/headphones-free-model-by-oscar-creative-db92168ca39541939d0110e64a37f92e | 17.9 MB, 58k, 2K | `hardware/headset_gaming.glb` 1.24 MB, 58.2k △ |
-| speakers.glb | Колонкалар | Amigo Computer gaming speakers | Kartik_Kishor | https://sketchfab.com/3d-models/amigo-computer-gaming-speakers-3b5adc5be8c4436eb913063c7e3f5c67 | 7.4 MB, 58k, 2K | `hardware/speaker_left.glb` 0.30 MB, 20.9k △<br>`hardware/speaker_right.glb` 0.30 MB, 20.9k △ |
+| speakers.glb | Колонкалар | Amigo Computer gaming speakers | Kartik_Kishor | https://sketchfab.com/3d-models/amigo-computer-gaming-speakers-3b5adc5be8c4436eb913063c7e3f5c67 | 7.4 MB, 58k, 2K | `hardware/speakers.glb` 0.46 MB, 42k △ (`#speaker_left` / `#speaker_right`) + `speakers_lod1.glb` |
 
 Балама үміткерлер (жүктелмеген): Monitor — Microsoft; Mechanical Keyboard – Aesthetic — M.Reslan; Ice Claw mouse — dmitriy7776661111; Dream Computer Setup — Daniel Cardona; RTX Titan — Vivien Deroche; MotherBoard + Components — Daniel Cardona; Unmarked processor + Socket — 00004707; Corsair DOMINATOR RGB RAM — MajdyModels; Noctua NH-D15 — SzaBa; Samsung 980 Pro NVMe — BlenderFace; RGB PC Fan — Bl3ndarts; Sony MDR-7506 — AndreiVNK; Computer Desk — draakon_4d (барлығы CC BY 4.0).
 
@@ -64,7 +66,7 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | Файл | Ассет | Автор | Лицензия | URL | Өзгерістер |
 |---|---|---|---|---|---|
 | studio_small_09_1k.hdr | Studio Small 09 | Sergej Majboroda (Poly Haven) | CC0 | https://polyhaven.com/a/studio_small_09 | Өзгертілмеген, 1K (1.6 MB), тек шағылыс/IBL үшін (фон ретінде көрсетілмейді) |
-| studio_small_09_2k.hdr | Studio Small 09 | Sergej Majboroda (Poly Haven) | CC0 | https://polyhaven.com/a/studio_small_09 | 2K (6.3 MB) — Ultra режиміне арналған; кодта әлі қолданылмайды |
+| studio_small_09_2k.hdr (`assets-src/library/hdr/`) | Studio Small 09 | Sergej Majboroda (Poly Haven) | CC0 | https://polyhaven.com/a/studio_small_09 | 2K (6.3 MB) — Ultra режиміне арналған; кодта әлі қолданылмайды |
 
 Қосымша: `EnvironmentLighting` HDRI үстіне 3 процедуралық Lightformer (softbox жолақтар) қосады.
 

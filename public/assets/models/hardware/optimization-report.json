@@ -9,6 +9,7 @@
     "after": {
       "bytes": 490716,
       "triangles": 76886,
+      "textureMB": 2.7,
       "primitives": 3,
       "bounds": {
         "min": [
@@ -23,9 +24,29 @@
         ]
       }
     },
+    "lod1": {
+      "file": "monitor_ultrawide_lod1.glb",
+      "bytes": 143752,
+      "triangles": 23134,
+      "textureMB": 0.4
+    },
     "edits": {
       "removedNodes": [],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "1024x256",
+          "to": "1024x256",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "512x512",
+          "to": "512x512",
+          "psnr": 99
+        }
+      ]
     }
   },
   {
@@ -38,6 +59,7 @@
     "after": {
       "bytes": 238668,
       "triangles": 8410,
+      "textureMB": 32,
       "primitives": 2,
       "bounds": {
         "min": [
@@ -52,12 +74,51 @@
         ]
       }
     },
+    "lod1": null,
     "edits": {
       "removedNodes": [
         "wire_Keyboard_0",
         "usb_Keyboard_0"
       ],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        }
+      ]
     }
   },
   {
@@ -68,8 +129,9 @@
       "triangles": 72483
     },
     "after": {
-      "bytes": 98260,
+      "bytes": 98296,
       "triangles": 17546,
+      "textureMB": 0,
       "primitives": 8,
       "bounds": {
         "min": [
@@ -84,6 +146,12 @@
         ]
       }
     },
+    "lod1": {
+      "file": "mouse_gaming_lod1.glb",
+      "bytes": 53784,
+      "triangles": 7114,
+      "textureMB": 0
+    },
     "edits": {
       "removedNodes": [
         "Cord_MousePlug_plastic_B3_0",
@@ -92,7 +160,8 @@
         "Cord_UsbPlugPlastic_Plastic_USB_Blue_0",
         "Cord.001_Cord.001_0"
       ],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": []
     }
   },
   {
@@ -105,6 +174,7 @@
     "after": {
       "bytes": 1058312,
       "triangles": 34961,
+      "textureMB": 53.3,
       "primitives": 3,
       "bounds": {
         "min": [
@@ -119,9 +189,77 @@
         ]
       }
     },
+    "lod1": {
+      "file": "motherboard_x570_lod1.glb",
+      "bytes": 297192,
+      "triangles": 15729,
+      "textureMB": 3.3
+    },
     "edits": {
       "removedNodes": [],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        }
+      ]
     }
   },
   {
@@ -132,8 +270,9 @@
       "triangles": 42084
     },
     "after": {
-      "bytes": 658860,
+      "bytes": 614856,
       "triangles": 41790,
+      "textureMB": 10.7,
       "primitives": 1,
       "bounds": {
         "min": [
@@ -148,9 +287,30 @@
         ]
       }
     },
+    "lod1": null,
     "edits": {
       "removedNodes": [],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "4x4",
+          "psnr": 71
+        }
+      ]
     }
   },
   {
@@ -163,6 +323,7 @@
     "after": {
       "bytes": 193720,
       "triangles": 2074,
+      "textureMB": 21.3,
       "primitives": 1,
       "bounds": {
         "min": [
@@ -177,9 +338,36 @@
         ]
       }
     },
+    "lod1": null,
     "edits": {
       "removedNodes": [],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        }
+      ]
     }
   },
   {
@@ -192,6 +380,7 @@
     "after": {
       "bytes": 446524,
       "triangles": 61770,
+      "textureMB": 5.3,
       "primitives": 5,
       "bounds": {
         "min": [
@@ -206,9 +395,23 @@
         ]
       }
     },
+    "lod1": {
+      "file": "cooler_tower_lod1.glb",
+      "bytes": 155288,
+      "triangles": 19514,
+      "textureMB": 0.3
+    },
     "edits": {
       "removedNodes": [],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        }
+      ]
     }
   },
   {
@@ -221,6 +424,7 @@
     "after": {
       "bytes": 598056,
       "triangles": 42281,
+      "textureMB": 16,
       "primitives": 32,
       "bounds": {
         "min": [
@@ -235,6 +439,7 @@
         ]
       }
     },
+    "lod1": null,
     "edits": {
       "removedNodes": [
         "Object_21",
@@ -248,7 +453,51 @@
         "Object_813",
         "Object_815"
       ],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "1024x2048",
+          "to": "512x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "512x256",
+          "to": "512x256",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "256x32",
+          "to": "256x32",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "512x256",
+          "to": "512x256",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x512",
+          "to": "1024x256",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "1024x1024",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "1024x1024",
+          "to": "1024x1024",
+          "psnr": 99
+        }
+      ]
     }
   },
   {
@@ -261,6 +510,7 @@
     "after": {
       "bytes": 227836,
       "triangles": 782,
+      "textureMB": 16,
       "primitives": 1,
       "bounds": {
         "min": [
@@ -275,9 +525,30 @@
         ]
       }
     },
+    "lod1": null,
     "edits": {
       "removedNodes": [],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        }
+      ]
     }
   },
   {
@@ -288,8 +559,9 @@
       "triangles": 12229
     },
     "after": {
-      "bytes": 97944,
+      "bytes": 97980,
       "triangles": 12143,
+      "textureMB": 0,
       "primitives": 10,
       "bounds": {
         "min": [
@@ -304,13 +576,15 @@
         ]
       }
     },
+    "lod1": null,
     "edits": {
       "removedNodes": [
         "Object_78",
         "Object_80",
         "Object_82"
       ],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": []
     }
   },
   {
@@ -321,8 +595,9 @@
       "triangles": 4648
     },
     "after": {
-      "bytes": 26496,
+      "bytes": 26536,
       "triangles": 2352,
+      "textureMB": 0,
       "primitives": 5,
       "bounds": {
         "min": [
@@ -337,11 +612,13 @@
         ]
       }
     },
+    "lod1": null,
     "edits": {
       "removedNodes": [
         "Object_10"
       ],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": []
     }
   },
   {
@@ -352,8 +629,9 @@
       "triangles": 4648
     },
     "after": {
-      "bytes": 28796,
+      "bytes": 28836,
       "triangles": 2296,
+      "textureMB": 0,
       "primitives": 1,
       "bounds": {
         "min": [
@@ -368,6 +646,7 @@
         ]
       }
     },
+    "lod1": null,
     "edits": {
       "removedNodes": [
         "Object_4",
@@ -383,7 +662,8 @@
         "Object_26",
         "Object_28"
       ],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": []
     }
   },
   {
@@ -394,8 +674,9 @@
       "triangles": 58208
     },
     "after": {
-      "bytes": 1238636,
+      "bytes": 1196388,
       "triangles": 58208,
+      "textureMB": 33.7,
       "primitives": 4,
       "bounds": {
         "min": [
@@ -410,101 +691,130 @@
         ]
       }
     },
+    "lod1": {
+      "file": "headset_gaming_lod1.glb",
+      "bytes": 236044,
+      "triangles": 17460,
+      "textureMB": 3
+    },
     "edits": {
       "removedNodes": [],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "256x256",
+          "psnr": 46.6
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "512x512",
+          "psnr": 46.8
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "4x4",
+          "psnr": 59.1
+        }
+      ]
     }
   },
   {
     "source": "speakers.glb",
-    "file": "speaker_left.glb",
+    "file": "speakers.glb",
     "before": {
       "bytes": 7433300,
       "triangles": 57896
     },
     "after": {
-      "bytes": 302344,
-      "triangles": 20879,
-      "primitives": 4,
+      "bytes": 463884,
+      "triangles": 41758,
+      "textureMB": 16,
+      "primitives": 8,
       "bounds": {
         "min": [
           -0.062060454003396937,
           -0.001181550922026535,
-          -0.05307739681339789
+          -0.053078165773051654
         ],
         "max": [
-          -0.016848278554449647,
+          0.060542594339981826,
           0.070288926953261,
           -0.0031391487227403446
         ]
       }
     },
-    "edits": {
-      "removedNodes": [
-        "pCylinder4_blinn1_0",
-        "polySurface3_blinn1_0",
-        "pCylinder18_blinn1_0",
-        "pCylinder19_blinn1_0",
-        "pCube6_lambert2_0",
-        "pCylinder20_blinn1_0",
-        "polySurface33_blinn3_0",
-        "polySurface34_blinn1_0",
-        "polySurface29_blinn3_0",
-        "polySurface28_blinn3_0",
-        "polySurface31_lambert3_0",
-        "polySurface25_blinn3_0",
-        "polySurface26_lambert2_0",
-        "polySurface27_blinn1_0",
-        "pCylinder21_blinn1_0",
-        "pCylinder22_blinn1_0"
-      ],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
-    }
-  },
-  {
-    "source": "speakers.glb",
-    "file": "speaker_right.glb",
-    "before": {
-      "bytes": 7433300,
-      "triangles": 57896
-    },
-    "after": {
-      "bytes": 303544,
-      "triangles": 20879,
-      "primitives": 4,
-      "bounds": {
-        "min": [
-          0.015330418891034536,
-          -0.0011810572181405743,
-          -0.053078165773051654
-        ],
-        "max": [
-          0.060542594339981826,
-          0.07028851351987164,
-          -0.003139712427423405
-        ]
-      }
+    "lod1": {
+      "file": "speakers_lod1.glb",
+      "bytes": 160252,
+      "triangles": 14782,
+      "textureMB": 1
     },
     "edits": {
       "removedNodes": [
         "pCylinder4_blinn1_0",
-        "polySurface3_blinn1_0",
-        "polySurface36_lambert3_0",
-        "polySurface37_blinn1_0",
-        "polySurface38_blinn3_0",
-        "polySurface39_blinn3_0",
-        "polySurface43_blinn3_0",
-        "polySurface40_blinn3_0",
-        "polySurface41_lambert2_0",
-        "pCylinder23_blinn1_0",
-        "pCylinder24_blinn1_0",
-        "pCylinder25_blinn1_0",
-        "pCube7_lambert2_0",
-        "pCylinder26_blinn1_0",
-        "pCylinder27_blinn1_0",
-        "polySurface42_blinn1_0"
+        "polySurface3_blinn1_0"
       ],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "psnr": 99
+        }
+      ]
     }
   },
   {
@@ -515,8 +825,9 @@
       "triangles": 86272
     },
     "after": {
-      "bytes": 163596,
+      "bytes": 142180,
       "triangles": 5803,
+      "textureMB": 1.7,
       "primitives": 5,
       "bounds": {
         "min": [
@@ -531,6 +842,7 @@
         ]
       }
     },
+    "lod1": null,
     "edits": {
       "removedNodes": [
         "Cube_Material_0",
@@ -1205,7 +1517,27 @@
         "Object_1072_Tasten_2_0",
         "Object_1074_Material.069_0"
       ],
-      "textures": "WebP up to 1024px, quality 88; Meshopt; welded and merged static meshes"
+      "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
+      "textureSizes": [
+        {
+          "name": null,
+          "from": "1024x1024",
+          "to": "512x512",
+          "psnr": 46.4
+        },
+        {
+          "name": null,
+          "from": "256x256",
+          "to": "256x256",
+          "psnr": 99
+        },
+        {
+          "name": null,
+          "from": "128x32",
+          "to": "128x32",
+          "psnr": 99
+        }
+      ]
     }
   }
 ]

@@ -2,6 +2,11 @@ import type { WebGLRenderer } from 'three';
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 import type { GLTFLoader } from 'three-stdlib';
 import { useGLTF } from '@react-three/drei';
+import { QUALITY_PRESETS } from '@/lib/quality/presets';
+import { selectEffectiveQuality, useSettingsStore } from '@/store/settingsStore';
+import { lodFile, splitModelUrl } from './modelUrls';
+
+export { lodFile, splitModelUrl } from './modelUrls';
 
 const base = import.meta.env.BASE_URL;
 
@@ -30,7 +35,12 @@ export function withKTX2(gl: WebGLRenderer) {
   };
 }
 
+/** The Low preset (phones, weak GPUs) loads light models only. */
+export const prefersLightModels = () => QUALITY_PRESETS[selectEffectiveQuality(useSettingsStore.getState())].lodBias >= 2;
+
 /** Warm the cache for a GLB before the scene that needs it mounts. */
 export function preloadModel(url: string) {
-  useGLTF.preload(url, DRACO_DECODER_PATH, true);
+  const { file } = splitModelUrl(url);
+  const light = lodFile(file);
+  useGLTF.preload(light && prefersLightModels() ? light : file, DRACO_DECODER_PATH, true);
 }

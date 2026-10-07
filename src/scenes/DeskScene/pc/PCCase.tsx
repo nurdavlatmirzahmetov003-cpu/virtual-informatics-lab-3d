@@ -77,9 +77,11 @@ interface PCCaseProps {
   /** RGB colour; `null` switches the lighting off. Default: the hero cyan. */
   rgbColor?: string | null;
   build?: ResolvedBuild;
+  /** Home hero: the case is small on screen, so detailed part models load after the scene is ready. */
+  deferDetail?: boolean;
 }
 
-export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbColor, build }: PCCaseProps) {
+export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbColor, build, deferDetail = false }: PCCaseProps) {
   const tex = usePcTextures();
   const res = useDisposable(() => {
     const rgb = new MeshStandardMaterial({ color: '#000000', emissive: '#4fdcff', emissiveIntensity: 1, roughness: 0.4 });
@@ -134,7 +136,7 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
       <Chassis tex={tex} fan={fan} rgb={res.rgb} />
       {PARTS.map((def) => (
         <PCPart key={def.id} def={def} enabled={interactive}>
-          <HardwarePart id={def.id} fallback={content[def.id]} rgbColor={rgbColor} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />
+          <HardwarePart id={def.id} fallback={content[def.id]} rgbColor={rgbColor} deferDetail={deferDetail} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />
         </PCPart>
       ))}
       <primitive object={showcaseTarget} position={[-0.2, 0.02, 0.15]} />

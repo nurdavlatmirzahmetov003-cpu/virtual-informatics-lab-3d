@@ -7,9 +7,13 @@ import { ContactShadows, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { Matrix4, Object3D, RepeatWrapping, SRGBColorSpace, type InstancedMesh, type Group } from 'three';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
+import { useSceneTextures } from '@/lib/three/modelAssets';
 import { DESK, DESK_TOP, MONITOR } from '../layout';
 
 const TEX = `${import.meta.env.BASE_URL}assets/textures/`;
+const FLOOR = [`${TEX}floor_diff.jpg`, `${TEX}floor_rough.webp`];
+/** Low preset (phones): 512 px copies. */
+const FLOOR_LOW = FLOOR.map((u) => u.replace(/\.(\w+)$/, '_512.$1'));
 const WALL_Z = -0.95;
 const SLATS = { count: 44, width: 0.028, pitch: 0.046, height: 2.1, depth: 0.018, bottom: 0.18 };
 
@@ -23,7 +27,8 @@ export function Room({ orbit = false }: { orbit?: boolean }) {
   });
   const [biasTarget] = useState(() => new Object3D());
 
-  const [map, roughnessMap] = useTexture([`${TEX}floor_diff.jpg`, `${TEX}floor_rough.jpg`], (loaded) => {
+  const floor = preset.maxTextureSize <= 512 ? FLOOR_LOW : FLOOR;
+  const [map, roughnessMap] = useTexture(floor, (loaded) => {
     loaded[0].colorSpace = SRGBColorSpace;
     loaded.forEach((t) => {
       t.wrapS = t.wrapT = RepeatWrapping;
@@ -31,6 +36,8 @@ export function Room({ orbit = false }: { orbit?: boolean }) {
       t.anisotropy = 8;
     });
   });
+
+  useSceneTextures(floor, [map, roughnessMap], preset.maxTextureSize);
 
   useLayoutEffect(() => {
     const mesh = slats.current;

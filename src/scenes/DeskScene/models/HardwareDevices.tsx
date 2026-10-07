@@ -43,7 +43,7 @@ export function Mouse() {
     group.current.rotation.y = MOUSE.yaw + storyRig.mouseSpin;
     group.current.position.y = MOUSE.position[1] + storyRig.mouseLift;
   });
-  return <ModelLoader ref={group} url={url('mouse_gaming')} fit={mouseFit} position={[...MOUSE.position]} onClick={e => { e.stopPropagation(); usePcStore.getState().enterDevice('mouse'); }} fallback={<MouseFallback />} />;
+  return <ModelLoader ref={group} url={url('mouse_gaming')} fit={mouseFit} deferDetail position={[...MOUSE.position]} onClick={e => { e.stopPropagation(); usePcStore.getState().enterDevice('mouse'); }} fallback={<MouseFallback />} />;
 }
 
 export function Headset() {
@@ -58,7 +58,7 @@ export function Headset() {
 
 export function Speakers() {
   return <>
-    <ModelLoader url={url('speaker_left')} fit={speakerFit} position={[...SPEAKERS.left.position]} rotation-y={SPEAKERS.left.yaw} fallback={<SpeakersFallback />} />
-    <ModelLoader url={url('speaker_right')} fit={speakerFit} position={[...SPEAKERS.right.position]} rotation-y={SPEAKERS.right.yaw} fallback={null} />
+    <ModelLoader url={`${url('speakers')}#speaker_left`} fit={speakerFit} deferDetail position={[...SPEAKERS.left.position]} rotation-y={SPEAKERS.left.yaw} fallback={<SpeakersFallback />} />
+    <ModelLoader url={`${url('speakers')}#speaker_right`} fit={speakerFit} deferDetail position={[...SPEAKERS.right.position]} rotation-y={SPEAKERS.right.yaw} fallback={null} />
   </>;
 }

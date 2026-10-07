@@ -1,6 +1,4 @@
 import kk from '@/locales/kk.json';
-import ru from '@/locales/ru.json';
-import en from '@/locales/en.json';
 
 export const LANGUAGES = ['kk', 'ru', 'en'] as const;
 export type Language = (typeof LANGUAGES)[number];
@@ -23,7 +21,34 @@ type Paths<T> = {
 export type TranslationKey = Paths<Dictionary>;
 export type TranslationVars = Record<string, string | number>;
 
-const dictionaries: Record<Language, unknown> = { kk, ru, en };
+/**
+ * Kazakh ships with the app (default language and fallback); Russian and
+ * English are separate chunks fetched only when chosen, so a visitor
+ * downloads one dictionary instead of three.
+ */
+const dictionaries: Partial<Record<Language, unknown>> = { kk };
+const loaders: Record<Exclude<Language, 'kk'>, () => Promise<{ default: unknown }>> = {
+  ru: () => import('@/locales/ru.json'),
+  en: () => import('@/locales/en.json'),
+};
+const pending = new Map<Language, Promise<void>>();
+
+export const isLanguageLoaded = (lang: Language) => dictionaries[lang] !== undefined;
+
+/** Fetches a dictionary once; resolves immediately when it is already here. */
+export function loadLanguage(lang: Language): Promise<void> {
+  if (isLanguageLoaded(lang)) return Promise.resolve();
+  let p = pending.get(lang);
+  if (!p) {
+    p = loaders[lang as Exclude<Language, 'kk'>]()
+      .then((m) => {
+        dictionaries[lang] = m.default;
+      })
+      .finally(() => pending.delete(lang));
+    pending.set(lang, p);
+  }
+  return p;
+}
 
 function lookup(dict: unknown, key: string): string | undefined {
   let node: unknown = dict;
@@ -39,7 +64,7 @@ function interpolate(text: string, vars?: TranslationVars): string {
   return text.replace(/\{(\w+)\}/g, (match, name: string) => (name in vars ? String(vars[name]) : match));
 }
 
-/** Resolves a key in `lang`, falling back to Kazakh, then to the key itself. */
+/** Resolves a key in `lang`, falling back to Kazakh (also while `lang` is loading), then to the key itself. */
 export function translate(lang: Language, key: TranslationKey, vars?: TranslationVars): string {
   const text = lookup(dictionaries[lang], key) ?? lookup(dictionaries[DEFAULT_LANGUAGE], key);
   if (text === undefined) {

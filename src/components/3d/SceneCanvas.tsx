@@ -49,6 +49,9 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
   const visible = usePageVisible();
   const webgl = useMemo(() => detectWebGL(), []);
   const [attempt, setAttempt] = useState(0);
+  const [contextLost, setContextLost] = useState(false);
+  // a replaced canvas releases its context on unmount: its "lost" event is not a GPU problem
+  const generation = useRef(0);
   const [metrics, setMetrics] = useState('Sampling…');
   const [measured, setMeasured] = useState('');
   const measure = useRef<(() => string) | null>(null);
@@ -106,6 +109,22 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
             stencil: false,
           }}
           onCreated={({ gl, camera }) => {
+            // reading shader logs forces a synchronous wait for every compile; dev only
+            gl.debug.checkShaderErrors = import.meta.env.DEV;
+            // GPU reset / memory pressure: say so, and rebuild the canvas once the context is back
+            const mine = generation.current;
+            gl.domElement.addEventListener('webglcontextlost', (e) => {
+              if (mine !== generation.current) return;
+              e.preventDefault();
+              console.warn('[SceneCanvas] WebGL context lost');
+              setContextLost(true);
+            });
+            gl.domElement.addEventListener('webglcontextrestored', () => {
+              if (mine !== generation.current) return;
+              generation.current++;
+              setContextLost(false);
+              setAttempt((n) => n + 1);
+            });
             gl.toneMapping = NeutralToneMapping;
             gl.toneMappingExposure = 1;
             gl.outputColorSpace = SRGBColorSpace;
@@ -121,6 +140,22 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
           {preset.postprocessing && <PostEffects preset={preset} />}
         </Canvas>
       </ErrorBoundary>
+      {contextLost && (
+        <div className={styles.error} role="alert">
+          <h2>{t('errors.contextLostTitle')}</h2>
+          <p>{t('errors.contextLostBody')}</p>
+          <button
+            type="button"
+            onClick={() => {
+              generation.current++;
+              setContextLost(false);
+              setAttempt((n) => n + 1);
+            }}
+          >
+            {t('errors.retry')}
+          </button>
+        </div>
+      )}
       {debug && <output aria-label="3D performance" style={{ position: 'absolute', right: 24, top: 78, zIndex: 20, padding: '10px 16px', background: '#05080de0', color: '#8ee8c5', font: '12px monospace', borderRadius: 12, pointerEvents: 'none' }}>{metrics}</output>}
       {debug && <div style={{ position: 'absolute', right: 24, top: 120, zIndex: 20, maxWidth: 480, background: '#05080de0', padding: 12, fontSize: 11 }}><button onClick={() => setMeasured(measure.current?.() ?? 'Not ready')}>Measure scene</button><output aria-label="Scene benchmark" style={{ display: 'block', overflowWrap: 'anywhere' }}>{measured}</output></div>}
     </div>

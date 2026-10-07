@@ -285,7 +285,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Speakers ─────────────
   item({
     id: 'spk-creative-pebble-v3', category: 'speakers', brand: 'Creative', model: 'Pebble V3',
-    priceKZT: 20_000, modelPath: M('speaker_left'), modelSize: 0.118, colors: ['black', 'white'],
+    priceKZT: 20_000, modelPath: 'hardware/speakers.glb#speaker_left', modelSize: 0.118, colors: ['black', 'white'],
     performanceTier: 'entry', recommendedUse: ['study', 'programming', 'universal'],
     specSourceUrl: 'https://uk.creative.com/p/speakers/creative-pebble-v3',
     specifications: [
@@ -297,7 +297,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'spk-logitech-z407', category: 'speakers', brand: 'Logitech', model: 'Z407',
-    priceKZT: 45_000, modelPath: M('speaker_left'), modelSize: 0.2, colors: ['graphite'],
+    priceKZT: 45_000, modelPath: 'hardware/speakers.glb#speaker_left', modelSize: 0.2, colors: ['graphite'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'universal', 'streaming'],
     specSourceUrl: 'https://www.logitech.com/en-us/products/speakers/z407-bluetooth-computer-speakers.html',
     specifications: [
@@ -309,7 +309,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'spk-edifier-r1280db', category: 'speakers', brand: 'Edifier', model: 'R1280DB',
-    priceKZT: 60_000, modelPath: M('speaker_left'), modelSize: 0.24, colors: ['wood', 'black'],
+    priceKZT: 60_000, modelPath: 'hardware/speakers.glb#speaker_left', modelSize: 0.24, colors: ['wood', 'black'],
     performanceTier: 'performance', recommendedUse: ['design3d', 'streaming', 'universal'],
     specSourceUrl: 'https://www.edifier.com/us-en/p/bookshelf-speakers/r1280db',
     specifications: [
