@@ -1,0 +1,44 @@
+{
+  "name": "cpu-intel-lga",
+  "description": "LGA1700/1851 package; heat-spreader print removed.",
+  "input": "assets-src/sketchfab/v2/free_intel_cpu.glb",
+  "output": "assets-src/blender/products/cpu-intel-lga.glb",
+  "rotate": 0,
+  "realSize": [
+    0.045,
+    0.0375,
+    0.0045
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_1",
+        "rects": [
+          [
+            0.15,
+            0.25,
+            0.85,
+            0.75
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/cpu-intel-lga.jpg"
+  }
+}

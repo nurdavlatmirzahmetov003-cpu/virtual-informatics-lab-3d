@@ -72,6 +72,9 @@ export async function inspectGlb(file) {
   return { parts, ports, triangles: total, textures: doc.getRoot().listTextures().length };
 }
 
+/** Marker node name (pipeline.py `marker_name`): slots, headers, sockets and mounts keep their prefix, the rest are `port_<type>_<n>`. */
+export const markerName = (type, n) => (/^(slot|header|socket|mount)_/.test(type) ? `${type}_${n}` : `port_${type}_${n}`);
+
 export function checkOutput(cfg, info, lod) {
   const errors = [];
   for (const p of cfg.parts) {
@@ -85,11 +88,12 @@ export function checkOutput(cfg, info, lod) {
     if (!Array.isArray(got.explode) || got.explode.length !== 3) errors.push(`part "${p.id}" has no explode vector`);
   }
   const expected = (cfg.ports ?? []).length;
+  // keep in sync with marker_name() in pipeline.py
   if (info.ports.length !== expected) errors.push(`expected ${expected} port markers, found ${info.ports.length}`);
   const counters = {};
   for (const port of cfg.ports ?? []) {
     counters[port.type] = (counters[port.type] ?? 0) + 1;
-    const name = `port_${port.type}_${counters[port.type]}`;
+    const name = markerName(port.type, counters[port.type]);
     const got = info.ports.find((p) => p.name === name);
     if (!got) errors.push(`port marker "${name}" missing`);
     else if (got.parent !== port.part) errors.push(`port marker "${name}" is under "${got.parent}", expected "${port.part}"`);

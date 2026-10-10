@@ -1,0 +1,160 @@
+{
+  "name": "gpu-asus-rog-astral-5090",
+  "description": "Black shroud (Astral), logos removed.",
+  "input": "assets-src/sketchfab/v2/rtx_3090_asus_rog_strix_white_edition_videocard.glb",
+  "output": "assets-src/blender/products/gpu-asus-rog-astral-5090.glb",
+  "rotate": [
+    [
+      "Z",
+      -90
+    ],
+    [
+      "Y",
+      90
+    ]
+  ],
+  "realSize": [
+    0.076,
+    0.358,
+    0.149
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "materials": "^(ROGlogo1?|ROGSTRIX|GEFARCERTX|cander\\d?)$"
+      },
+      {
+        "center": {
+          "max": [
+            1000,
+            1000,
+            -2
+          ]
+        }
+      },
+      {
+        "center": {
+          "min": [
+            -1000,
+            -1000,
+            2
+          ]
+        }
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": [
+      {
+        "materials": "^Case$",
+        "color": "#24262b",
+        "roughness": 0.45
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [
+    {
+      "type": "slot_pcie_x16",
+      "part": "body",
+      "at": [
+        0.5,
+        0.75,
+        0
+      ],
+      "dir": [
+        0,
+        0,
+        -1
+      ],
+      "label": "ports.pcieX16"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.45
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "hdmi",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.6
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.hdmi"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.75
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "pcie_power",
+      "part": "body",
+      "at": [
+        0.5,
+        0.35,
+        1
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.pciePower"
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/gpu-asus-rog-astral-5090.jpg"
+  }
+}

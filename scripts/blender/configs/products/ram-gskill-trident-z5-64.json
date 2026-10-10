@@ -1,0 +1,32 @@
+{
+  "name": "ram-gskill-trident-z5-64",
+  "description": "Catalog PC component model (V2-2b), canonical orientation for the case mount.",
+  "input": "assets-src/sketchfab/ram_rgb.glb",
+  "output": "assets-src/blender/products/ram-gskill-trident-z5-64.glb",
+  "rotate": 90,
+  "realSize": [
+    0.1336,
+    0.008,
+    0.0442
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/ram-gskill-trident-z5-64.jpg"
+  }
+}

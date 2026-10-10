@@ -17,7 +17,7 @@
 // same and no longer take megabytes of GPU memory.
 import { NodeIO, Logger } from '@gltf-transform/core';
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
-import { dedup, flatten, join, prune, weld, simplify, meshopt, getBounds, cloneDocument } from '@gltf-transform/functions';
+import { dedup, flatten, join, prune, weld, simplify, meshopt, getBounds, cloneDocument, compactPrimitive } from '@gltf-transform/functions';
 import { MeshoptEncoder, MeshoptDecoder, MeshoptSimplifier } from 'meshoptimizer';
 import sharp from 'sharp';
 import { mkdir, writeFile, stat, readFile, rm, mkdtemp } from 'node:fs/promises';
@@ -50,6 +50,9 @@ const MAX_TEXTURE = 1024;
 const LOD_TEXTURE = 256;
 const MIN_PSNR = 45;
 const QUALITY = 88;
+// `npm run assets:optimize -- products [id …]` rebuilds only catalog products (all, or the given ids)
+const [STAGE, ...ONLY] = process.argv.slice(2);
+const productsOnly = STAGE === 'products';
 
 const report = [];
 const triangles = (doc) => doc.getRoot().listMeshes().reduce((sum, m) => sum + m.listPrimitives().reduce((s, p) => s + (p.getIndices()?.getCount() ?? p.getAttribute('POSITION')?.getCount() ?? 0) / 3, 0), 0);
@@ -103,6 +106,24 @@ async function adaptiveTextures(doc, maxSize, adaptive = true) {
   return decisions;
 }
 
+/**
+ * Per-level GPU texture budget: while the textures (RGBA + mips) exceed it,
+ * the largest one is halved. Models with dozens of 2K maps (one per
+ * connector) or big flat maps would otherwise cost hundreds of MB.
+ */
+async function fitTextureBudget(doc, budgetBytes) {
+  const halved = [];
+  while (textureBytes(doc) > budgetBytes) {
+    const largest = doc.getRoot().listTextures().reduce((a, t) => (!a || t.getSize()[0] * t.getSize()[1] > a.getSize()[0] * a.getSize()[1] ? t : a), null);
+    const [w, h] = largest?.getSize() ?? [0, 0];
+    if (Math.max(w, h) <= 64) break;
+    const webp = await sharp(Buffer.from(largest.getImage())).resize(Math.max(1, w >> 1), Math.max(1, h >> 1), { fit: 'fill', kernel: 'lanczos3' }).webp({ quality: QUALITY }).toBuffer();
+    largest.setImage(new Uint8Array(webp));
+    halved.push(largest.getName() || '?');
+  }
+  return halved.length;
+}
+
 /** Texture roles: colour data is sRGB, everything else (normal, ORM…) linear. */
 function colourTextures(doc) {
   const set = new Set();
@@ -149,7 +170,7 @@ async function ktx2Textures(doc) {
   return { decisions, gpuMB: +(gpuBytes / 1048576).toFixed(1) };
 }
 
-for (const name of names) {
+for (const name of productsOnly ? [] : names) {
   const sourceName = name.startsWith('fan_') ? 'fan_120' : name;
   const input = resolve(root, 'assets-src/sketchfab', sourceName + '.glb');
   const doc = await io.read(input);
@@ -248,39 +269,75 @@ for (const name of names) {
   report.push(entry);
   console.log(`${file}: ${(before.bytes / 1e6).toFixed(2)} -> ${(entry.after.bytes / 1e6).toFixed(2)} MB, ${Math.round(entry.after.triangles / 1000)}k △, ${entry.after.textureMB} MB GPU tex${lod ? ` · ${lod.file} ${(lod.bytes / 1e6).toFixed(2)} MB, ${Math.round(lod.triangles / 1000)}k △` : ''}${hd ? ` · ${hd.file} ${(hd.bytes / 1e6).toFixed(2)} MB, ${hd.gpuTextureMB} MB GPU (KTX2)` : ''}`);
 }
-await writeFile(resolve(root, 'public/assets/models/hardware/optimization-report.json'), JSON.stringify(report, null, 2) + '\n');
+if (!productsOnly) await writeFile(resolve(root, 'public/assets/models/hardware/optimization-report.json'), JSON.stringify(report, null, 2) + '\n');
 
 // Catalog products (V2-2a): Blender pipeline output (assets-src/blender/products,
 // normalised to real metres, logos removed) → three levels per product:
 //   <id>.glb       High/Ultra — ≤ 80k triangles, ≤ 2048 px textures (adaptive)
 //   <id>_lod1.glb  Medium     — ≤ 55 % and ≤ 30k triangles, ≤ 1024 px
 //   <id>_lod2.glb  Low        — ≤ 25 % and ≤ 8k triangles, ≤ 512 px (the Low texture cap)
-// (budgets: AUDIT_V2.md §3.4; meshes that cannot simplify further keep more)
+// GPU texture budget per level (RGBA + mips): 32 / 16 / 4 MB — the largest maps are halved until it fits.
+// (budgets: AUDIT_V2.md §3.4). Seam-heavy meshes (many small parts, UV and
+// normal splits) stall at the base error: the error then grows ×3 per retry up
+// to `maxError`, and the lighter levels may also move open borders.
 // Named nodes (parts, `Screen`/`DeskTop` materials) and extras are preserved.
 const PRODUCT_LEVELS = [
-  { suffix: '', ratio: 1, budget: 80000, error: 0.001, texture: 2048, adaptive: true, quantize: 16 },
-  { suffix: '_lod1', ratio: 0.55, budget: 30000, error: 0.002, texture: 1024, adaptive: true, quantize: 14 },
-  { suffix: '_lod2', ratio: 0.25, budget: 8000, error: 0.004, texture: 512, adaptive: true, quantize: 14 },
+  { suffix: '', ratio: 1, budget: 80000, error: 0.001, maxError: 0.003, texture: 2048, textureMB: 32, adaptive: true, quantize: 16 },
+  { suffix: '_lod1', ratio: 0.55, budget: 30000, error: 0.002, maxError: 0.018, texture: 1024, textureMB: 16, adaptive: true, quantize: 14 },
+  { suffix: '_lod2', ratio: 0.25, budget: 8000, error: 0.004, maxError: 0.036, texture: 512, textureMB: 4, adaptive: true, quantize: 14 },
 ];
+/**
+ * Last resort for the lighter levels: simplify with meshoptimizer's `Prune`
+ * flag, which also drops small disconnected pieces (screws, fins, tiny
+ * connectors) that an edge-collapse simplifier can never remove; `Permissive`
+ * lets it collapse across UV / normal seams.
+ */
+function pruneIslands(doc, targetRatio, error, flags) {
+  for (const mesh of doc.getRoot().listMeshes()) for (const prim of mesh.listPrimitives()) {
+    const indices = prim.getIndices(), position = prim.getAttribute('POSITION');
+    if (!indices || !position || position.getComponentType() !== 5126) continue;
+    const src = Uint32Array.from(indices.getArray());
+    const target = Math.max(3, Math.floor((src.length * targetRatio) / 3) * 3);
+    const [out] = MeshoptSimplifier.simplify(src, position.getArray(), 3, target, error, flags);
+    if (out.length >= src.length) continue;
+    if (out.length === 0) {
+      prim.dispose();
+      continue;
+    }
+    indices.setArray(position.getCount() > 65535 ? out : Uint16Array.from(out));
+    compactPrimitive(prim);
+  }
+}
+
 const productSrc = resolve(root, 'assets-src/blender/products');
 const productOut = resolve(root, 'public/assets/models/products');
-const productReport = [];
+const productReportFile = resolve(productOut, 'optimization-report.json');
+const productReport = ONLY.length && existsSync(productReportFile) ? JSON.parse(await readFile(productReportFile, 'utf8')).filter((e) => !ONLY.includes(e.id)) : [];
 if (existsSync(productSrc)) {
   await mkdir(productOut, { recursive: true });
   const { readdir } = await import('node:fs/promises');
-  for (const name of (await readdir(productSrc)).filter((f) => f.endsWith('.glb')).sort()) {
+  for (const name of (await readdir(productSrc)).filter((f) => f.endsWith('.glb') && (!ONLY.length || ONLY.includes(f.slice(0, -4)))).sort()) {
     const id = name.replace(/\.glb$/, '');
     const input = resolve(productSrc, name);
     const source = await io.read(input);
     source.setLogger(new Logger(Logger.Verbosity.WARN));
-    await source.transform(prune({ keepExtras: true, keepAttributes: true }), dedup(), weld(), join({ keepNamed: true }));
+    // join's own cleanup would prune the port markers (empty leaf nodes with extras)
+    await source.transform(prune({ keepExtras: true, keepAttributes: true }), dedup(), weld(), join({ keepNamed: true, cleanup: false }), prune({ keepExtras: true, keepAttributes: true }));
     const entry = { id, source: `assets-src/blender/products/${name}`, sourceBytes: (await stat(input)).size, levels: [] };
     for (const level of PRODUCT_LEVELS) {
-      const doc = cloneDocument(source);
-      doc.setLogger(new Logger(Logger.Verbosity.WARN));
-      const ratio = Math.min(level.ratio, level.budget / Math.max(1, triangles(doc)));
-      if (ratio < 1) await doc.transform(simplify({ simplifier: MeshoptSimplifier, ratio, error: level.error, lockBorder: true }));
+      let doc;
+      for (let error = level.error; ; error *= 3) {
+        doc = cloneDocument(source);
+        doc.setLogger(new Logger(Logger.Verbosity.WARN));
+        const ratio = Math.min(level.ratio, level.budget / Math.max(1, triangles(doc)));
+        if (ratio >= 1) break;
+        await doc.transform(simplify({ simplifier: MeshoptSimplifier, ratio, error, lockBorder: error <= 0.004 }));
+        if (triangles(doc) <= level.budget * 1.25 || error * 3 > level.maxError * 1.0001) break;
+      }
+      // the full level only drops tiny islands; the lighter ones may also collapse across UV seams
+      if (triangles(doc) > level.budget * 1.25) pruneIslands(doc, level.budget / triangles(doc), level.maxError, level.suffix ? ['Prune', 'Permissive'] : ['Prune']);
       await adaptiveTextures(doc, level.texture, level.adaptive);
+      await fitTextureBudget(doc, level.textureMB * 1048576);
       // keep UVs even where a texture became a flat colour: the site maps its own wallpaper onto `Screen`
       const keep = { keepExtras: true, keepAttributes: true };
       await doc.transform(prune(keep), meshopt({ encoder: MeshoptEncoder, level: 'high', quantizePosition: level.quantize }), prune(keep));
@@ -291,13 +348,14 @@ if (existsSync(productSrc)) {
     productReport.push(entry);
     console.log(`products/${id}: ` + entry.levels.map((l) => `${l.file} ${(l.bytes / 1e6).toFixed(2)} MB ${Math.round(l.triangles / 100) / 10}k △`).join(' · '));
   }
-  await writeFile(resolve(productOut, 'optimization-report.json'), JSON.stringify(productReport, null, 2) + '\n');
+  productReport.sort((a, b) => a.id.localeCompare(b.id));
+  await writeFile(productReportFile, JSON.stringify(productReport, null, 2) + '\n');
 }
 
 // Room/desk textures: 512 px copies for the Low preset (phones), so they are
 // not downloaded at 2K only to be shrunk on the GPU.
 const textureDir = resolve(root, 'public/assets/textures');
-for (const name of ['wood_diff.jpg', 'wood_nor.webp', 'wood_rough.jpg', 'floor_diff.jpg', 'floor_rough.webp']) {
+for (const name of productsOnly ? [] : ['wood_diff.jpg', 'wood_nor.webp', 'wood_rough.jpg', 'floor_diff.jpg', 'floor_rough.webp']) {
   const input = resolve(textureDir, name);
   const outName = name.replace(/\.(\w+)$/, '_512.$1');
   const img = sharp(input).resize(512, 512, { kernel: 'lanczos3' });

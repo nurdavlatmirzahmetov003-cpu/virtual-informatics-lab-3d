@@ -170,6 +170,13 @@ def rule_matches(rule, obj, group):
         hi = rule["center"].get("max", [math.inf] * 3)
         if not all(lo[i] <= c[i] <= hi[i] for i in range(3)):
             return False
+    if "size" in rule:
+        # bounding-box extent per axis, e.g. only the big flat side panel among small frame pieces
+        b = world_bounds([obj])
+        lo = rule["size"].get("min", [0] * 3)
+        hi = rule["size"].get("max", [math.inf] * 3)
+        if not all(lo[i] <= b[1][i] - b[0][i] <= hi[i] for i in range(3)):
+            return False
     return True
 
 
@@ -263,13 +270,39 @@ def edit_materials(cfg, report):
 
 
 def rotate_scene(degrees):
-    """Turn the whole model about Z before anything else (front must face -Y in Blender = +Z in glTF)."""
+    """Turn the whole model before anything else (front must face -Y in Blender = +Z in glTF).
+    A number turns about Z; [x, y, z] are Euler degrees (XYZ) for models that lie on their side."""
     if not degrees:
         return
-    m = Matrix.Rotation(math.radians(degrees), 4, "Z")
+    if isinstance(degrees, list) and degrees and isinstance(degrees[0], list):
+        # steps in order, e.g. [["Z", -90], ["Y", 90]]: turn about Z first, then about Y
+        m = Matrix.Identity(4)
+        for axis, d in degrees:
+            if axis == "MIRROR":
+                # ["MIRROR", "X"]: e.g. a case whose glass panel is on the other side
+                m = Matrix.Diagonal([(-1 if d == a else 1) for a in "XYZ"] + [1]) @ m
+            else:
+                m = Matrix.Rotation(math.radians(d), 4, axis) @ m
+    elif isinstance(degrees, list):
+        from mathutils import Euler
+
+        m = Euler([math.radians(d) for d in degrees], "XYZ").to_matrix().to_4x4()
+    else:
+        m = Matrix.Rotation(math.radians(degrees), 4, "Z")
     for o in [o for o in bpy.data.objects if o.parent is None]:
         o.matrix_world = m @ o.matrix_world
     bpy.context.view_layer.update()
+    if m.determinant() < 0:
+        # mirrored: bake the transform so face winding (and normals) can be corrected
+        meshes = [o for o in bpy.data.objects if o.type == "MESH"]
+        for o in meshes:
+            mw = o.matrix_world.copy()
+            o.parent = None
+            o.matrix_world = mw
+        select_only(meshes)
+        bpy.ops.object.make_single_user(object=True, obdata=True)
+        # Blender flips the face winding itself when it applies a negative scale
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
 
 def cleanup(meshes, cfg, report):
@@ -454,8 +487,16 @@ def tag_parts(parts, cfg, bounds):
         obj["order"] = part.get("order", 0)
 
 
+MARKER_PREFIXES = ("slot_", "header_", "socket_", "mount_")
+
+
+def marker_name(kind, n):
+    return f"{kind}_{n}" if kind.startswith(MARKER_PREFIXES) else f"port_{kind}_{n}"
+
+
 def add_ports(parts, cfg, ports):
-    """Port markers: empty nodes `port_<type>_<n>` parented to their part, +Z of the empty = plug direction."""
+    """Port markers: empty nodes `port_<type>_<n>` parented to their part, +Z of the empty = plug direction.
+    Slots, headers, sockets and mounts keep their own prefix: `slot_pcie_x16_1`, `header_24pin_1`."""
     counters = {}
     made = []
     for p in ports:
@@ -466,7 +507,7 @@ def add_ports(parts, cfg, ports):
             loc = point_in_bounds(world_bounds([part]), p.get("at", [0.5, 0.5, 0.5]))
         n = counters.get(p["type"], 0) + 1
         counters[p["type"]] = n
-        empty = bpy.data.objects.new(f"port_{p['type']}_{n}", None)
+        empty = bpy.data.objects.new(marker_name(p["type"], n), None)
         empty.empty_display_type = "SINGLE_ARROW"
         empty.empty_display_size = 0.02
         bpy.context.scene.collection.objects.link(empty)

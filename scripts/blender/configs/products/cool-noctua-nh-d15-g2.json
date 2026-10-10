@@ -1,0 +1,37 @@
+{
+  "name": "cool-noctua-nh-d15-g2",
+  "description": "Catalog PC component model (V2-2b), canonical orientation for the case mount.",
+  "input": "assets-src/sketchfab/v2/noctua_nh-d15_cpu_cooler.glb",
+  "output": "assets-src/blender/products/cool-noctua-nh-d15-g2.glb",
+  "rotate": [
+    [
+      "Y",
+      90
+    ]
+  ],
+  "realSize": [
+    0.15,
+    0.161,
+    0.168
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/cool-noctua-nh-d15-g2.jpg"
+  }
+}

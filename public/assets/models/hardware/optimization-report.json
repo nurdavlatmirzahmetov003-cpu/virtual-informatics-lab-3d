@@ -76,7 +76,49 @@
       }
     },
     "lod1": null,
-    "hd": null,
+    "hd": {
+      "file": "keyboard_mech_hd.glb",
+      "bytes": 5767376,
+      "gpuTextureMB": 32,
+      "textures": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        }
+      ]
+    },
     "edits": {
       "removedNodes": [
         "wire_Keyboard_0",
@@ -198,7 +240,73 @@
       "triangles": 15729,
       "textureMB": 3.3
     },
-    "hd": null,
+    "hd": {
+      "file": "motherboard_x570_hd.glb",
+      "bytes": 9230540,
+      "gpuTextureMB": 53.3,
+      "textures": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        }
+      ]
+    },
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -292,7 +400,31 @@
       }
     },
     "lod1": null,
-    "hd": null,
+    "hd": {
+      "file": "cpu_am4_hd.glb",
+      "bytes": 1110924,
+      "gpuTextureMB": 10.7,
+      "textures": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "8x8",
+          "srgb": false
+        }
+      ]
+    },
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -344,7 +476,37 @@
       }
     },
     "lod1": null,
-    "hd": null,
+    "hd": {
+      "file": "ram_rgb_hd.glb",
+      "bytes": 3953060,
+      "gpuTextureMB": 21.3,
+      "textures": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        }
+      ]
+    },
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -407,7 +569,19 @@
       "triangles": 19514,
       "textureMB": 0.3
     },
-    "hd": null,
+    "hd": {
+      "file": "cooler_tower_hd.glb",
+      "bytes": 3955388,
+      "gpuTextureMB": 5.3,
+      "textures": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        }
+      ]
+    },
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -447,7 +621,55 @@
       }
     },
     "lod1": null,
-    "hd": null,
+    "hd": {
+      "file": "gpu_triple_fan_hd.glb",
+      "bytes": 939396,
+      "gpuTextureMB": 7,
+      "textures": [
+        {
+          "name": null,
+          "from": "1024x2048",
+          "to": "1024x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "512x256",
+          "to": "512x256",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "256x32",
+          "to": "256x32",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "512x256",
+          "to": "512x256",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x512",
+          "to": "2048x512",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "1024x1024",
+          "to": "1024x1024",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "1024x1024",
+          "to": "1024x1024",
+          "srgb": true
+        }
+      ]
+    },
     "edits": {
       "removedNodes": [
         "Object_21",
@@ -534,7 +756,31 @@
       }
     },
     "lod1": null,
-    "hd": null,
+    "hd": {
+      "file": "ssd_m2_hd.glb",
+      "bytes": 3232888,
+      "gpuTextureMB": 16,
+      "textures": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        }
+      ]
+    },
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -709,7 +955,67 @@
       "triangles": 17460,
       "textureMB": 3
     },
-    "hd": null,
+    "hd": {
+      "file": "headset_gaming_hd.glb",
+      "bytes": 11513780,
+      "gpuTextureMB": 24.7,
+      "textures": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "512x512",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "1024x1024",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "512x512",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "8x8",
+          "srgb": false
+        }
+      ]
+    },
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -802,7 +1108,31 @@
       "triangles": 14782,
       "textureMB": 1
     },
-    "hd": null,
+    "hd": {
+      "file": "speakers_hd.glb",
+      "bytes": 3281584,
+      "gpuTextureMB": 6,
+      "textures": [
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "2048x2048",
+          "srgb": true
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "512x512",
+          "srgb": false
+        },
+        {
+          "name": null,
+          "from": "2048x2048",
+          "to": "512x512",
+          "srgb": false
+        }
+      ]
+    },
     "edits": {
       "removedNodes": [
         "pCylinder4_blinn1_0",

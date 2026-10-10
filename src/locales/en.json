@@ -3111,5 +3111,29 @@
         "condition": "Complete all {target} tasks."
       }
     }
+  },
+  "ports": {
+    "atx24pin": "24-pin ATX power",
+    "audio": "3.5 mm audio jack",
+    "displayport": "DisplayPort",
+    "eps8pin": "8-pin CPU power (EPS)",
+    "ethernet": "Ethernet port (RJ-45)",
+    "fanHeader": "Fan header",
+    "frontPanel": "Front-panel header",
+    "hdmi": "HDMI",
+    "pcie8pin": "PCIe 8-pin power",
+    "pciePower": "Graphics card power (PCIe)",
+    "pcieX1": "PCIe x1 slot",
+    "pcieX16": "PCIe x16 slot",
+    "powerAc": "Mains power inlet (220 V)",
+    "powerButton": "Power button",
+    "sata": "SATA port",
+    "sataPower": "SATA power",
+    "slotDimm": "Memory slot (DIMM)",
+    "slotM2": "M.2 slot",
+    "socketCpu": "CPU socket",
+    "usbA": "USB-A port",
+    "usbC": "USB-C port",
+    "usbHeader": "Front USB header"
   }
 }

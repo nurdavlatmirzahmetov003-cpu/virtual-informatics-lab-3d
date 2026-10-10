@@ -34,16 +34,19 @@ async function check(path, label, maxTexture) {
 }
 
 /** Per-product models (V2-2a): three levels, real size in metres, standing on the ground, centred. */
-const LEVELS = [['', 2048], ['_lod1', 1024], ['_lod2', 512]];
+/** [suffix, max texture px, GPU texture budget MB (RGBA + mips)] — see optimize-assets.mjs */
+const LEVELS = [['', 2048, 32], ['_lod1', 1024, 16], ['_lod2', 512, 4]];
 async function checkProduct(file) {
   const id = file.match(/^products\/([a-z0-9-]+)\.glb$/)?.[1];
   assert.ok(id, `${file}: products/<id>.glb`);
-  for (const [suffix, max] of LEVELS) {
+  for (const [suffix, max, budgetMB] of LEVELS) {
     const label = `products/${id}${suffix}.glb`;
     const { doc, bounds } = await check(resolve(root, 'public/assets/models', label), label, max);
     assert.ok(Math.abs(bounds.min[1]) < 0.005, `${label}: stands on the ground (min y ${bounds.min[1]})`);
     assert.ok(Math.abs(bounds.min[0] + bounds.max[0]) < 0.01 && Math.abs(bounds.min[2] + bounds.max[2]) < 0.01, `${label}: centred`);
     assert.ok(bounds.max.every((v, i) => v - bounds.min[i] < 2.5), `${label}: real-world size in metres`);
+    const gpuMB = doc.getRoot().listTextures().reduce((sum, t) => sum + t.getSize()[0] * t.getSize()[1] * 4 * (4 / 3), 0) / 1048576;
+    assert.ok(gpuMB <= budgetMB + 0.01, `${label}: ${gpuMB.toFixed(1)} MB of textures, budget ${budgetMB} MB`);
     const materials = doc.getRoot().listMaterials().map(m => m.getName());
     if (id.startsWith('mon-')) assert.ok(materials.includes('Screen'), `${label}: Screen material`);
     if (id.startsWith('desk-')) assert.ok(materials.includes('DeskTop'), `${label}: DeskTop material`);
@@ -61,4 +64,4 @@ for (const asset of registry) {
     }
   }
 }
-console.log(`Validated ${files} GLBs from ${registry.length} attributed originals: ${(bytes / 1e6).toFixed(2)} MB; Meshopt decoding, bounded geometry, valid indices, WebP texture budgets, product levels on the ground at real size.`);
+console.log(`Validated ${files} GLBs from ${registry.length} attributed originals: ${(bytes / 1e6).toFixed(2)} MB; Meshopt decoding, bounded geometry, valid indices, WebP texture sizes and per-level GPU budgets, product levels on the ground at real size.`);

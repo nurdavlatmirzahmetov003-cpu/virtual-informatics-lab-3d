@@ -1,0 +1,142 @@
+{
+  "name": "gpu-asus-dual-5060ti-16",
+  "description": "Shorter card, light shroud.",
+  "input": "assets-src/sketchfab/gpu_triple_fan.glb",
+  "output": "assets-src/blender/products/gpu-asus-dual-5060ti-16.glb",
+  "rotate": [
+    [
+      "Z",
+      -90
+    ],
+    [
+      "Y",
+      -90
+    ]
+  ],
+  "realSize": [
+    0.05,
+    0.229,
+    0.12
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "materials": "^(msilogo1|msilogopng|geforcertx|gfrtx2)$"
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": [
+      {
+        "materials": "^(Material\\.00[1-9]|Material)$",
+        "color": "#c9ccd2",
+        "roughness": 0.5
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [
+    {
+      "type": "slot_pcie_x16",
+      "part": "body",
+      "at": [
+        0.5,
+        0.75,
+        0
+      ],
+      "dir": [
+        0,
+        0,
+        -1
+      ],
+      "label": "ports.pcieX16"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.45
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "hdmi",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.6
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.hdmi"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.75
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "pcie_power",
+      "part": "body",
+      "at": [
+        0.5,
+        0.35,
+        1
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.pciePower"
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/gpu-asus-dual-5060ti-16.jpg"
+  }
+}

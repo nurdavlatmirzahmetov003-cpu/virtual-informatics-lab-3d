@@ -1,5 +1,130 @@
 [
   {
+    "id": "case-corsair-4000d-airflow",
+    "source": "assets-src/blender/products/case-corsair-4000d-airflow.glb",
+    "sourceBytes": 19506652,
+    "levels": [
+      {
+        "file": "case-corsair-4000d-airflow.glb",
+        "bytes": 1385464,
+        "triangles": 7663,
+        "textureMB": 32
+      },
+      {
+        "file": "case-corsair-4000d-airflow_lod1.glb",
+        "bytes": 824168,
+        "triangles": 5743,
+        "textureMB": 16
+      },
+      {
+        "file": "case-corsair-4000d-airflow_lod2.glb",
+        "bytes": 311676,
+        "triangles": 5337,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "case-deepcool-cc560-v2",
+    "source": "assets-src/blender/products/case-deepcool-cc560-v2.glb",
+    "sourceBytes": 20732544,
+    "levels": [
+      {
+        "file": "case-deepcool-cc560-v2.glb",
+        "bytes": 1385908,
+        "triangles": 7663,
+        "textureMB": 32
+      },
+      {
+        "file": "case-deepcool-cc560-v2_lod1.glb",
+        "bytes": 824612,
+        "triangles": 5743,
+        "textureMB": 16
+      },
+      {
+        "file": "case-deepcool-cc560-v2_lod2.glb",
+        "bytes": 312120,
+        "triangles": 5337,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "case-fractal-north",
+    "source": "assets-src/blender/products/case-fractal-north.glb",
+    "sourceBytes": 3278308,
+    "levels": [
+      {
+        "file": "case-fractal-north.glb",
+        "bytes": 574272,
+        "triangles": 80000,
+        "textureMB": 2.7
+      },
+      {
+        "file": "case-fractal-north_lod1.glb",
+        "bytes": 326964,
+        "triangles": 29698,
+        "textureMB": 2.7
+      },
+      {
+        "file": "case-fractal-north_lod2.glb",
+        "bytes": 82380,
+        "triangles": 7098,
+        "textureMB": 0.7
+      }
+    ]
+  },
+  {
+    "id": "case-lianli-o11d-evo",
+    "source": "assets-src/blender/products/case-lianli-o11d-evo.glb",
+    "sourceBytes": 9086692,
+    "levels": [
+      {
+        "file": "case-lianli-o11d-evo.glb",
+        "bytes": 161100,
+        "triangles": 7054,
+        "textureMB": 29.3
+      },
+      {
+        "file": "case-lianli-o11d-evo_lod1.glb",
+        "bytes": 100756,
+        "triangles": 3878,
+        "textureMB": 13.3
+      },
+      {
+        "file": "case-lianli-o11d-evo_lod2.glb",
+        "bytes": 60492,
+        "triangles": 2366,
+        "textureMB": 3
+      }
+    ]
+  },
+  {
+    "id": "case-nzxt-h5-flow-2024",
+    "source": "assets-src/blender/products/case-nzxt-h5-flow-2024.glb",
+    "sourceBytes": 2898560,
+    "levels": [
+      {
+        "file": "case-nzxt-h5-flow-2024.glb",
+        "bytes": 445980,
+        "triangles": 80000,
+        "textureMB": 0
+      },
+      {
+        "file": "case-nzxt-h5-flow-2024_lod1.glb",
+        "bytes": 198676,
+        "triangles": 29698,
+        "textureMB": 0
+      },
+      {
+        "file": "case-nzxt-h5-flow-2024_lod2.glb",
+        "bytes": 59056,
+        "triangles": 7098,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
     "id": "chair-hm-embody-gaming",
     "source": "assets-src/blender/products/chair-hm-embody-gaming.glb",
     "sourceBytes": 509464,
@@ -18,8 +143,8 @@
       },
       {
         "file": "chair-hm-embody-gaming_lod2.glb",
-        "bytes": 119920,
-        "triangles": 23694,
+        "bytes": 44936,
+        "triangles": 7576,
         "textureMB": 0
       }
     ]
@@ -56,9 +181,9 @@
     "levels": [
       {
         "file": "chair-secretlab-titan-evo.glb",
-        "bytes": 1410856,
+        "bytes": 596664,
         "triangles": 13529,
-        "textureMB": 64
+        "textureMB": 32
       },
       {
         "file": "chair-secretlab-titan-evo_lod1.glb",
@@ -71,6 +196,131 @@
         "bytes": 253664,
         "triangles": 9107,
         "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "cool-deepcool-ak400",
+    "source": "assets-src/blender/products/cool-deepcool-ak400.glb",
+    "sourceBytes": 5009944,
+    "levels": [
+      {
+        "file": "cool-deepcool-ak400.glb",
+        "bytes": 1122772,
+        "triangles": 79996,
+        "textureMB": 21.3
+      },
+      {
+        "file": "cool-deepcool-ak400_lod1.glb",
+        "bytes": 333100,
+        "triangles": 32206,
+        "textureMB": 5.3
+      },
+      {
+        "file": "cool-deepcool-ak400_lod2.glb",
+        "bytes": 106536,
+        "triangles": 7994,
+        "textureMB": 1.3
+      }
+    ]
+  },
+  {
+    "id": "cool-noctua-nh-d15-g2",
+    "source": "assets-src/blender/products/cool-noctua-nh-d15-g2.glb",
+    "sourceBytes": 523356,
+    "levels": [
+      {
+        "file": "cool-noctua-nh-d15-g2.glb",
+        "bytes": 125224,
+        "triangles": 10256,
+        "textureMB": 0
+      },
+      {
+        "file": "cool-noctua-nh-d15-g2_lod1.glb",
+        "bytes": 116604,
+        "triangles": 9014,
+        "textureMB": 0
+      },
+      {
+        "file": "cool-noctua-nh-d15-g2_lod2.glb",
+        "bytes": 107744,
+        "triangles": 7808,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "cool-thermalright-pa120se",
+    "source": "assets-src/blender/products/cool-thermalright-pa120se.glb",
+    "sourceBytes": 522016,
+    "levels": [
+      {
+        "file": "cool-thermalright-pa120se.glb",
+        "bytes": 124500,
+        "triangles": 10256,
+        "textureMB": 0
+      },
+      {
+        "file": "cool-thermalright-pa120se_lod1.glb",
+        "bytes": 114248,
+        "triangles": 8834,
+        "textureMB": 0
+      },
+      {
+        "file": "cool-thermalright-pa120se_lod2.glb",
+        "bytes": 105744,
+        "triangles": 7658,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "cpu-amd-am5",
+    "source": "assets-src/blender/products/cpu-amd-am5.glb",
+    "sourceBytes": 16096740,
+    "levels": [
+      {
+        "file": "cpu-amd-am5.glb",
+        "bytes": 366080,
+        "triangles": 1975,
+        "textureMB": 30.7
+      },
+      {
+        "file": "cpu-amd-am5_lod1.glb",
+        "bytes": 171196,
+        "triangles": 1387,
+        "textureMB": 14.7
+      },
+      {
+        "file": "cpu-amd-am5_lod2.glb",
+        "bytes": 74540,
+        "triangles": 1317,
+        "textureMB": 3.7
+      }
+    ]
+  },
+  {
+    "id": "cpu-intel-lga",
+    "source": "assets-src/blender/products/cpu-intel-lga.glb",
+    "sourceBytes": 1145620,
+    "levels": [
+      {
+        "file": "cpu-intel-lga.glb",
+        "bytes": 268420,
+        "triangles": 11162,
+        "textureMB": 5.7
+      },
+      {
+        "file": "cpu-intel-lga_lod1.glb",
+        "bytes": 268400,
+        "triangles": 11146,
+        "textureMB": 5.7
+      },
+      {
+        "file": "cpu-intel-lga_lod2.glb",
+        "bytes": 142560,
+        "triangles": 6420,
+        "textureMB": 1.7
       }
     ]
   },
@@ -150,6 +400,131 @@
     ]
   },
   {
+    "id": "gpu-asus-dual-5060ti-16",
+    "source": "assets-src/blender/products/gpu-asus-dual-5060ti-16.glb",
+    "sourceBytes": 3094812,
+    "levels": [
+      {
+        "file": "gpu-asus-dual-5060ti-16.glb",
+        "bytes": 855356,
+        "triangles": 48455,
+        "textureMB": 22
+      },
+      {
+        "file": "gpu-asus-dual-5060ti-16_lod1.glb",
+        "bytes": 698752,
+        "triangles": 37047,
+        "textureMB": 10
+      },
+      {
+        "file": "gpu-asus-dual-5060ti-16_lod2.glb",
+        "bytes": 264624,
+        "triangles": 8021,
+        "textureMB": 3
+      }
+    ]
+  },
+  {
+    "id": "gpu-asus-rog-astral-5090",
+    "source": "assets-src/blender/products/gpu-asus-rog-astral-5090.glb",
+    "sourceBytes": 8374032,
+    "levels": [
+      {
+        "file": "gpu-asus-rog-astral-5090.glb",
+        "bytes": 1306176,
+        "triangles": 95509,
+        "textureMB": 0
+      },
+      {
+        "file": "gpu-asus-rog-astral-5090_lod1.glb",
+        "bytes": 517476,
+        "triangles": 29990,
+        "textureMB": 0
+      },
+      {
+        "file": "gpu-asus-rog-astral-5090_lod2.glb",
+        "bytes": 144572,
+        "triangles": 7987,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "gpu-nvidia-5070-fe",
+    "source": "assets-src/blender/products/gpu-nvidia-5070-fe.glb",
+    "sourceBytes": 17261412,
+    "levels": [
+      {
+        "file": "gpu-nvidia-5070-fe.glb",
+        "bytes": 656532,
+        "triangles": 42164,
+        "textureMB": 28.3
+      },
+      {
+        "file": "gpu-nvidia-5070-fe_lod1.glb",
+        "bytes": 444560,
+        "triangles": 24518,
+        "textureMB": 15
+      },
+      {
+        "file": "gpu-nvidia-5070-fe_lod2.glb",
+        "bytes": 180844,
+        "triangles": 7963,
+        "textureMB": 1.9
+      }
+    ]
+  },
+  {
+    "id": "gpu-nvidia-5080-fe",
+    "source": "assets-src/blender/products/gpu-nvidia-5080-fe.glb",
+    "sourceBytes": 17265956,
+    "levels": [
+      {
+        "file": "gpu-nvidia-5080-fe.glb",
+        "bytes": 656760,
+        "triangles": 42164,
+        "textureMB": 28.3
+      },
+      {
+        "file": "gpu-nvidia-5080-fe_lod1.glb",
+        "bytes": 444536,
+        "triangles": 24490,
+        "textureMB": 15
+      },
+      {
+        "file": "gpu-nvidia-5080-fe_lod2.glb",
+        "bytes": 180628,
+        "triangles": 7979,
+        "textureMB": 1.9
+      }
+    ]
+  },
+  {
+    "id": "gpu-sapphire-9070xt-pulse",
+    "source": "assets-src/blender/products/gpu-sapphire-9070xt-pulse.glb",
+    "sourceBytes": 16315708,
+    "levels": [
+      {
+        "file": "gpu-sapphire-9070xt-pulse.glb",
+        "bytes": 1982504,
+        "triangles": 94304,
+        "textureMB": 0
+      },
+      {
+        "file": "gpu-sapphire-9070xt-pulse_lod1.glb",
+        "bytes": 682696,
+        "triangles": 29929,
+        "textureMB": 0
+      },
+      {
+        "file": "gpu-sapphire-9070xt-pulse_lod2.glb",
+        "bytes": 218428,
+        "triangles": 7972,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
     "id": "hs-hyperx-cloud-iii",
     "source": "assets-src/blender/products/hs-hyperx-cloud-iii.glb",
     "sourceBytes": 8344524,
@@ -162,15 +537,15 @@
       },
       {
         "file": "hs-hyperx-cloud-iii_lod1.glb",
-        "bytes": 908896,
+        "bytes": 501244,
         "triangles": 29998,
-        "textureMB": 27
+        "textureMB": 15
       },
       {
         "file": "hs-hyperx-cloud-iii_lod2.glb",
-        "bytes": 275868,
+        "bytes": 180468,
         "triangles": 7998,
-        "textureMB": 7
+        "textureMB": 4
       }
     ]
   },
@@ -181,21 +556,21 @@
     "levels": [
       {
         "file": "hs-logitech-pro-x2.glb",
-        "bytes": 1045540,
+        "bytes": 763200,
         "triangles": 40546,
-        "textureMB": 65.7
+        "textureMB": 29.7
       },
       {
         "file": "hs-logitech-pro-x2_lod1.glb",
-        "bytes": 945748,
+        "bytes": 339236,
         "triangles": 22296,
-        "textureMB": 65.7
+        "textureMB": 15.7
       },
       {
         "file": "hs-logitech-pro-x2_lod2.glb",
-        "bytes": 248844,
+        "bytes": 143596,
         "triangles": 7996,
-        "textureMB": 17.7
+        "textureMB": 3.9
       }
     ]
   },
@@ -237,15 +612,15 @@
       },
       {
         "file": "hs-steelseries-nova7_lod1.glb",
-        "bytes": 831408,
+        "bytes": 527912,
         "triangles": 30475,
-        "textureMB": 32
+        "textureMB": 16
       },
       {
         "file": "hs-steelseries-nova7_lod2.glb",
-        "bytes": 312792,
-        "triangles": 11649,
-        "textureMB": 8
+        "bytes": 209960,
+        "triangles": 9735,
+        "textureMB": 4
       }
     ]
   },
@@ -268,8 +643,8 @@
       },
       {
         "file": "kb-keychron-k8-pro_lod2.glb",
-        "bytes": 234904,
-        "triangles": 13880,
+        "bytes": 148600,
+        "triangles": 7998,
         "textureMB": 3.1
       }
     ]
@@ -312,15 +687,15 @@
       },
       {
         "file": "kb-logitech-mx-keys-s_lod1.glb",
-        "bytes": 390856,
+        "bytes": 337684,
         "triangles": 15255,
-        "textureMB": 22.7
+        "textureMB": 14.7
       },
       {
         "file": "kb-logitech-mx-keys-s_lod2.glb",
-        "bytes": 234580,
-        "triangles": 10275,
-        "textureMB": 6.7
+        "bytes": 203960,
+        "triangles": 9294,
+        "textureMB": 3.7
       }
     ]
   },
@@ -337,15 +712,15 @@
       },
       {
         "file": "kb-logitech-pro-x-tkl_lod1.glb",
-        "bytes": 353912,
+        "bytes": 342452,
         "triangles": 29999,
-        "textureMB": 16.3
+        "textureMB": 12.3
       },
       {
         "file": "kb-logitech-pro-x-tkl_lod2.glb",
-        "bytes": 136128,
+        "bytes": 131544,
         "triangles": 7999,
-        "textureMB": 4.3
+        "textureMB": 3.3
       }
     ]
   },
@@ -362,15 +737,115 @@
       },
       {
         "file": "kb-razer-huntsman-v3-pro-tkl_lod1.glb",
-        "bytes": 353352,
+        "bytes": 341892,
         "triangles": 29999,
-        "textureMB": 16.3
+        "textureMB": 12.3
       },
       {
         "file": "kb-razer-huntsman-v3-pro-tkl_lod2.glb",
-        "bytes": 136236,
+        "bytes": 131652,
         "triangles": 7999,
-        "textureMB": 4.3
+        "textureMB": 3.3
+      }
+    ]
+  },
+  {
+    "id": "mb-asus-prime-z890-p",
+    "source": "assets-src/blender/products/mb-asus-prime-z890-p.glb",
+    "sourceBytes": 9382292,
+    "levels": [
+      {
+        "file": "mb-asus-prime-z890-p.glb",
+        "bytes": 622636,
+        "triangles": 34961,
+        "textureMB": 29.3
+      },
+      {
+        "file": "mb-asus-prime-z890-p_lod1.glb",
+        "bytes": 452100,
+        "triangles": 19225,
+        "textureMB": 13.3
+      },
+      {
+        "file": "mb-asus-prime-z890-p_lod2.glb",
+        "bytes": 196504,
+        "triangles": 7981,
+        "textureMB": 3.3
+      }
+    ]
+  },
+  {
+    "id": "mb-asus-tuf-b650-plus",
+    "source": "assets-src/blender/products/mb-asus-tuf-b650-plus.glb",
+    "sourceBytes": 9382292,
+    "levels": [
+      {
+        "file": "mb-asus-tuf-b650-plus.glb",
+        "bytes": 622636,
+        "triangles": 34961,
+        "textureMB": 29.3
+      },
+      {
+        "file": "mb-asus-tuf-b650-plus_lod1.glb",
+        "bytes": 452100,
+        "triangles": 19225,
+        "textureMB": 13.3
+      },
+      {
+        "file": "mb-asus-tuf-b650-plus_lod2.glb",
+        "bytes": 196504,
+        "triangles": 7981,
+        "textureMB": 3.3
+      }
+    ]
+  },
+  {
+    "id": "mb-msi-b650-gaming-plus",
+    "source": "assets-src/blender/products/mb-msi-b650-gaming-plus.glb",
+    "sourceBytes": 11068816,
+    "levels": [
+      {
+        "file": "mb-msi-b650-gaming-plus.glb",
+        "bytes": 636764,
+        "triangles": 18416,
+        "textureMB": 10.7
+      },
+      {
+        "file": "mb-msi-b650-gaming-plus_lod1.glb",
+        "bytes": 418256,
+        "triangles": 18234,
+        "textureMB": 2.7
+      },
+      {
+        "file": "mb-msi-b650-gaming-plus_lod2.glb",
+        "bytes": 171044,
+        "triangles": 7992,
+        "textureMB": 0.7
+      }
+    ]
+  },
+  {
+    "id": "mb-msi-pro-b760m-a-ddr4",
+    "source": "assets-src/blender/products/mb-msi-pro-b760m-a-ddr4.glb",
+    "sourceBytes": 2792328,
+    "levels": [
+      {
+        "file": "mb-msi-pro-b760m-a-ddr4.glb",
+        "bytes": 160032,
+        "triangles": 4268,
+        "textureMB": 31.7
+      },
+      {
+        "file": "mb-msi-pro-b760m-a-ddr4_lod1.glb",
+        "bytes": 154244,
+        "triangles": 4268,
+        "textureMB": 15.7
+      },
+      {
+        "file": "mb-msi-pro-b760m-a-ddr4_lod2.glb",
+        "bytes": 123520,
+        "triangles": 4268,
+        "textureMB": 3.9
       }
     ]
   },
@@ -381,9 +856,9 @@
     "levels": [
       {
         "file": "mon-asus-va24ehf.glb",
-        "bytes": 218936,
+        "bytes": 143452,
         "triangles": 6388,
-        "textureMB": 64
+        "textureMB": 32
       },
       {
         "file": "mon-asus-va24ehf_lod1.glb",
@@ -456,9 +931,9 @@
     "levels": [
       {
         "file": "mon-dell-u2724d.glb",
-        "bytes": 188532,
+        "bytes": 167356,
         "triangles": 6388,
-        "textureMB": 42.7
+        "textureMB": 26.7
       },
       {
         "file": "mon-dell-u2724d_lod1.glb",
@@ -506,21 +981,21 @@
     "levels": [
       {
         "file": "mouse-logitech-g102.glb",
-        "bytes": 323944,
+        "bytes": 298164,
         "triangles": 25001,
-        "textureMB": 32.3
+        "textureMB": 28.3
       },
       {
         "file": "mouse-logitech-g102_lod1.glb",
-        "bytes": 262376,
+        "bytes": 181276,
         "triangles": 13749,
-        "textureMB": 32.3
+        "textureMB": 12.3
       },
       {
         "file": "mouse-logitech-g102_lod2.glb",
-        "bytes": 132612,
+        "bytes": 95760,
         "triangles": 6249,
-        "textureMB": 9.3
+        "textureMB": 3.3
       }
     ]
   },
@@ -537,15 +1012,15 @@
       },
       {
         "file": "mouse-logitech-g305_lod1.glb",
-        "bytes": 256876,
+        "bytes": 198504,
         "triangles": 13749,
-        "textureMB": 27
+        "textureMB": 15
       },
       {
         "file": "mouse-logitech-g305_lod2.glb",
-        "bytes": 130260,
+        "bytes": 94656,
         "triangles": 6249,
-        "textureMB": 8
+        "textureMB": 3
       }
     ]
   },
@@ -556,21 +1031,21 @@
     "levels": [
       {
         "file": "mouse-logitech-g502x-plus.glb",
-        "bytes": 1354068,
+        "bytes": 1158152,
         "triangles": 79984,
-        "textureMB": 36.3
+        "textureMB": 28.3
       },
       {
         "file": "mouse-logitech-g502x-plus_lod1.glb",
-        "bytes": 1061404,
+        "bytes": 555104,
         "triangles": 30084,
-        "textureMB": 36.3
+        "textureMB": 12.3
       },
       {
         "file": "mouse-logitech-g502x-plus_lod2.glb",
-        "bytes": 315264,
-        "triangles": 10772,
-        "textureMB": 9.3
+        "bytes": 167492,
+        "triangles": 7995,
+        "textureMB": 3.3
       }
     ]
   },
@@ -587,15 +1062,15 @@
       },
       {
         "file": "mouse-logitech-superlight2_lod1.glb",
-        "bytes": 249484,
+        "bytes": 215080,
         "triangles": 13749,
-        "textureMB": 21.3
+        "textureMB": 13.3
       },
       {
         "file": "mouse-logitech-superlight2_lod2.glb",
-        "bytes": 123432,
+        "bytes": 110188,
         "triangles": 6337,
-        "textureMB": 5.3
+        "textureMB": 3.3
       }
     ]
   },
@@ -606,9 +1081,9 @@
     "levels": [
       {
         "file": "mouse-razer-viper-v3-pro.glb",
-        "bytes": 566668,
+        "bytes": 343308,
         "triangles": 17414,
-        "textureMB": 43
+        "textureMB": 27
       },
       {
         "file": "mouse-razer-viper-v3-pro_lod1.glb",
@@ -625,6 +1100,206 @@
     ]
   },
   {
+    "id": "psu-bequiet-pp12m-650",
+    "source": "assets-src/blender/products/psu-bequiet-pp12m-650.glb",
+    "sourceBytes": 25129652,
+    "levels": [
+      {
+        "file": "psu-bequiet-pp12m-650.glb",
+        "bytes": 795688,
+        "triangles": 21352,
+        "textureMB": 32
+      },
+      {
+        "file": "psu-bequiet-pp12m-650_lod1.glb",
+        "bytes": 392596,
+        "triangles": 11742,
+        "textureMB": 16
+      },
+      {
+        "file": "psu-bequiet-pp12m-650_lod2.glb",
+        "bytes": 161560,
+        "triangles": 5518,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "psu-corsair-rm750e",
+    "source": "assets-src/blender/products/psu-corsair-rm750e.glb",
+    "sourceBytes": 25126356,
+    "levels": [
+      {
+        "file": "psu-corsair-rm750e.glb",
+        "bytes": 795104,
+        "triangles": 21352,
+        "textureMB": 32
+      },
+      {
+        "file": "psu-corsair-rm750e_lod1.glb",
+        "bytes": 391768,
+        "triangles": 11742,
+        "textureMB": 16
+      },
+      {
+        "file": "psu-corsair-rm750e_lod2.glb",
+        "bytes": 160432,
+        "triangles": 5418,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "psu-corsair-rm850x",
+    "source": "assets-src/blender/products/psu-corsair-rm850x.glb",
+    "sourceBytes": 25129652,
+    "levels": [
+      {
+        "file": "psu-corsair-rm850x.glb",
+        "bytes": 795688,
+        "triangles": 21352,
+        "textureMB": 32
+      },
+      {
+        "file": "psu-corsair-rm850x_lod1.glb",
+        "bytes": 392596,
+        "triangles": 11742,
+        "textureMB": 16
+      },
+      {
+        "file": "psu-corsair-rm850x_lod2.glb",
+        "bytes": 161560,
+        "triangles": 5518,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "psu-deepcool-pk550d",
+    "source": "assets-src/blender/products/psu-deepcool-pk550d.glb",
+    "sourceBytes": 853396,
+    "levels": [
+      {
+        "file": "psu-deepcool-pk550d.glb",
+        "bytes": 191580,
+        "triangles": 12229,
+        "textureMB": 0
+      },
+      {
+        "file": "psu-deepcool-pk550d_lod1.glb",
+        "bytes": 186824,
+        "triangles": 11467,
+        "textureMB": 0
+      },
+      {
+        "file": "psu-deepcool-pk550d_lod2.glb",
+        "bytes": 138256,
+        "triangles": 7991,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "psu-seasonic-focus-gx-1000",
+    "source": "assets-src/blender/products/psu-seasonic-focus-gx-1000.glb",
+    "sourceBytes": 853396,
+    "levels": [
+      {
+        "file": "psu-seasonic-focus-gx-1000.glb",
+        "bytes": 191580,
+        "triangles": 12229,
+        "textureMB": 0
+      },
+      {
+        "file": "psu-seasonic-focus-gx-1000_lod1.glb",
+        "bytes": 186824,
+        "triangles": 11467,
+        "textureMB": 0
+      },
+      {
+        "file": "psu-seasonic-focus-gx-1000_lod2.glb",
+        "bytes": 138256,
+        "triangles": 7991,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "ram-corsair-vengeance-rgb-32",
+    "source": "assets-src/blender/products/ram-corsair-vengeance-rgb-32.glb",
+    "sourceBytes": 641104,
+    "levels": [
+      {
+        "file": "ram-corsair-vengeance-rgb-32.glb",
+        "bytes": 94384,
+        "triangles": 1412,
+        "textureMB": 2.7
+      },
+      {
+        "file": "ram-corsair-vengeance-rgb-32_lod1.glb",
+        "bytes": 93824,
+        "triangles": 1342,
+        "textureMB": 2.7
+      },
+      {
+        "file": "ram-corsair-vengeance-rgb-32_lod2.glb",
+        "bytes": 47100,
+        "triangles": 1320,
+        "textureMB": 0.7
+      }
+    ]
+  },
+  {
+    "id": "ram-gskill-trident-z5-64",
+    "source": "assets-src/blender/products/ram-gskill-trident-z5-64.glb",
+    "sourceBytes": 3780216,
+    "levels": [
+      {
+        "file": "ram-gskill-trident-z5-64.glb",
+        "bytes": 190284,
+        "triangles": 2074,
+        "textureMB": 21.3
+      },
+      {
+        "file": "ram-gskill-trident-z5-64_lod1.glb",
+        "bytes": 168744,
+        "triangles": 1140,
+        "textureMB": 13.3
+      },
+      {
+        "file": "ram-gskill-trident-z5-64_lod2.glb",
+        "bytes": 65696,
+        "triangles": 780,
+        "textureMB": 3.3
+      }
+    ]
+  },
+  {
+    "id": "ram-kingston-fury-beast",
+    "source": "assets-src/blender/products/ram-kingston-fury-beast.glb",
+    "sourceBytes": 7428188,
+    "levels": [
+      {
+        "file": "ram-kingston-fury-beast.glb",
+        "bytes": 382524,
+        "triangles": 9796,
+        "textureMB": 5.5
+      },
+      {
+        "file": "ram-kingston-fury-beast_lod1.glb",
+        "bytes": 375068,
+        "triangles": 8600,
+        "textureMB": 5.5
+      },
+      {
+        "file": "ram-kingston-fury-beast_lod2.glb",
+        "bytes": 258372,
+        "triangles": 8512,
+        "textureMB": 1.4
+      }
+    ]
+  },
+  {
     "id": "spk-creative-pebble-v3",
     "source": "assets-src/blender/products/spk-creative-pebble-v3.glb",
     "sourceBytes": 8779748,
@@ -637,15 +1312,15 @@
       },
       {
         "file": "spk-creative-pebble-v3_lod1.glb",
-        "bytes": 1609764,
+        "bytes": 1095292,
         "triangles": 25853,
-        "textureMB": 21.3
+        "textureMB": 13.3
       },
       {
         "file": "spk-creative-pebble-v3_lod2.glb",
-        "bytes": 666784,
-        "triangles": 22103,
-        "textureMB": 5.3
+        "bytes": 241060,
+        "triangles": 7993,
+        "textureMB": 3.3
       }
     ]
   },
@@ -662,15 +1337,15 @@
       },
       {
         "file": "spk-edifier-r1280db_lod1.glb",
-        "bytes": 864648,
+        "bytes": 452196,
         "triangles": 8950,
-        "textureMB": 21.4
+        "textureMB": 13.4
       },
       {
         "file": "spk-edifier-r1280db_lod2.glb",
-        "bytes": 236312,
+        "bytes": 174088,
         "triangles": 7076,
-        "textureMB": 5.4
+        "textureMB": 3.4
       }
     ]
   },
@@ -681,21 +1356,121 @@
     "levels": [
       {
         "file": "spk-logitech-z407.glb",
-        "bytes": 957728,
+        "bytes": 950260,
         "triangles": 3694,
-        "textureMB": 32.7
+        "textureMB": 28.7
       },
       {
         "file": "spk-logitech-z407_lod1.glb",
-        "bytes": 942688,
+        "bytes": 262060,
         "triangles": 2050,
-        "textureMB": 32.7
+        "textureMB": 12.7
       },
       {
         "file": "spk-logitech-z407_lod2.glb",
-        "bytes": 243880,
+        "bytes": 100176,
         "triangles": 1566,
-        "textureMB": 7.4
+        "textureMB": 3.4
+      }
+    ]
+  },
+  {
+    "id": "ssd-kingston-nv3-1tb",
+    "source": "assets-src/blender/products/ssd-kingston-nv3-1tb.glb",
+    "sourceBytes": 2377120,
+    "levels": [
+      {
+        "file": "ssd-kingston-nv3-1tb.glb",
+        "bytes": 460956,
+        "triangles": 782,
+        "textureMB": 26.7
+      },
+      {
+        "file": "ssd-kingston-nv3-1tb_lod1.glb",
+        "bytes": 178388,
+        "triangles": 430,
+        "textureMB": 10.7
+      },
+      {
+        "file": "ssd-kingston-nv3-1tb_lod2.glb",
+        "bytes": 61648,
+        "triangles": 194,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "ssd-samsung-870-evo-1tb",
+    "source": "assets-src/blender/products/ssd-samsung-870-evo-1tb.glb",
+    "sourceBytes": 4443588,
+    "levels": [
+      {
+        "file": "ssd-samsung-870-evo-1tb.glb",
+        "bytes": 231044,
+        "triangles": 198,
+        "textureMB": 27
+      },
+      {
+        "file": "ssd-samsung-870-evo-1tb_lod1.glb",
+        "bytes": 23676,
+        "triangles": 198,
+        "textureMB": 1.7
+      },
+      {
+        "file": "ssd-samsung-870-evo-1tb_lod2.glb",
+        "bytes": 13840,
+        "triangles": 198,
+        "textureMB": 0.4
+      }
+    ]
+  },
+  {
+    "id": "ssd-samsung-990-pro-2tb",
+    "source": "assets-src/blender/products/ssd-samsung-990-pro-2tb.glb",
+    "sourceBytes": 1128704,
+    "levels": [
+      {
+        "file": "ssd-samsung-990-pro-2tb.glb",
+        "bytes": 262420,
+        "triangles": 2038,
+        "textureMB": 16
+      },
+      {
+        "file": "ssd-samsung-990-pro-2tb_lod1.glb",
+        "bytes": 262356,
+        "triangles": 2026,
+        "textureMB": 16
+      },
+      {
+        "file": "ssd-samsung-990-pro-2tb_lod2.glb",
+        "bytes": 79520,
+        "triangles": 2026,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "ssd-wd-sn850x-1tb",
+    "source": "assets-src/blender/products/ssd-wd-sn850x-1tb.glb",
+    "sourceBytes": 2377116,
+    "levels": [
+      {
+        "file": "ssd-wd-sn850x-1tb.glb",
+        "bytes": 460960,
+        "triangles": 782,
+        "textureMB": 26.7
+      },
+      {
+        "file": "ssd-wd-sn850x-1tb_lod1.glb",
+        "bytes": 178376,
+        "triangles": 430,
+        "textureMB": 10.7
+      },
+      {
+        "file": "ssd-wd-sn850x-1tb_lod2.glb",
+        "bytes": 61644,
+        "triangles": 194,
+        "textureMB": 2.7
       }
     ]
   }

@@ -1,0 +1,141 @@
+{
+  "name": "psu-corsair-rm750e",
+  "description": "Catalog PC component model (V2-2b), canonical orientation for the case mount.",
+  "input": "assets-src/sketchfab/v2/power_supply_aerocool_kcas_500w_atx.glb",
+  "output": "assets-src/blender/products/psu-corsair-rm750e.glb",
+  "rotate": [
+    [
+      "X",
+      180
+    ],
+    [
+      "Z",
+      180
+    ]
+  ],
+  "realSize": [
+    0.15,
+    0.14,
+    0.086
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.44,
+            0.48,
+            0.72,
+            0.64
+          ]
+        ]
+      },
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.62,
+            0.85,
+            0.895,
+            1.0
+          ]
+        ],
+        "color": "#161616"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [
+    {
+      "type": "power_ac",
+      "part": "body",
+      "at": [
+        0.3,
+        1,
+        0.5
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.powerAc"
+    },
+    {
+      "type": "atx_24pin",
+      "part": "body",
+      "at": [
+        0.3,
+        0,
+        0.5
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ],
+      "label": "ports.atx24pin"
+    },
+    {
+      "type": "eps_8pin",
+      "part": "body",
+      "at": [
+        0.6,
+        0,
+        0.6
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ],
+      "label": "ports.eps8pin"
+    },
+    {
+      "type": "pcie_power",
+      "part": "body",
+      "at": [
+        0.6,
+        0,
+        0.3
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ],
+      "label": "ports.pciePower"
+    },
+    {
+      "type": "sata_power",
+      "part": "body",
+      "at": [
+        0.85,
+        0,
+        0.5
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ],
+      "label": "ports.sataPower"
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/psu-corsair-rm750e.jpg"
+  }
+}

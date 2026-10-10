@@ -3111,5 +3111,29 @@
         "condition": "Барлық {target} тапсырманы орында."
       }
     }
+  },
+  "ports": {
+    "atx24pin": "24 пиндік ATX қуат ұясы",
+    "audio": "3,5 мм аудио ұясы",
+    "displayport": "DisplayPort",
+    "eps8pin": "Процессордың 8 пиндік қуаты (EPS)",
+    "ethernet": "Ethernet ұясы (RJ-45)",
+    "fanHeader": "Желдеткіш коннекторы",
+    "frontPanel": "Алдыңғы панель коннекторы",
+    "hdmi": "HDMI",
+    "pcie8pin": "PCIe 8 пиндік қуат",
+    "pciePower": "Видеокарта қуаты (PCIe)",
+    "pcieX1": "PCIe x1 слоты",
+    "pcieX16": "PCIe x16 слоты",
+    "powerAc": "Желі кабелінің ұясы (220 В)",
+    "powerButton": "Қосу батырмасы",
+    "sata": "SATA ұясы",
+    "sataPower": "SATA қуаты",
+    "slotDimm": "Жедел жад слоты (DIMM)",
+    "slotM2": "M.2 слоты",
+    "socketCpu": "Процессор сокеті",
+    "usbA": "USB-A ұясы",
+    "usbC": "USB-C ұясы",
+    "usbHeader": "Алдыңғы USB коннекторы"
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Vector3, type Group, type PerspectiveCamera } from 'three';
@@ -7,8 +7,8 @@ import { EnvironmentLighting } from '@/components/3d/EnvironmentLighting';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { STEP_IDS, type StepId } from '@/labs/AssemblyLab';
-import { resolveBuild, type ResolvedBuild } from '@/lib/studio/build';
-import { recommendBuild } from '@/lib/studio/recommend';
+import type { ResolvedBuild } from '@/lib/studio/build';
+import { showcaseBuild } from '@/lib/studio/showcase';
 import { framingScale } from '@/lib/three/framing';
 import { useAssemblyLabStore } from '@/store/assemblyLabStore';
 import { Desk } from '@/scenes/DeskScene/models/Desk';
@@ -151,7 +151,7 @@ function TrayPads() {
 
 export default function AssemblyLabScene() {
   const t = useT();
-  const build = useMemo(() => resolveBuild(recommendBuild('gaming', 1_200_000, 'black')), []);
+  const build = showcaseBuild();
   const installed = useAssemblyLabStore((s) => s.assembly.installed);
   const boardStep: StepId = installed.includes('motherboard') ? 'mountBoard' : 'motherboard';
   const name = (s: StepId) => t(tk(`pcLab.steps.${s}.part`));

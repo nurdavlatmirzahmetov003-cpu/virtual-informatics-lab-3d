@@ -3111,5 +3111,29 @@
         "condition": "Выполни все {target} заданий."
       }
     }
+  },
+  "ports": {
+    "atx24pin": "24-контактный разъём питания ATX",
+    "audio": "Аудиоразъём 3,5 мм",
+    "displayport": "DisplayPort",
+    "eps8pin": "8-контактное питание процессора (EPS)",
+    "ethernet": "Порт Ethernet (RJ-45)",
+    "fanHeader": "Разъём вентилятора",
+    "frontPanel": "Разъём передней панели",
+    "hdmi": "HDMI",
+    "pcie8pin": "Питание PCIe 8-pin",
+    "pciePower": "Питание видеокарты (PCIe)",
+    "pcieX1": "Слот PCIe x1",
+    "pcieX16": "Слот PCIe x16",
+    "powerAc": "Разъём сетевого кабеля (220 В)",
+    "powerButton": "Кнопка питания",
+    "sata": "Разъём SATA",
+    "sataPower": "Питание SATA",
+    "slotDimm": "Слот памяти (DIMM)",
+    "slotM2": "Слот M.2",
+    "socketCpu": "Процессорный сокет",
+    "usbA": "Порт USB-A",
+    "usbC": "Порт USB-C",
+    "usbHeader": "Разъём фронтальных USB"
   }
 }

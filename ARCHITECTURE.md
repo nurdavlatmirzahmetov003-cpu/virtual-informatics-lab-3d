@@ -161,6 +161,14 @@ legacy/                     ескі ES-module прототип (python http.ser
     - `ModelLoader` деңгейді `modelLevels(file, lodBias)` арқылы таңдайды. Setup Studio мұндай модельдерді `fit`-сіз қояды; ескі ортақ модельдер (`hardware/*`) бұрынғыдай fit + stretch-пен.
     - Конфиг → Blender → `assets-src/blender/products/` → `assets:optimize` → `public/assets/models/products/` → `assets:validate`.
 
+39. **ПК бөлшектері мен маркерлер (V2-2b).**
+    - ПК бөлшектерінің өнім модельдері «канондық күйде» болады (Blender осьтері: компонент жағы +Z, плата жоғары +X / I/O +Y, GPU PCIe жиегінде, кулер табаны −Z; толығы `scripts/blender/README.md`).
+    - `HardwareParts.tsx` оларды бір ортақ бұрылыспен (Z бойынша 90°) платаға қояды. `ModelFit.pin` модельдің бір жағын анкерге қояды (мысалы, плата артқы беті, GPU кронштейні), ал `size`-сыз модель өз масштабында қалады.
+    - Корпус моделі `Chassis.tsx`-те tray бетімен туралады (`TRAY_FACE_X`); шыны процедуралық. Модельсіз өнімдер (Kraken, HDD) бұрынғы ортақ/процедуралық жолмен.
+    - Басты бет пен Assembly Lab бір жинақты көрсетеді: `lib/studio/showcase.ts`.
+    - Маркерлер — GLB ішіндегі бос node-тар, extras: `port` (түрі), `dir` (қосылу бағыты), `labelKey` (`ports.*`). Атаулары `port_<type>_<n>`; `slot_*`, `header_*`, `socket_*`, `mount_*` өз атымен. V2-6 кабельдері мен V2-7 симуляциясы осыларды оқиды; React-та координата қатаң жазылмайды.
+    - Текстура бюджеті (RGBA + mip) деңгейге 32/16/4 MB — `optimize-assets.mjs` ең үлкенін екі есе кішірейтеді, `assets:validate` тексереді.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

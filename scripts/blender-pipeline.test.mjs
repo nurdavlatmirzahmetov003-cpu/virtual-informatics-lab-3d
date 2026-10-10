@@ -77,3 +77,17 @@ test('every catalog product with its own model has a pipeline config (and vice v
   const own = new Set([...catalog.matchAll(/P\('([a-z0-9-]+)'\)/g)].map((m) => m[1]));
   assert.deepEqual([...own].sort(), [...configs].sort());
 });
+
+test('every port marker label is translated (V2-2b markers feed the V2-6 port tooltips)', () => {
+  const dir = path.join(import.meta.dirname, 'blender', 'configs');
+  const files = [
+    ...readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => path.join(dir, f)),
+    ...readdirSync(path.join(dir, 'products')).filter((f) => f.endsWith('.json')).map((f) => path.join(dir, 'products', f)),
+  ];
+  const labels = new Set(files.flatMap((f) => (JSON.parse(readFileSync(f, 'utf8')).ports ?? []).map((p) => p.label).filter(Boolean)));
+  assert.ok(labels.size > 10);
+  for (const lang of ['kk', 'ru', 'en']) {
+    const dict = JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'src', 'locales', `${lang}.json`), 'utf8'));
+    for (const key of labels) assert.equal(typeof key.split('.').reduce((o, k) => o?.[k], dict), 'string', `${lang}: ${key}`);
+  }
+});

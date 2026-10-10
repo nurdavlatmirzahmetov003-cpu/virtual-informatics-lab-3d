@@ -463,6 +463,33 @@ Renders: `docs/blender/gpu_triple_fan_assembled.jpg`, `docs/blender/gpu_triple_f
 
 - **Result:** all 28 products of batch 1 have their own model (ASSET_MANIFEST.md, "Setup Studio per-product models").
 
+## 6c. Batch 2 result (V2-2b, 2026-10-10)
+
+- **Downloaded:** 18 GLBs by the owner: the 16 planned models plus 2 extras. The owner's list is in `Downloads/PC_3D_MODELS_README.md`.
+- **Mismatches** (the model is a stand-in for the product):
+
+  | Product | Model used |
+  |---|---|
+  | Fractal North | A Corsair 4000D with a North-style front (mod) |
+  | NZXT H5 Flow | Same mod base, flat white |
+  | MSI B650 | MSI B450 TOMAHAWK MAX |
+  | MSI B760M | MSI Z790 low poly |
+  | Samsung 870 EVO | Samsung SM883 |
+  | Lian Li O11 | NZXT-style case (Igor.Jop) |
+  | be quiet!/Corsair PSUs | Aerocool KCAS (the Seasonic M12II CAD shape has only 444 △) |
+
+  The real "Fractal North" model on Sketchfab does not allow downloads.
+- **Reused earlier originals:** the cooler tower (AK400), X570 board (ASUS TUF/Prime), Trident-style RAM, 3080 Gaming X Trio (5060 Ti Dual), M.2 SSD (NV3/SN850X) and the PSU (PK550D/Focus GX).
+- **Result:** 31 model configs for 37 catalog products. Physically identical packages share one model: AM5 (4 CPUs), LGA (2 CPUs) and Kingston FURY Beast (3 kits).
+  - Port/slot markers: 24 per motherboard, 19 per case, 6 per GPU, 5 per PSU.
+  - Still without a model: NZXT Kraken 240 (procedural AIO) and the 3.5″ HDD (procedural).
+  - Details: ASSET_MANIFEST.md, "PC components (V2-2b)".
+- **Pipeline additions:**
+  - `rotate` steps;
+  - a `size` cleanup rule;
+  - marker naming (`slot_*`, `header_*`, `socket_*`, `mount_*`);
+  - `optimize-assets.mjs products [id …]` (escalating error, `Prune`/`Permissive`; `join` no longer prunes the markers).
+
 ## 7. What the owner needs to do
 
 ### (a) Models to download: owner signs in to Sketchfab

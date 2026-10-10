@@ -1,0 +1,36 @@
+{
+  "name": "ram-kingston-fury-beast",
+  "description": "Low-profile black heat spreader (DDR4 / DDR5 kits).",
+  "input": "assets-src/sketchfab/v2/kingston_hyperx_fury_black_ram_module.glb",
+  "output": "assets-src/blender/products/ram-kingston-fury-beast.glb",
+  "rotate": 90,
+  "realSize": [
+    0.1334,
+    0.0068,
+    0.0345
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "materials": "^Material\\.00[12]$"
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/ram-kingston-fury-beast.jpg"
+  }
+}

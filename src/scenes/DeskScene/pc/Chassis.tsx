@@ -4,7 +4,7 @@
  * fan, interior LED strip, cable runs, and the removable tempered-glass side
  * panel (pulled out and lifted away by `pcRig.glassOpen`).
  */
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
 import type { Group, Material, MeshStandardMaterial, PointLight } from 'three';
@@ -16,12 +16,34 @@ import { Fan, type FanGeometries } from '../models/Fan';
 import { BOARD_FACE, D, FAN, GPU, H, MB, T, W } from './constants';
 import { pcRig } from './pcRig';
 import type { PcTextures } from './usePcTextures';
+import type { HardwareItem } from '@/data/hardware/types';
+import { isTieredModel } from '@/lib/three/modelUrls';
 
 const powderCoat = { color: '#1a1c21', metalness: 0.45, roughness: 0.48 } as const;
 const smooth = (x: number) => x * x * (3 - 2 * x);
 const chassisFit = { axis: 1 as const, size: H, rotation: [0, Math.PI / 2, 0] as const };
+/**
+ * Catalog case models (V2-2b) already fill the case box at real size, front +Z,
+ * glass side −X (the glass stays procedural). Their motherboard trays sit
+ * deeper than the scene's (cable room behind the tray), so each model moves
+ * along +X until its tray face (measured in Blender) is one standoff (6 mm)
+ * behind the board — otherwise the board would hide inside the tray.
+ */
+const STANDOFF = 0.006;
+const TRAY_FACE_X: Readonly<Record<string, number>> = {
+  'case-corsair-4000d-airflow': 0.094,
+  'case-deepcool-cc560-v2': 0.094,
+  'case-fractal-north': 0.083,
+  'case-nzxt-h5-flow-2024': 0.083,
+  'case-lianli-o11d-evo': 0.089,
+};
+const productFit = (id: string) => ({ axis: 1 as const, offset: [MB.x + STANDOFF - (TRAY_FACE_X[id] ?? MB.x + STANDOFF), 0, 0] as const });
 
-export function Chassis({ tex, fan, rgb }: { tex: PcTextures; fan: FanGeometries; rgb: Material }) {
+export function Chassis({ tex, fan, rgb, product }: { tex: PcTextures; fan: FanGeometries; rgb: Material; product?: HardwareItem }) {
+  const own = !!product && isTieredModel(product.modelPath);
+  const caseId = own ? product.id : null;
+  // stable object: ModelLoader re-fits when `fit` changes
+  const fit = useMemo(() => (caseId ? productFit(caseId) : chassisFit), [caseId]);
   const preset = useQualityPreset();
   const glass = useRef<Group>(null);
   const cables = useRef<Group>(null);
@@ -75,7 +97,8 @@ export function Chassis({ tex, fan, rgb }: { tex: PcTextures; fan: FanGeometries
     if (cables.current) cables.current.visible = pcRig.cables > 0.5 && pcRig.explode < 0.02;
     if (strip.current) strip.current.emissiveIntensity = 0.35 + 1.6 * pcRig.interior;
     if (light.current) {
-      light.current.intensity = 0.08 * pcRig.glow + 0.14 * pcRig.interior;
+      // a catalog case model shades its interior more than the open procedural shell
+      light.current.intensity = (0.08 * pcRig.glow + 0.14 * pcRig.interior) * (caseId ? 2.5 : 1);
       light.current.visible = light.current.intensity > 0.005;
     }
   });
@@ -93,7 +116,12 @@ export function Chassis({ tex, fan, rgb }: { tex: PcTextures; fan: FanGeometries
       )}
 
       {/* panels */}
-      <ModelLoader url={`${import.meta.env.BASE_URL}assets/models/hardware/chassis.glb`} fit={chassisFit} scale={[-0.85, 1, -0.9]} fallback={<group>
+      <ModelLoader
+        key={own ? product!.id : 'chassis'}
+        url={`${import.meta.env.BASE_URL}assets/models/${own ? product!.modelPath : 'hardware/chassis.glb'}`}
+        fit={fit}
+        scale={own ? 1 : [-0.85, 1, -0.9]}
+        fallback={<group>
       <RoundedBox args={[T, H, D]} radius={0.0018} position-x={W / 2 - T / 2} castShadow receiveShadow>
         <meshStandardMaterial {...powderCoat} />
       </RoundedBox>

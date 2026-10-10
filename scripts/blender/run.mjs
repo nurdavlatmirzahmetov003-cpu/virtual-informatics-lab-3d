@@ -47,6 +47,8 @@ for (const config of configs) {
   const run = spawnSync(blender, ['--background', '--factory-startup', '--python', path.join(here, 'pipeline.py'), '--', config], {
     cwd: root,
     encoding: 'utf8',
+    // Blender logs every imported node; the default 1 MB buffer would cut the run short
+    maxBuffer: 256 * 1024 * 1024,
   });
   const lines = `${run.stdout}${run.stderr}`.split('\n').filter((l) => l.startsWith('[pipeline]') || /Traceback|Error/.test(l));
   console.log(lines.join('\n'));

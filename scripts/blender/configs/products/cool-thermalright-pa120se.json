@@ -1,0 +1,44 @@
+{
+  "name": "cool-thermalright-pa120se",
+  "description": "Dual tower, silver.",
+  "input": "assets-src/sketchfab/v2/noctua_nh-d15_cpu_cooler.glb",
+  "output": "assets-src/blender/products/cool-thermalright-pa120se.glb",
+  "rotate": [
+    [
+      "Y",
+      90
+    ]
+  ],
+  "realSize": [
+    0.125,
+    0.11,
+    0.155
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": [
+      {
+        "materials": ".",
+        "color": "#c4c7cc",
+        "metallic": 0.8,
+        "roughness": 0.3
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/cool-thermalright-pa120se.jpg"
+  }
+}

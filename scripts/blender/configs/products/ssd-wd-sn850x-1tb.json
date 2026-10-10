@@ -1,0 +1,54 @@
+{
+  "name": "ssd-wd-sn850x-1tb",
+  "description": "Black label.",
+  "input": "assets-src/sketchfab/ssd_m2.glb",
+  "output": "assets-src/blender/products/ssd-wd-sn850x-1tb.glb",
+  "rotate": [
+    [
+      "X",
+      -90
+    ],
+    [
+      "Z",
+      90
+    ]
+  ],
+  "realSize": [
+    0.022,
+    0.08,
+    0.0024
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#111214"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/ssd-wd-sn850x-1tb.jpg"
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "name": "gpu-nvidia-5080-fe",
+  "description": "Catalog PC component model (V2-2b), canonical orientation for the case mount.",
+  "input": "assets-src/sketchfab/v2/nvidia_rtx_5090_founders_edition.glb",
+  "output": "assets-src/blender/products/gpu-nvidia-5080-fe.glb",
+  "rotate": [
+    [
+      "Y",
+      -90
+    ],
+    [
+      "Z",
+      180
+    ]
+  ],
+  "realSize": [
+    0.048,
+    0.304,
+    0.137
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "materials": "^(Titanium_Brushed|Material\\.001)$"
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [
+    {
+      "type": "slot_pcie_x16",
+      "part": "body",
+      "at": [
+        0.5,
+        0.75,
+        0
+      ],
+      "dir": [
+        0,
+        0,
+        -1
+      ],
+      "label": "ports.pcieX16"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.45
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "hdmi",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.6
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.hdmi"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.75
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "pcie_power",
+      "part": "body",
+      "at": [
+        0.5,
+        0.35,
+        1
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.pciePower"
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/gpu-nvidia-5080-fe.jpg"
+  }
+}

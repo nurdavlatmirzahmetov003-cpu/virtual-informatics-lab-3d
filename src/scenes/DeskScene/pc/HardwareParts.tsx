@@ -4,10 +4,11 @@ import type { Group } from 'three';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { ModelLoader } from '@/components/3d/ModelLoader';
 import type { PartId } from './parts';
-import { FRONT_FANS, RAM } from './constants';
+import { BOARD_FACE, D, FRONT_FANS, H, MB, RAM, SSD, W } from './constants';
 import { pcRig } from './pcRig';
 import type { HardwareItem } from '@/data/hardware/types';
 import { LiquidCooler } from './LiquidCooler';
+import { isTieredModel } from '@/lib/three/modelUrls';
 
 type Fit = NonNullable<ComponentProps<typeof ModelLoader>['fit']>;
 const fits: Record<Exclude<PartId, 'fans'>, Fit> = {
@@ -23,6 +24,29 @@ const files = { motherboard: 'motherboard_x570', cpu: 'cpu_am4', cooler: 'cooler
 const fanFit: Fit = { axis: 0, size: 0.12, rotation: [Math.PI / 2, 0, 0] };
 const rotorFit: Fit = { axis: 0, size: 0.0935, rotation: [Math.PI / 2, 0, 0] };
 const url = (name: string) => `${import.meta.env.BASE_URL}assets/models/hardware/${name}.glb`;
+const productUrl = (product: HardwareItem) => `${import.meta.env.BASE_URL}assets/models/${product.modelPath}`;
+
+/**
+ * Per-product models (V2-2b) are real size in a canonical pose (component side
+ * up, see scripts/blender/configs/products): a quarter turn about Z lays them
+ * against the board (component side −X, top edge up, I/O / bracket at the back).
+ * `pin x max` puts the back of the part on its anchor, the offset is the height
+ * of the socket / slot it sits in.
+ */
+const ON_BOARD = [0, 0, Math.PI / 2] as const;
+const productFits: Record<Exclude<PartId, 'fans'>, Fit> = {
+  // ATX and mATX share the top edge and the I/O edge
+  motherboard: { axis: 1, rotation: ON_BOARD, pin: { x: 'max', y: 'max', z: 'min' }, offset: [0, MB.h / 2, -MB.d / 2] },
+  cpu: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.004, 0, 0] },
+  cooler: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.0105, 0, 0] },
+  ram: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.002, 0, 0] },
+  gpu: { axis: 1, rotation: ON_BOARD, pin: { x: 'max', z: 'min' }, offset: [-0.004, 0, 0] },
+  ssd: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.001, 0, 0] },
+  psu: { axis: 0 },
+};
+/** A 2.5″ SATA drive lies on the PSU shroud in front of the board, not in the M.2 slot. */
+const SATA_AT = [-W / 2 + 0.07, -H / 2 + 0.098, D / 2 - 0.13] as const;
+const sataFit: Fit = { axis: 0, align: 'floor', offset: [SATA_AT[0] - BOARD_FACE, SATA_AT[1] - SSD.y, SATA_AT[2] - SSD.z] };
 
 /**
  * A row of 120 mm fans along Y. Deliberately not instanced (measured in
@@ -57,15 +81,24 @@ function Rotor({ y }: { y: number }) {
 }
 
 /** 2 or 4 identical modules in the DIMM slots (one cached file, see HardwareFans on instancing). */
-function RamSticks({ count, fallback }: { count: number; fallback: ReactNode }) {
+function RamSticks({ count, fallback, product }: { count: number; fallback: ReactNode; product?: HardwareItem }) {
   const positions = useMemo(() => Array.from({ length: Math.min(4, count) }, (_, i) => [0, 0, RAM.pitch * (count === 2 ? i * 2 + 1 : i)] as const), [count]);
-  return <>{positions.map((p, i) => <ModelLoader key={i} url={url(files.ram)} fit={fits.ram} position={[...p]} fallback={i === 0 ? fallback : null} />)}</>;
+  const own = product && isTieredModel(product.modelPath);
+  return (
+    <>
+      {positions.map((p, i) => (
+        <ModelLoader key={i} url={own ? productUrl(product) : url(files.ram)} fit={own ? productFits.ram : fits.ram} position={[...p]} fallback={i === 0 ? fallback : null} />
+      ))}
+    </>
+  );
 }
 
 /** Licensed PBR components; PCPart retains ownership of all choreography. */
 export function HardwarePart({ id, fallback, product, rgbColor, deferDetail = false }: { id: PartId; fallback: ReactNode; product?: HardwareItem; rgbColor?: string | null; deferDetail?: boolean }) {
+  const own = !!product && isTieredModel(product.modelPath);
   const fit = useMemo(() => {
     if (id === 'fans') return null;
+    if (own) return id === 'ssd' && /SATA/.test(product?.model ?? '') ? sataFit : productFits[id];
     const base = fits[id];
     if (id === 'gpu' && product?.modelSize) return { ...base, size: product.modelSize, offset: [-0.07, 0, product.modelSize / 2] as const };
     if (id === 'cooler' && product?.compatibility.coolerHeightMm) {
@@ -73,12 +106,12 @@ export function HardwarePart({ id, fallback, product, rgbColor, deferDetail = fa
       return { ...base, size: height, offset: [-height / 2, 0, 0.01] as const };
     }
     return base;
-  }, [id, product]);
+  }, [id, product, own]);
   if (id === 'fans') return <HardwareFans ys={FRONT_FANS.ys} fallback={fallback} />;
   if (id === 'cooler' && product?.compatibility.radiatorMm) return <LiquidCooler radiatorMm={product.compatibility.radiatorMm} rgbColor={rgbColor} />;
   if (id === 'ram') {
     const count = product ? Number(product.model.match(/\((\d+)\s*[×x]/)?.[1] ?? 2) : RAM.count;
-    return <RamSticks count={count} fallback={fallback} />;
+    return <RamSticks count={count} fallback={fallback} product={product} />;
   }
-  return <ModelLoader url={url(files[id])} fit={fit!} fallback={fallback} deferDetail={deferDetail} />;
+  return <ModelLoader key={own ? product!.id : id} url={own ? productUrl(product!) : url(files[id])} fit={fit!} fallback={fallback} deferDetail={deferDetail} />;
 }

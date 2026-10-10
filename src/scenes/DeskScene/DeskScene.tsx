@@ -13,6 +13,7 @@ import { Headset, Keyboard, Monitor, Mouse, Speakers } from './models/HardwareDe
 import { PCCase } from './pc/PCCase';
 import { Room } from './models/Room';
 import { usePcStore } from '@/store/pcStore';
+import { showcaseBuild } from '@/lib/studio/showcase';
 import { ExploreCamera } from './ExploreCamera';
 import { ShadowSync } from './ShadowSync';
 import { StoryCamera } from './StoryCamera';
@@ -46,7 +47,7 @@ export default function DeskScene() {
       <Mouse />
       <Speakers />
       <Headset />
-      <PCCase deferDetail />
+      <PCCase deferDetail build={showcaseBuild()} />
     </>
   );
 }

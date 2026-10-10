@@ -1,0 +1,85 @@
+{
+  "name": "ram-corsair-vengeance-rgb-32",
+  "description": "One stick of the kit; heat-spreader print removed.",
+  "input": "assets-src/sketchfab/v2/ram_corsair_vengeance_ddr4_rgb_pro.glb",
+  "output": "assets-src/blender/products/ram-corsair-vengeance-rgb-32.glb",
+  "rotate": 0,
+  "realSize": [
+    0.1336,
+    0.0076,
+    0.044
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "separateLoose": true,
+    "remove": [
+      {
+        "center": {
+          "max": [
+            1000,
+            -0.02,
+            1000
+          ]
+        }
+      }
+    ],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.045,
+            0.34,
+            0.115,
+            0.68
+          ],
+          [
+            0.215,
+            0.34,
+            0.285,
+            0.68
+          ],
+          [
+            0.37,
+            0.34,
+            0.44,
+            0.68
+          ],
+          [
+            0.545,
+            0.34,
+            0.615,
+            0.68
+          ],
+          [
+            0.705,
+            0.34,
+            0.775,
+            0.68
+          ],
+          [
+            0.88,
+            0.34,
+            0.962,
+            0.68
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/ram-corsair-vengeance-rgb-32.jpg"
+  }
+}

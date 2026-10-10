@@ -9,7 +9,7 @@ import { useFrame } from '@react-three/fiber';
 import { Box3, Plane, Vector3, type Group, type Material, type Mesh, type MeshStandardMaterial, type Object3D } from 'three';
 import { ModelLoader } from '@/components/3d/ModelLoader';
 import type { HardwareItem } from '@/data/hardware/types';
-import { CASE_FINISHES, type Finish, type PeripheralTheme } from '@/data/studio/options';
+import { CASE_FINISHES, type CaseFinish, type Finish, type PeripheralTheme } from '@/data/studio/options';
 import type { ResolvedBuild } from '@/lib/studio/build';
 import { applyPaint, type PaintFinish } from '@/lib/three/finish';
 import { isTieredModel } from '@/lib/three/modelUrls';
@@ -218,18 +218,24 @@ function Monitor({ product, paint, animated }: { product: HardwareItem; paint: P
 
 /* ── PC ──────────────────────────────────────────────────── */
 
+/** Finish a catalog case model already has (V2-2b); other finishes are painted on. */
+const NATIVE_CASE_FINISH: Readonly<Record<string, CaseFinish>> = { 'case-lianli-o11d-evo': 'white', 'case-nzxt-h5-flow-2024': 'white' };
+
 /** System unit with case paint and RGB; parts missing from the build are hidden. */
 function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish; rig: PcRigMode }) {
   const group = useRef<Group>(null);
   const applied = useRef('');
-  const paint = finish.case === 'black' ? null : CASE_FINISHES[finish.case];
+  const own = build.case && isTieredModel(build.case.modelPath) ? build.case : null;
+  const native = own ? (NATIVE_CASE_FINISH[own.id] ?? 'black') : 'black';
+  const paint = finish.case === native ? null : CASE_FINISHES[finish.case];
   const hide = useMemo<PartId[]>(() => (['motherboard', 'cpu', 'cooler', 'ram', 'gpu', 'ssd', 'psu'] as const).filter(id => !build[id === 'cooler' ? 'cooling' : id]), [build]);
   useFrame(() => {
-    const chassis = group.current?.getObjectByName('asset:chassis.glb');
+    const chassis = group.current?.getObjectByName(own ? `asset:${own.id}.glb` : 'asset:chassis.glb');
     if (!chassis) return;
     const key = `${chassis.uuid}:${finish.case}`;
     if (applied.current === key) return;
-    applyPaint(chassis, paint);
+    // a dark case keeps its light trims (wood, silver) when painted
+    applyPaint(chassis, paint, { onlyDark: native === 'black' });
     applied.current = key;
     notifySetupChanged();
   });

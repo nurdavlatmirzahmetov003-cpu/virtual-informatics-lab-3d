@@ -1,0 +1,50 @@
+{
+  "name": "cpu-amd-am5",
+  "description": "AM5 package; heat-spreader print removed.",
+  "input": "assets-src/sketchfab/v2/amd_ryzen_9.glb",
+  "output": "assets-src/blender/products/cpu-amd-am5.glb",
+  "rotate": [
+    [
+      "Y",
+      -90
+    ]
+  ],
+  "realSize": [
+    0.04,
+    0.04,
+    0.0065
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_4",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#d9d4d0"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/cpu-amd-am5.jpg"
+  }
+}

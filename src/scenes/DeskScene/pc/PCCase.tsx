@@ -133,7 +133,7 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
   return (
     <group position={[...CASE_ORIGIN]}>
       <PcRigController mode={rig} hide={hide} />
-      <Chassis tex={tex} fan={fan} rgb={res.rgb} />
+      <Chassis tex={tex} fan={fan} rgb={res.rgb} product={build?.case} />
       {PARTS.map((def) => (
         <PCPart key={def.id} def={def} enabled={interactive}>
           <HardwarePart id={def.id} fallback={content[def.id]} rgbColor={rgbColor} deferDetail={deferDetail} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />

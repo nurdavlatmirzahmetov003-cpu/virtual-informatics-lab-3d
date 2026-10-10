@@ -1,0 +1,57 @@
+{
+  "name": "ssd-samsung-990-pro-2tb",
+  "description": "Catalog PC component model (V2-2b), canonical orientation for the case mount.",
+  "input": "assets-src/sketchfab/v2/m.2_nvme_ssd_samsung_990_pro_1tb_3d_model.glb",
+  "output": "assets-src/blender/products/ssd-samsung-990-pro-2tb.glb",
+  "rotate": 90,
+  "realSize": [
+    0.022,
+    0.08,
+    0.0023
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.05,
+            0.33,
+            0.95,
+            0.68
+          ]
+        ],
+        "color": "#141416"
+      },
+      {
+        "image": "Image_1",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#141416"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/ssd-samsung-990-pro-2tb.jpg"
+  }
+}

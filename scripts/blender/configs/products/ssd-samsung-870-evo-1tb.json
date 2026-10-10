@@ -1,0 +1,44 @@
+{
+  "name": "ssd-samsung-870-evo-1tb",
+  "description": "Catalog PC component model (V2-2b), canonical orientation for the case mount.",
+  "input": "assets-src/sketchfab/v2/sata_samsung_sm883_ssd.glb",
+  "output": "assets-src/blender/products/ssd-samsung-870-evo-1tb.glb",
+  "rotate": 0,
+  "realSize": [
+    0.0699,
+    0.1,
+    0.0068
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.25,
+            0.4,
+            0.8,
+            0.65
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/ssd-samsung-870-evo-1tb.jpg"
+  }
+}

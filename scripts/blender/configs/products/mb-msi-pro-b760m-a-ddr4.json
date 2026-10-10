@@ -1,0 +1,467 @@
+{
+  "name": "mb-msi-pro-b760m-a-ddr4",
+  "description": "Dragon / brand / series marks repainted.",
+  "input": "assets-src/sketchfab/v2/motherboard_msi_z790_low_poly.glb",
+  "output": "assets-src/blender/products/mb-msi-pro-b760m-a-ddr4.glb",
+  "rotate": [
+    [
+      "X",
+      -90
+    ],
+    [
+      "Z",
+      -90
+    ]
+  ],
+  "realSize": [
+    0.244,
+    0.244,
+    0
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_28",
+        "rects": [
+          [
+            0.665,
+            0.02,
+            0.74,
+            0.13
+          ],
+          [
+            0.65,
+            0.16,
+            0.7,
+            0.2
+          ],
+          [
+            0.44,
+            0.27,
+            0.5,
+            0.31
+          ],
+          [
+            0.54,
+            0.225,
+            0.63,
+            0.245
+          ],
+          [
+            0.49,
+            0.0,
+            0.53,
+            0.02
+          ]
+        ]
+      },
+      {
+        "image": "Image_29",
+        "rects": [
+          [
+            0.355,
+            0.49,
+            0.44,
+            0.61
+          ],
+          [
+            0.34,
+            0.63,
+            0.39,
+            0.68
+          ],
+          [
+            0.0,
+            0.66,
+            0.07,
+            0.71
+          ],
+          [
+            0.73,
+            0.75,
+            0.76,
+            0.8
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [
+    {
+      "type": "socket_cpu",
+      "part": "body",
+      "at": [
+        0.73,
+        0.56,
+        0.25
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.socketCpu"
+    },
+    {
+      "type": "slot_dimm",
+      "part": "body",
+      "at": [
+        0.71,
+        0.27,
+        0.25
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.slotDimm"
+    },
+    {
+      "type": "slot_dimm",
+      "part": "body",
+      "at": [
+        0.71,
+        0.23,
+        0.25
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.slotDimm"
+    },
+    {
+      "type": "slot_dimm",
+      "part": "body",
+      "at": [
+        0.71,
+        0.19,
+        0.25
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.slotDimm"
+    },
+    {
+      "type": "slot_dimm",
+      "part": "body",
+      "at": [
+        0.71,
+        0.15,
+        0.25
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.slotDimm"
+    },
+    {
+      "type": "slot_pcie_x16",
+      "part": "body",
+      "at": [
+        0.35,
+        0.7,
+        0.25
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.pcieX16"
+    },
+    {
+      "type": "slot_pcie_x1",
+      "part": "body",
+      "at": [
+        0.42,
+        0.75,
+        0.25
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.pcieX1"
+    },
+    {
+      "type": "slot_m2",
+      "part": "body",
+      "at": [
+        0.17,
+        0.54,
+        0.2
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.slotM2"
+    },
+    {
+      "type": "header_24pin",
+      "part": "body",
+      "at": [
+        0.62,
+        0.0,
+        0.25
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ],
+      "label": "ports.atx24pin"
+    },
+    {
+      "type": "header_eps_8pin",
+      "part": "body",
+      "at": [
+        0.97,
+        0.8,
+        0.25
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.eps8pin"
+    },
+    {
+      "type": "header_sata",
+      "part": "body",
+      "at": [
+        0.22,
+        0.0,
+        0.2
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ],
+      "label": "ports.sata"
+    },
+    {
+      "type": "header_sata",
+      "part": "body",
+      "at": [
+        0.16,
+        0.0,
+        0.2
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ],
+      "label": "ports.sata"
+    },
+    {
+      "type": "header_fan_cpu",
+      "part": "body",
+      "at": [
+        0.95,
+        0.45,
+        0.25
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.fanHeader"
+    },
+    {
+      "type": "header_usb3_front",
+      "part": "body",
+      "at": [
+        0.47,
+        0.0,
+        0.25
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ],
+      "label": "ports.usbHeader"
+    },
+    {
+      "type": "header_front_panel",
+      "part": "body",
+      "at": [
+        0.03,
+        0.12,
+        0.2
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.frontPanel"
+    },
+    {
+      "type": "usb_a",
+      "part": "body",
+      "at": [
+        0.94,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.usbA"
+    },
+    {
+      "type": "usb_a",
+      "part": "body",
+      "at": [
+        0.9,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.usbA"
+    },
+    {
+      "type": "usb_a",
+      "part": "body",
+      "at": [
+        0.71,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.usbA"
+    },
+    {
+      "type": "usb_a",
+      "part": "body",
+      "at": [
+        0.67,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.usbA"
+    },
+    {
+      "type": "hdmi",
+      "part": "body",
+      "at": [
+        0.84,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.hdmi"
+    },
+    {
+      "type": "displayport",
+      "part": "body",
+      "at": [
+        0.79,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.displayport"
+    },
+    {
+      "type": "ethernet",
+      "part": "body",
+      "at": [
+        0.62,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.ethernet"
+    },
+    {
+      "type": "usb_c",
+      "part": "body",
+      "at": [
+        0.58,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.usbC"
+    },
+    {
+      "type": "audio_3_5",
+      "part": "body",
+      "at": [
+        0.53,
+        1,
+        0.3
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ],
+      "label": "ports.audio"
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/mb-msi-pro-b760m-a-ddr4.jpg"
+  }
+}

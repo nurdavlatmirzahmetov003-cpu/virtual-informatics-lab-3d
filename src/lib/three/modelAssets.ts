@@ -11,10 +11,13 @@ export const lodSwitches = { count: 0 };
 /** Preserve proportions, orient the source, then fit to real-world metres. */
 export interface ModelFit {
   axis: 0 | 1 | 2;
-  size: number;
+  /** Size along `axis` in metres; omitted = keep the model's own scale (real-size product models). */
+  size?: number;
   rotation?: readonly [number, number, number];
   align?: 'floor' | 'center';
   offset?: readonly [number, number, number];
+  /** Put a side of the bounding box on the origin instead of centring that axis (e.g. a card's back on the board). */
+  pin?: Partial<Record<'x' | 'y' | 'z', 'min' | 'max'>>;
 }
 
 /**
@@ -106,9 +109,10 @@ export function fitModel(levels: Object3D[], fit: ModelFit | undefined, name: st
     const box = new Box3().setFromObject(levels[0]);
     const size = box.getSize(new Vector3());
     const center = box.getCenter(new Vector3());
-    const scale = fit.size / Math.max(size.getComponent(fit.axis), 0.000001);
+    const scale = fit.size ? fit.size / Math.max(size.getComponent(fit.axis), 0.000001) : 1;
     oriented.scale.setScalar(scale);
-    oriented.position.set(-center.x * scale, -(fit.align === 'floor' ? box.min.y : center.y) * scale, -center.z * scale);
+    const at = (k: 'x' | 'y' | 'z', centre: number) => (fit.pin?.[k] === 'max' ? box.max[k] : fit.pin?.[k] === 'min' ? box.min[k] : centre);
+    oriented.position.set(-at('x', center.x) * scale, -at('y', fit.align === 'floor' ? box.min.y : center.y) * scale, -at('z', center.z) * scale);
     if (fit.offset) oriented.position.add(new Vector3(...fit.offset));
   }
   oriented.updateMatrixWorld(true);

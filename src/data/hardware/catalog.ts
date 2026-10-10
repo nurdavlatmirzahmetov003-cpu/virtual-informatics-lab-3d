@@ -401,7 +401,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Cases ─────────────
   item({
     id: 'case-deepcool-cc560-v2', category: 'case', brand: 'DeepCool', model: 'CC560 V2',
-    priceKZT: 30_000, modelPath: M('chassis'), colors: ['black', 'white'], rgb: true,
+    priceKZT: 30_000, modelPath: P('case-deepcool-cc560-v2'), colors: ['black', 'white'], rgb: true,
     performanceTier: 'entry', recommendedUse: ['study', 'gaming', 'universal'],
     specSourceUrl: 'https://www.deepcool.com/products/Cases/CC560-V2/',
     specifications: [
@@ -414,7 +414,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'case-corsair-4000d-airflow', category: 'case', brand: 'Corsair', model: '4000D AIRFLOW',
-    priceKZT: 45_000, modelPath: M('chassis'), colors: ['black', 'white'],
+    priceKZT: 45_000, modelPath: P('case-corsair-4000d-airflow'), colors: ['black', 'white'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'programming', 'universal', 'streaming'],
     specSourceUrl: 'https://www.corsair.com/us/en/p/pc-cases/cc-9011200-ww/4000d-airflow-tempered-glass-mid-tower-atx-case-black-cc-9011200-ww',
     specifications: [
@@ -427,7 +427,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'case-nzxt-h5-flow-2024', category: 'case', brand: 'NZXT', model: 'H5 Flow (2024)',
-    priceKZT: 45_000, modelPath: M('chassis'), colors: ['black', 'white'],
+    priceKZT: 45_000, modelPath: P('case-nzxt-h5-flow-2024'), colors: ['black', 'white'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'streaming', 'universal'],
     specSourceUrl: 'https://support.nzxt.com/hc/en-us/articles/40225168535451-H5-Flow-2024-Specs',
     specifications: [
@@ -439,7 +439,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'case-fractal-north', category: 'case', brand: 'Fractal Design', model: 'North',
-    priceKZT: 70_000, modelPath: M('chassis'), colors: ['black', 'white', 'wood'],
+    priceKZT: 70_000, modelPath: P('case-fractal-north'), colors: ['black', 'white', 'wood'],
     performanceTier: 'performance', recommendedUse: ['design3d', 'programming', 'universal'],
     specSourceUrl: 'https://www.fractal-design.com/products/cases/north/north/',
     specifications: [
@@ -451,7 +451,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'case-lianli-o11d-evo', category: 'case', brand: 'Lian Li', model: 'O11 Dynamic EVO',
-    priceKZT: 75_000, modelPath: M('chassis'), colors: ['black', 'white', 'grey'],
+    priceKZT: 75_000, modelPath: P('case-lianli-o11d-evo'), colors: ['black', 'white', 'grey'],
     performanceTier: 'enthusiast', recommendedUse: ['gaming', 'streaming', 'design3d'],
     specSourceUrl: 'https://lian-li.com/product/o11-dynamic-evo/',
     specifications: [
@@ -465,7 +465,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── CPUs ─────────────
   item({
     id: 'cpu-amd-r5-8500g', category: 'cpu', brand: 'AMD', model: 'Ryzen 5 8500G',
-    priceKZT: 75_000, modelPath: M('cpu_am4'), colors: ['silver'],
+    priceKZT: 75_000, modelPath: P('cpu-amd-am5'), colors: ['silver'],
     performanceTier: 'entry', recommendedUse: ['study', 'programming', 'universal'],
     specSourceUrl: 'https://www.amd.com/en/products/processors/desktops/ryzen/8000-series/amd-ryzen-5-8500g.html',
     specifications: [
@@ -478,7 +478,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'cpu-intel-i5-14400f', category: 'cpu', brand: 'Intel', model: 'Core i5-14400F',
-    priceKZT: 85_000, modelPath: M('cpu_am4'), colors: ['silver'],
+    priceKZT: 85_000, modelPath: P('cpu-intel-lga'), colors: ['silver'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'universal', 'programming'],
     specSourceUrl: 'https://www.intel.com/content/www/us/en/products/sku/236788/intel-core-i5-processor-14400f-20m-cache-up-to-4-70-ghz/specifications.html',
     specifications: [
@@ -491,7 +491,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'cpu-amd-r5-7600', category: 'cpu', brand: 'AMD', model: 'Ryzen 5 7600',
-    priceKZT: 95_000, modelPath: M('cpu_am4'), colors: ['silver'],
+    priceKZT: 95_000, modelPath: P('cpu-amd-am5'), colors: ['silver'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'programming', 'universal', 'study'],
     specSourceUrl: 'https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-5-7600.html',
     specifications: [
@@ -504,7 +504,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'cpu-intel-ultra7-265k', category: 'cpu', brand: 'Intel', model: 'Core Ultra 7 265K',
-    priceKZT: 160_000, modelPath: M('cpu_am4'), colors: ['silver'],
+    priceKZT: 160_000, modelPath: P('cpu-intel-lga'), colors: ['silver'],
     performanceTier: 'performance', recommendedUse: ['design3d', 'streaming', 'programming'],
     specSourceUrl: 'https://www.intel.com/content/www/us/en/products/sku/241060/intel-core-ultra-7-processor-265k-30m-cache-up-to-5-50-ghz/specifications.html',
     specifications: [
@@ -517,7 +517,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'cpu-amd-r7-7800x3d', category: 'cpu', brand: 'AMD', model: 'Ryzen 7 7800X3D',
-    priceKZT: 220_000, modelPath: M('cpu_am4'), colors: ['silver'],
+    priceKZT: 220_000, modelPath: P('cpu-amd-am5'), colors: ['silver'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming'],
     specSourceUrl: 'https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7800x3d.html',
     specifications: [
@@ -530,7 +530,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'cpu-amd-r9-9950x', category: 'cpu', brand: 'AMD', model: 'Ryzen 9 9950X',
-    priceKZT: 300_000, modelPath: M('cpu_am4'), colors: ['silver'],
+    priceKZT: 300_000, modelPath: P('cpu-amd-am5'), colors: ['silver'],
     performanceTier: 'enthusiast', recommendedUse: ['design3d', 'streaming', 'programming'],
     specSourceUrl: 'https://www.amd.com/en/products/processors/desktops/ryzen/9000-series/amd-ryzen-9-9950x.html',
     specifications: [
@@ -545,7 +545,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── CPU cooling ─────────────
   item({
     id: 'cool-deepcool-ak400', category: 'cooling', brand: 'DeepCool', model: 'AK400',
-    priceKZT: 18_000, modelPath: M('cooler_tower'), modelSize: 0.155, colors: ['black', 'white'],
+    priceKZT: 18_000, modelPath: P('cool-deepcool-ak400'), modelSize: 0.155, colors: ['black', 'white'],
     performanceTier: 'entry', recommendedUse: ['study', 'gaming', 'programming', 'universal'],
     specSourceUrl: 'https://www.deepcool.com/products/Cooling/cpuaircoolers/AK400-Performance-CPU-Cooler/2021/15222.shtml',
     specifications: [
@@ -558,7 +558,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'cool-thermalright-pa120se', category: 'cooling', brand: 'Thermalright', model: 'Peerless Assassin 120 SE',
-    priceKZT: 20_000, modelPath: M('cooler_tower'), modelSize: 0.155, colors: ['black', 'white', 'silver'], rgb: true,
+    priceKZT: 20_000, modelPath: P('cool-thermalright-pa120se'), modelSize: 0.155, colors: ['black', 'white', 'silver'], rgb: true,
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'streaming', 'universal'],
     specSourceUrl: 'https://www.thermalright.com/product/peerless-assassin-120-se/',
     specifications: [
@@ -582,7 +582,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'cool-noctua-nh-d15-g2', category: 'cooling', brand: 'Noctua', model: 'NH-D15 G2',
-    priceKZT: 80_000, modelPath: M('cooler_tower'), modelSize: 0.168, colors: ['grey', 'black'],
+    priceKZT: 80_000, modelPath: P('cool-noctua-nh-d15-g2'), modelSize: 0.168, colors: ['grey', 'black'],
     performanceTier: 'enthusiast', recommendedUse: ['design3d', 'streaming', 'programming'],
     specSourceUrl: 'https://www.noctua.at/en/products/nh-d15-g2/specifications',
     specifications: [
@@ -597,7 +597,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Motherboards ─────────────
   item({
     id: 'mb-msi-pro-b760m-a-ddr4', category: 'motherboard', brand: 'MSI', model: 'PRO B760M-A WIFI DDR4',
-    priceKZT: 65_000, modelPath: M('motherboard_x570'), colors: ['black'],
+    priceKZT: 65_000, modelPath: P('mb-msi-pro-b760m-a-ddr4'), colors: ['black'],
     performanceTier: 'entry', recommendedUse: ['study', 'programming', 'universal', 'gaming'],
     specSourceUrl: 'https://www.msi.com/Motherboard/PRO-B760M-A-WIFI-DDR4/Specification',
     specifications: [
@@ -610,7 +610,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mb-msi-b650-gaming-plus', category: 'motherboard', brand: 'MSI', model: 'B650 GAMING PLUS WIFI',
-    priceKZT: 80_000, modelPath: M('motherboard_x570'), colors: ['black'],
+    priceKZT: 80_000, modelPath: P('mb-msi-b650-gaming-plus'), colors: ['black'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'universal', 'study', 'programming'],
     specSourceUrl: 'https://www.msi.com/Motherboard/B650-GAMING-PLUS-WIFI/Specification',
     specifications: [
@@ -623,7 +623,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mb-asus-tuf-b650-plus', category: 'motherboard', brand: 'ASUS', model: 'TUF GAMING B650-PLUS WIFI',
-    priceKZT: 95_000, modelPath: M('motherboard_x570'), colors: ['black'],
+    priceKZT: 95_000, modelPath: P('mb-asus-tuf-b650-plus'), colors: ['black'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming', 'design3d'],
     specSourceUrl: 'https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b650-plus-wifi/techspec/',
     specifications: [
@@ -636,7 +636,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mb-asus-prime-z890-p', category: 'motherboard', brand: 'ASUS', model: 'PRIME Z890-P WIFI',
-    priceKZT: 130_000, modelPath: M('motherboard_x570'), colors: ['black'],
+    priceKZT: 130_000, modelPath: P('mb-asus-prime-z890-p'), colors: ['black'],
     performanceTier: 'performance', recommendedUse: ['design3d', 'streaming', 'programming'],
     specSourceUrl: 'https://www.asus.com/motherboards-components/motherboards/prime/prime-z890-p-wifi/techspec/',
     specifications: [
@@ -651,7 +651,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Memory ─────────────
   item({
     id: 'ram-kingston-beast-ddr4-16', category: 'ram', brand: 'Kingston', model: 'FURY Beast DDR4-3200 16 GB (2 × 8)',
-    priceKZT: 22_000, modelPath: M('ram_rgb'), colors: ['black'],
+    priceKZT: 22_000, modelPath: P('ram-kingston-fury-beast'), colors: ['black'],
     performanceTier: 'entry', recommendedUse: ['study', 'universal', 'programming'],
     specSourceUrl: 'https://www.kingston.com/en/memory/gaming/kingston-fury-beast-ddr4-memory',
     specifications: [
@@ -664,7 +664,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'ram-kingston-beast-ddr5-16', category: 'ram', brand: 'Kingston', model: 'FURY Beast DDR5-5600 16 GB (2 × 8)',
-    priceKZT: 32_000, modelPath: M('ram_rgb'), colors: ['black'],
+    priceKZT: 32_000, modelPath: P('ram-kingston-fury-beast'), colors: ['black'],
     performanceTier: 'entry', recommendedUse: ['study', 'universal', 'programming'],
     specSourceUrl: 'https://www.kingston.com/en/memory/gaming/kingston-fury-beast-ddr5-memory',
     specifications: [
@@ -677,7 +677,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'ram-kingston-beast-ddr5-32', category: 'ram', brand: 'Kingston', model: 'FURY Beast DDR5-6000 32 GB (2 × 16)',
-    priceKZT: 55_000, modelPath: M('ram_rgb'), colors: ['black', 'white'],
+    priceKZT: 55_000, modelPath: P('ram-kingston-fury-beast'), colors: ['black', 'white'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'programming', 'universal', 'streaming'],
     specSourceUrl: 'https://www.kingston.com/en/memory/gaming/kingston-fury-beast-ddr5-memory',
     specifications: [
@@ -690,7 +690,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'ram-corsair-vengeance-rgb-32', category: 'ram', brand: 'Corsair', model: 'VENGEANCE RGB DDR5-6000 32 GB (2 × 16)',
-    priceKZT: 60_000, modelPath: M('ram_rgb'), colors: ['black', 'white'], rgb: true,
+    priceKZT: 60_000, modelPath: P('ram-corsair-vengeance-rgb-32'), colors: ['black', 'white'], rgb: true,
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'streaming'],
     specSourceUrl: 'https://www.corsair.com/us/en/p/memory/cmh32gx5m2e6000c36/vengeance-rgb-32gb-2x16gb-ddr5-dram-6000mt-s-cl36-memory-kit-black-cmh32gx5m2e6000c36',
     specifications: [
@@ -703,7 +703,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'ram-gskill-trident-z5-64', category: 'ram', brand: 'G.Skill', model: 'Trident Z5 RGB DDR5-6400 64 GB (2 × 32)',
-    priceKZT: 120_000, modelPath: M('ram_rgb'), colors: ['black', 'silver'], rgb: true,
+    priceKZT: 120_000, modelPath: P('ram-gskill-trident-z5-64'), colors: ['black', 'silver'], rgb: true,
     performanceTier: 'enthusiast', recommendedUse: ['design3d', 'streaming', 'programming'],
     specSourceUrl: 'https://www.gskill.com/product/165/390/1665020865/F5-6400J3239G32GX2-TZ5RK',
     specifications: [
@@ -718,7 +718,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Graphics cards ─────────────
   item({
     id: 'gpu-asus-dual-5060ti-16', category: 'gpu', brand: 'ASUS', model: 'Dual GeForce RTX 5060 Ti 16GB',
-    priceKZT: 230_000, modelPath: M('gpu_triple_fan'), modelSize: 0.229, colors: ['black', 'white'],
+    priceKZT: 230_000, modelPath: P('gpu-asus-dual-5060ti-16'), modelSize: 0.229, colors: ['black', 'white'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'streaming', 'universal'],
     specSourceUrl: 'https://www.asus.com/motherboards-components/graphics-cards/dual/dual-rtx5060ti-o16g/techspec/',
     specifications: [
@@ -731,7 +731,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'gpu-nvidia-5070-fe', category: 'gpu', brand: 'NVIDIA', model: 'GeForce RTX 5070 Founders Edition',
-    priceKZT: 300_000, modelPath: M('gpu_triple_fan'), modelSize: 0.242, colors: ['silver'],
+    priceKZT: 300_000, modelPath: P('gpu-nvidia-5070-fe'), modelSize: 0.242, colors: ['silver'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming', 'design3d'],
     specSourceUrl: 'https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5070-family/',
     specifications: [
@@ -744,7 +744,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'gpu-sapphire-9070xt-pulse', category: 'gpu', brand: 'Sapphire', model: 'PULSE Radeon RX 9070 XT 16GB',
-    priceKZT: 360_000, modelPath: M('gpu_triple_fan'), modelSize: 0.32, colors: ['black'],
+    priceKZT: 360_000, modelPath: P('gpu-sapphire-9070xt-pulse'), modelSize: 0.32, colors: ['black'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming'],
     specSourceUrl: 'https://www.sapphiretech.com/en/consumer/pulse-radeon-rx-9070-xt-16g-gddr6',
     specifications: [
@@ -757,7 +757,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'gpu-nvidia-5080-fe', category: 'gpu', brand: 'NVIDIA', model: 'GeForce RTX 5080 Founders Edition',
-    priceKZT: 580_000, modelPath: M('gpu_triple_fan'), modelSize: 0.304, colors: ['silver'],
+    priceKZT: 580_000, modelPath: P('gpu-nvidia-5080-fe'), modelSize: 0.304, colors: ['silver'],
     performanceTier: 'enthusiast', recommendedUse: ['gaming', 'design3d', 'streaming'],
     specSourceUrl: 'https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5080/',
     specifications: [
@@ -770,7 +770,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'gpu-asus-rog-astral-5090', category: 'gpu', brand: 'ASUS', model: 'ROG Astral GeForce RTX 5090 32GB',
-    priceKZT: 1_500_000, modelPath: M('gpu_triple_fan'), modelSize: 0.358, colors: ['black'],
+    priceKZT: 1_500_000, modelPath: P('gpu-asus-rog-astral-5090'), modelSize: 0.358, colors: ['black'],
     performanceTier: 'enthusiast', recommendedUse: ['design3d', 'gaming'],
     specSourceUrl: 'https://rog.asus.com/graphics-cards/graphics-cards/rog-astral/rog-astral-rtx5090-o32g-gaming/spec/',
     specifications: [
@@ -785,7 +785,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Storage ─────────────
   item({
     id: 'ssd-kingston-nv3-1tb', category: 'ssd', brand: 'Kingston', model: 'NV3 1 TB',
-    priceKZT: 35_000, modelPath: M('ssd_m2'), colors: ['black'],
+    priceKZT: 35_000, modelPath: P('ssd-kingston-nv3-1tb'), colors: ['black'],
     performanceTier: 'entry', recommendedUse: ['study', 'universal', 'gaming', 'programming'],
     specSourceUrl: 'https://www.kingston.com/en/ssd/nv3-nvme-pcie-ssd',
     specifications: [
@@ -797,7 +797,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'ssd-samsung-870-evo-1tb', category: 'ssd', brand: 'Samsung', model: '870 EVO 1 TB (2.5″ SATA)',
-    priceKZT: 45_000, modelPath: M('ssd_m2'), colors: ['black'],
+    priceKZT: 45_000, modelPath: P('ssd-samsung-870-evo-1tb'), colors: ['black'],
     performanceTier: 'entry', recommendedUse: ['study', 'universal'],
     specSourceUrl: 'https://www.samsung.com/us/computing/memory-storage/solid-state-drives/870-evo-sata-2-5-ssd-1tb-mz-77e1t0b-am/',
     specifications: [
@@ -809,7 +809,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'ssd-wd-sn850x-1tb', category: 'ssd', brand: 'WD_BLACK', model: 'SN850X 1 TB',
-    priceKZT: 55_000, modelPath: M('ssd_m2'), colors: ['black'],
+    priceKZT: 55_000, modelPath: P('ssd-wd-sn850x-1tb'), colors: ['black'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming', 'programming'],
     specSourceUrl: 'https://www.westerndigital.com/products/internal-drives/wd-black-sn850x-nvme-ssd',
     specifications: [
@@ -821,7 +821,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'ssd-samsung-990-pro-2tb', category: 'ssd', brand: 'Samsung', model: '990 PRO 2 TB',
-    priceKZT: 95_000, modelPath: M('ssd_m2'), colors: ['black'],
+    priceKZT: 95_000, modelPath: P('ssd-samsung-990-pro-2tb'), colors: ['black'],
     performanceTier: 'enthusiast', recommendedUse: ['design3d', 'streaming', 'gaming'],
     specSourceUrl: 'https://www.samsung.com/us/computing/memory-storage/solid-state-drives/990-pro-pcie-4-0-nvme-ssd-2tb-mz-v9p2t0b-am/',
     specifications: [
@@ -835,7 +835,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Power supplies ─────────────
   item({
     id: 'psu-deepcool-pk550d', category: 'psu', brand: 'DeepCool', model: 'PK550D',
-    priceKZT: 25_000, modelPath: M('psu'), colors: ['black'],
+    priceKZT: 25_000, modelPath: P('psu-deepcool-pk550d'), colors: ['black'],
     performanceTier: 'entry', recommendedUse: ['study', 'universal', 'programming'],
     specSourceUrl: 'https://www.deepcool.com/products/PowerSupplyUnits/PK550D/',
     specifications: [
@@ -847,7 +847,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'psu-bequiet-pp12m-650', category: 'psu', brand: 'be quiet!', model: 'Pure Power 12 M 650W',
-    priceKZT: 45_000, modelPath: M('psu'), colors: ['black'],
+    priceKZT: 45_000, modelPath: P('psu-bequiet-pp12m-650'), colors: ['black'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'programming', 'universal'],
     specSourceUrl: 'https://www.bequiet.com/en/powersupply/4018',
     specifications: [
@@ -860,7 +860,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'psu-corsair-rm750e', category: 'psu', brand: 'Corsair', model: 'RM750e',
-    priceKZT: 50_000, modelPath: M('psu'), colors: ['black'],
+    priceKZT: 50_000, modelPath: P('psu-corsair-rm750e'), colors: ['black'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'streaming', 'universal'],
     specSourceUrl: 'https://www.corsair.com/us/en/p/psu/cp-9020262-na/rme-series-rm750e-fully-modular-low-noise-atx-power-supply-cp-9020262-na',
     specifications: [
@@ -873,7 +873,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'psu-corsair-rm850x', category: 'psu', brand: 'Corsair', model: 'RM850x (2024)',
-    priceKZT: 65_000, modelPath: M('psu'), colors: ['black', 'white'],
+    priceKZT: 65_000, modelPath: P('psu-corsair-rm850x'), colors: ['black', 'white'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'design3d', 'streaming'],
     specSourceUrl: 'https://www.corsair.com/us/en/p/psu/cp-9020270-na/rmx-series-rm850x-fully-modular-low-noise-atx-power-supply-cp-9020270-na',
     specifications: [
@@ -886,7 +886,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'psu-seasonic-focus-gx-1000', category: 'psu', brand: 'Seasonic', model: 'FOCUS GX-1000 ATX 3',
-    priceKZT: 85_000, modelPath: M('psu'), colors: ['black', 'white'],
+    priceKZT: 85_000, modelPath: P('psu-seasonic-focus-gx-1000'), colors: ['black', 'white'],
     performanceTier: 'enthusiast', recommendedUse: ['design3d', 'gaming'],
     specSourceUrl: 'https://seasonic.com/atx3-focus-gx/',
     specifications: [

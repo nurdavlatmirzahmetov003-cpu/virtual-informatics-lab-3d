@@ -1,0 +1,39 @@
+{
+  "name": "cool-deepcool-ak400",
+  "description": "Single tower, dark finish.",
+  "input": "assets-src/sketchfab/cooler_tower.glb",
+  "output": "assets-src/blender/products/cool-deepcool-ak400.glb",
+  "rotate": 180,
+  "realSize": [
+    0.127,
+    0.097,
+    0.155
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": [
+      {
+        "materials": ".",
+        "color": "#2a2c30",
+        "metallic": 0.7,
+        "roughness": 0.35
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/cool-deepcool-ak400.jpg"
+  }
+}

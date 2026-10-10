@@ -1,0 +1,322 @@
+{
+  "name": "case-fractal-north",
+  "description": "Wood-slat front; glass-side panes removed (scene glass).",
+  "input": "assets-src/sketchfab/v2/crosair_4000d_x_fractal_north.glb",
+  "output": "assets-src/blender/products/case-fractal-north.glb",
+  "rotate": 0,
+  "realSize": [
+    0.23,
+    0.45,
+    0.47
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "separateLoose": true,
+    "remove": [
+      {
+        "center": {
+          "max": [
+            -81.5,
+            1000000000.0,
+            1000000000.0
+          ]
+        },
+        "size": {
+          "min": [
+            0,
+            300,
+            300
+          ]
+        }
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [
+    {
+      "type": "usb_a",
+      "part": "body",
+      "at": [
+        0.62,
+        0.1,
+        1
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.usbA"
+    },
+    {
+      "type": "usb_a",
+      "part": "body",
+      "at": [
+        0.68,
+        0.1,
+        1
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.usbA"
+    },
+    {
+      "type": "usb_c",
+      "part": "body",
+      "at": [
+        0.56,
+        0.1,
+        1
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.usbC"
+    },
+    {
+      "type": "audio_3_5",
+      "part": "body",
+      "at": [
+        0.5,
+        0.1,
+        1
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.audio"
+    },
+    {
+      "type": "power_button",
+      "part": "body",
+      "at": [
+        0.76,
+        0.1,
+        1
+      ],
+      "dir": [
+        0,
+        0,
+        1
+      ],
+      "label": "ports.powerButton"
+    },
+    {
+      "type": "mount_motherboard",
+      "part": "body",
+      "at": [
+        0.95,
+        0.55,
+        0.62
+      ],
+      "dir": [
+        -1,
+        0,
+        0
+      ]
+    },
+    {
+      "type": "mount_io_shield",
+      "part": "body",
+      "at": [
+        0.82,
+        1,
+        0.83
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "slot_expansion",
+      "part": "body",
+      "at": [
+        0.62,
+        1,
+        0.66
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "slot_expansion",
+      "part": "body",
+      "at": [
+        0.62,
+        1,
+        0.617
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "slot_expansion",
+      "part": "body",
+      "at": [
+        0.62,
+        1,
+        0.5740000000000001
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "slot_expansion",
+      "part": "body",
+      "at": [
+        0.62,
+        1,
+        0.531
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "slot_expansion",
+      "part": "body",
+      "at": [
+        0.62,
+        1,
+        0.48800000000000004
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "slot_expansion",
+      "part": "body",
+      "at": [
+        0.62,
+        1,
+        0.44500000000000006
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "slot_expansion",
+      "part": "body",
+      "at": [
+        0.62,
+        1,
+        0.402
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "mount_psu",
+      "part": "body",
+      "at": [
+        0.55,
+        1,
+        0.1
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "type": "mount_fan_front",
+      "part": "body",
+      "at": [
+        0.5,
+        0,
+        0.76
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "type": "mount_fan_front",
+      "part": "body",
+      "at": [
+        0.5,
+        0,
+        0.5
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "type": "mount_fan_front",
+      "part": "body",
+      "at": [
+        0.5,
+        0,
+        0.24
+      ],
+      "dir": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "type": "mount_fan_rear",
+      "part": "body",
+      "at": [
+        0.5,
+        1,
+        0.8
+      ],
+      "dir": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/case-fractal-north.jpg"
+  }
+}
