@@ -1,461 +1,598 @@
-# VIRTUAL INFORMATICS LAB 3D — V2 ЖОСПАРЫ (үлкен зертхана + платформа)
+# VIRTUAL INFORMATICS LAB 3D — V2 PLAN (large lab + learning platform)
 
-Жасалды: 2026-10-10. Негіз: Фаза 0–9 дайын (`PROJECT_STATE.md`). Бұл файл — пайдаланушының V2 тілектерінің құрылымдалған нұсқасы және әр этапқа дайын промпт.
-Әр жаңа сессияда: төмендегі этап промптын көшіріп жібер. Бір этап = бір сессия (лимитке сыятындай); үлкендері `a / b` болып бөлінген.
-
----
-
-## 1. Мақсат (пайдаланушы тілегі, құрылымдалған)
-
-1. **Үлкен 3D зертхана.** Бір үстелмен шектелмейтін кең кеңістік, бөлек аймақтар (зоналар). Ашық, жарқынырақ, градиентті стиль; премиум деңгей сақталады.
-2. **50+ құрылғы**, барлығы 3D, 360° айналдырып көруге болады:
-   - **ПК ішкі бөлшектері:** CPU, кулер (ауа және су), аналық плата, RAM, GPU, PSU, корпус, корпус желдеткіштері, термопаста, кабельдер.
-   - **Жинақтағыштар:** HDD 3.5″, HDD 2.5″, SATA SSD, NVMe SSD, флешка, SD/microSD карта, сыртқы диск, CD/DVD және жетек.
-   - **Енгізу құрылғылары:** пернетақта, тышқан, графикалық планшет, геймпад, микрофон, веб-камера, сканер.
-   - **Шығару құрылғылары:** монитор, принтер (лазерлік және сия), проектор, колонка, құлаққап.
-   - **Желі құралдары:** роутер, свитч, модем, Wi-Fi адаптер, желі картасы, Ethernet кабелі.
-   - **Басқа есептеу құрылғылары:** ноутбук, моноблок, смартфон, планшет, смарт-сағат, 3D принтер, ИБП/UPS, док-станция, USB хаб, кард-ридер.
-3. **Ішкі құрылымды анимациямен ашу.** Корпус, ноутбук, моноблок, смартфон, планшет, 3D принтер «ашылып» бөлшектеріне ажырайды (exploded view). Әр бөлшектің аты мен қызметі көрсетіледі.
-4. **Әр өнімге жеке 3D модель.** Setup Studio-да ASUS мониторын таңдасаң ASUS моделі, Samsung таңдасаң Samsung моделі шығады; модельдер бір-біріне ұқсамайды. Лицензиясы бар GLB-лер (Sketchfab, Poly Haven, т.б.) және Blender арқылы өңделген нұсқалар қолданылады.
-5. **Модель сапасы жоғары.** Ноутбук ауыр модельдерді көтереді, бірақ сайтты оқушылар әлсіз компьютерден де ашады. Сондықтан:
-   - қуатты құрылғыға — High/Ultra (2K текстура, толық полигон);
-   - әлсізіне — LOD нұсқалары.
-   Тегістеу (антиалиасинг) жақсарады, текстуралар пиксельденбейді.
-6. **Сымдар мен порттар.** Мониторды HDMI/DisplayPort арқылы, колонканы, тышқанды, пернетақтаны (USB, 3.5 мм) өзі жалғау. Қате портқа жалғаса — түсіндірме.
-7. **Желіге қосылу.** Ethernet арқылы (роутер → ПК / ноутбук / моноблок порты) және Wi-Fi-ға дұрыс қосылуды үйрету.
-8. **Себеп пен салдар симуляциясы:**
-   - кулер жоқ → CPU температурасы көтеріледі, дабыл, троттлинг, өшу;
-   - RAM жоқ → POST дыбысы, компьютер қосылмайды;
-   - HDD → баяу жүктеледі, SSD → жылдам;
-   - GPU жоқ → ауыр бағдарламалар жүрмейді (iGPU жоқ процессорда сурет мүлде шықпайды);
-   - БП жеткіліксіз → тұрақсыз жұмыс.
-   Барлығы анимация мен ескертулер арқылы көрсетіледі.
-9. **Аудитория:** мектеп оқушылары да, ересектер де.
-10. **Платформа (дерекқормен):**
-    - 3 рөл: **Админ**, **Мұғалім**, **Оқушы**.
-    - Мұғалім: оқушыларды тіркейді (сынып коды), тапсырма мен хабарлама қосады, жұмыстарды көріп бағалайды.
-    - Оқушы: тапсырма орындайды, баға алады, басқалармен жарысады.
-    - Админ: пайдаланушылар, контент, қауіпсіздік, баптаулар.
-11. **Геймификация (басты назар):** XP, деңгейлер, бейдждер, рейтинг кестесі, онлайн викторина (бірнеше оқушы бір уақытта), ПК жинау жарысы (бір уақытта бірнеше адам), күнделікті челлендж, сынып пен сынып арасындағы сайыс.
-12. **Хостинг.** Қазір барлығы **оффлайн, локалды** жасалады, бірақ дерекқор, домен және хостингке дайын архитектурамен. Хостинг пен домен — кейінгі этап.
+Created: 2026-10-10. Baseline: Phases 0–9 are complete (see `PROJECT_STATE.md`).
+This file is the structured version of the owner's V2 requests plus a ready-to-paste prompt for every stage.
+**One stage = one session** (sized to fit a usage limit); large stages are split into `a / b`.
+The site UI stays trilingual (Kazakh first, then Russian, English). The owner reads Kazakh: always give the end-of-session summary in Kazakh.
 
 ---
 
-## 2. Шектеулер мен шешімдер (алдын ала білу керек)
+## 1. Vision (owner requirements, structured)
 
-- **3D модельдерді жүктеу.**
-  - Sketchfab GLB-лері тек аккаунтқа кіргенде жүктеледі. Модельдерді не сен жүктейсің, не мен сенің рұқсатыңмен браузер арқылы жүктеймін (әр жүктеуге рұқсат сұралады). Құпиясөзіңді ешқашан енгізбеймін.
-  - Тек **CC0 / CC BY** лицензиялы модельдер алынады. Әр модель `ASSET_MANIFEST.md`-ге жазылады, авторы `/credits`-те көрсетіледі.
-- **Әр брендке жеке модель.**
-  - Әр нақты өнімге (67+ SKU) тегін модель табылмауы мүмкін. Онда модель Blender-де өңделеді: пішін, өлшем, түс, порттар өзгертіледі. Ұқсас өнімдер ұқсас, бірақ бірдей емес болады.
-  - Сауда белгілері (логотиптер) модель текстурасында қалдырылмайды, бренд аты UI-да жазылады.
-  - Ақылы модельдер (CGTrader, TurboSquid) — сенің бюджет шешімің.
-- **Blender 5.1 компьютерде бар.** Мен оны скриптпен (headless) іске қосып, модельдерді тазалай аламын: exploded-анимацияға бөлшектерге бөлу, порттарды белгілеу, LOD жасау.
-- **Дерекқор.**
-  - Қазір Node 24-тің кіріктірілген SQLite-ы (`node:sqlite`) қолданылады — орнату керек емес.
-  - Схема PostgreSQL-үйлесімді жазылады, хостингте PostgreSQL / Supabase-ке көшіріледі.
-  - Құпиясөздер тек хэшпен (scrypt) сақталады. Кілттер мен құпиялар тек серверде, `.env` файлында, ешқашан браузер кодында болмайды.
-- **Балалардың деректері.** Минимум жиналады: аты, сыныбы, логин. Email міндетті емес, мұғалім тіркейді. ҚР «Дербес деректер туралы» заңын хостингке шығарар алдында ескеру керек.
-- **Өнімділік.**
-  - «Ауыр» сапалы модельдер тек High/Ultra-да жүктеледі; Low/Medium жеңіл LOD алады.
-  - Зоналар lazy-load болады: бәрі бірден жүктелмейді.
-  - Фаза 9-дағы өлшеу құралы (`npm run perf`) әр этаптан кейін іске қосылып, бұрын/кейін салыстырылады.
-- **KTX2.** V2-де hero модельдер үшін UASTC (GPU жады аз, сапа жоғары) енгізіледі. Жүктеу көлемі өсетіндіктен, тек High/Ultra-да.
+1. **A large 3D laboratory**
+   - Replace the single small desk with a spacious lab room divided into zones.
+   - Brighter look with tasteful gradients, while keeping the premium, non-childish quality.
+2. **50+ devices, all in 3D, each viewable in 360°**
+   - **PC internals:** CPU, air and liquid coolers, motherboard, RAM, GPU, PSU, case, case fans, thermal paste, internal cables.
+   - **Storage:** 3.5″ HDD, 2.5″ HDD, SATA SSD, NVMe SSD, USB flash drive, SD/microSD card, external drive, CD/DVD disc and drive.
+   - **Input:** keyboard, mouse, graphics tablet, gamepad, microphone, webcam, scanner.
+   - **Output:** monitor, laser printer, inkjet printer, projector, speakers, headphones.
+   - **Networking:** router, switch, modem, Wi-Fi adapter, network card, Ethernet cable.
+   - **Other computing devices:** laptop, all-in-one PC, smartphone, tablet, smartwatch, 3D printer, UPS, docking station, USB hub, card reader.
+3. **Teardown animations**
+   - System unit, laptop, all-in-one, smartphone, tablet and 3D printer open up with polished animations (exploded views).
+   - Each internal part is labelled and its function explained.
+4. **A distinct 3D model per product**
+   - In Setup Studio, choosing an ASUS monitor shows an ASUS-like model and choosing a Samsung monitor shows a different one.
+   - Products must not look identical.
+   - Sources: licensed GLBs (Sketchfab, Poly Haven, etc.) plus variants built or edited in Blender.
+5. **High model quality without hurting weak machines**
+   - The owner's laptop is powerful, but students will use weaker computers.
+   - Heavy, high-detail models load only on High/Ultra; Low/Medium get LOD versions.
+   - Fix aliasing (jagged edges) and blurry or pixelated textures.
+6. **Cables and ports**
+   - Students physically connect devices: monitor via HDMI/DisplayPort, keyboard, mouse and speakers via USB or 3.5 mm.
+   - Wrong ports produce an explanation.
+7. **Networking**
+   - Teach connecting via Ethernet (router → PC / laptop / all-in-one port).
+   - Teach joining Wi-Fi correctly and securely.
+8. **Cause-and-effect simulation**
+   - **No cooler:** CPU temperature rises, alarm, throttling, shutdown.
+   - **No RAM:** POST beep, no boot.
+   - **Storage type:** HDD boots slowly, SSD/NVMe boots fast.
+   - **No GPU:** heavy apps fail; with no integrated GPU (e.g. Intel F-series) there is no picture at all.
+   - **Weak PSU:** shutdowns under load.
+   - All shown with warnings and animations.
+9. **Audience:** school students **and** adults learning computer hardware.
+10. **Platform with a database and three roles**
+    - **Admin:** security, users, content, settings.
+    - **Teacher:**
+      - registers students (class codes);
+      - publishes assignments and announcements;
+      - sees student work and grades it.
+    - **Student:**
+      - completes lab tasks and gets grades;
+      - competes with classmates.
+11. **Gamification (top priority for the platform)**
+    - XP, levels, badges, leaderboards.
+    - Live online quizzes with many students at once.
+    - Simultaneous PC-assembly races.
+    - Daily challenges and class-vs-class contests.
+12. **Hosting and data**
+    - Build everything **offline and local first**, architected for a real database, a domain and hosting.
+    - Buying hosting and a domain is a later stage and the owner's decision.
 
 ---
 
-## 3. Жалпы ережелер (әр этап промптына қосылады)
+## 2. Constraints and decisions (read before every stage)
+
+- **Website logins, downloads and accounts**
+  - Some work needs a logged-in website: Sketchfab downloads, CGTrader, GitHub, hosting dashboards, etc. When that happens, **stop and tell the owner exactly which site and why**.
+  - **The owner logs in themselves** in the browser.
+  - Never type passwords, never create accounts, and ask before every file download (state file name, source and size).
+  - Paid assets or services are the owner's decision: report the options with prices.
+- **Asset licensing**
+  - Only CC0 or CC BY assets.
+  - Every asset gets an entry in `ASSET_MANIFEST.md` and attribution on `/credits`.
+  - Trademarks (logos) are removed from textures; brand names appear only as UI text.
+- **Per-product models**
+  - Not every one of the 67+ catalog products will have a free model.
+  - Where none exists, derive a variant in Blender: shape, size, bezel, stand, ports, colour. Similar products should look similar but never identical.
+- **Blender 5.1 is installed**
+  - Path: `C:\Program Files\Blender Foundation\Blender 5.1`.
+  - Drive it headless with Python scripts (in `scripts/blender/`) for:
+    - cleanup;
+    - splitting into parts (teardown);
+    - port markers (empty nodes);
+    - LODs;
+    - export.
+- **Database**
+  - Use Node 24's built-in SQLite (`node:sqlite`) locally, with a PostgreSQL-compatible schema and migrations, so production can move to PostgreSQL/Supabase.
+  - Passwords are stored only as scrypt hashes.
+  - Secrets and API keys live only on the server in `.env`, never in browser code.
+- **Children's data**
+  - Collect the minimum: display name, class, login. Email is optional; teachers register students.
+  - Note Kazakhstan's personal-data law before going online.
+- **Performance**
+  - Heavy assets only on High/Ultra; zones are lazy-loaded and disposed on exit (`src/lib/three/assetCache.ts`).
+  - Never load all 50+ models at once.
+  - Measure before/after every stage with `npm run build && npm run preview` + `node scripts/perf-measure.mjs` (see README).
+- **KTX2**
+  - V2 introduces UASTC KTX2 for hero models on High/Ultra (lower GPU memory, high quality, larger downloads).
+  - If an encoder (toktx/basisu) must be installed, ask the owner first.
+
+---
+
+## 3. Global rules (append to every stage prompt)
 
 ```
-Жалпы ережелер:
-- Алдымен PROJECT_STATE.md, PLAN_V2.md, ROADMAP.md, TODO.md, ARCHITECTURE.md, ASSET_MANIFEST.md, KNOWN_ISSUES.md оқы, NEXT_ACTION-ды тексер. Жобаны нөлден бастама, бұрынғы бөлімдерді бұзба.
-- Барлық мәтін locales файлдарында (kk/ru/en).
-- Ассет лицензиясы тексерілмей жобаға қосылмайды; ASSET_MANIFEST.md мен /credits жаңартылады.
-- Кілттер мен құпиялар тек серверде (.env), ешқашан браузер кодында емес; құпиясөздер тек хэшпен.
-- Өнімділік: этап соңында `npm run build && npm run preview` + `node scripts/perf-measure.mjs` арқылы бұрын/кейін салыстыр; нашарласа — себебін түзет немесе маған айт.
-- Сыртқы көрініс нашарламасын; таңдау керек болса, маған айт.
-- npm run build, lint, typecheck, npm test таза болсын; console қателерін түзет; жаңа логикаға тест жаз.
-- git commit жаса, PROJECT_STATE.md жаңартып, соңында NEXT_ACTION жаз.
-- Соңында маған қазақша қысқаша: не жасалды (сандармен), нені тексеру керек.
+Global rules:
+- First read PROJECT_STATE.md, PLAN_V2.md, ROADMAP.md, TODO.md, ARCHITECTURE.md, ASSET_MANIFEST.md and KNOWN_ISSUES.md, and check NEXT_ACTION. Never restart the project from scratch and never break existing sections.
+- All user-facing text goes into the locale files (src/locales/kk.json, ru.json, en.json); Kazakh is the reference language.
+- Assets: only CC0 / CC BY, recorded in ASSET_MANIFEST.md and shown on /credits; remove logos from textures.
+- Logins and downloads: if any website requires signing in (Sketchfab, CGTrader, GitHub, hosting, etc.), STOP and tell me which site and why — I will log in myself. Never enter passwords or create accounts. Ask before each download (file name, source, size). Paid options: list them with prices and let me decide.
+- Security: secrets only on the server in .env, never in browser code; passwords only as hashes.
+- Performance: at the end, run `npm run build && npm run preview` and `node scripts/perf-measure.mjs` and compare before/after; Low/Medium must not get slower. If something must get heavier, explain why.
+- Never degrade the visual quality; if a trade-off is needed, ask me.
+- npm run build, npm run lint, typecheck and npm test must pass; fix console errors; write tests for new logic.
+- Make a git commit, update PROJECT_STATE.md and finish it with NEXT_ACTION.
+- Finally, give me a short summary in Kazakh: what was done (with numbers) and what I should test.
 ```
 
 ---
 
-## 4. Этаптар
+## 4. Stages
 
-| № | Этап | Негізгі нәтиже |
+| # | Stage | Main result |
 |---|---|---|
-| V2-0 | Аудит, каталог, ассет жоспары | 50+ құрылғы тізімі, әр құрылғыға модель көзі мен лицензиясы, Blender пайплайны |
-| V2-1 | Визуал сапасы және жарқын стиль | Антиалиасинг, текстура анықтығы, 2K/KTX2 hero, жарқын градиентті тема |
-| V2-2a/b | Жоғары сапалы модельдер және әр өнімге жеке модель | Setup Studio-да әр SKU-ға өз моделі; ауыр модельдер LOD-пен |
-| V2-3 | Үлкен зертхана кеңістігі | Зоналар, навигация, lazy зоналар |
-| V2-4a/b | 50+ құрылғы және 360° көрініс | Барлық құрылғы 3D, ақпарат және тест |
-| V2-5a/b | Құрылғыларды ашу анимациясы | Ноутбук, смартфон, планшет, моноблок, 3D принтер, ПК — exploded |
-| V2-6 | Сымдар, порттар, желі | HDMI/DP/USB/3.5 мм/Ethernet жалғау, Wi-Fi |
-| V2-7 | Себеп пен салдар симуляциясы | Кулер/RAM/GPU/HDD/БП жоқ болғанда не болатыны |
-| V2-8 | Backend және дерекқор | Локалды сервер, SQLite (PostgreSQL-үйлесімді), auth, 3 рөл |
-| V2-9 | Мұғалім және оқушы кабинеттері | Сыныптар, тапсырмалар, хабарламалар, бағалау |
-| V2-10 | Админ панель | Пайдаланушылар, контент, журналдар, қауіпсіздік, backup |
-| V2-11a/b | Геймификация v2 және real-time | XP, деңгей, рейтинг, онлайн викторина, жинау жарысы (WebSocket) |
-| V2-12 | QA, қауіпсіздік, хостингке дайындық | Тест, аудит, Docker, деплой нұсқаулығы |
+| V2-0 | Audit, device catalog, asset plan | 50+ device list, source and licence per model, Blender pipeline proven |
+| V2-1 | Visual quality and brighter style | Anti-aliasing, texture sharpness, 2K/KTX2 hero assets, bright gradient theme |
+| V2-2a/b | High-quality, per-product models | Every catalog product has its own model; heavy models with LODs |
+| V2-3 | The large lab space | Zones, navigation, minimap, lazy zones |
+| V2-4a/b | 50+ devices with 360° viewer | Every device in 3D with info and a quiz |
+| V2-5a/b | Teardown animations | PC, laptop, smartphone, tablet, all-in-one, 3D printer |
+| V2-6 | Cables, ports, networking | HDMI/DP/USB/3.5 mm/Ethernet connecting, Wi-Fi setup |
+| V2-7 | Cause-and-effect simulation | What happens without cooler/RAM/GPU/storage/enough PSU |
+| V2-8 | Backend and database | Local server, SQLite (PostgreSQL-compatible), auth, 3 roles |
+| V2-9 | Teacher and student dashboards | Classes, assignments, announcements, grading |
+| V2-10 | Admin panel | Users, content, audit log, security, backups |
+| V2-11a/b | Gamification v2 and real-time | XP, levels, leaderboards, live quizzes, assembly races |
+| V2-12 | QA, security, hosting readiness | Tests, audit, Docker, deployment guide |
 
-Рет: V2-0 → V2-1 → V2-2 → V2-3 → V2-4 → V2-5 → V2-6 → V2-7 → V2-8 → V2-9 → V2-10 → V2-11 → V2-12. Backend (V2-8) 3D бөлімдерге тәуелді емес: қаласаң, V2-3-тен кейін ерте бастауға болады.
+Order: V2-0 → V2-1 → … → V2-12. The backend (V2-8) does not depend on the 3D stages and may start any time after V2-3 if preferred.
 
 ---
 
-## 5. Этап промпттары
+## 5. Stage prompts
 
-### V2-0 — Аудит, құрылғылар каталогы, ассет жоспары
-
-```
-PLAN_V2.md-дегі «Жалпы ережелерді» орында. PLAN_V2.md-дің 1–2 бөлімін толық оқы.
-
-Бұл сессияда V2-0 — Аудит және жоспар (код аз, құжат көп):
-
-1. Қазіргі 3D модельдер мен сахналардың сапасын бағала: скриншоттар (scripts/perf-measure.mjs --shots), полигон, текстура өлшемі, пиксельдену/тегістеу мәселелері. Нәтижені AUDIT_V2.md-ге жаз.
-2. DEVICE_CATALOG.md жаса: 50+ құрылғы, санат бойынша (ПК ішкі, жинақтағыштар, енгізу, шығару, желі, мобильді/басқа). Әр құрылғыға:
-   - аты (kk/ru/en);
-   - қызметі;
-   - ашылатын-ашылмайтыны (exploded);
-   - порттары;
-   - зертханадағы аймағы;
-   - тест сұрақтарының тақырыбы.
-3. ASSET_SOURCING.md жаса: әр құрылғыға және Setup Studio-дағы әр SKU-ға (src/data/hardware/catalog.ts, 67 өнім):
-   - модель көзі — Sketchfab / Poly Haven / басқа, URL;
-   - лицензиясы (тек CC0/CC BY);
-   - сапасы: полигон, текстура;
-   - тегін модель жоқ болса — Blender-де қалай өңделетіні (база модель + өзгерістер).
-   Брендтерді ажырату жоспарын жаз: ASUS мен Samsung мониторы бір-біріне ұқсамасын.
-4. Blender 5.1 (C:\Program Files\Blender Foundation\Blender 5.1) headless скрипт пайплайнын тексер: GLB импорт → тазалау → бөлшектерге бөлу (exploded) → порт белгілері (empty node) → LOD → экспорт. scripts/blender/ ішінде шағын үлгі скрипт жаса және 1 модельмен тексер.
-5. Маған тізім бер:
-   - қай модельдерді менің аккаунтым арқылы жүктеу керек (URL-дерімен);
-   - қайсысын сен өзің өңдей аласың;
-   - ақылы модель қажет болса, бағасымен.
-
-Ережелер: PLAN_V2.md жалпы ережелері. Бұл этапта сайт кодын бұзба, тек құжаттар мен scripts/blender.
-```
-
-### V2-1 — Визуал сапасы және жарқын стиль
+### V2-0 — Audit, device catalog, asset plan
 
 ```
-PLAN_V2.md жалпы ережелерін орында. AUDIT_V2.md-ді оқы.
+Project: D:\informatics-lab (Virtual Informatics Lab 3D). Follow the "Global rules" in PLAN_V2.md and read PLAN_V2.md sections 1–3 in full.
 
-Бұл сессияда V2-1 — Визуал сапасы:
+This session is stage V2-0 — Audit and planning (mostly documents, little code):
 
-1. Тегістеу (антиалиасинг):
-   - High/Ultra-да SMAA немесе MSAA жұмыс істейтінін тексер;
-   - Medium-ге жеңіл FXAA/SMAA қос;
-   - devicePixelRatio шегін қуатты құрылғыларда 1.5–2-ге көтер;
-   - сызықтар мен шеттердің «тістерін» скриншотпен бұрын/кейін салыстыр.
-2. Текстура анықтығы:
-   - барлық текстураларға anisotropy (8–16) және mipmap;
-   - hero және жақын көріністерге 2K текстура тек High/Ultra-да (жеке файл, керек кезде жүктеледі);
-   - KTX2 UASTC нұсқасын hero модельдерге жаса (энкодер: Blender емес — басқа құрал керек болса, маған айт).
-3. Жарқын, градиентті стиль: тема токендерін жаңарт (қараңғы және ашық тема), фон градиенттері, жарық/HDRI-ді сәл жарқынырақ ет. Премиум көрінісі және оқылуы сақталсын, контраст ≥ 4.5:1.
-4. Сапа деңгейлерін (Low–Ultra) қайта өлше: perf-measure кестесі PROJECT_STATE.md-ге.
+1. Audit the current 3D quality. Capture screenshots with `node scripts/perf-measure.mjs --shots=...`, and record polygon counts, texture sizes, aliasing (jagged edges) and blurry/pixelated textures, with causes. Write the findings to AUDIT_V2.md.
 
-Ережелер: PLAN_V2.md жалпы ережелері. Әлсіз құрылғыдағы (Low/Medium) FPS нашарламасын.
+2. Create DEVICE_CATALOG.md with 50+ devices grouped by category (PC internals, storage, input, output, networking, mobile/other; see PLAN_V2.md §1.2). For each device:
+   - name in kk / ru / en;
+   - what it does, explained at two levels (school student / adult);
+   - whether it gets a teardown (exploded view) and which parts;
+   - its ports and connectors;
+   - which lab zone it belongs to;
+   - quiz topics.
+
+3. Create ASSET_SOURCING.md for every device and for every product in src/data/hardware/catalog.ts (67 products):
+   - the candidate model source (Sketchfab / Poly Haven / other) with URL;
+   - licence (CC0 or CC BY only) and author;
+   - quality (polygon count, texture resolution);
+   - if no free model exists, how it will be derived in Blender (base model + specific edits).
+   Include a plan that makes same-category products from different brands (e.g. ASUS vs Samsung monitors) clearly different.
+
+4. Prove the Blender 5.1 headless pipeline (C:\Program Files\Blender Foundation\Blender 5.1\blender.exe, run with --background --python). The pipeline is: GLB import → cleanup → split into named parts for teardown → port markers as empty nodes → LOD generation → GLB export. Put a small working example script in scripts/blender/ and run it on one existing model. Document the steps in ASSET_SOURCING.md.
+
+5. Give me, at the end:
+   (a) the list of models I must download or log in for, with exact URLs (I will sign in; ask before downloading);
+   (b) what you can produce yourself in Blender;
+   (c) any paid models worth buying, with prices.
+
+Do not change site code in this stage except scripts/blender and documentation.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-2a — Ассет пайплайны v2 және бірінші партия (перифериялар)
+### V2-1 — Visual quality and a brighter style
 
 ```
-PLAN_V2.md жалпы ережелерін орында. ASSET_SOURCING.md-ді оқы.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md. Read AUDIT_V2.md.
 
-Бұл сессияда V2-2a — Жоғары сапалы модельдер, 1-партия:
+This session is stage V2-1 — Visual quality:
 
-1. scripts/optimize-assets.mjs-ті кеңейт:
-   - сапа деңгейлері: `<name>.glb` (High, 2K), `<name>_lod1.glb` (Medium), `<name>_lod2.glb` (Low);
-   - әр өнімге жеке файл;
-   - Blender скрипттерімен байланыс (scripts/blender).
-2. Менің жүктеген (assets-src/sketchfab/) жаңа модельдерімді өңде: мониторлар, пернетақталар, тышқандар, құлаққаптар, колонкалар, орындық, үстел (placeholder-лерді ауыстыр).
-3. src/data/hardware/catalog.ts: әр SKU-ға өз modelPath. Setup Studio-да ASUS мониторы мен Samsung мониторы әртүрлі көрінсін. Модельдер бірдей болып қалса, Blender-де ажырат: пішін, тұғыр, жақтау, түс.
-4. Логотиптерді текстуралардан алып таста; бренд тек UI-да.
-5. Скриншотпен көзбен тексер; perf: Low/Medium нашарламасын.
+1. Anti-aliasing:
+   - verify MSAA/SMAA on High/Ultra;
+   - add a light SMAA/FXAA pass on Medium;
+   - raise the devicePixelRatio cap to 1.5–2 on capable devices;
+   - compare jagged edges in before/after screenshots.
 
-Ережелер: PLAN_V2.md жалпы ережелері; ASSET_MANIFEST.md + /credits міндетті.
+2. Texture sharpness:
+   - anisotropic filtering (8–16) and mipmaps on all textures;
+   - 2K textures for hero and close-up views on High/Ultra only, as separate files loaded on demand;
+   - UASTC KTX2 for hero models. If an encoder must be installed, ask me first.
+
+3. A brighter style:
+   - update the theme tokens (dark and light themes), add tasteful background gradients, make the lighting/HDRI slightly brighter;
+   - keep the premium look and readability (text contrast ≥ 4.5:1).
+
+4. Re-measure all quality presets (Low–Ultra) with perf-measure and add the table to PROJECT_STATE.md.
+
+Low/Medium FPS must not drop.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-2b — Бірінші партия жалғасы (ПК бөлшектері)
+### V2-2a — Asset pipeline v2 and batch 1 (peripherals and furniture)
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md. Read ASSET_SOURCING.md.
 
-Бұл сессияда V2-2b — Жоғары сапалы модельдер, 2-партия:
+This session is stage V2-2a — High-quality models, batch 1:
 
-1. ПК бөлшектері, әр SKU-ға жеке: CPU, кулерлер (ауа және су), аналық платалар, RAM, GPU, SSD (SATA және NVMe), HDD, PSU, корпустар, желдеткіштер.
-2. Корпус пен аналық платада порттар мен слоттар Blender-де empty node ретінде белгіленсін. Олар V2-6 (сым жалғау) мен V2-7 (симуляция) үшін керек.
-3. PC Assembly Lab пен басты беттегі exploded view жаңа модельдермен жұмыс істесін (ПК бөлшектері, PCCase, HardwareParts).
-4. Скриншот + perf бұрын/кейін.
+1. Extend scripts/optimize-assets.mjs:
+   - three quality levels per product: `<name>.glb` (High/Ultra, up to 2K textures), `<name>_lod1.glb` (Medium) and `<name>_lod2.glb` (Low);
+   - one file per product;
+   - integration with the Blender scripts in scripts/blender.
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+2. Process the new source models in assets-src/ for monitors, keyboards, mice, headsets, speakers, chair and desk (replace the procedural placeholders). If any source still needs downloading, tell me which site and URL — I will log in.
+
+3. In src/data/hardware/catalog.ts, give every product its own modelPath, so that in Setup Studio an ASUS monitor and a Samsung monitor look different. Where sources are identical, derive variants in Blender (shape, stand, bezel, colour).
+
+4. Remove logos from textures; brands appear only in the UI.
+
+5. Check visually with screenshots and measure performance; Low/Medium must not get slower.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-3 — Үлкен зертхана кеңістігі
+### V2-2b — Batch 2 (PC components)
 
 ```
-PLAN_V2.md жалпы ережелерін орында. DEVICE_CATALOG.md-дегі аймақтарды оқы.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-3 — Үлкен 3D зертхана:
+This session is stage V2-2b — High-quality models, batch 2:
 
-1. Кең зертхана бөлмесі, аймақтары:
-   - Жұмыс үстелі (қазіргі setup);
-   - ПК жинау станциясы;
-   - Жинақтағыштар;
-   - Мобильді құрылғылар;
-   - Баспа және сканерлеу;
-   - Желі бұрышы;
-   - Енгізу және шығару құрылғылары;
-   - Көрме (витрина).
-   Жарқын, градиентті, премиум интерьер.
-2. Навигация:
-   - аймақ картасы (миникарта);
-   - аймаққа ұшу анимациясы;
-   - тышқанмен/саусақпен айналдыру;
-   - Esc — жалпы көрініс;
-   - пернетақтамен де басқарылсын (қолжетімділік).
-3. Lazy зоналар: тек көрініп тұрған немесе жақын аймақтың модельдері жүктеледі; шыққан аймақ кейін dispose болады (lib/three/assetCache.ts).
-4. Басты бет (cinematic scroll) сақталады; «Зертханаға кіру» жаңа кеңістікке апарады.
-5. Perf: бастапқы жүктеу ≤ бұрынғы басты бет; барлық 50+ модель бірден жүктелмесін.
+1. A model per product for every PC component: CPUs, air and liquid coolers, motherboards, RAM, GPUs, SATA and NVMe SSDs, HDDs, PSUs, cases and fans.
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+2. In Blender, mark ports and slots on cases and motherboards as named empty nodes (e.g. port_hdmi_1, slot_pcie_x16, header_24pin). Stages V2-6 (cables) and V2-7 (simulation) will use them.
+
+3. Make the PC Assembly Lab, the home-page exploded view (PCCase, HardwareParts) and Setup Studio work with the new models.
+
+4. Compare before/after with screenshots and performance measurements.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-4a — 50+ құрылғы: каталог және 360° көрініс
+### V2-3 — The large lab space
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md. Read the zones in DEVICE_CATALOG.md.
 
-Бұл сессияда V2-4a — Құрылғылар 1-бөлім (ПК ішкі, жинақтағыштар, енгізу-шығару):
+This session is stage V2-3 — The large 3D lab:
 
-1. DEVICE_CATALOG.md бойынша құрылғыларды зертхана аймақтарына орналастыр:
-   - HDD 3.5″ және 2.5″, SATA SSD, NVMe, флешка, SD карта, сыртқы диск, CD/DVD;
-   - принтерлер (лазерлік, сия), сканер, проектор, графикалық планшет, геймпад, т.б.
-2. Әр құрылғыға:
-   - 360° көрініс (айналдыру, жақындату);
-   - ақпарат панелі: аты, қызметі, сипаттамалары, порттары, қай жерде қолданылады (мектеп оқушысына да, ересекке де түсінікті, екі деңгейлі мәтін);
-   - 3 сұрақтық тест (services/grading арқылы, progress-ке сақталады).
-3. Hardware Explorer кеңейеді (немесе зертхана ішіндегі viewer-ге ауысады): санат сүзгісі, іздеу.
-4. Барлық мәтін kk/ru/en.
+1. Build a spacious lab room with zones:
+   - Workstation (current desk setup);
+   - PC Assembly Station;
+   - Storage;
+   - Mobile Devices;
+   - Printing & Scanning;
+   - Networking Corner;
+   - Input/Output Devices;
+   - Showcase.
+   Use a bright, gradient-accented premium interior.
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+2. Navigation:
+   - a minimap;
+   - animated camera flights between zones;
+   - orbit and zoom with mouse and touch;
+   - Esc returns to the overview;
+   - full keyboard control for accessibility.
+
+3. Lazy zones: load only the models of the visible or nearby zone; dispose zones you leave, using src/lib/three/assetCache.ts. Never load all 50+ models at once.
+
+4. Keep the cinematic home page. Its "Enter the lab" button leads into the new space.
+
+5. Performance: the initial load must not exceed the current home page.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-4b — 50+ құрылғы: желі және мобильді
+### V2-4a — Devices part 1: PC internals, storage, input/output, with 360° viewer
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-4b — Құрылғылар 2-бөлім:
-- желі: роутер, свитч, модем, Wi-Fi адаптер, желі картасы, кабельдер;
-- мобильді және басқа: ноутбук, моноблок, смартфон, планшет, смарт-сағат, 3D принтер, UPS, док-станция, USB хаб, кард-ридер.
+This session is stage V2-4a — Devices, part 1:
 
-360° көрініс, ақпарат, тест — V2-4a-дағыдай. Services/progress каталогына жаңа тапсырмалар тіркеледі (catalog.ts + тест).
+1. Place the devices from DEVICE_CATALOG.md into their zones:
+   - storage: 3.5″ and 2.5″ HDD, SATA SSD, NVMe, USB flash drive, SD card, external drive, CD/DVD;
+   - printing and input/output: laser and inkjet printers, scanner, projector, graphics tablet, gamepad, etc.
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+2. For each device:
+   - a 360° viewer (rotate, zoom);
+   - an info panel with name, function, specs, ports and real-world use, written at two levels (school student / adult);
+   - a 3-question quiz graded with services/grading and saved to progress.
+
+3. Extend the Hardware Explorer, or turn it into the in-lab viewer, with category filters and search.
+
+4. All text in kk/ru/en.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-5a — Құрылғыларды ашу: жүйелік блок және ноутбук
+### V2-4b — Devices part 2: networking, mobile and other
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-5a — Ішкі құрылымды ашу анимациясы:
+This session is stage V2-4b — Devices, part 2:
 
-1. Жалпы «Teardown» жүйесі: құрылғы бөлшектерге бөлінеді (exploded), әр бөлшекке:
-   - белгі және қызметі;
-   - «жинау / бөлшектеу» слайдері;
-   - қадамдық режим (бөлшекті бір-бірлеп алу);
-   - reduced-motion қолдауы.
-2. Жүйелік блок: бүйір қақпағы ашылады → бөлшектер ретімен шығады.
-3. Ноутбук: қақпақ ашылады → төменгі қақпақ алынады → батарея, аналық плата, RAM, SSD, Wi-Fi модулі, салқындату, динамиктер, экран кабелі.
-4. Модельдер Blender-де бөлшектерге бөлінеді (scripts/blender), әр бөлшек жеке node.
+1. Add the remaining devices:
+   - networking: router, switch, modem, Wi-Fi adapter, network card, cables;
+   - mobile and other: laptop, all-in-one, smartphone, tablet, smartwatch, 3D printer, UPS, docking station, USB hub, card reader.
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+2. Give each the same 360° viewer, info panel and quiz as in V2-4a.
+
+3. Register the new tasks in src/services/progress/catalog.ts and update its tests.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-5b — Құрылғыларды ашу: смартфон, планшет, моноблок, 3D принтер
+### V2-5a — Teardown: system unit and laptop
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-5b — Teardown жалғасы:
-- смартфон (экран, батарея, аналық плата/SoC, камералар, динамик, вибромотор, SIM);
-- планшет;
-- моноблок (экран артындағы бөлшектер);
-- 3D принтер (экструдер, үстел, моторлар, басқару тақтасы) — басып шығару процесінің анимациясы.
+This session is stage V2-5a — Teardown animations, part 1:
 
-Әр құрылғыға шағын тапсырма: «осы бөлшек не істейді?» (services/grading).
+1. Build a reusable Teardown system:
+   - the device separates into labelled parts (exploded view);
+   - each part has a label and an explanation of its function;
+   - an assemble/disassemble slider;
+   - a step-by-step mode that removes parts one at a time;
+   - support for prefers-reduced-motion.
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+2. System unit: the side panel opens, then the parts come out in a realistic order.
+
+3. Laptop:
+   - the lid opens;
+   - the bottom cover comes off;
+   - then the battery, motherboard, RAM, SSD, Wi-Fi module, cooling, speakers and display cable come out.
+
+4. Split the models into named parts with the Blender scripts (scripts/blender).
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-6 — Сымдар, порттар, желіге қосылу
+### V2-5b — Teardown: smartphone, tablet, all-in-one, 3D printer
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-6 — Жалғау зертханасы:
+This session is stage V2-5b — Teardown animations, part 2:
 
-1. Порттар: HDMI, DisplayPort, USB-A/C, 3.5 мм аудио, Ethernet (RJ-45), қуат. Әр порт модельде (V2-2b-дегі empty node) нақты орнында тұрады; жақындағанда атауы шығады.
-2. Сымды жалғау:
-   - кабельді сүйреп, дұрыс портқа қосу (физикалық иілетін кабель — tube/spline);
-   - монитор → жүйелік блок (HDMI/DP, видеокартаға, аналық платаға емес — неге екені түсіндіріледі);
-   - пернетақта, тышқан → USB;
-   - колонка → 3.5 мм немесе USB;
-   - қате портқа қосса — қазақша түсіндірме.
-3. Желі:
-   - Ethernet: роутер → ПК / ноутбук / моноблок порты;
-   - Wi-Fi-ға қосылу: желіні таңдау, құпиясөз, қауіпсіздік (WPA2/WPA3);
-   - IP алу (DHCP) — бұрынғы Network Lab-пен байланыстыр.
-4. Тапсырмалар (services/grading): «Компьютерді толық жалға», «Ноутбукты Ethernet арқылы желіге қос», «Wi-Fi-ға қауіпсіз қосыл».
+1. Smartphone: display, battery, mainboard/SoC, cameras, speaker, vibration motor, SIM tray.
+2. Tablet.
+3. All-in-one PC: the components behind the screen.
+4. 3D printer: extruder, heated bed, stepper motors, control board, plus an animation of the printing process.
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+Give each device a short task ("What does this part do?") graded with services/grading.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-7 — Себеп пен салдар симуляциясы
+### V2-6 — Cables, ports and networking
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-7 — «Бөлшек жоқ болса не болады?» симуляциясы (логика src/labs/SystemSim/, UI-дан бөлек, тестпен):
+This session is stage V2-6 — Connection lab:
 
-1. Жинақты қосу (power on) симуляциясы, шынайы мінез-құлық:
-   - кулер жоқ / нашар → CPU температурасы графикпен көтеріледі, ескерту, троттлинг, авариялық өшу (бұрынғы Experiments/cpuTemp моделін қолдан);
-   - RAM жоқ → POST дыбыс коды, экран қара, түсіндірме;
-   - жинақтағыш жоқ → «Boot device not found»;
-   - HDD → баяу жүктелу, SSD/NVMe → жылдам (уақытпен салыстыру);
-   - GPU жоқ → iGPU бар CPU-да сурет шығады, ауыр бағдарлама/ойын жүрмейді; iGPU жоқ CPU-да (мыс. F-сериясы) сурет мүлде жоқ;
-   - БП қуаты жетпейді → жүктеме кезінде өшу;
-   - монитор кабелі дұрыс портта емес → сурет жоқ.
-2. Анимациялар: қызыл жарқыл, термометр, дыбыс (ауыстырғышпен), BIOS/POST экраны, Windows жүктелу прогресі.
-3. Тапсырма: «Ақаулы компьютерді жөнде» — себебін тауып түзету (services/grading).
+1. Ports: HDMI, DisplayPort, USB-A/C, 3.5 mm audio, Ethernet (RJ-45) and power.
+   - Each port sits at its real location, using the port markers from V2-2b.
+   - Hovering or approaching a port shows its name.
 
-Ережелер: PLAN_V2.md жалпы ережелері; модельдер шынайы, бұл оқу симуляциясы екені көрсетілсін.
+2. Connecting cables:
+   - drag a cable and plug it into the right port; cables bend realistically (tube/spline);
+   - monitor → system unit via HDMI/DP, plugged into the graphics card (explain why not into the motherboard when a GPU is present);
+   - keyboard and mouse → USB;
+   - speakers → 3.5 mm or USB;
+   - wrong ports give a clear explanation in Kazakh.
+
+3. Networking:
+   - Ethernet from a router to the PC, laptop or all-in-one port;
+   - joining Wi-Fi: choose the network, enter the key, prefer WPA2/WPA3 and explain why open networks are risky;
+   - getting an IP via DHCP, linked to the existing Network Lab.
+
+4. Graded tasks (services/grading):
+   - "Fully connect the computer";
+   - "Connect the laptop to the network via Ethernet";
+   - "Join Wi-Fi securely".
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-8 — Backend және дерекқор (локалды, хостингке дайын)
+### V2-7 — Cause-and-effect simulation
 
 ```
-PLAN_V2.md жалпы ережелерін орында. MASTER_PROMPT.md 44-бөлімін оқы.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-8 — Сервер және дерекқор негізі:
+This session is stage V2-7 — "What happens if a part is missing?". Put the logic in src/labs/SystemSim/, separate from the UI, with tests.
 
-1. server/ ішінде Node 24 сервері (бұрынғы ai-server-мен бірге немесе бөлек): REST API + кейінге WebSocket орны.
-2. Дерекқор: node:sqlite (локалды файл data/lab.db), схема PostgreSQL-үйлесімді. Миграциялар server/migrations/ ішінде. Кестелер:
+1. Simulate powering on a build with realistic behaviour:
+   - no or weak cooler: the CPU temperature rises on a live graph, then warning, throttling and emergency shutdown (reuse src/labs/Experiments/cpuTemp);
+   - no RAM: POST beep code, black screen, explanation;
+   - no storage: "Boot device not found";
+   - HDD vs SSD vs NVMe: compare boot times;
+   - no graphics card: a CPU with integrated graphics still shows a picture but heavy apps/games fail; a CPU without integrated graphics (e.g. Intel F-series) shows no picture at all;
+   - insufficient PSU: shutdown under load;
+   - monitor cable in the wrong port: no signal.
+
+2. Feedback:
+   - red alert flashes and a thermometer;
+   - optional sound with a toggle;
+   - BIOS/POST screen and an OS boot progress bar.
+
+3. A graded task "Fix the broken computer": diagnose the cause and fix it (services/grading).
+
+State on the page that this is an educational simulation.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
+```
+
+### V2-8 — Backend and database (local, hosting-ready)
+
+```
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md. Read MASTER_PROMPT.md section 44.
+
+This session is stage V2-8 — Server and database foundation:
+
+1. A Node 24 server in server/ (alongside or merged with the existing ai-server): a REST API now, with room for WebSockets later.
+
+2. Database: node:sqlite with a local file data/lab.db and a PostgreSQL-compatible schema. Put migrations in server/migrations/. Tables:
    - users (role: admin / teacher / student), schools, classes, class_members;
    - assignments, submissions, attempts, grades;
-   - messages / announcements;
+   - announcements, messages;
    - achievements, xp_events;
    - sessions, audit_log.
-3. Auth:
-   - логин + құпиясөз (scrypt хэш), httpOnly cookie сессиясы, CSRF қорғанысы;
-   - кіру әрекеттеріне rate limit;
-   - рөл тексерісі әр API-де;
-   - бірінші админ CLI арқылы жасалады (құпиясөзді мен жазбаймын — сен енгізесің).
-4. services/progress → ProgressRepository-нің сервер нұсқасы (localStorage офлайн режим ретінде қалады, кіргенде синхрондалады).
-5. Фронтенд: кіру беті; рөл бойынша бағыттау (оқушы / мұғалім / админ); қонақ режимі (тіркелмей зертханаларды көру) сақталады.
-6. Тесттер: auth, рөлдер, миграция, API. .env.example; кілттер тек серверде.
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+3. Authentication:
+   - login + password stored as scrypt hashes;
+   - httpOnly session cookies and CSRF protection;
+   - rate-limited login attempts;
+   - role checks on every endpoint.
+   The first admin is created by a CLI command where I type the password myself; never hard-code or invent credentials.
+
+4. Add a server implementation of ProgressRepository (src/services/progress/repository.ts). localStorage stays as the offline mode and syncs after login.
+
+5. Frontend:
+   - a sign-in page;
+   - routing by role (student / teacher / admin);
+   - guest mode (exploring the labs without an account) stays.
+
+6. Tests for auth, roles, migrations and the API. Add .env.example. Secrets stay on the server only.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-9 — Мұғалім және оқушы кабинеттері
+### V2-9 — Teacher and student dashboards
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-9 — Кабинеттер:
+This session is stage V2-9 — Dashboards:
 
-1. Мұғалім:
-   - сынып құру, сынып коды / QR;
-   - оқушыларды тіркеу (тізіммен, логин/құпиясөз генерациясы, баспаға шығаратын парақ);
-   - тапсырма беру: зертхана тапсырмасы, мерзімі, ұпайы;
-   - хабарлама және хабарландыру жариялау;
-   - оқушы жұмыстарын көру (әрекеттер, уақыт, қателер, кеңестер);
-   - бағалау және пікір жазу (автобағаны түзету мүмкіндігімен);
-   - сынып статистикасы, CSV/JSON экспорт.
-2. Оқушы:
-   - сыныпқа код арқылы қосылу;
-   - менің тапсырмаларым (мерзімімен);
-   - хабарламалар;
-   - бағаларым және мұғалім пікірі;
-   - бұрынғы «Менің нәтижелерім» серверден.
-3. Хабарламалар интерфейсі (real-time кейін, қазір жаңарту арқылы).
+1. Teacher:
+   - create classes with a join code and QR;
+   - register students from a list, with generated logins/passwords and a printable sheet;
+   - create assignments (lab tasks, deadline, points);
+   - publish announcements;
+   - view each student's work (attempts, time, mistakes, hints);
+   - grade and comment, with the option to override the automatic score;
+   - class statistics and CSV/JSON export.
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+2. Student:
+   - join a class with a code;
+   - see their assignments with deadlines;
+   - read announcements;
+   - see grades and teacher comments;
+   - "My results" now loads from the server.
+
+3. Messaging UI: refresh-based for now; real-time comes later.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-10 — Админ панель
+### V2-10 — Admin panel
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-10 — Админ панель:
-- пайдаланушылар: іздеу, рөл өзгерту, бұғаттау, құпиясөзді қалпына келтіру сілтемесі;
-- мектептер мен сыныптар;
-- контент: құрылғылар каталогы, тапсырмалар, викторина сұрақтары (UI арқылы қосу/өңдеу, kk/ru/en);
-- қауіпсіздік: audit_log, кіру әрекеттері, бұғатталған IP;
-- баптаулар;
-- дерекқор backup және restore (локалды файл);
-- жүйе күйі.
-Барлық әрекет audit_log-қа жазылады.
+This session is stage V2-10 — Admin panel:
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+1. Users: search, change role, block, issue password-reset links.
+2. Schools and classes.
+3. Content management: device catalog, tasks and quiz questions, editable through the UI in kk/ru/en.
+4. Security: audit log, login attempts, blocked IPs.
+5. Site settings.
+6. Database backup and restore (local file).
+7. System health page.
+
+Every admin action is written to audit_log.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-11a — Геймификация v2
+### V2-11a — Gamification v2
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md. Read MASTER_PROMPT.md section 27.
 
-Бұл сессияда V2-11a — Геймификация:
-- XP және деңгейлер (әр тапсырма, тест, күнделікті челлендж);
-- бейдждер (бұрынғы 14 жетістік + жаңалары);
-- рейтинг кестесі: сынып, мектеп, апта; ересектерге анонимді режим;
-- күнделікті және апталық челлендждер;
-- сынып пен сынып арасындағы сайыс.
-Анимациялар премиум, бала ойыны сияқты емес (MASTER_PROMPT 27). Деректер серверде (V2-8).
+This session is stage V2-11a — Gamification:
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+1. XP and levels for tasks, quizzes and daily challenges.
+2. Badges: the existing 14 achievements plus new ones.
+3. Leaderboards per class, school and week, with an anonymous mode for adults.
+4. Daily and weekly challenges.
+5. Class-vs-class contests.
+
+Animations must stay premium, not a children's mobile game. All data lives on the server (V2-8).
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-11b — Real-time сайыстар
+### V2-11b — Real-time competitions
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-11b — Бір уақыттағы сайыстар (WebSocket):
-1. Онлайн викторина (Kahoot сияқты): мұғалім бөлме ашады → оқушылар кодпен кіреді → сұрақтар уақытпен → тірі рейтинг → нәтиже серверде.
-2. ПК жинау жарысы: бірнеше оқушы бір уақытта жинайды, бір-бірінің прогресін көреді; жылдамдық пен дәлдік бойынша ұпай.
-3. Порт жалғау жарысы, «Ақаулы ПК-ны тап» жарысы.
-4. Байланыс үзілгенде қайта қосылу; адал ойын (нәтижені сервер тексереді).
+This session is stage V2-11b — Live competitions over WebSockets:
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+1. Live quiz (Kahoot-style):
+   - the teacher opens a room and students join with a code;
+   - timed questions with a live leaderboard;
+   - results are saved on the server.
+
+2. PC-assembly race: several students build at the same time and see each other's progress. Score speed and accuracy.
+
+3. Port-connection race and "Find the fault" race.
+
+4. Reconnection after network drops, and fair play: the server validates every result.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-12 — QA, қауіпсіздік, хостингке дайындық
+### V2-12 — QA, security, hosting readiness
 
 ```
-PLAN_V2.md жалпы ережелерін орында.
+Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.
 
-Бұл сессияда V2-12 — Финалдық QA және деплойға дайындық:
-1. Тексеру:
-   - Chrome, Edge, Firefox, Safari; нақты телефон мен планшет; әлсіз ноутбук;
-   - perf-measure барлық беттерге;
-   - қолжетімділік: пернетақта, контраст, screen reader.
-2. Қауіпсіздік аудиті:
-   - OWASP Top 10: auth, сессия, CSRF, XSS, SQL injection, rate limit, рұқсаттар;
-   - тәуелділіктер (npm audit);
-   - .env құпиялары.
-3. Хостингке дайындық:
-   - Dockerfile;
-   - PostgreSQL миграциясы (SQLite → PostgreSQL);
-   - HTTPS, домен, CDN (3D ассеттер үшін);
-   - backup;
-   - DEPLOY.md нұсқаулығы (VPS / Render / Railway / Supabase нұсқалары, бағаларымен).
-4. README толық.
-Хостинг пен доменді сатып алу — сенің шешімің, мен тек нұсқаулық дайындаймын.
+This session is stage V2-12 — Final QA and deployment readiness:
 
-Ережелер: PLAN_V2.md жалпы ережелері.
+1. Testing:
+   - Chrome, Edge, Firefox and Safari;
+   - a real phone, a tablet and a weak laptop;
+   - perf-measure on every page;
+   - accessibility: keyboard, contrast, screen readers.
+
+2. Security audit:
+   - OWASP Top 10: auth, sessions, CSRF, XSS, SQL injection, rate limits, permissions;
+   - npm audit;
+   - .env handling.
+
+3. Hosting readiness:
+   - a Dockerfile;
+   - a migration path from SQLite to PostgreSQL;
+   - HTTPS, domain, a CDN for 3D assets, backups;
+   - DEPLOY.md comparing VPS / Render / Railway / Supabase with prices.
+   Buying hosting or a domain is my decision; if any dashboard needs a login, tell me and I will sign in.
+
+4. Complete the README.
+
+Global rules:
+<paste section 3 of PLAN_V2.md here>
 ```
