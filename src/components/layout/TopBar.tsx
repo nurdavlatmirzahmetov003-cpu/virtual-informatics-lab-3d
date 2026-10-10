@@ -8,6 +8,7 @@ import styles from './TopBar.module.css';
 
 const NAV: ReadonlyArray<{ to: string; label: TranslationKey; end?: boolean }> = [
   { to: '/', label: 'nav.home', end: true },
+  { to: '/lab', label: 'nav.lab' },
   { to: '/explorer', label: 'nav.explorer' },
   { to: '/labs', label: 'nav.labs' },
   { to: '/studio', label: 'nav.studio' },

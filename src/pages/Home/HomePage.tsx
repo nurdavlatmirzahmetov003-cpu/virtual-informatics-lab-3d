@@ -59,7 +59,10 @@ export default function HomePage() {
         <h2>{t('home.outroTitle')}</h2>
         <p>{t('home.outroBody')}</p>
         <div className={styles.outroActions}>
-          <ButtonLink to="/labs">{t('home.outroLabs')}</ButtonLink>
+          <ButtonLink to="/lab">{t('home.enterLab')}</ButtonLink>
+          <ButtonLink to="/labs" variant="ghost">
+            {t('home.outroLabs')}
+          </ButtonLink>
           <ButtonLink to="/studio" variant="ghost">
             {t('home.outroStudio')}
           </ButtonLink>

@@ -1,5 +1,6 @@
 import type { Ref } from 'react';
-import { ArrowRight, Hand, MousePointer2, Rotate3d } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, DoorOpen, Hand, MousePointer2, Rotate3d } from 'lucide-react';
 import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
 import { CHAPTERS } from '@/scenes/DeskScene/chapters';
@@ -40,6 +41,10 @@ export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
             {t('home.cta')}
             <ArrowRight size={18} aria-hidden="true" />
           </button>
+          <Link to="/lab" className={styles.exploreBtn} tabIndex={chapter === 0 ? 0 : -1}>
+            <DoorOpen size={16} aria-hidden="true" />
+            {t('home.enterLab')}
+          </Link>
           <button type="button" className={styles.exploreBtn} tabIndex={chapter === 0 ? 0 : -1} onClick={() => enterDevice('setup')}><Rotate3d size={16} />{t('explore.viewSetup')}</button>
         </div>
         <div className={styles.scrollHint} aria-hidden="true">

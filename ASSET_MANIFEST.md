@@ -147,6 +147,9 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | `ssd-samsung-990-pro-2tb` | [M.2 NVMe SSD Samsung 990 PRO 1TB](https://sketchfab.com/3d-models/m2-nvme-ssd-samsung-990-pro-1tb-3d-model-41b7bfda7eab40f8b13330913fd66fc2) | lime.ball.animations | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 2 texture areas repainted (logos / print) |
 | `ssd-wd-sn850x-1tb` | [m2ssd_Painter](https://sketchfab.com/3d-models/m2ssd-painter-ccda7c201091445087c02692444641c2) | Igor.Jop | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 1 texture areas repainted (logos / print) |
 
+### 3D зертхана (V2-3, 2026-10-11)
+Жаңа ассет жүктелмеді. Зал, жиһаз, тақтайшалар, кесте және [PLACEHOLDER] құрылғылар процедуралық (`scenes/LabSpace/`). Қайта қолданылғандар: еден roughness картасы (`floor_rough*.webp`), Poly Haven HDRI `studio_small_09_1k.hdr` (CC0), каталог өнімдерінің GLB-лері (жоғарыдағы V2-2a/b кестелері), анатомия placeholders. Бренд атаулары (кестеде өнім атауы) — тек мәтін.
+
 ### Setup Studio (Фаза 4)
 Каталог өнімдері (`src/data/hardware/catalog.ts`) жаңа ассет жүктемейді: әр өнімнің `modelPath`-ы жоғарыдағы `hardware/*.glb` модельдеріне сілтейді және `modelSize` арқылы өнімнің нақты өлшеміне масштабталады. Үстел — жобаның процедуралық `Desk`-і, орындық — процедуралық `scenes/SetupStudio/Chair.tsx` ([PLACEHOLDER]). Өнім атаулары мен сипаттамалары — өндірушілердің ресми беттерінен (сілтеме әр өнімде, `specCheckedAt: 2026-10-03`); сауда белгілері иелеріне тиесілі, жоба тек оқу мақсатында сипаттайды. Бағалар — «Demo price».
 

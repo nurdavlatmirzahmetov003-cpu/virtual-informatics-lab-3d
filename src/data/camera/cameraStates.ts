@@ -5,6 +5,8 @@
  * World units are metres. The desk top sits at y = 0.75 with its centre at
  * the origin (see scenes/DeskScene/layout.ts).
  */
+import { LAB_OVERVIEW } from '@/data/lab/zones';
+
 export type Vec3 = readonly [number, number, number];
 
 export interface CameraState {
@@ -42,6 +44,7 @@ export const CAMERA_STATE_NAMES = [
   'ASSEMBLY_DESK',
   'ASSEMBLY_AUDIO',
   'ASSEMBLY_PC',
+  'LAB_OVERVIEW',
 ] as const;
 
 export type CameraStateName = (typeof CAMERA_STATE_NAMES)[number];
@@ -75,4 +78,6 @@ export const CAMERA_STATES: Record<CameraStateName, CameraState> = {
   ASSEMBLY_AUDIO: { position: [-0.95, 1.26, 1.22], target: [-0.42, 0.88, -0.08], fov: 36 },
   ASSEMBLY_PC: { position: [0.02, 1.3, 1.18], target: [0.62, 0.99, -0.06], fov: 36 },
   ANATOMY_INTERNAL: { position: [0, 2.0, 1.32], target: [0, 0.76, -0.01], fov: 36, minDistance: 0.18, maxDistance: 3 },
+  // The large 3D lab (V2-3): the whole hall; the shot itself lives with the zones (data/lab/zones.ts)
+  LAB_OVERVIEW: { position: LAB_OVERVIEW.position, target: LAB_OVERVIEW.target, fov: LAB_OVERVIEW.fov },
 };

@@ -34,6 +34,8 @@ interface ModelLoaderProps extends Omit<GroupProps, 'children'> {
    * for less and nothing visibly changes.
    */
   deferDetail?: boolean;
+  /** Only the lightest level, e.g. an overview where the model is never close (V2-3 lab previews). */
+  lightOnly?: boolean;
 }
 
 /** Below this height on screen (px) the light level is shown; ×0.6 on High/Ultra. */
@@ -45,7 +47,7 @@ const HD_SWITCH_PX = 380;
  * Loads a GLB without ever taking the whole scene down: failures are caught
  * locally, logged with the url, and replaced by a fallback.
  */
-export function ModelLoader({ url, fallback, deferDetail = false, ...props }: ModelLoaderProps) {
+export function ModelLoader({ url, fallback, deferDetail = false, lightOnly = false, ...props }: ModelLoaderProps) {
   // only models that have a lighter level can show it first
   const deferrable = deferDetail && modelLevels(splitModelUrl(url).file, 0).far !== null;
   const ready = useSceneStatus((s) => s.ready);
@@ -67,7 +69,7 @@ export function ModelLoader({ url, fallback, deferDetail = false, ...props }: Mo
       fallback={() => (fallback === undefined ? <ModelFallback /> : fallback)}
       onError={(error) => console.error(`[ModelLoader] failed to load "${url}"`, error)}
     >
-      {deferrable ? <Suspense fallback={light}>{detail ? <GLTFModel url={url} {...props} /> : light}</Suspense> : <GLTFModel url={url} {...props} />}
+      {lightOnly ? light : deferrable ? <Suspense fallback={light}>{detail ? <GLTFModel url={url} {...props} /> : light}</Suspense> : <GLTFModel url={url} {...props} />}
     </ErrorBoundary>
   );
 }
@@ -81,7 +83,7 @@ function GLTFModel({
   distanceLod = true,
   lightOnly = false,
   ...groupProps
-}: Omit<ModelLoaderProps, 'fallback' | 'deferDetail'> & { lightOnly?: boolean }) {
+}: Omit<ModelLoaderProps, 'fallback' | 'deferDetail'>) {
   const preset = useQualityPreset();
   const { file, node } = splitModelUrl(url);
   // Low preset (phones, weak GPUs): the light file only. Otherwise the detailed

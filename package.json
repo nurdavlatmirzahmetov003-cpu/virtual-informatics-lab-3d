@@ -24,8 +24,9 @@
     "test:experiments": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/experiments.test.mjs",
     "test:progress": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/progress.test.mjs",
     "ai:server": "node --experimental-strip-types --import ./scripts/test-resolve.mjs server/ai-server.ts",
+    "test:lab": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/lab-space.test.mjs",
     "test:ai": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/ai.test.mjs",
-    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab && npm run test:progress && npm run test:network && npm run test:grading && npm run test:algorithms && npm run test:logic && npm run test:experiments && npm run test:blender && npm run test:visual",
+    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab && npm run test:progress && npm run test:network && npm run test:grading && npm run test:algorithms && npm run test:logic && npm run test:experiments && npm run test:lab && npm run test:blender && npm run test:visual",
     "test:blender": "node --test scripts/blender-pipeline.test.mjs",
     "blender:pipeline": "node scripts/blender/run.mjs",
     "test:visual": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/visual.test.mjs"

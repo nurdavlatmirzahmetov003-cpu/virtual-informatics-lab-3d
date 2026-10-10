@@ -169,6 +169,14 @@ legacy/                     ескі ES-module прототип (python http.ser
     - Маркерлер — GLB ішіндегі бос node-тар, extras: `port` (түрі), `dir` (қосылу бағыты), `labelKey` (`ports.*`). Атаулары `port_<type>_<n>`; `slot_*`, `header_*`, `socket_*`, `mount_*` өз атымен. V2-6 кабельдері мен V2-7 симуляциясы осыларды оқиды; React-та координата қатаң жазылмайды.
     - Текстура бюджеті (RGBA + mip) деңгейге 32/16/4 MB — `optimize-assets.mjs` ең үлкенін екі есе кішірейтеді, `assets:validate` тексереді.
 
+40. **Үлкен 3D зертхана (V2-3).**
+    - `/lab` = `pages/Lab` + `scenes/LabSpace`. Аймақтар — деректер (`data/lab/zones.ts`), логика таза функциялар (`lib/lab/navigation.ts`, тестпен), күй `labStore` (focus, hovered, flightToken, nudge).
+    - `labCameraPose` — камера орны миникарта үшін (useFrame жазады, React re-render жоқ).
+    - Әр аймақ `ZoneStage`: платформа + canvas-тақтайша (тіл/тема бойынша) + мазмұн. Мазмұн `detail: 'preview' | 'full'` — тек `focus` аймақ толық; Suspense fallback = preview, сондықтан жүктеу кезінде аймақ бос қалмайды.
+    - Жүктеу саясаты `loadPlan()`: толық — тек таңдалған аймақ; көршілер — `fetch(priority: low)` HTTP кэшке (useGLTF кэшіне емес, жадта ұсталмайды); кетсе — unmount → `assetCache` босатады.
+    - Жарық: көлеңке картасы static (autoUpdate=false), аймақ ауысқанда 6 с жаңарады; castShadow тұрақты (ауыстырсақ шейдерлер қайта компиляцияланады).
+    - Камера: ease-in-out ұшу + доға, OrbitControls (pan жоқ), қашықтық шектері тек ұшу аяқталғанда қолданылады, target залдан шықпайды (`clampToHall`).
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

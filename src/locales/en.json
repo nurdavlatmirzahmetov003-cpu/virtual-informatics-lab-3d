@@ -10,7 +10,8 @@
     "studio": "Setup Studio",
     "progress": "My results",
     "primary": "Primary navigation",
-    "explorer": "Anatomy"
+    "explorer": "Anatomy",
+    "lab": "3D lab"
   },
   "settings": {
     "language": "Language",
@@ -47,14 +48,20 @@
     "outroTitle": "Keep going",
     "outroBody": "You have met the devices. Now head to the labs and build your own setup.",
     "outroLabs": "Go to labs",
-    "outroStudio": "Setup Studio"
+    "outroStudio": "Setup Studio",
+    "enterLab": "Enter the lab"
   },
   "labs": {
     "title": "Labs",
-    "subtitle": "9 modules: 3D hardware, networks, algorithms, logic and your own setup. Tasks are graded automatically.",
+    "subtitle": "10 modules: a 3D lab, 3D hardware, networks, algorithms, logic and your own setup. Tasks are graded automatically.",
     "phase": "Phase {n}",
     "planned": "In development",
     "modules": {
+      "space": {
+        "title": "3D lab",
+        "desc": "A large hall with nine zones: workstation, PC build, storage, input/output, printing, networking, power, mobile devices and a showcase. Minimap and keyboard control.",
+        "tag": "3D · 9 zones"
+      },
       "hardware": {
         "title": "Computer hardware",
         "desc": "3D anatomy of external and internal devices.",
@@ -3135,5 +3142,91 @@
     "usbA": "USB-A port",
     "usbC": "USB-C port",
     "usbHeader": "Front USB header"
+  },
+  "lab": {
+    "title": "3D lab",
+    "eyebrow": "The large lab space",
+    "lead": "Tour nine zones: pick a zone and the camera flies there.",
+    "sceneLabel": "3D lab hall with nine zones",
+    "overview": "Overview",
+    "next": "Next zone",
+    "prev": "Previous zone",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetView": "Reset camera",
+    "minimap": "Lab map",
+    "zonesNav": "Zones",
+    "loading": "Loading the zone’s models…",
+    "you": "You",
+    "focused": "Zone: {name}",
+    "atOverview": "Overview",
+    "hint": "Drag to orbit · Wheel or pinch to zoom · Esc for the overview",
+    "keys": "Keys",
+    "keysList": {
+      "digits": "1–9 — fly to a zone",
+      "overview": "Esc or 0 — overview",
+      "step": "[ ] or PageUp/PageDown — previous/next zone",
+      "zoom": "+ / − — zoom in/out",
+      "orbit": "← → — orbit"
+    },
+    "storage": {
+      "chartTitle": "Read speed",
+      "unit": "MB/s",
+      "hdd": "HDD 3.5″ (typical)"
+    },
+    "zones": {
+      "workstation": {
+        "name": "Workstation",
+        "caption": "Your Setup Studio setup",
+        "description": "Monitor, keyboard, mouse, speakers and the system unit on one desk. The setup you built in Setup Studio stands here; if you have not built one yet, the recommended gaming build.",
+        "action": "Build in Setup Studio"
+      },
+      "assembly": {
+        "name": "PC build bench",
+        "caption": "Board, CPU, RAM, GPU, PSU",
+        "description": "On the anti-static mat: the motherboard (with CPU, cooler, memory and SSD), the graphics card and the PSU, with an empty case beside them. This is where you build a PC yourself.",
+        "action": "Build a PC"
+      },
+      "storage": {
+        "name": "Storage wall",
+        "caption": "HDD vs SSD: which is faster?",
+        "description": "Hard disks and SSDs on the shelves (enlarged so they read from the aisle). The chart on the wall compares the catalog read speeds: an NVMe SSD is more than 30 times faster than a typical HDD.",
+        "action": "See in Anatomy"
+      },
+      "peripherals": {
+        "name": "Input / output desk",
+        "caption": "Keyboards, mice, headsets",
+        "description": "Five keyboards and five mice in a row, from a basic office model to an esports one. The monitor, speakers, headsets, microphone and webcam are here too.",
+        "action": "See in Anatomy"
+      },
+      "print_media": {
+        "name": "Print & media",
+        "caption": "Printer, 3D printer, projector",
+        "description": "Printer-scanner, 3D printer, projector with a screen and an interactive panel: output to paper, to plastic and to the big screen.",
+        "action": "Printer in Anatomy"
+      },
+      "network": {
+        "name": "Network corner",
+        "caption": "Router, switch, rack",
+        "description": "Switches and patch cables in the server rack; a Wi-Fi router and a network card on the desk. This is how computers join a network.",
+        "action": "Network lab"
+      },
+      "power": {
+        "name": "Power & cables",
+        "caption": "UPS, cables, hubs",
+        "description": "A UPS, a surge protector, a docking station and a USB hub. HDMI, DisplayPort, USB-C, USB-A, audio and power cables hang on the wall."
+      },
+      "mobile": {
+        "name": "Mobile devices",
+        "caption": "Laptop, smartphone, tablet",
+        "description": "Laptop, smartphone, tablet, all-in-one, smartwatch and a single-board computer: computers built into one body."
+      },
+      "showcase": {
+        "name": "Showcase",
+        "caption": "The best of the catalog",
+        "description": "In the middle of the hall, a premium case on a turntable, with a monitor, gaming chair, keyboard and headset from the Setup Studio catalog around it.",
+        "action": "Setup Studio"
+      }
+    }
   }
 }

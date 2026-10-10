@@ -42,6 +42,7 @@ const grid = (
 );
 
 const BACK: Record<ModuleId, ReactNode> = {
+  space: grid,
   hardware: grid,
   assembly: grid,
   network: grid,
@@ -54,6 +55,21 @@ const BACK: Record<ModuleId, ReactNode> = {
 };
 
 const FRONT: Record<ModuleId, (face: string) => ReactNode> = {
+  // the hall from above: three walls, nine zones, the visitor at the open front
+  space: (face) => (
+    <>
+      <path d="M70 140 V26 H250 V140" {...line} />
+      {[
+        [86, 34], [138, 34], [190, 34],
+        [74, 70], [74, 104], [214, 70], [214, 104],
+        [122, 112],
+      ].map(([x, y]) => (
+        <rect key={`${x}-${y}`} x={x} y={y} width="34" height="22" rx="3" {...line} fill={face} />
+      ))}
+      <circle cx="160" cy="80" r="15" {...line} fill={face} />
+      <circle cx="176" cy="148" r="4" fill="var(--tone)" />
+    </>
+  ),
   hardware: (face) => (
     <>
       <rect x="92" y="34" width="96" height="66" rx="6" {...line} fill={face} />

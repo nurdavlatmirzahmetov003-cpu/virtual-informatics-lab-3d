@@ -17,12 +17,14 @@ const AlgorithmLabPage = lazy(() => import('@/pages/Labs/AlgorithmLab/AlgorithmL
 const LogicLabPage = lazy(() => import('@/pages/Labs/LogicLab/LogicLabPage'));
 const ExperimentLabPage = lazy(() => import('@/pages/Labs/ExperimentLab/ExperimentLabPage'));
 const TasksPage = lazy(() => import('@/pages/Tasks/TasksPage'));
+const LabPage = lazy(() => import('@/pages/Lab/LabPage'));
 
 export const router = createBrowserRouter([
   {
     element: <AppShell />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'lab', element: <LabPage /> },
       { path: 'labs', element: <LabsPage /> },
       { path: 'labs/assembly', element: <AssemblyLabPage /> },
       { path: 'labs/network', element: <NetworkLabPage /> },

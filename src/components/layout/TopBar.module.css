@@ -102,6 +102,20 @@
   }
 }
 
+/* six links do not fit between the brand and the controls on small tablets: scroll, never overlap */
+@media (max-width: 920px) {
+  .nav {
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @media (max-width: 720px) {
   .root {
     grid-template-columns: auto 1fr;
