@@ -1,0 +1,53 @@
+{
+  "name": "mon-dell-u2724d",
+  "description": "27″ base, silver finish, taller height-adjust stand.",
+  "input": "assets-src/sketchfab/v2/pc_monitor_27_inch.glb",
+  "output": "assets-src/blender/products/mon-dell-u2724d.glb",
+  "rotate": 0,
+  "realSize": [
+    0.612,
+    0.185,
+    0.5
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#0b0d12"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {
+      "^Display$": "Screen"
+    },
+    "paint": [
+      {
+        "materials": "^Base$",
+        "color": "#b9bcc2",
+        "metallic": 0.6,
+        "roughness": 0.35
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/mon-dell-u2724d.jpg"
+  }
+}

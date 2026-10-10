@@ -1,0 +1,35 @@
+{
+  "name": "spk-creative-pebble-v3",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/satellite_enhanced_900_followers_special.glb",
+  "output": "assets-src/blender/products/spk-creative-pebble-v3.glb",
+  "rotate": -90,
+  "realSize": [
+    0.116,
+    0.122,
+    0.115
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "groups": "^Icosphere$"
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/spk-creative-pebble-v3.jpg"
+  }
+}

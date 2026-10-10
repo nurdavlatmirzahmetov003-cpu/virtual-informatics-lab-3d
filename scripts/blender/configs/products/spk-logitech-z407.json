@@ -1,0 +1,35 @@
+{
+  "name": "spk-logitech-z407",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/logitech_speakers.glb",
+  "output": "assets-src/blender/products/spk-logitech-z407.glb",
+  "rotate": 0,
+  "realSize": [
+    0.08,
+    0.09,
+    0.179
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "groups": "^(Cord_12|Aux Cable _14|Aux casing(\\.001)?_\\d+|Body\\.001_6|Front\\.001_7|Volume knob\\.001_8)$"
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/spk-logitech-z407.jpg"
+  }
+}

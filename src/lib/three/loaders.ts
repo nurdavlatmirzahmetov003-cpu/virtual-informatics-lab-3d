@@ -4,9 +4,9 @@ import type { GLTFLoader } from 'three-stdlib';
 import { useGLTF } from '@react-three/drei';
 import { QUALITY_PRESETS } from '@/lib/quality/presets';
 import { selectEffectiveQuality, useSettingsStore } from '@/store/settingsStore';
-import { lodFile, splitModelUrl } from './modelUrls';
+import { modelLevels, splitModelUrl } from './modelUrls';
 
-export { hdFile, lodFile, splitModelUrl } from './modelUrls';
+export { hdFile, isTieredModel, lodFile, modelLevels, splitModelUrl } from './modelUrls';
 
 const base = import.meta.env.BASE_URL;
 
@@ -41,6 +41,6 @@ export const prefersLightModels = () => QUALITY_PRESETS[selectEffectiveQuality(u
 /** Warm the cache for a GLB before the scene that needs it mounts. */
 export function preloadModel(url: string) {
   const { file } = splitModelUrl(url);
-  const light = lodFile(file);
-  useGLTF.preload(light && prefersLightModels() ? light : file, DRACO_DECODER_PATH, true);
+  const level = QUALITY_PRESETS[selectEffectiveQuality(useSettingsStore.getState())].lodBias;
+  useGLTF.preload(modelLevels(file, level).near, DRACO_DECODER_PATH, true);
 }

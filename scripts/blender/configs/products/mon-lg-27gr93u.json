@@ -1,0 +1,50 @@
+{
+  "name": "mon-lg-27gr93u",
+  "description": "Box stand base; LG logo meshes removed.",
+  "input": "assets-src/sketchfab/v2/lg_moniter.glb",
+  "output": "assets-src/blender/products/mon-lg-27gr93u.glb",
+  "rotate": 0,
+  "realSize": [
+    0.613,
+    0.237,
+    0.46
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "materials": "^(material|White)$"
+      }
+    ],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#0b0d12"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {
+      "^desktop$": "Screen"
+    },
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/mon-lg-27gr93u.jpg"
+  }
+}

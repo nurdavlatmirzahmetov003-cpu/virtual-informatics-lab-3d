@@ -3,6 +3,7 @@
  *
  *   npm run blender:pipeline                       # every scripts/blender/configs/*.json
  *   npm run blender:pipeline -- gpu_triple_fan     # one config (name or path)
+ *   npm run blender:pipeline -- products           # every catalog product (configs/products)
  *
  * Blender is found via BLENDER_PATH or the default Windows install of Blender 5.1.
  */
@@ -27,9 +28,19 @@ if (!blender) {
 
 const configsDir = path.join(here, 'configs');
 const wanted = process.argv.slice(2);
-const configs = (wanted.length ? wanted : readdirSync(configsDir).filter((f) => f.endsWith('.json'))).map((c) =>
-  existsSync(c) ? path.resolve(c) : path.join(configsDir, c.endsWith('.json') ? c : `${c}.json`),
-);
+const productsDir = path.join(configsDir, 'products');
+const all = [
+  ...readdirSync(configsDir).filter((f) => f.endsWith('.json')).map((f) => path.join(configsDir, f)),
+  ...readdirSync(productsDir).filter((f) => f.endsWith('.json')).map((f) => path.join(productsDir, f)),
+];
+// `products` = every catalog product config; otherwise names or paths
+const configs = !wanted.length
+  ? all
+  : wanted.flatMap((c) =>
+      c === 'products'
+        ? all.filter((f) => f.startsWith(productsDir))
+        : [existsSync(c) ? path.resolve(c) : all.find((f) => path.basename(f) === (c.endsWith('.json') ? c : `${c}.json`)) ?? c],
+    );
 
 let failed = 0;
 for (const config of configs) {

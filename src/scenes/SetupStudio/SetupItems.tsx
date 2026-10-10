@@ -6,12 +6,13 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Plane, Vector3, type Group, type Material, type Mesh, type MeshStandardMaterial, type Object3D } from 'three';
+import { Box3, Plane, Vector3, type Group, type Material, type Mesh, type MeshStandardMaterial, type Object3D } from 'three';
 import { ModelLoader } from '@/components/3d/ModelLoader';
 import type { HardwareItem } from '@/data/hardware/types';
 import { CASE_FINISHES, type Finish, type PeripheralTheme } from '@/data/studio/options';
 import type { ResolvedBuild } from '@/lib/studio/build';
 import { applyPaint, type PaintFinish } from '@/lib/three/finish';
+import { isTieredModel } from '@/lib/three/modelUrls';
 import { DeskMat } from '@/scenes/DeskScene/models/DeskMat';
 import { useMonitorWallpaper } from '@/scenes/DeskScene/models/useMonitorWallpaper';
 import { HEADSET, KEYBOARD, MAT, MONITOR, MOUSE, SPEAKERS } from '@/scenes/DeskScene/layout';
@@ -39,11 +40,17 @@ interface ProductModelProps {
   stretchY?: number;
 }
 
-/** A catalog model scaled to the product's real size and painted with the chosen finish. */
+/**
+ * A catalog model at the product's real size, painted with the chosen finish.
+ * Per-product models (`products/<id>.glb`, V2-2a) are built at real size,
+ * facing the user, on the ground; shared legacy models are fitted here.
+ */
 function ProductModel({ product, axis, rotation, offset, paint, prepare, stretchY = 1, ...group }: ProductModelProps) {
   const [root, setRoot] = useState<Object3D | null>(null);
   const size = product.modelSize ?? 0.1;
-  const fit = useMemo<Fit>(() => ({ axis, size, rotation, offset, align: 'floor' }), [axis, size, rotation, offset]);
+  const own = isTieredModel(product.modelPath);
+  const fit = useMemo<Fit | undefined>(() => (own ? undefined : { axis, size, rotation, offset, align: 'floor' }), [own, axis, size, rotation, offset]);
+  const position = own && offset && group.position ? ([group.position[0] + offset[0], group.position[1] + offset[1], group.position[2] + offset[2]] as const) : own && offset ? offset : group.position;
   const onLoaded = useCallback(
     (r: Object3D) => {
       prepare?.(r);
@@ -62,9 +69,9 @@ function ProductModel({ product, axis, rotation, offset, paint, prepare, stretch
       url={`${import.meta.env.BASE_URL}assets/models/${product.modelPath}`}
       fit={fit}
       onLoaded={onLoaded}
-      position={group.position ? [...group.position] : undefined}
+      position={position ? [...position] : undefined}
       rotation-y={group['rotation-y'] ?? 0}
-      scale-y={stretchY}
+      scale-y={own ? 1 : stretchY}
     />
   );
 }
@@ -104,6 +111,7 @@ function Piece({ k, animated, from = [0, 0.22, 0], unroll, children }: { k: Piec
 /** Height (fraction of the panel width) where the ultrawide GLB's stand meets the panel. */
 const STAND_SPLIT = 1.5 / 10.727;
 function monitorStretch(product: HardwareItem) {
+  if (isTieredModel(product.modelPath)) return 1;
   const resolution = String(product.specifications.find(s => s.key === 'resolution')?.value ?? '').match(/(\d+)\s*[×x]\s*(\d+)/);
   const aspect = resolution ? Number(resolution[1]) / Number(resolution[2]) : 21 / 9;
   return (21 / 9) / aspect;
@@ -119,10 +127,20 @@ function ClippedMonitor({ product, paint, part, onScreen }: { product: HardwareI
   const plane = useMemo(() => new Plane(new Vector3(0, part === 'stand' ? -1 : 1, 0), 0), [part]);
   const world = useMemo(() => new Vector3(), []);
   const stretchY = monitorStretch(product);
-  const splitY = (product.modelSize ?? 0.6) * STAND_SPLIT * stretchY;
+  // own models: the panel starts just under the screen (bottom bezel); shared ultrawide: fixed ratio
+  const split = useRef((product.modelSize ?? 0.6) * STAND_SPLIT * stretchY);
   const prepare = useCallback(
     (root: Object3D) => {
       onScreen?.(root);
+      if (isTieredModel(product.modelPath) && holder.current) {
+        root.updateWorldMatrix(true, true);
+        const box = new Box3();
+        root.traverse((obj) => {
+          const mesh = obj as Mesh;
+          if (mesh.isMesh && (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).some((m) => m.name === 'Screen')) box.expandByObject(mesh);
+        });
+        if (!box.isEmpty()) split.current = box.min.y - holder.current.getWorldPosition(new Vector3()).y - 0.02;
+      }
       root.traverse((obj) => {
         const mesh = obj as Mesh;
         if (!mesh.isMesh) return;
@@ -132,13 +150,13 @@ function ClippedMonitor({ product, paint, part, onScreen }: { product: HardwareI
         });
       });
     },
-    [onScreen, plane],
+    [onScreen, plane, product.modelPath],
   );
   useFrame(() => {
     const h = holder.current;
     if (!h) return;
     h.getWorldPosition(world);
-    const y = world.y + splitY;
+    const y = world.y + split.current;
     plane.constant = part === 'stand' ? y : -y;
   });
   return (
@@ -223,6 +241,7 @@ function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish;
 }
 
 const MOUSE_ROT = [0, Math.PI, 0] as const;
+const CHAIR_POSITION = [-1.12, 0, 0.4] as const;
 const HEADSET_OFFSET = [0, 0.045, 0] as const;
 const MAT_PIVOT = { pivotX: MAT.position[0] - MAT.size[0] / 2 };
 
@@ -283,7 +302,11 @@ export function SetupItems({ build, finish, animated = false }: { build: Resolve
       )}
       {chair && (
         <Piece k="chair" animated={animated} from={[-0.25, 0, 0.7]}>
-          <Chair key={chair.id} height={chair.modelSize} upholstery={chairWhite ? '#d8d9dd' : '#1c1d21'} position={[-1.12, 0, 0.4]} rotation-y={0.75} />
+          {isTieredModel(chair.modelPath) ? (
+            <ProductModel key={chair.id} product={chair} axis={1} paint={null} position={CHAIR_POSITION} rotation-y={0.75} />
+          ) : (
+            <Chair key={chair.id} height={chair.modelSize} upholstery={chairWhite ? '#d8d9dd' : '#1c1d21'} position={[...CHAIR_POSITION]} rotation-y={0.75} />
+          )}
         </Piece>
       )}
       {build.case && (

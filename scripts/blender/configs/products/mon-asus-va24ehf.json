@@ -1,0 +1,46 @@
+{
+  "name": "mon-asus-va24ehf",
+  "description": "23.8″ flat from the 27″ base: narrower panel, low stand.",
+  "input": "assets-src/sketchfab/v2/pc_monitor_27_inch.glb",
+  "output": "assets-src/blender/products/mon-asus-va24ehf.glb",
+  "rotate": 0,
+  "realSize": [
+    0.54,
+    0.18,
+    0.417
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#0b0d12"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {
+      "^Display$": "Screen"
+    },
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/mon-asus-va24ehf.jpg"
+  }
+}

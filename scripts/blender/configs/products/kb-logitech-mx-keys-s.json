@@ -1,0 +1,31 @@
+{
+  "name": "kb-logitech-mx-keys-s",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/logitech_mx_keys.glb",
+  "output": "assets-src/blender/products/kb-logitech-mx-keys-s.glb",
+  "rotate": 0,
+  "realSize": [
+    0.43,
+    0.131,
+    0.021
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/kb-logitech-mx-keys-s.jpg"
+  }
+}

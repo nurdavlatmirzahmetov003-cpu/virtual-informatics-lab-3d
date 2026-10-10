@@ -8,6 +8,8 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { EnvironmentLighting } from '@/components/3d/EnvironmentLighting';
 import { resolveBuild } from '@/lib/studio/build';
 import { Desk } from '@/scenes/DeskScene/models/Desk';
+import { isTieredModel } from '@/lib/three/modelUrls';
+import { ProductDesk } from './ProductDesk';
 import { Room } from '@/scenes/DeskScene/models/Room';
 import { useStudioStore } from '@/store/studioStore';
 import { SetupItems } from './SetupItems';
@@ -52,7 +54,7 @@ export default function StudioScene() {
       <StudioCamera />
       <StudioShadows />
       <Room />
-      <Desk surface={finish.desk} />
+      {build.desk && isTieredModel(build.desk.modelPath) ? <ProductDesk key={build.desk.id} product={build.desk} surface={finish.desk} /> : <Desk surface={finish.desk} />}
       <SetupItems build={build} finish={finish} />
     </>
   );

@@ -1,0 +1,61 @@
+{
+  "name": "mouse-logitech-superlight2",
+  "description": "Longer, lighter-coloured symmetric shell.",
+  "input": "assets-src/sketchfab/v2/mouse_logitech_g203.glb",
+  "output": "assets-src/blender/products/mouse-logitech-superlight2.glb",
+  "rotate": 0,
+  "realSize": [
+    0.0632,
+    0.125,
+    0.04
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_6",
+        "rects": [
+          [
+            0.12,
+            0.89,
+            0.21,
+            0.98
+          ]
+        ]
+      },
+      {
+        "image": "Image_8",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#000000"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": [
+      {
+        "materials": "^standardSurface1[234]$",
+        "color": "#e8e9ec",
+        "roughness": 0.45
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/mouse-logitech-superlight2.jpg"
+  }
+}

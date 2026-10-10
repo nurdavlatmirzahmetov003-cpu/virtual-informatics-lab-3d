@@ -2,7 +2,7 @@ import { Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from '
 import { useFrame, type ThreeElements } from '@react-three/fiber';
 import { Box3, Sphere, Vector3, type Material, type Mesh, type Object3D, type Texture } from 'three';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { hdFile, lodFile, splitModelUrl } from '@/lib/three/loaders';
+import { hdFile, modelLevels, splitModelUrl } from '@/lib/three/loaders';
 import { capTreeTextures, tuneTreeTextures } from '@/lib/three/assetCache';
 import { cloneSource, fitModel, lodSwitches, notifyPcPart, useModelFile, type ModelFit } from '@/lib/three/modelAssets';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
@@ -46,7 +46,8 @@ const HD_SWITCH_PX = 380;
  * locally, logged with the url, and replaced by a fallback.
  */
 export function ModelLoader({ url, fallback, deferDetail = false, ...props }: ModelLoaderProps) {
-  const deferrable = deferDetail && lodFile(splitModelUrl(url).file) !== null;
+  // only models that have a lighter level can show it first
+  const deferrable = deferDetail && modelLevels(splitModelUrl(url).file, 0).far !== null;
   const ready = useSceneStatus((s) => s.ready);
   const [detail, setDetail] = useState(!deferrable);
   useEffect(() => {
@@ -83,18 +84,18 @@ function GLTFModel({
 }: Omit<ModelLoaderProps, 'fallback' | 'deferDetail'> & { lightOnly?: boolean }) {
   const preset = useQualityPreset();
   const { file, node } = splitModelUrl(url);
-  const light = lodFile(file);
-  // Low preset (phones, weak GPUs): the light file only. Otherwise the full
-  // file, plus the light one to stand in while the model is small on screen.
-  const lowOnly = light !== null && (preset.lodBias >= 2 || lightOnly);
+  // Low preset (phones, weak GPUs): the light file only. Otherwise the detailed
+  // file for the preset, plus a lighter one while the model is small on screen.
+  const lv = modelLevels(file, preset.lodBias, lightOnly);
+  const lowOnly = lv.near !== file && lv.far === null;
   const hd = preset.hdTextures && !lightOnly ? hdFile(file) : null;
   // sticky: once a close-up asked for 2K textures they stay for this model
   const [wantHd, setWantHd] = useState(false);
   const askedHd = useRef(false);
-  const useLod = light !== null && !lowOnly && distanceLod;
-  const main = useModelFile(lowOnly ? light : file);
+  const useLod = lv.far !== null && distanceLod;
+  const main = useModelFile(lv.near);
   // hooks cannot be conditional: without a far level this is the same cached file
-  const far = useModelFile(useLod ? light : lowOnly ? light : file);
+  const far = useModelFile(useLod && lv.far ? lv.far : lv.near);
 
   const { root, levels } = useMemo(() => {
     const pick = (scene: Object3D) => (node ? scene.getObjectByName(node) : scene) ?? scene;

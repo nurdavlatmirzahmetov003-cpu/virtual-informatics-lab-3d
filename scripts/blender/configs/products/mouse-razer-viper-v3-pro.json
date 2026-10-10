@@ -1,0 +1,35 @@
+{
+  "name": "mouse-razer-viper-v3-pro",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/razer_mouse.glb",
+  "output": "assets-src/blender/products/mouse-razer-viper-v3-pro.glb",
+  "rotate": 90,
+  "realSize": [
+    0.0574,
+    0.1272,
+    0.0399
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "materials": "^09_-_Default$"
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/mouse-razer-viper-v3-pro.jpg"
+  }
+}

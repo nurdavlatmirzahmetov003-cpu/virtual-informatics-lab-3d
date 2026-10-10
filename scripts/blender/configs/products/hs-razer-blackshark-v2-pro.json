@@ -1,0 +1,48 @@
+{
+  "name": "hs-razer-blackshark-v2-pro",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/razer_headset.glb",
+  "output": "assets-src/blender/products/hs-razer-blackshark-v2-pro.glb",
+  "rotate": 0,
+  "realSize": [
+    0.17,
+    0.1,
+    0.2
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "separateLoose": true,
+    "remove": [
+      {
+        "center": {
+          "max": [
+            1000,
+            1000,
+            -0.25
+          ]
+        }
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": [
+      {
+        "materials": "^Material\\.001$",
+        "color": "#2b302d",
+        "roughness": 0.5
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/hs-razer-blackshark-v2-pro.jpg"
+  }
+}

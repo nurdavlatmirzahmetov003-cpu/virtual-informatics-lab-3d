@@ -9,7 +9,7 @@
  * texture memory and JS heap (`__vil3d.memory`). Prints JSON.
  */
 import { spawn } from 'node:child_process';
-import { mkdtempSync, rmSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -36,6 +36,10 @@ const loseContext = args.includes('--lose-context');
 const leaveTo = opt('leave', null);
 /** --shots=dir: PNG of every page once ready (visual comparison of builds) */
 const shots = opt('shots', null);
+/** --storage=file.json: { "localStorage key": value } written before measuring (e.g. a Setup Studio build) */
+const storageFile = opt('storage', null);
+/** --probe=file.js: an expression evaluated on every page once ready; its JSON result is reported as `probe` */
+const probeFile = opt('probe', null);
 const pages = opt('pages', '/,/studio').split(',');
 const PORT = 9333;
 
@@ -137,6 +141,11 @@ await evaluate(`(() => {
   s.state = { ...s.state, qualityMode: ${JSON.stringify(quality)}, theme: ${JSON.stringify(theme)} };
   localStorage.setItem(k, JSON.stringify(s));
 })()`);
+if (storageFile) {
+  const entries = JSON.parse(readFileSync(storageFile, 'utf8'));
+  await evaluate(`(() => { const e = ${JSON.stringify(entries)}; for (const k in e) localStorage.setItem(k, typeof e[k] === 'string' ? e[k] : JSON.stringify(e[k])); })()`);
+}
+const probe = probeFile ? readFileSync(probeFile, 'utf8') : null;
 
 /** Functions with the most self time in a CDP CPU profile. */
 function topFunctions(prof, n) {
@@ -241,6 +250,7 @@ for (const p of pages) {
     const fps = await new Promise((done) => { let n = 0; const s = performance.now(); const f = () => { n++; performance.now() - s < 5000 ? requestAnimationFrame(f) : done(Math.round(n / ((performance.now() - s) / 1000))); }; requestAnimationFrame(f); });
     return { level: v.quality, dpr: v.dpr(), bench: v.bench(60), fps, memory: v.memory(), lodSwitches: v.lod?.(), programs: v.renderer().programs, state: v.state?.() };
   })()`);
+  const probed = probe ? await evaluate(`(async () => JSON.stringify(await (${probe})))()`).then((r) => JSON.parse(r ?? 'null')).catch((e) => String(e)) : undefined;
   if (shots) {
     mkdirSync(shots, { recursive: true });
     const { data } = await send('Page.captureScreenshot', { format: 'png' });
@@ -255,7 +265,7 @@ for (const p of pages) {
   }
   results.gpu ??= await evaluate(`(() => { const g = document.createElement('canvas').getContext('webgl2'); const e = g?.getExtension('WEBGL_debug_renderer_info'); return e ? g.getParameter(e.UNMASKED_RENDERER_WEBGL) : null; })()`);
   const pageText = ready === null ? await evaluate(`document.querySelector('main')?.innerText.slice(0, 300) ?? ''`) : undefined;
-  results.pages[p] = { readyMs: ready, firstFrameMs, ...(pageText !== undefined ? { pageText } : {}), ...(contextLoss ? { contextLoss } : {}), ...(afterLeave ? { afterLeave } : {}), readyKB, downloadKB: Math.round(total), requests: requests.size, by, scene, errors: errors.splice(0), ...(hot ? { hot } : {}), ...(loadHot ? { loadHot } : {}) };
+  results.pages[p] = { readyMs: ready, firstFrameMs, ...(pageText !== undefined ? { pageText } : {}), ...(contextLoss ? { contextLoss } : {}), ...(afterLeave ? { afterLeave } : {}), readyKB, downloadKB: Math.round(total), requests: requests.size, by, scene, ...(probed !== undefined ? { probe: probed } : {}), errors: errors.splice(0), ...(hot ? { hot } : {}), ...(loadHot ? { loadHot } : {}) };
 }
 
 console.log(JSON.stringify(results, null, 2));

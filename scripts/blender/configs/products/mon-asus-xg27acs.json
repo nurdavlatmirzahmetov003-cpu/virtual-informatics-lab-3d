@@ -1,0 +1,50 @@
+{
+  "name": "mon-asus-xg27acs",
+  "description": "Gaming V-stand base; ASUS logo meshes removed.",
+  "input": "assets-src/sketchfab/v2/asus__tuf_gaming_monitor.glb",
+  "output": "assets-src/blender/products/mon-asus-xg27acs.glb",
+  "rotate": 180,
+  "realSize": [
+    0.6145,
+    0.22,
+    0.47
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "materials": "^Material\\.00[89]$"
+      }
+    ],
+    "paint": [
+      {
+        "image": "Image_3",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#0b0d12"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {
+      "^material$": "Screen"
+    },
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/mon-asus-xg27acs.jpg"
+  }
+}

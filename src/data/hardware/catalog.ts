@@ -12,6 +12,8 @@ import type { HardwareCategory, HardwareItem } from './types';
 const CHECKED = '2026-10-03';
 const DEMO = { priceUpdatedAt: CHECKED, priceSource: { kind: 'demo' }, specCheckedAt: CHECKED } as const;
 const M = (file: string) => `hardware/${file}.glb`;
+/** Per-product model (V2-2a): `products/<id>.glb` + `_lod1` / `_lod2`, built by scripts/blender + optimize-assets. */
+const P = (id: string) => `products/${id}.glb`;
 
 type Draft = Omit<HardwareItem, 'priceUpdatedAt' | 'priceSource' | 'specCheckedAt'>;
 const item = (d: Draft): HardwareItem => ({ ...DEMO, ...d });
@@ -20,7 +22,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Monitors ─────────────
   item({
     id: 'mon-asus-va24ehf', category: 'monitor', brand: 'ASUS', model: 'VA24EHF',
-    priceKZT: 55_000, modelPath: M('monitor_ultrawide'), modelSize: 0.54, colors: ['black'],
+    priceKZT: 55_000, modelPath: P('mon-asus-va24ehf'), modelSize: 0.54, colors: ['black'],
     performanceTier: 'entry', recommendedUse: ['study', 'programming', 'universal'],
     specSourceUrl: 'https://www.asus.com/displays-desktops/monitors/eye-care/va24ehf/techspec/',
     specifications: [
@@ -33,7 +35,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mon-dell-u2724d', category: 'monitor', brand: 'Dell', model: 'UltraSharp U2724D',
-    priceKZT: 230_000, modelPath: M('monitor_ultrawide'), modelSize: 0.61, colors: ['black', 'silver'],
+    priceKZT: 230_000, modelPath: P('mon-dell-u2724d'), modelSize: 0.61, colors: ['black', 'silver'],
     performanceTier: 'performance', recommendedUse: ['programming', 'design3d', 'study'],
     specSourceUrl: 'https://www.dell.com/en-us/shop/dell-ultrasharp-27-monitor-u2724d/apd/210-bkst/monitors-monitor-accessories',
     specifications: [
@@ -46,7 +48,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mon-asus-xg27acs', category: 'monitor', brand: 'ASUS', model: 'ROG Strix XG27ACS',
-    priceKZT: 150_000, modelPath: M('monitor_ultrawide'), modelSize: 0.61, colors: ['black'],
+    priceKZT: 150_000, modelPath: P('mon-asus-xg27acs'), modelSize: 0.61, colors: ['black'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'streaming', 'universal'],
     specSourceUrl: 'https://rog.asus.com/monitors/27-to-31-5-inches/rog-strix-xg27acs/spec/',
     specifications: [
@@ -59,7 +61,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mon-lg-27gr93u', category: 'monitor', brand: 'LG', model: 'UltraGear 27GR93U',
-    priceKZT: 280_000, modelPath: M('monitor_ultrawide'), modelSize: 0.61, colors: ['black'],
+    priceKZT: 280_000, modelPath: P('mon-lg-27gr93u'), modelSize: 0.61, colors: ['black'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'design3d', 'streaming'],
     specSourceUrl: 'https://www.lg.com/us/monitors/lg-27gr93u-b-gaming-monitor',
     specifications: [
@@ -86,7 +88,7 @@ export const CATALOG: readonly HardwareItem[] = [
 
   item({
     id: 'mon-asus-xg27aqmr', category: 'monitor', brand: 'ASUS', model: 'ROG Strix XG27AQMR',
-    priceKZT: 250_000, modelPath: M('monitor_ultrawide'), modelSize: 0.6148, colors: ['black'],
+    priceKZT: 250_000, modelPath: P('mon-asus-xg27aqmr'), modelSize: 0.6148, colors: ['black'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming'],
     specSourceUrl: 'https://rog.asus.com/us/monitors/27-to-31-5-inches/rog-strix-xg27aqmr/spec/',
     specifications: [
@@ -100,7 +102,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Keyboards ─────────────
   item({
     id: 'kb-logitech-k120', category: 'keyboard', brand: 'Logitech', model: 'K120',
-    priceKZT: 5_000, modelPath: M('keyboard_mech'), modelSize: 0.45, colors: ['black'],
+    priceKZT: 5_000, modelPath: P('kb-logitech-k120'), modelSize: 0.45, colors: ['black'],
     performanceTier: 'entry', recommendedUse: ['study', 'universal'],
     specSourceUrl: 'https://www.logitech.com/en-us/products/keyboards/k120-usb-standard-computer.html',
     specifications: [
@@ -113,7 +115,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'kb-logitech-mx-keys-s', category: 'keyboard', brand: 'Logitech', model: 'MX Keys S',
-    priceKZT: 55_000, modelPath: M('keyboard_mech'), modelSize: 0.43, colors: ['graphite', 'grey', 'black'],
+    priceKZT: 55_000, modelPath: P('kb-logitech-mx-keys-s'), modelSize: 0.43, colors: ['graphite', 'grey', 'black'],
     performanceTier: 'performance', recommendedUse: ['programming', 'study', 'design3d'],
     specSourceUrl: 'https://www.logitech.com/en-us/products/keyboards/mx-keys-s.html',
     specifications: [
@@ -126,7 +128,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'kb-keychron-k8-pro', category: 'keyboard', brand: 'Keychron', model: 'K8 Pro',
-    priceKZT: 50_000, modelPath: M('keyboard_mech'), modelSize: 0.359, colors: ['black', 'grey'], rgb: true,
+    priceKZT: 50_000, modelPath: P('kb-keychron-k8-pro'), modelSize: 0.359, colors: ['black', 'grey'], rgb: true,
     performanceTier: 'mainstream', recommendedUse: ['programming', 'universal', 'study'],
     specSourceUrl: 'https://www.keychron.com/products/keychron-k8-pro-qmk-via-wireless-mechanical-keyboard',
     specifications: [
@@ -139,7 +141,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'kb-logitech-pro-x-tkl', category: 'keyboard', brand: 'Logitech G', model: 'PRO X TKL LIGHTSPEED',
-    priceKZT: 95_000, modelPath: M('keyboard_mech'), modelSize: 0.36, colors: ['black', 'white'], rgb: true,
+    priceKZT: 95_000, modelPath: P('kb-logitech-pro-x-tkl'), modelSize: 0.36, colors: ['black', 'white'], rgb: true,
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming'],
     specSourceUrl: 'https://www.logitechg.com/en-us/products/gaming-keyboards/pro-x-tkl-wireless-keyboard.html',
     specifications: [
@@ -152,7 +154,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'kb-razer-huntsman-v3-pro-tkl', category: 'keyboard', brand: 'Razer', model: 'Huntsman V3 Pro TKL',
-    priceKZT: 110_000, modelPath: M('keyboard_mech'), modelSize: 0.36, colors: ['black', 'white'], rgb: true,
+    priceKZT: 110_000, modelPath: P('kb-razer-huntsman-v3-pro-tkl'), modelSize: 0.36, colors: ['black', 'white'], rgb: true,
     performanceTier: 'enthusiast', recommendedUse: ['gaming'],
     specSourceUrl: 'https://www.razer.com/gaming-keyboards/razer-huntsman-v3-pro-tkl',
     specifications: [
@@ -167,7 +169,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Mice ─────────────
   item({
     id: 'mouse-logitech-g102', category: 'mouse', brand: 'Logitech G', model: 'G102 LIGHTSYNC',
-    priceKZT: 10_000, modelPath: M('mouse_gaming'), modelSize: 0.117, colors: ['black', 'white'], rgb: true,
+    priceKZT: 10_000, modelPath: P('mouse-logitech-g102'), modelSize: 0.117, colors: ['black', 'white'], rgb: true,
     performanceTier: 'entry', recommendedUse: ['study', 'gaming', 'universal'],
     specSourceUrl: 'https://www.logitechg.com/en-us/products/gaming-mice/g203-lightsync-rgb-6-button-gaming-mouse.html',
     specifications: [
@@ -180,7 +182,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mouse-logitech-g305', category: 'mouse', brand: 'Logitech G', model: 'G305 LIGHTSPEED',
-    priceKZT: 16_000, modelPath: M('mouse_gaming'), modelSize: 0.117, colors: ['black', 'white'],
+    priceKZT: 16_000, modelPath: P('mouse-logitech-g305'), modelSize: 0.117, colors: ['black', 'white'],
     performanceTier: 'entry', recommendedUse: ['study', 'programming', 'universal', 'gaming'],
     specSourceUrl: 'https://www.logitechg.com/en-us/products/gaming-mice/g305-lightspeed-wireless-gaming-mouse.html',
     specifications: [
@@ -193,7 +195,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mouse-logitech-g502x-plus', category: 'mouse', brand: 'Logitech G', model: 'G502 X PLUS',
-    priceKZT: 65_000, modelPath: M('mouse_gaming'), modelSize: 0.131, colors: ['black', 'white'], rgb: true,
+    priceKZT: 65_000, modelPath: P('mouse-logitech-g502x-plus'), modelSize: 0.131, colors: ['black', 'white'], rgb: true,
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming', 'design3d'],
     specSourceUrl: 'https://www.logitechg.com/en-us/products/gaming-mice/g502-x-plus-wireless-lightforce.html',
     specifications: [
@@ -206,7 +208,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mouse-logitech-superlight2', category: 'mouse', brand: 'Logitech G', model: 'PRO X SUPERLIGHT 2',
-    priceKZT: 70_000, modelPath: M('mouse_gaming'), modelSize: 0.125, colors: ['black', 'white'],
+    priceKZT: 70_000, modelPath: P('mouse-logitech-superlight2'), modelSize: 0.125, colors: ['black', 'white'],
     performanceTier: 'enthusiast', recommendedUse: ['gaming'],
     specSourceUrl: 'https://www.logitechg.com/en-us/products/gaming-mice/pro-x2-superlight-wireless-mouse.html',
     specifications: [
@@ -219,7 +221,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'mouse-razer-viper-v3-pro', category: 'mouse', brand: 'Razer', model: 'Viper V3 Pro',
-    priceKZT: 80_000, modelPath: M('mouse_gaming'), modelSize: 0.127, colors: ['black', 'white'],
+    priceKZT: 80_000, modelPath: P('mouse-razer-viper-v3-pro'), modelSize: 0.127, colors: ['black', 'white'],
     performanceTier: 'enthusiast', recommendedUse: ['gaming'],
     specSourceUrl: 'https://www.razer.com/gaming-mice/razer-viper-v3-pro',
     specifications: [
@@ -234,7 +236,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Headsets ─────────────
   item({
     id: 'hs-hyperx-cloud-iii', category: 'headset', brand: 'HyperX', model: 'Cloud III',
-    priceKZT: 45_000, modelPath: M('headset_gaming'), modelSize: 0.2, colors: ['black'],
+    priceKZT: 45_000, modelPath: P('hs-hyperx-cloud-iii'), modelSize: 0.2, colors: ['black'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'study', 'universal'],
     specSourceUrl: 'https://hyperx.com/products/hyperx-cloud-iii-gaming-headset',
     specifications: [
@@ -246,7 +248,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'hs-steelseries-nova7', category: 'headset', brand: 'SteelSeries', model: 'Arctis Nova 7 Wireless',
-    priceKZT: 85_000, modelPath: M('headset_gaming'), modelSize: 0.2, colors: ['black', 'white'],
+    priceKZT: 85_000, modelPath: P('hs-steelseries-nova7'), modelSize: 0.2, colors: ['black', 'white'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming', 'universal'],
     specSourceUrl: 'https://steelseries.com/gaming-headsets/arctis-nova-7',
     specifications: [
@@ -258,7 +260,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'hs-razer-blackshark-v2-pro', category: 'headset', brand: 'Razer', model: 'BlackShark V2 Pro (2023)',
-    priceKZT: 95_000, modelPath: M('headset_gaming'), modelSize: 0.2, colors: ['black', 'white'],
+    priceKZT: 95_000, modelPath: P('hs-razer-blackshark-v2-pro'), modelSize: 0.2, colors: ['black', 'white'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming'],
     specSourceUrl: 'https://www.razer.com/gaming-headsets/razer-blackshark-v2-pro',
     specifications: [
@@ -270,7 +272,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'hs-logitech-pro-x2', category: 'headset', brand: 'Logitech G', model: 'PRO X 2 LIGHTSPEED',
-    priceKZT: 120_000, modelPath: M('headset_gaming'), modelSize: 0.19, colors: ['black', 'white'],
+    priceKZT: 120_000, modelPath: P('hs-logitech-pro-x2'), modelSize: 0.19, colors: ['black', 'white'],
     performanceTier: 'enthusiast', recommendedUse: ['gaming', 'streaming'],
     specSourceUrl: 'https://www.logitechg.com/en-us/products/gaming-audio/pro-x-2-wireless-headset.html',
     specifications: [
@@ -285,7 +287,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Speakers ─────────────
   item({
     id: 'spk-creative-pebble-v3', category: 'speakers', brand: 'Creative', model: 'Pebble V3',
-    priceKZT: 20_000, modelPath: 'hardware/speakers.glb#speaker_left', modelSize: 0.118, colors: ['black', 'white'],
+    priceKZT: 20_000, modelPath: P('spk-creative-pebble-v3'), modelSize: 0.118, colors: ['black', 'white'],
     performanceTier: 'entry', recommendedUse: ['study', 'programming', 'universal'],
     specSourceUrl: 'https://uk.creative.com/p/speakers/creative-pebble-v3',
     specifications: [
@@ -297,7 +299,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'spk-logitech-z407', category: 'speakers', brand: 'Logitech', model: 'Z407',
-    priceKZT: 45_000, modelPath: 'hardware/speakers.glb#speaker_left', modelSize: 0.2, colors: ['graphite'],
+    priceKZT: 45_000, modelPath: P('spk-logitech-z407'), modelSize: 0.2, colors: ['graphite'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'universal', 'streaming'],
     specSourceUrl: 'https://www.logitech.com/en-us/products/speakers/z407-bluetooth-computer-speakers.html',
     specifications: [
@@ -309,7 +311,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'spk-edifier-r1280db', category: 'speakers', brand: 'Edifier', model: 'R1280DB',
-    priceKZT: 60_000, modelPath: 'hardware/speakers.glb#speaker_left', modelSize: 0.24, colors: ['wood', 'black'],
+    priceKZT: 60_000, modelPath: P('spk-edifier-r1280db'), modelSize: 0.24, colors: ['wood', 'black'],
     performanceTier: 'performance', recommendedUse: ['design3d', 'streaming', 'universal'],
     specSourceUrl: 'https://www.edifier.com/us-en/p/bookshelf-speakers/r1280db',
     specifications: [
@@ -323,7 +325,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Desks ─────────────
   item({
     id: 'desk-ikea-uppspel', category: 'desk', brand: 'IKEA', model: 'UPPSPEL 180 × 80',
-    priceKZT: 180_000, modelPath: 'procedural:desk', modelSize: 1.8, colors: ['black'],
+    priceKZT: 180_000, modelPath: P('desk-ikea-uppspel'), modelSize: 1.8, colors: ['black'],
     performanceTier: 'mainstream', recommendedUse: ['gaming', 'streaming', 'universal'],
     specSourceUrl: 'https://www.ikea.com/us/en/p/uppspel-gaming-desk-black-s39407273/',
     specifications: [
@@ -335,7 +337,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'desk-flexispot-e7', category: 'desk', brand: 'FlexiSpot', model: 'E7',
-    priceKZT: 200_000, modelPath: 'procedural:desk', modelSize: 1.6, colors: ['black', 'white', 'wood'],
+    priceKZT: 200_000, modelPath: P('desk-flexispot-e7'), modelSize: 1.6, colors: ['black', 'white', 'wood'],
     performanceTier: 'performance', recommendedUse: ['programming', 'design3d', 'study', 'universal'],
     specSourceUrl: 'https://www.flexispot.com/standing-desks/e7',
     specifications: [
@@ -347,7 +349,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'desk-secretlab-magnus-pro', category: 'desk', brand: 'Secretlab', model: 'MAGNUS Pro',
-    priceKZT: 350_000, modelPath: 'procedural:desk', modelSize: 1.5, colors: ['black', 'white'],
+    priceKZT: 350_000, modelPath: P('desk-secretlab-magnus-pro'), modelSize: 1.5, colors: ['black', 'white'],
     performanceTier: 'enthusiast', recommendedUse: ['gaming', 'streaming'],
     specSourceUrl: 'https://secretlab.co/products/magnus-pro',
     specifications: [
@@ -361,7 +363,7 @@ export const CATALOG: readonly HardwareItem[] = [
   // ───────────── Chairs ─────────────
   item({
     id: 'chair-ikea-markus', category: 'chair', brand: 'IKEA', model: 'MARKUS',
-    priceKZT: 75_000, modelPath: 'procedural:chair', modelSize: 1.3, colors: ['black'],
+    priceKZT: 75_000, modelPath: P('chair-ikea-markus'), modelSize: 1.3, colors: ['black'],
     performanceTier: 'entry', recommendedUse: ['study', 'programming', 'universal'],
     specSourceUrl: 'https://www.ikea.com/us/en/p/markus-office-chair-vissle-dark-gray-90289172/',
     specifications: [
@@ -373,7 +375,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'chair-secretlab-titan-evo', category: 'chair', brand: 'Secretlab', model: 'TITAN Evo (Regular)',
-    priceKZT: 260_000, modelPath: 'procedural:chair', modelSize: 1.35, colors: ['black', 'white'],
+    priceKZT: 260_000, modelPath: P('chair-secretlab-titan-evo'), modelSize: 1.35, colors: ['black', 'white'],
     performanceTier: 'performance', recommendedUse: ['gaming', 'streaming', 'universal'],
     specSourceUrl: 'https://secretlab.co/products/titan-evo-2022-series',
     specifications: [
@@ -385,7 +387,7 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
   item({
     id: 'chair-hm-embody-gaming', category: 'chair', brand: 'Herman Miller × Logitech G', model: 'Embody Gaming Chair',
-    priceKZT: 900_000, modelPath: 'procedural:chair', modelSize: 1.3, colors: ['black'],
+    priceKZT: 900_000, modelPath: P('chair-hm-embody-gaming'), modelSize: 1.3, colors: ['black'],
     performanceTier: 'enthusiast', recommendedUse: ['programming', 'design3d', 'gaming'],
     specSourceUrl: 'https://store.hermanmiller.com/gaming-chairs/embody-gaming-chair/',
     specifications: [

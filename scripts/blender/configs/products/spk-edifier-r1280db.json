@@ -1,0 +1,35 @@
+{
+  "name": "spk-edifier-r1280db",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/speaker_bookshelf_v2_-_optimized.glb",
+  "output": "assets-src/blender/products/spk-edifier-r1280db.glb",
+  "rotate": -90,
+  "realSize": [
+    0.146,
+    0.196,
+    0.234
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "groups": "^Icosphere$"
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/spk-edifier-r1280db.jpg"
+  }
+}

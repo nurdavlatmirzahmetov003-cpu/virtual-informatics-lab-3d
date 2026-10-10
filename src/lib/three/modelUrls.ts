@@ -41,3 +41,28 @@ export function hdFile(file: string): string | null {
   const name = file.match(/([^/]+)\.glb$/)?.[1];
   return name && HD_MODELS.has(name) ? file.replace(/\.glb$/, '_hd.glb') : null;
 }
+
+/**
+ * Catalog products (V2-2a, `products/<id>.glb`) ship three levels from
+ * scripts/optimize-assets.mjs: `<id>.glb` (≤ 2K textures, High/Ultra),
+ * `<id>_lod1.glb` (Medium) and `<id>_lod2.glb` (Low).
+ */
+export function isTieredModel(file: string): boolean {
+  return /(^|\/)products\/[^/]+\.glb$/.test(file) && !/_lod\d\.glb$/.test(file);
+}
+
+/**
+ * Which file a model shows up close (`near`) and, if any, the lighter file
+ * that stands in while it is small on screen (`far`).
+ * lodBias: 0 High/Ultra, 1 Medium, 2 Low. `lightOnly`: the lightest level only.
+ */
+export function modelLevels(file: string, lodBias: number, lightOnly = false): { near: string; far: string | null } {
+  if (isTieredModel(file)) {
+    const tiers = [file, file.replace(/\.glb$/, '_lod1.glb'), file.replace(/\.glb$/, '_lod2.glb')];
+    const i = lightOnly ? 2 : Math.min(2, Math.max(0, lodBias));
+    return { near: tiers[i], far: i < 2 ? tiers[i + 1] : null };
+  }
+  const light = lodFile(file);
+  if (!light) return { near: file, far: null };
+  return lodBias >= 2 || lightOnly ? { near: light, far: null } : { near: file, far: light };
+}

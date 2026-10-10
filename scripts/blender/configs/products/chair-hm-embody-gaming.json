@@ -1,0 +1,31 @@
+{
+  "name": "chair-hm-embody-gaming",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/herman_miller_cosm_chair.glb",
+  "output": "assets-src/blender/products/chair-hm-embody-gaming.glb",
+  "rotate": 0,
+  "realSize": [
+    0.71,
+    0.71,
+    1.1
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/chair-hm-embody-gaming.jpg"
+  }
+}

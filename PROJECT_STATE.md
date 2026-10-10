@@ -1,9 +1,59 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
 Жаңартылды: 2026-10-10
-**Ағымдағы фаза: V2-1 дайын (антиалиасинг, текстура анықтығы, жарық/қараңғы тема, 2K KTX2 пайплайны — HD файлдар toktx орнатылғанда жасалады). V2-0, Фаза 0–9 дайын. Келесі — V2-2a. Жоспар: PLAN_V2.md.**
+**Ағымдағы фаза: V2-2a дайын (перифериялар мен жиһазға 28 жеке модель, үш деңгей, логотиптер алынды). V2-1, V2-0, Фаза 0–9 дайын. Келесі — V2-2b (ПК бөлшектері). 2K KTX2 `_hd` файлдары toktx орнатылғанда. Жоспар: PLAN_V2.md.**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
+
+## V2-2a — Әр өнімге жеке модель, 1-топ: перифериялар мен жиһаз (2026-10-10)
+- **Жүктеу.**
+  - Пайдаланушы Sketchfab-тан 26 GLB жүктеді (24 жоспарлы + өзі таңдаған 5; HyperX, K120, Dell жүктелмеді, орнына балама қолданылды). Бәрі CC BY 4.0, лицензия GLB метадеректерінен тексерілді.
+  - Шикі файлдар `assets-src/sketchfab/v2/` (git-ке кірмейді).
+  - 23-і қолданылды, 3-еуі V2-4-ке сақталды.
+- **Blender пайплайны v2** (`scripts/blender/pipeline.py`):
+  - `rotate`;
+  - `realSize: [W, D, H]` (өнімнің нақты өлшемі);
+  - `extends` (вариант конфигтері);
+  - `materials.rename/paint` (`Screen`, `DeskTop`, түс варианттары);
+  - `cleanup.paint` (текстурадағы логотипті айналасының түсімен жабу);
+  - `cleanup.separateLoose` (кабельді бөлу);
+  - rig/armature-ды «пісіріп» өшіру;
+  - custom normals бар mesh-тер біріктірілмейді (перне беттеріндегі дақтар жойылды);
+  - бөлшекке `transform`.
+- **Көмекші скрипттер:** `inspect.py` (4 ракурс + топтар), `materials.py` (материал ауданы мен бағыты), `textures.py` (логотип іздеу үшін түс текстуралары), `thumbnails.py`.
+- **28 өнімнің конфигі** — `scripts/blender/configs/products/`: 5 монитор, 5 пернетақта, 5 тышқан, 4 құлаққап, 3 колонка, 3 орындық, 3 үстел. `npm run blender:pipeline -- products`.
+- **Үш деңгей** (`npm run assets:optimize`):
+
+  | Файл | Деңгей | Үшбұрыш | Текстура |
+  |---|---|---|---|
+  | `products/<id>.glb` | High/Ultra | ≤ 80k | ≤ 2048 px |
+  | `_lod1` | Medium | ≤ 30k | ≤ 1024 px |
+  | `_lod2` | Low | ≤ 8k, мүмкін болса | ≤ 512 px |
+
+  Алыстағы модель келесі жеңіл деңгейді көрсетеді (`modelLevels()`). `assets:validate`: 99 GLB, бәрі жерде, ортада, нақты өлшемде, мониторларда `Screen`, үстелдерде `DeskTop`.
+- **Сайт.**
+  - `catalog.ts`: 28 өнім `products/<id>.glb` моделіне ауысты (`P()`); LG 34GP83A бұрынғы ultrawide-та қалды.
+  - Setup Studio: жеке модельдер масштабсыз/бұрылмай қойылады.
+  - Монитордың тұғыр/панель бөлінісі `Screen` шекарасынан есептеледі.
+  - Тұсқағаз экран UV-іне өздігінен келтіріледі (айна/төңкеру).
+  - Үстел GLB (`ProductDesk`, қара/ақ — тек үсті), орындық GLB.
+  - Ескі процедуралық `Desk`/`Chair` модельдері модельсіз өнімдер үшін қалды.
+- **Логотиптер.**
+  - Алынған mesh-тер: ASUS, LG, SteelSeries, Razer.
+  - Текстурадан жабылғандар: Logitech G (G203, G700s, G735), SteelSeries (4 аймақ), монитор тұсқағаздары (TUF, Windows).
+- **Тексерілді:** `npm test` 90/90, lint, typecheck, build, `assets:validate`. Скриншоттар — `docs/v2-2a/`.
+
+### Бұрын / кейін (Setup Studio, бірдей жинақ, Intel UHD)
+
+| Сапа | FPS | Үшбұрыш | GPU текстура | Жүктеу |
+|---|---|---|---|---|
+| Low | 82 → 85 | 130k → 139k | 48.6 → 65.6 MB | 5.40 → 6.18 MB |
+| Medium | 77 → 80 | 225k → 191k | 276 → 301 MB | 11.68 → 12.76 MB |
+| High | 32 → 32 | 239k → 399k | 276 → 440 MB | 11.68 → 16.9 MB |
+
+- Басты бет пен анатомия өзгерген жоқ: бұрын/кейін бірдей.
+- High әдейі ауырлады: 2K текстуралар мен толық геометрия тек дискретті GPU-ға арналған.
+- `dist` 16 → 52 MB, себебі 84 өнім файлы қосылды. Бетке тек таңдалған өнімнің бір деңгейі жүктеледі.
 
 ## V2-1 — Көрнекі сапа және жарқын стиль (2026-10-10)
 - **Антиалиасинг.**
@@ -313,15 +363,17 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION:
-1. Пайдаланушы KTX-Software 4.4.2 орнатқан болса (`C:\Program Files\KTX-Software\bin\toktx.exe` немесе PATH-та toktx):
-   - `npm run assets:optimize` → 9 `*_hd.glb` пайда болады;
-   - `/explorer`-де High-да жақын көріністе 2K текстура ауысқанын тексер (`__vil3d` + network);
-   - өлшемдерін optimization-report.json мен PROJECT_STATE-ке жаз, ASSET_MANIFEST-ке «KTX2 UASTC 2K» өзгерісін қос, commit.
-2. Сосын V2-2a — PLAN_V2.md-дегі «V2-2a — Asset pipeline v2 and batch 1» промпты:
-   - ASSET_SOURCING.md §7a, 1-топ (24 модель): пайдаланушы Sketchfab-қа өзі кіреді, әр жүктеуге рұқсат сұра, құпиясөз енгізбе;
-   - Blender пайплайны (`npm run blender:pipeline`); веб-оңтайландыруда бөлшектерді біріктірме (KNOWN_ISSUES #39);
-   - жаңа модельдерге `_hd` деңгейі де (HD_MODELS + optimize-assets HD);
-   - тема: екі темада да тексер (`perf-measure --theme=light`).
+NEXT_ACTION: V2-2b — PLAN_V2.md-дегі «V2-2b — Batch 2 (PC components)» промпты.
+1. Жүктеу (ASSET_SOURCING.md §7a, 2-топ: 16 модель):
+   - пайдаланушы өзі жүктейді (Claude in Chrome/Edge арқылы бір сайттан қатарынан жүктеу бұғатталады), сілтемелер тізімін бер;
+   - файлдарды Downloads-тан `assets-src/sketchfab/v2/`-ге көшір, GLB `asset.extras`-тан автор/лицензияны тексер.
+2. Пайплайн:
+   - `scripts/blender/inspect.py`, `materials.py`, `textures.py` → конфиг (`configs/products/<id>.json`, `rotate` / `realSize` / `cleanup.remove/paint` / `materials`) → `npm run blender:pipeline -- products` → `npm run assets:optimize`;
+   - ПК бөлшектерінде порт/слот маркерлері (`ports`) керек — V2-6/V2-7;
+   - PC Assembly Lab, басты беттің exploded view (`PCCase`, `HardwareParts`) және Setup Studio жаңа модельдермен жұмыс істеуі тиіс.
+3. Тексеру:
+   - `perf-measure --storage=<setup.json> --probe=<js>` арқылы Studio-ны жинақпен өлше;
+   - Low/Medium баяуламасын.
+4. toktx (KTX-Software) орнатылса: `npm run assets:optimize` → `_hd.glb`.
 
-Пайдаланушы шешімі (2026-10-10): барлық V2 толық ЛОКАЛДЫ; домен/хостинг — V2-12-ден кейін. Фаза 0–9, V2-0, V2-1 дайын — нөлден бастама. D:/informatics-lab, dev :5173, preview :4173.
+Пайдаланушы шешімі (2026-10-10): барлық V2 толық ЛОКАЛДЫ; домен/хостинг — V2-12-ден кейін. Фаза 0–9, V2-0, V2-1, V2-2a дайын — нөлден бастама. D:/informatics-lab, dev :5173, preview :4173.

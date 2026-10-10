@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { isThemeMode, nextThemeMode, resolveTheme, SCENE_PALETTES, THEME_MODES } from '../src/lib/theme/index.ts';
-import { HD_MODELS, hdFile, lodFile } from '../src/lib/three/modelUrls.ts';
+import { HD_MODELS, hdFile, isTieredModel, lodFile, modelLevels } from '../src/lib/three/modelUrls.ts';
 import { QUALITY_LEVELS, QUALITY_PRESETS } from '../src/lib/quality/presets.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
@@ -73,4 +73,19 @@ test('both themes keep text contrast ≥ 4.5:1 on the page and panel backgrounds
       }
     }
   }
+});
+
+test('per-product models: one file per quality level, the next lighter one far away', () => {
+  const f = 'assets/models/products/mon-dell-u2724d.glb';
+  assert.ok(isTieredModel(f));
+  assert.ok(!isTieredModel('assets/models/products/mon-dell-u2724d_lod1.glb'));
+  assert.ok(!isTieredModel('assets/models/hardware/psu.glb'));
+  assert.deepEqual(modelLevels(f, 0), { near: f, far: f.replace('.glb', '_lod1.glb') });
+  assert.deepEqual(modelLevels(f, 1), { near: f.replace('.glb', '_lod1.glb'), far: f.replace('.glb', '_lod2.glb') });
+  assert.deepEqual(modelLevels(f, 2), { near: f.replace('.glb', '_lod2.glb'), far: null });
+  assert.deepEqual(modelLevels(f, 0, true), { near: f.replace('.glb', '_lod2.glb'), far: null });
+  // shared hardware models keep their two levels
+  assert.deepEqual(modelLevels('hardware/speakers.glb', 1), { near: 'hardware/speakers.glb', far: 'hardware/speakers_lod1.glb' });
+  assert.deepEqual(modelLevels('hardware/speakers.glb', 2), { near: 'hardware/speakers_lod1.glb', far: null });
+  assert.deepEqual(modelLevels('hardware/psu.glb', 2), { near: 'hardware/psu.glb', far: null });
 });

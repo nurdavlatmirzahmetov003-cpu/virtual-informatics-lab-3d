@@ -1,0 +1,31 @@
+{
+  "name": "kb-keychron-k8-pro",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/keychron_k8.glb",
+  "output": "assets-src/blender/products/kb-keychron-k8-pro.glb",
+  "rotate": 0,
+  "realSize": [
+    0.359,
+    0.127,
+    0.039
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/kb-keychron-k8-pro.jpg"
+  }
+}

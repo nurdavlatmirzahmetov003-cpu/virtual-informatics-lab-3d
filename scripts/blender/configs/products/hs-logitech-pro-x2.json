@@ -1,0 +1,49 @@
+{
+  "name": "hs-logitech-pro-x2",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/g735_logitech_gaming_headset.glb",
+  "output": "assets-src/blender/products/hs-logitech-pro-x2.glb",
+  "rotate": 0,
+  "realSize": [
+    0.18,
+    0.1,
+    0.21
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_3",
+        "rects": [
+          [
+            0.24,
+            0.15,
+            0.42,
+            0.36
+          ],
+          [
+            0.47,
+            0.62,
+            0.52,
+            0.72
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/hs-logitech-pro-x2.jpg"
+  }
+}

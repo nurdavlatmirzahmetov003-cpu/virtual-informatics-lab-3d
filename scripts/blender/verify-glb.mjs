@@ -8,6 +8,7 @@
  *   marker `port_<type>_<n>` parented to its part, LOD1 lighter than LOD0.
  */
 import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -54,7 +55,7 @@ function triangles(mesh) {
 }
 
 export async function inspectGlb(file) {
-  const doc = await new NodeIO().read(file);
+  const doc = await new NodeIO().registerExtensions(ALL_EXTENSIONS).read(file);
   const nodes = doc.getRoot().listNodes();
   const parentOf = new Map();
   for (const n of nodes) for (const c of n.listChildren()) parentOf.set(c, n);

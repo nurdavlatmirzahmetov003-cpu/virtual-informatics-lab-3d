@@ -58,6 +58,46 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 
 > Брендтік модельдер (MSI, AMD, Samsung, Lian Li, Cooler Master, Corsair, Sony): CC BY модельдің геометриясын қолдануға рұқсат береді, бірақ сауда белгілеріне (логотиптерге) құқық бермейді. Оқу жобасы үшін логотиптерді Blender-де алып тастау не жасыру ұсынылады (MASTER_PROMPT §6). **Күйі: әлі жасалмаған** — текстураларда логотиптер қалды (TODO.md, KNOWN_ISSUES.md).
 
+### Setup Studio per-product models (V2-2a, 2026-10-10) — `public/assets/models/products/`
+
+- **Source:** Sketchfab downloads by the owner (2026-10-10, signed-in account, original "GLB" archives), raw files in `assets-src/sketchfab/v2/` (not in git). Every source is **CC BY 4.0**; the licence and author were read from each GLB's own `asset.extras` and match the model page. Credits: `/credits` (`src/data/assets/hardware.json`, 23 new entries).
+- **Changes (CC BY):**
+  - Blender pipeline (`scripts/blender/configs/products/<id>.json`): rotated to face the user, scaled to the product's real dimensions (W×D×H), logo meshes removed and logo areas in textures repainted with the surrounding colour, rigs baked and removed, screens renamed `Screen` (site wallpaper), desk tops `DeskTop` (finish).
+  - Then `npm run assets:optimize`: Meshopt and WebP in three levels — `<id>.glb` (≤ 80k △, ≤ 2048 px), `_lod1` (≤ 30k △, ≤ 1024 px), `_lod2` (≤ 8k △ where possible, ≤ 512 px).
+- **Variants:** several products derive from one source with different size and finish (stated in the table). Brands appear only as UI text.
+- **Downloaded but unused for now:** "Logitech mechanical gaming keyboard" (BlackCube), "RAZER BlackWidow Chroma" (Mieshu), "Low poly – Computer Mouse" (IQINISO). These are kept for V2-4.
+
+| Product | Source model | Author | Licence | Changes |
+|---|---|---|---|---|
+| `chair-hm-embody-gaming` | [Herman Miller COSM Chair](https://sketchfab.com/3d-models/herman-miller-cosm-chair-3b6bd05e32494279871c5a4074e43dc2) | CindyO | CC BY 4.0 | real size 710×710×1100 mm |
+| `chair-ikea-markus` | [Tall Back Office Chair](https://sketchfab.com/3d-models/tall-back-office-chair-06269ce18ab7458182564957308cb8a2) | thornbell | CC BY 4.0 | real size 620×600×1290 mm |
+| `chair-secretlab-titan-evo` | [Gaming Chair](https://sketchfab.com/3d-models/gaming-chair-ccb3ada5917a4b90b689e1d1bf852dc2) | Kiiba | CC BY 4.0 | rotated 180°, real size 700×700×1330 mm |
+| `desk-flexispot-e7` | [Standing Desk](https://sketchfab.com/3d-models/standing-desk-65a7f4b06a5f4954a0d43eb8812dd165) | Ryan_Nein | CC BY 4.0 | real size 1600×700×750 mm |
+| `desk-ikea-uppspel` | [Office Desk 140x60](https://sketchfab.com/3d-models/office-desk-140x60-9262f311271c4c4390341e526d3fe103) | AleixoAlonso | CC BY 4.0 | real size 1800×800×750 mm |
+| `desk-secretlab-magnus-pro` | [Secretlab MAGNUS Pro XL](https://sketchfab.com/3d-models/secretlab-magnus-pro-xl-c8d6d07a4562408abda29062c2019816) | luckyluce | CC BY 4.0 | rotated 90°, real size 1500×700×750 mm |
+| `hs-hyperx-cloud-iii` | [Wireless Headphones](https://sketchfab.com/3d-models/wireless-headphones-c43d4223e70b450089cc242305f99718) | uliana | CC BY 4.0 | rotated 90°, real size 180×95×200 mm |
+| `hs-logitech-pro-x2` | [G735 Logitech Gaming Headset](https://sketchfab.com/3d-models/g735-logitech-gaming-headset-8930ea831c7e45e8929c77888a6b5e7d) | shaielwolf | CC BY 4.0 | real size 180×100×210 mm, 2 texture areas repainted (logos / screen) |
+| `hs-razer-blackshark-v2-pro` | [Razer Headset](https://sketchfab.com/3d-models/razer-headset-fa7de2b85f6c44ad80b53aabd5142070) | harithsami01 | CC BY 4.0 | real size 170×100×200 mm, 133 logo/helper meshes removed, finish recoloured |
+| `hs-steelseries-nova7` | [SteelSeries Arctis Wireless Pro](https://sketchfab.com/3d-models/steelseries-arctis-wireless-pro-2eeabb208f9f45cf87e2eb1d5bc83ab3) | mariokart64n | CC BY 4.0 | real size 180×95×205 mm, 1 logo/helper meshes removed, 8 texture areas repainted (logos / screen) |
+| `kb-keychron-k8-pro` | [Keychron K8](https://sketchfab.com/3d-models/keychron-k8-b00c531f3d8f4fd39c636eae56f23c0f) | MozzarellaARC | CC BY 4.0 | real size 359×127×39 mm |
+| `kb-logitech-k120` | [Keyboard](https://sketchfab.com/3d-models/keyboard-cc7e7ed38d9a469ea499893295bc767a) | thethieme | CC BY 4.0 | real size 450×155×24 mm |
+| `kb-logitech-mx-keys-s` | [Logitech MX Keys](https://sketchfab.com/3d-models/logitech-mx-keys-67901d82781f48349f1f61ce78a6b6e0) | ArkinRS | CC BY 4.0 | real size 430×131×21 mm |
+| `kb-logitech-pro-x-tkl` | [Gaming keyboard](https://sketchfab.com/3d-models/gaming-keyboard-c1e5e07153d84978a1ad7256d720220a) | ZxTulz | CC BY 4.0 | real size 361×149×34 mm |
+| `kb-razer-huntsman-v3-pro-tkl` | [Gaming keyboard](https://sketchfab.com/3d-models/gaming-keyboard-c1e5e07153d84978a1ad7256d720220a) | ZxTulz | CC BY 4.0 | real size 361×140×40 mm |
+| `mon-asus-va24ehf` | [PC Monitor 27 inch](https://sketchfab.com/3d-models/pc-monitor-27-inch-06fb18eec19245d4811c4c3c8c7ea567) | Annelida | CC BY 4.0 | real size 540×180×417 mm, 1 texture areas repainted (logos / screen) |
+| `mon-asus-xg27acs` | [ASUS  TUF gaming monitor](https://sketchfab.com/3d-models/asus-tuf-gaming-monitor-570372a3cc6941029b2490eb3113b224) | Jelvehkar | CC BY 4.0 | rotated 180°, real size 614×220×470 mm, 3 logo/helper meshes removed, 1 texture areas repainted (logos / screen) |
+| `mon-asus-xg27aqmr` | [ASUS  TUF gaming monitor](https://sketchfab.com/3d-models/asus-tuf-gaming-monitor-570372a3cc6941029b2490eb3113b224) | Jelvehkar | CC BY 4.0 | rotated 180°, real size 614×240×490 mm, 3 logo/helper meshes removed, 1 texture areas repainted (logos / screen), finish recoloured |
+| `mon-dell-u2724d` | [PC Monitor 27 inch](https://sketchfab.com/3d-models/pc-monitor-27-inch-06fb18eec19245d4811c4c3c8c7ea567) | Annelida | CC BY 4.0 | real size 612×185×500 mm, 1 texture areas repainted (logos / screen), finish recoloured |
+| `mon-lg-27gr93u` | [LG moniter](https://sketchfab.com/3d-models/lg-moniter-f899bb43701f4e95b1e44c4bf21ed29c) | Mohamed Ahmed | CC BY 4.0 | real size 613×237×460 mm, 2 logo/helper meshes removed, 1 texture areas repainted (logos / screen) |
+| `mouse-logitech-g102` | [Mouse Logitech G203](https://sketchfab.com/3d-models/mouse-logitech-g203-6b70ace291c44735bed3309b05f44bba) | JorgeAlfredOwO | CC BY 4.0 | real size 62×117×38 mm, 2 texture areas repainted (logos / screen) |
+| `mouse-logitech-g305` | [Mouse Logitech G203](https://sketchfab.com/3d-models/mouse-logitech-g203-6b70ace291c44735bed3309b05f44bba) | JorgeAlfredOwO | CC BY 4.0 | real size 62×117×38 mm, 2 texture areas repainted (logos / screen) |
+| `mouse-logitech-g502x-plus` | [Logitech G700s](https://sketchfab.com/3d-models/logitech-g700s-8d96670d940742c4b515b0a0b0dc92ab) | Miléd Hammoud | CC BY 4.0 | real size 79×131×41 mm, 5 texture areas repainted (logos / screen) |
+| `mouse-logitech-superlight2` | [Mouse Logitech G203](https://sketchfab.com/3d-models/mouse-logitech-g203-6b70ace291c44735bed3309b05f44bba) | JorgeAlfredOwO | CC BY 4.0 | real size 63×125×40 mm, 2 texture areas repainted (logos / screen), finish recoloured |
+| `mouse-razer-viper-v3-pro` | [Razer Mouse](https://sketchfab.com/3d-models/razer-mouse-9f0a3283cbca4454bf04c8d43494247a) | Fred Drabble | CC BY 4.0 | rotated 90°, real size 57×127×40 mm, 1 logo/helper meshes removed |
+| `spk-creative-pebble-v3` | [Satellite Enhanced (900 followers special)](https://sketchfab.com/3d-models/satellite-enhanced-900-followers-special-9d30170f553d47978936b0da92f6c011) | rendysix | CC BY 4.0 | rotated -90°, real size 116×122×115 mm, 1 logo/helper meshes removed |
+| `spk-edifier-r1280db` | [Speaker Bookshelf V2 - Optimized](https://sketchfab.com/3d-models/speaker-bookshelf-v2-optimized-cbb87dee55e84a389cbccb4ddc0036e0) | rendysix | CC BY 4.0 | rotated -90°, real size 146×196×234 mm, 1 logo/helper meshes removed |
+| `spk-logitech-z407` | [Logitech Speakers](https://sketchfab.com/3d-models/logitech-speakers-73634ff35df3434dbfd2ae87c886ec5f) | Jayemel11 | CC BY 4.0 | real size 80×90×179 mm, 15 logo/helper meshes removed |
+
 ### Setup Studio (Фаза 4)
 Каталог өнімдері (`src/data/hardware/catalog.ts`) жаңа ассет жүктемейді: әр өнімнің `modelPath`-ы жоғарыдағы `hardware/*.glb` модельдеріне сілтейді және `modelSize` арқылы өнімнің нақты өлшеміне масштабталады. Үстел — жобаның процедуралық `Desk`-і, орындық — процедуралық `scenes/SetupStudio/Chair.tsx` ([PLACEHOLDER]). Өнім атаулары мен сипаттамалары — өндірушілердің ресми беттерінен (сілтеме әр өнімде, `specCheckedAt: 2026-10-03`); сауда белгілері иелеріне тиесілі, жоба тек оқу мақсатында сипаттайды. Бағалар — «Demo price».
 

@@ -1,0 +1,31 @@
+{
+  "name": "kb-logitech-pro-x-tkl",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/gaming_keyboard.glb",
+  "output": "assets-src/blender/products/kb-logitech-pro-x-tkl.glb",
+  "rotate": 0,
+  "realSize": [
+    0.361,
+    0.149,
+    0.034
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/kb-logitech-pro-x-tkl.jpg"
+  }
+}

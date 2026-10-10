@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { validateConfig, checkOutput, verify } from './blender/verify-glb.mjs';
 
@@ -59,10 +59,21 @@ test('checkOutput finds missing parts, misplaced ports and a LOD that is not lig
 
 test('every committed pipeline config is valid (and its output, when built, matches it)', async () => {
   const dir = path.join(import.meta.dirname, 'blender', 'configs');
-  const files = readdirSync(dir).filter((f) => f.endsWith('.json'));
-  assert.ok(files.length > 0);
+  const files = [
+    ...readdirSync(dir).filter((f) => f.endsWith('.json')),
+    ...readdirSync(path.join(dir, 'products')).filter((f) => f.endsWith('.json')).map((f) => path.join('products', f)),
+  ];
+  assert.ok(files.length > 1);
   for (const f of files) {
     const r = await verify(path.join(dir, f));
     assert.deepEqual(r.errors, [], `${f}: ${r.errors.join('; ')}`);
   }
+});
+
+test('every catalog product with its own model has a pipeline config (and vice versa)', () => {
+  const dir = path.join(import.meta.dirname, 'blender', 'configs', 'products');
+  const configs = new Set(readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)));
+  const catalog = readFileSync(path.join(import.meta.dirname, '..', 'src', 'data', 'hardware', 'catalog.ts'), 'utf8');
+  const own = new Set([...catalog.matchAll(/P\('([a-z0-9-]+)'\)/g)].map((m) => m[1]));
+  assert.deepEqual([...own].sort(), [...configs].sort());
 });

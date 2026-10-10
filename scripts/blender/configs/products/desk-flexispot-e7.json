@@ -1,0 +1,33 @@
+{
+  "name": "desk-flexispot-e7",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/standing_desk.glb",
+  "output": "assets-src/blender/products/desk-flexispot-e7.glb",
+  "rotate": 0,
+  "realSize": [
+    1.6,
+    0.7,
+    0.75
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {
+      "^Desk_Top_Material$": "DeskTop"
+    },
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/desk-flexispot-e7.jpg"
+  }
+}

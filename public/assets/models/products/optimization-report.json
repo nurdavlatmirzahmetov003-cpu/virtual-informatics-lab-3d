@@ -1,0 +1,702 @@
+[
+  {
+    "id": "chair-hm-embody-gaming",
+    "source": "assets-src/blender/products/chair-hm-embody-gaming.glb",
+    "sourceBytes": 509464,
+    "levels": [
+      {
+        "file": "chair-hm-embody-gaming.glb",
+        "bytes": 129580,
+        "triangles": 24992,
+        "textureMB": 0
+      },
+      {
+        "file": "chair-hm-embody-gaming_lod1.glb",
+        "bytes": 122304,
+        "triangles": 24048,
+        "textureMB": 0
+      },
+      {
+        "file": "chair-hm-embody-gaming_lod2.glb",
+        "bytes": 119920,
+        "triangles": 23694,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "chair-ikea-markus",
+    "source": "assets-src/blender/products/chair-ikea-markus.glb",
+    "sourceBytes": 1079152,
+    "levels": [
+      {
+        "file": "chair-ikea-markus.glb",
+        "bytes": 264624,
+        "triangles": 22876,
+        "textureMB": 0.3
+      },
+      {
+        "file": "chair-ikea-markus_lod1.glb",
+        "bytes": 198276,
+        "triangles": 14048,
+        "textureMB": 0.3
+      },
+      {
+        "file": "chair-ikea-markus_lod2.glb",
+        "bytes": 160140,
+        "triangles": 9522,
+        "textureMB": 0.3
+      }
+    ]
+  },
+  {
+    "id": "chair-secretlab-titan-evo",
+    "source": "assets-src/blender/products/chair-secretlab-titan-evo.glb",
+    "sourceBytes": 9920320,
+    "levels": [
+      {
+        "file": "chair-secretlab-titan-evo.glb",
+        "bytes": 1410856,
+        "triangles": 13529,
+        "textureMB": 64
+      },
+      {
+        "file": "chair-secretlab-titan-evo_lod1.glb",
+        "bytes": 463340,
+        "triangles": 9715,
+        "textureMB": 16
+      },
+      {
+        "file": "chair-secretlab-titan-evo_lod2.glb",
+        "bytes": 253664,
+        "triangles": 9107,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "desk-flexispot-e7",
+    "source": "assets-src/blender/products/desk-flexispot-e7.glb",
+    "sourceBytes": 6339736,
+    "levels": [
+      {
+        "file": "desk-flexispot-e7.glb",
+        "bytes": 175908,
+        "triangles": 13198,
+        "textureMB": 28.4
+      },
+      {
+        "file": "desk-flexispot-e7_lod1.glb",
+        "bytes": 99740,
+        "triangles": 7518,
+        "textureMB": 7.3
+      },
+      {
+        "file": "desk-flexispot-e7_lod2.glb",
+        "bytes": 65020,
+        "triangles": 3910,
+        "textureMB": 3.3
+      }
+    ]
+  },
+  {
+    "id": "desk-ikea-uppspel",
+    "source": "assets-src/blender/products/desk-ikea-uppspel.glb",
+    "sourceBytes": 2125244,
+    "levels": [
+      {
+        "file": "desk-ikea-uppspel.glb",
+        "bytes": 563852,
+        "triangles": 7100,
+        "textureMB": 16
+      },
+      {
+        "file": "desk-ikea-uppspel_lod1.glb",
+        "bytes": 545772,
+        "triangles": 3904,
+        "textureMB": 16
+      },
+      {
+        "file": "desk-ikea-uppspel_lod2.glb",
+        "bytes": 130064,
+        "triangles": 1774,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "desk-secretlab-magnus-pro",
+    "source": "assets-src/blender/products/desk-secretlab-magnus-pro.glb",
+    "sourceBytes": 2624516,
+    "levels": [
+      {
+        "file": "desk-secretlab-magnus-pro.glb",
+        "bytes": 1066788,
+        "triangles": 1664,
+        "textureMB": 21.3
+      },
+      {
+        "file": "desk-secretlab-magnus-pro_lod1.glb",
+        "bytes": 357764,
+        "triangles": 914,
+        "textureMB": 5.3
+      },
+      {
+        "file": "desk-secretlab-magnus-pro_lod2.glb",
+        "bytes": 77696,
+        "triangles": 428,
+        "textureMB": 1.3
+      }
+    ]
+  },
+  {
+    "id": "hs-hyperx-cloud-iii",
+    "source": "assets-src/blender/products/hs-hyperx-cloud-iii.glb",
+    "sourceBytes": 8344524,
+    "levels": [
+      {
+        "file": "hs-hyperx-cloud-iii.glb",
+        "bytes": 1189064,
+        "triangles": 79998,
+        "textureMB": 27
+      },
+      {
+        "file": "hs-hyperx-cloud-iii_lod1.glb",
+        "bytes": 908896,
+        "triangles": 29998,
+        "textureMB": 27
+      },
+      {
+        "file": "hs-hyperx-cloud-iii_lod2.glb",
+        "bytes": 275868,
+        "triangles": 7998,
+        "textureMB": 7
+      }
+    ]
+  },
+  {
+    "id": "hs-logitech-pro-x2",
+    "source": "assets-src/blender/products/hs-logitech-pro-x2.glb",
+    "sourceBytes": 9549224,
+    "levels": [
+      {
+        "file": "hs-logitech-pro-x2.glb",
+        "bytes": 1045540,
+        "triangles": 40546,
+        "textureMB": 65.7
+      },
+      {
+        "file": "hs-logitech-pro-x2_lod1.glb",
+        "bytes": 945748,
+        "triangles": 22296,
+        "textureMB": 65.7
+      },
+      {
+        "file": "hs-logitech-pro-x2_lod2.glb",
+        "bytes": 248844,
+        "triangles": 7996,
+        "textureMB": 17.7
+      }
+    ]
+  },
+  {
+    "id": "hs-razer-blackshark-v2-pro",
+    "source": "assets-src/blender/products/hs-razer-blackshark-v2-pro.glb",
+    "sourceBytes": 4634200,
+    "levels": [
+      {
+        "file": "hs-razer-blackshark-v2-pro.glb",
+        "bytes": 709456,
+        "triangles": 63595,
+        "textureMB": 11
+      },
+      {
+        "file": "hs-razer-blackshark-v2-pro_lod1.glb",
+        "bytes": 539556,
+        "triangles": 30611,
+        "textureMB": 11
+      },
+      {
+        "file": "hs-razer-blackshark-v2-pro_lod2.glb",
+        "bytes": 213992,
+        "triangles": 9089,
+        "textureMB": 3
+      }
+    ]
+  },
+  {
+    "id": "hs-steelseries-nova7",
+    "source": "assets-src/blender/products/hs-steelseries-nova7.glb",
+    "sourceBytes": 4668136,
+    "levels": [
+      {
+        "file": "hs-steelseries-nova7.glb",
+        "bytes": 979512,
+        "triangles": 55721,
+        "textureMB": 32
+      },
+      {
+        "file": "hs-steelseries-nova7_lod1.glb",
+        "bytes": 831408,
+        "triangles": 30475,
+        "textureMB": 32
+      },
+      {
+        "file": "hs-steelseries-nova7_lod2.glb",
+        "bytes": 312792,
+        "triangles": 11649,
+        "textureMB": 8
+      }
+    ]
+  },
+  {
+    "id": "kb-keychron-k8-pro",
+    "source": "assets-src/blender/products/kb-keychron-k8-pro.glb",
+    "sourceBytes": 5368280,
+    "levels": [
+      {
+        "file": "kb-keychron-k8-pro.glb",
+        "bytes": 520420,
+        "triangles": 45580,
+        "textureMB": 12.4
+      },
+      {
+        "file": "kb-keychron-k8-pro_lod1.glb",
+        "bytes": 357600,
+        "triangles": 25066,
+        "textureMB": 12.4
+      },
+      {
+        "file": "kb-keychron-k8-pro_lod2.glb",
+        "bytes": 234904,
+        "triangles": 13880,
+        "textureMB": 3.1
+      }
+    ]
+  },
+  {
+    "id": "kb-logitech-k120",
+    "source": "assets-src/blender/products/kb-logitech-k120.glb",
+    "sourceBytes": 1353512,
+    "levels": [
+      {
+        "file": "kb-logitech-k120.glb",
+        "bytes": 223576,
+        "triangles": 144,
+        "textureMB": 16
+      },
+      {
+        "file": "kb-logitech-k120_lod1.glb",
+        "bytes": 223556,
+        "triangles": 140,
+        "textureMB": 16
+      },
+      {
+        "file": "kb-logitech-k120_lod2.glb",
+        "bytes": 89052,
+        "triangles": 140,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "kb-logitech-mx-keys-s",
+    "source": "assets-src/blender/products/kb-logitech-mx-keys-s.glb",
+    "sourceBytes": 2869376,
+    "levels": [
+      {
+        "file": "kb-logitech-mx-keys-s.glb",
+        "bytes": 491156,
+        "triangles": 27191,
+        "textureMB": 22.7
+      },
+      {
+        "file": "kb-logitech-mx-keys-s_lod1.glb",
+        "bytes": 390856,
+        "triangles": 15255,
+        "textureMB": 22.7
+      },
+      {
+        "file": "kb-logitech-mx-keys-s_lod2.glb",
+        "bytes": 234580,
+        "triangles": 10275,
+        "textureMB": 6.7
+      }
+    ]
+  },
+  {
+    "id": "kb-logitech-pro-x-tkl",
+    "source": "assets-src/blender/products/kb-logitech-pro-x-tkl.glb",
+    "sourceBytes": 3215832,
+    "levels": [
+      {
+        "file": "kb-logitech-pro-x-tkl.glb",
+        "bytes": 566464,
+        "triangles": 71399,
+        "textureMB": 16.3
+      },
+      {
+        "file": "kb-logitech-pro-x-tkl_lod1.glb",
+        "bytes": 353912,
+        "triangles": 29999,
+        "textureMB": 16.3
+      },
+      {
+        "file": "kb-logitech-pro-x-tkl_lod2.glb",
+        "bytes": 136128,
+        "triangles": 7999,
+        "textureMB": 4.3
+      }
+    ]
+  },
+  {
+    "id": "kb-razer-huntsman-v3-pro-tkl",
+    "source": "assets-src/blender/products/kb-razer-huntsman-v3-pro-tkl.glb",
+    "sourceBytes": 3213720,
+    "levels": [
+      {
+        "file": "kb-razer-huntsman-v3-pro-tkl.glb",
+        "bytes": 567036,
+        "triangles": 71399,
+        "textureMB": 16.3
+      },
+      {
+        "file": "kb-razer-huntsman-v3-pro-tkl_lod1.glb",
+        "bytes": 353352,
+        "triangles": 29999,
+        "textureMB": 16.3
+      },
+      {
+        "file": "kb-razer-huntsman-v3-pro-tkl_lod2.glb",
+        "bytes": 136236,
+        "triangles": 7999,
+        "textureMB": 4.3
+      }
+    ]
+  },
+  {
+    "id": "mon-asus-va24ehf",
+    "source": "assets-src/blender/products/mon-asus-va24ehf.glb",
+    "sourceBytes": 9212504,
+    "levels": [
+      {
+        "file": "mon-asus-va24ehf.glb",
+        "bytes": 218936,
+        "triangles": 6388,
+        "textureMB": 64
+      },
+      {
+        "file": "mon-asus-va24ehf_lod1.glb",
+        "bytes": 103636,
+        "triangles": 3514,
+        "textureMB": 16
+      },
+      {
+        "file": "mon-asus-va24ehf_lod2.glb",
+        "bytes": 52400,
+        "triangles": 1876,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "mon-asus-xg27acs",
+    "source": "assets-src/blender/products/mon-asus-xg27acs.glb",
+    "sourceBytes": 1589868,
+    "levels": [
+      {
+        "file": "mon-asus-xg27acs.glb",
+        "bytes": 495488,
+        "triangles": 59156,
+        "textureMB": 5.3
+      },
+      {
+        "file": "mon-asus-xg27acs_lod1.glb",
+        "bytes": 304928,
+        "triangles": 30064,
+        "textureMB": 5.3
+      },
+      {
+        "file": "mon-asus-xg27acs_lod2.glb",
+        "bytes": 143612,
+        "triangles": 8346,
+        "textureMB": 1.3
+      }
+    ]
+  },
+  {
+    "id": "mon-asus-xg27aqmr",
+    "source": "assets-src/blender/products/mon-asus-xg27aqmr.glb",
+    "sourceBytes": 1595332,
+    "levels": [
+      {
+        "file": "mon-asus-xg27aqmr.glb",
+        "bytes": 498216,
+        "triangles": 59156,
+        "textureMB": 5.3
+      },
+      {
+        "file": "mon-asus-xg27aqmr_lod1.glb",
+        "bytes": 306788,
+        "triangles": 30064,
+        "textureMB": 5.3
+      },
+      {
+        "file": "mon-asus-xg27aqmr_lod2.glb",
+        "bytes": 147452,
+        "triangles": 8532,
+        "textureMB": 1.3
+      }
+    ]
+  },
+  {
+    "id": "mon-dell-u2724d",
+    "source": "assets-src/blender/products/mon-dell-u2724d.glb",
+    "sourceBytes": 8649388,
+    "levels": [
+      {
+        "file": "mon-dell-u2724d.glb",
+        "bytes": 188532,
+        "triangles": 6388,
+        "textureMB": 42.7
+      },
+      {
+        "file": "mon-dell-u2724d_lod1.glb",
+        "bytes": 90720,
+        "triangles": 3514,
+        "textureMB": 10.7
+      },
+      {
+        "file": "mon-dell-u2724d_lod2.glb",
+        "bytes": 46280,
+        "triangles": 1862,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "mon-lg-27gr93u",
+    "source": "assets-src/blender/products/mon-lg-27gr93u.glb",
+    "sourceBytes": 112836,
+    "levels": [
+      {
+        "file": "mon-lg-27gr93u.glb",
+        "bytes": 20992,
+        "triangles": 1948,
+        "textureMB": 0
+      },
+      {
+        "file": "mon-lg-27gr93u_lod1.glb",
+        "bytes": 15756,
+        "triangles": 1068,
+        "textureMB": 0
+      },
+      {
+        "file": "mon-lg-27gr93u_lod2.glb",
+        "bytes": 12904,
+        "triangles": 654,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "mouse-logitech-g102",
+    "source": "assets-src/blender/products/mouse-logitech-g102.glb",
+    "sourceBytes": 4456904,
+    "levels": [
+      {
+        "file": "mouse-logitech-g102.glb",
+        "bytes": 323944,
+        "triangles": 25001,
+        "textureMB": 32.3
+      },
+      {
+        "file": "mouse-logitech-g102_lod1.glb",
+        "bytes": 262376,
+        "triangles": 13749,
+        "textureMB": 32.3
+      },
+      {
+        "file": "mouse-logitech-g102_lod2.glb",
+        "bytes": 132612,
+        "triangles": 6249,
+        "textureMB": 9.3
+      }
+    ]
+  },
+  {
+    "id": "mouse-logitech-g305",
+    "source": "assets-src/blender/products/mouse-logitech-g305.glb",
+    "sourceBytes": 4448248,
+    "levels": [
+      {
+        "file": "mouse-logitech-g305.glb",
+        "bytes": 318444,
+        "triangles": 25001,
+        "textureMB": 27
+      },
+      {
+        "file": "mouse-logitech-g305_lod1.glb",
+        "bytes": 256876,
+        "triangles": 13749,
+        "textureMB": 27
+      },
+      {
+        "file": "mouse-logitech-g305_lod2.glb",
+        "bytes": 130260,
+        "triangles": 6249,
+        "textureMB": 8
+      }
+    ]
+  },
+  {
+    "id": "mouse-logitech-g502x-plus",
+    "source": "assets-src/blender/products/mouse-logitech-g502x-plus.glb",
+    "sourceBytes": 9633188,
+    "levels": [
+      {
+        "file": "mouse-logitech-g502x-plus.glb",
+        "bytes": 1354068,
+        "triangles": 79984,
+        "textureMB": 36.3
+      },
+      {
+        "file": "mouse-logitech-g502x-plus_lod1.glb",
+        "bytes": 1061404,
+        "triangles": 30084,
+        "textureMB": 36.3
+      },
+      {
+        "file": "mouse-logitech-g502x-plus_lod2.glb",
+        "bytes": 315264,
+        "triangles": 10772,
+        "textureMB": 9.3
+      }
+    ]
+  },
+  {
+    "id": "mouse-logitech-superlight2",
+    "source": "assets-src/blender/products/mouse-logitech-superlight2.glb",
+    "sourceBytes": 4318096,
+    "levels": [
+      {
+        "file": "mouse-logitech-superlight2.glb",
+        "bytes": 311380,
+        "triangles": 25001,
+        "textureMB": 21.3
+      },
+      {
+        "file": "mouse-logitech-superlight2_lod1.glb",
+        "bytes": 249484,
+        "triangles": 13749,
+        "textureMB": 21.3
+      },
+      {
+        "file": "mouse-logitech-superlight2_lod2.glb",
+        "bytes": 123432,
+        "triangles": 6337,
+        "textureMB": 5.3
+      }
+    ]
+  },
+  {
+    "id": "mouse-razer-viper-v3-pro",
+    "source": "assets-src/blender/products/mouse-razer-viper-v3-pro.glb",
+    "sourceBytes": 1528020,
+    "levels": [
+      {
+        "file": "mouse-razer-viper-v3-pro.glb",
+        "bytes": 566668,
+        "triangles": 17414,
+        "textureMB": 43
+      },
+      {
+        "file": "mouse-razer-viper-v3-pro_lod1.glb",
+        "bytes": 251808,
+        "triangles": 9574,
+        "textureMB": 11
+      },
+      {
+        "file": "mouse-razer-viper-v3-pro_lod2.glb",
+        "bytes": 119596,
+        "triangles": 4750,
+        "textureMB": 3
+      }
+    ]
+  },
+  {
+    "id": "spk-creative-pebble-v3",
+    "source": "assets-src/blender/products/spk-creative-pebble-v3.glb",
+    "sourceBytes": 8779748,
+    "levels": [
+      {
+        "file": "spk-creative-pebble-v3.glb",
+        "bytes": 1665336,
+        "triangles": 33239,
+        "textureMB": 21.3
+      },
+      {
+        "file": "spk-creative-pebble-v3_lod1.glb",
+        "bytes": 1609764,
+        "triangles": 25853,
+        "textureMB": 21.3
+      },
+      {
+        "file": "spk-creative-pebble-v3_lod2.glb",
+        "bytes": 666784,
+        "triangles": 22103,
+        "textureMB": 5.3
+      }
+    ]
+  },
+  {
+    "id": "spk-edifier-r1280db",
+    "source": "assets-src/blender/products/spk-edifier-r1280db.glb",
+    "sourceBytes": 6221588,
+    "levels": [
+      {
+        "file": "spk-edifier-r1280db.glb",
+        "bytes": 917856,
+        "triangles": 15558,
+        "textureMB": 21.4
+      },
+      {
+        "file": "spk-edifier-r1280db_lod1.glb",
+        "bytes": 864648,
+        "triangles": 8950,
+        "textureMB": 21.4
+      },
+      {
+        "file": "spk-edifier-r1280db_lod2.glb",
+        "bytes": 236312,
+        "triangles": 7076,
+        "textureMB": 5.4
+      }
+    ]
+  },
+  {
+    "id": "spk-logitech-z407",
+    "source": "assets-src/blender/products/spk-logitech-z407.glb",
+    "sourceBytes": 2682388,
+    "levels": [
+      {
+        "file": "spk-logitech-z407.glb",
+        "bytes": 957728,
+        "triangles": 3694,
+        "textureMB": 32.7
+      },
+      {
+        "file": "spk-logitech-z407_lod1.glb",
+        "bytes": 942688,
+        "triangles": 2050,
+        "textureMB": 32.7
+      },
+      {
+        "file": "spk-logitech-z407_lod2.glb",
+        "bytes": 243880,
+        "triangles": 1566,
+        "textureMB": 7.4
+      }
+    ]
+  }
+]

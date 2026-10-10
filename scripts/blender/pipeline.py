@@ -117,9 +117,26 @@ def is_invisible(mat):
 # ───────────────────────── config ─────────────────────────
 
 
-def load_config(path):
+def deep_merge(base, over):
+    out = dict(base)
+    for k, v in over.items():
+        out[k] = deep_merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+    return out
+
+
+def read_config(path):
+    """A config may `extend` another (relative path); its keys override the base (objects merge)."""
     with open(path, encoding="utf-8") as f:
         cfg = json.load(f)
+    if "extends" in cfg:
+        base = read_config(os.path.normpath(os.path.join(os.path.dirname(path), cfg.pop("extends"))))
+        base.pop("preview", None)
+        cfg = deep_merge(base, cfg)
+    return cfg
+
+
+def load_config(path):
+    cfg = read_config(path)
     for key in ("name", "input", "output", "parts"):
         if key not in cfg:
             fail(f"config is missing '{key}'")
@@ -169,10 +186,117 @@ def import_glb(path):
     return meshes
 
 
+def hex_rgb(h):
+    h = h.lstrip("#")
+    srgb = [int(h[i : i + 2], 16) / 255 for i in (0, 2, 4)]
+    return [c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in srgb]
+
+
+def paint_textures(rules, report):
+    """Cover logos baked into textures: each rect is filled with the median colour
+    of a thin ring around it (or a given colour). Rects are fractions of the image,
+    origin top-left, as seen in an image viewer: [x0, y0, x1, y1]."""
+    import numpy as np
+
+    done = []
+    for rule in rules:
+        img = bpy.data.images.get(rule["image"])
+        if img is None or not img.size[0]:
+            fail(f"paint: image '{rule['image']}' not found")
+        w, h = img.size
+        px = np.empty(w * h * 4, dtype=np.float32)
+        img.pixels.foreach_get(px)
+        px = px.reshape(h, w, 4)  # Blender rows run bottom-up
+        for x0, y0, x1, y1 in rule["rects"]:
+            c0, c1 = int(x0 * w), max(int(x0 * w) + 1, int(round(x1 * w)))
+            r0, r1 = int((1 - y1) * h), max(int((1 - y1) * h) + 1, int(round((1 - y0) * h)))
+            if "color" in rule:
+                fill = np.array(hex_rgb(rule["color"]) + [1.0], dtype=np.float32)
+            else:
+                ring = max(2, int(0.006 * max(w, h)))
+                a0, a1 = max(0, r0 - ring), min(h, r1 + ring)
+                b0, b1 = max(0, c0 - ring), min(w, c1 + ring)
+                block = px[a0:a1, b0:b1].copy()
+                mask = np.ones(block.shape[:2], dtype=bool)
+                mask[r0 - a0 : r1 - a0, c0 - b0 : c1 - b0] = False
+                fill = np.median(block[mask], axis=0)
+            px[r0:r1, c0:c1] = fill
+        img.pixels.foreach_set(px.ravel())
+        img.update()
+        img.pack()  # the exporter writes the edited pixels
+        done.append({"image": rule["image"], "rects": len(rule["rects"])})
+    if done:
+        report["texturePaint"] = done
+        log(f"texture paint: {sum(d['rects'] for d in done)} logo areas in {len(done)} images")
+
+
+def edit_materials(cfg, report):
+    """Rename materials the site looks for (e.g. "Screen") and repaint finishes for variants."""
+    m = cfg.get("materials", {})
+    renamed = []
+    for pattern, new in m.get("rename", {}).items():
+        for mat in list(bpy.data.materials):
+            if re.search(pattern, mat.name) and mat.name != new:
+                renamed.append([mat.name, new])
+                mat.name = new
+    painted = []
+    for rule in m.get("paint", []):
+        for mat in bpy.data.materials:
+            if not re.search(rule["materials"], mat.name) or not mat.node_tree:
+                continue
+            for node in mat.node_tree.nodes:
+                if node.type != "BSDF_PRINCIPLED":
+                    continue
+                base = node.inputs["Base Color"]
+                if "color" in rule:
+                    if base.is_linked and not rule.get("keepTexture", False):
+                        mat.node_tree.links.remove(base.links[0])
+                    base.default_value = hex_rgb(rule["color"]) + [1.0]
+                if "metallic" in rule and not node.inputs["Metallic"].is_linked:
+                    node.inputs["Metallic"].default_value = rule["metallic"]
+                if "roughness" in rule and not node.inputs["Roughness"].is_linked:
+                    node.inputs["Roughness"].default_value = rule["roughness"]
+            painted.append(mat.name)
+    if renamed or painted:
+        report["materials"] = {"renamed": renamed, "painted": painted}
+        log(f"materials: renamed {len(renamed)}, repainted {len(painted)}")
+
+
+def rotate_scene(degrees):
+    """Turn the whole model about Z before anything else (front must face -Y in Blender = +Z in glTF)."""
+    if not degrees:
+        return
+    m = Matrix.Rotation(math.radians(degrees), 4, "Z")
+    for o in [o for o in bpy.data.objects if o.parent is None]:
+        o.matrix_world = m @ o.matrix_world
+    bpy.context.view_layer.update()
+
+
 def cleanup(meshes, cfg, report):
     """Remove logos/helpers, weld duplicate vertices, drop loose geometry."""
     c = cfg.get("cleanup", {})
     remove_rules = c.get("remove", [])
+    # Rigged downloads: bake the current pose into the meshes and drop the armature,
+    # so the GLB is a static model (skinned meshes would be placed by their joints).
+    armatures = [o for o in bpy.data.objects if o.type == "ARMATURE"]
+    if armatures:
+        for o in meshes:
+            for mod in [m for m in o.modifiers if m.type == "ARMATURE"]:
+                select_only([o])
+                bpy.ops.object.modifier_apply(modifier=mod.name)
+            o.vertex_groups.clear()
+        for a in armatures:
+            bpy.data.objects.remove(a, do_unlink=True)
+        log(f"baked and removed {len(armatures)} armature(s)")
+    if c.get("separateLoose"):
+        # one mesh holding several loose pieces (e.g. a headset with its cable): split so rules can drop pieces
+        select_only(meshes)
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.mesh.separate(type="LOOSE")
+        bpy.ops.object.mode_set(mode="OBJECT")
+        meshes = [o for o in bpy.data.objects if o.type == "MESH"]
+        log(f"separated into {len(meshes)} loose pieces")
     removed = []
     keep = []
     for o in meshes:
@@ -197,7 +321,9 @@ def cleanup(meshes, cfg, report):
         bm = bmesh.new()
         bm.from_mesh(o.data)
         before = len(bm.verts)
-        if weld > 0:
+        # Merging vertices would drop authored hard edges (custom split normals) and
+        # leave dark shading blotches; those meshes only lose their loose vertices.
+        if weld > 0 and not o.data.has_custom_normals:
             # relative to the object's own size so tiny parts are not collapsed
             size = max(o.dimensions) or 1.0
             bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=weld * size)
@@ -273,11 +399,20 @@ def split_parts(meshes, cfg, report):
 def normalise(parts, cfg, ports):
     """Scale to real size (metres, longest side), put the model on the ground at the origin."""
     mn, mx = world_bounds(list(parts.values()))
-    size = max(mx - mn)
+    dims = mx - mn
+    size = max(dims)
     real = cfg.get("realSize")
-    s = real / size if real else 1.0
     centre = Vector(((mn.x + mx.x) / 2, (mn.y + mx.y) / 2, mn.z))
-    m = Matrix.Scale(s, 4) @ Matrix.Translation(-centre)
+    if isinstance(real, list):
+        # exact product dimensions (width X, depth Y, height Z in metres); 0 keeps that axis proportional
+        known = [real[i] / dims[i] for i in range(3) if real[i]]
+        k = sum(known) / len(known)
+        sv = [real[i] / dims[i] if real[i] else k for i in range(3)]
+        m = Matrix.Diagonal((*sv, 1.0)) @ Matrix.Translation(-centre)
+        s = k
+    else:
+        s = real / size if real else 1.0
+        m = Matrix.Scale(s, 4) @ Matrix.Translation(-centre)
     for obj in parts.values():
         obj.matrix_world = m @ obj.matrix_world
         select_only([obj])
@@ -288,6 +423,22 @@ def normalise(parts, cfg, ports):
         if "_world" in p:
             p["_world"] = m @ p["_world"]
     return s, world_bounds(list(parts.values()))
+
+
+def transform_parts(parts, cfg):
+    """Variant edits in metres after normalising: scale a part about its own centre, then move it."""
+    for part in cfg["parts"]:
+        t = part.get("transform")
+        if not t:
+            continue
+        obj = parts[part["id"]]
+        if "scale" in t:
+            obj.scale = Vector(t["scale"])
+        if "translate" in t:
+            obj.location += Vector(t["translate"])
+        select_only([obj])
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        bpy.context.view_layer.update()
 
 
 def tag_parts(parts, cfg, bounds):
@@ -399,7 +550,7 @@ def render_preview(parts, path, exploded):
     scene = bpy.context.scene
     scene.render.engine = "BLENDER_WORKBENCH"
     scene.display.shading.light = "STUDIO"
-    scene.display.shading.color_type = "MATERIAL"
+    scene.display.shading.color_type = "TEXTURE"
     scene.display.shading.show_cavity = True
     scene.render.resolution_x, scene.render.resolution_y = 1200, 800
     scene.render.film_transparent = False
@@ -443,10 +594,16 @@ def main():
     meshes = import_glb(repo_path(cfg["input"], root))
     report["input"] = {"file": cfg["input"], "bytes": os.path.getsize(repo_path(cfg["input"], root)), "meshes": len(meshes), "triangles": sum(map(tri_count, meshes))}
 
+    rotate_scene(cfg.get("rotate", 0))
+    paint_textures(cfg.get("cleanup", {}).get("paint", []), report)
+    edit_materials(cfg, report)
     meshes = cleanup(meshes, cfg, report)
     ports = resolve_port_anchors(cfg, meshes)
     parts = split_parts(meshes, cfg, report)
     scale, bounds = normalise(parts, cfg, ports)
+    if any(p.get("transform") for p in cfg["parts"]):
+        transform_parts(parts, cfg)
+        bounds = world_bounds(list(parts.values()))
     tag_parts(parts, cfg, bounds)
     report["ports"] = add_ports(parts, cfg, ports)
     bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
@@ -476,8 +633,10 @@ def main():
 
     preview = cfg.get("preview")
     if preview:
-        render_preview(parts, repo_path(preview["assembled"], root), exploded=False)
-        render_preview(parts, repo_path(preview["exploded"], root), exploded=True)
+        if preview.get("assembled"):
+            render_preview(parts, repo_path(preview["assembled"], root), exploded=False)
+        if preview.get("exploded"):
+            render_preview(parts, repo_path(preview["exploded"], root), exploded=True)
 
     report["seconds"] = round(time.time() - started, 1)
     report_path = re.sub(r"\.glb$", ".report.json", out)

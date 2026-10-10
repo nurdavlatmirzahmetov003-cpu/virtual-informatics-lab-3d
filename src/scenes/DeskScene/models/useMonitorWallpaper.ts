@@ -1,7 +1,51 @@
 import { useCallback } from 'react';
-import { CanvasTexture, SRGBColorSpace, type Mesh, type MeshStandardMaterial, type Object3D } from 'three';
+import { CanvasTexture, SRGBColorSpace, type BufferGeometry, type Mesh, type MeshStandardMaterial, type Object3D, type Texture } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
 import { drawWallpaper } from '@/lib/three/proceduralTextures';
+
+/**
+ * How the wallpaper must be placed on a screen mesh: the UV rectangle the
+ * screen uses, and whether its UVs run right-to-left / top-to-bottom relative
+ * to the panel (per-product models come from different authors). The screen
+ * faces +Z in the model, so "left" is −X and "up" is +Y.
+ */
+function screenUvFrame(geometry: BufferGeometry) {
+  const pos = geometry.attributes.position;
+  const uv = geometry.attributes.uv;
+  if (!pos || !uv) return null;
+  let uMin = Infinity, uMax = -Infinity, vMin = Infinity, vMax = -Infinity;
+  // covariance sign of (x, u) and (y, v) tells the direction of each axis
+  let cx = 0, cy = 0, mx = 0, my = 0, mu = 0, mv = 0;
+  const n = uv.count;
+  for (let i = 0; i < n; i++) {
+    const u = uv.getX(i), v = uv.getY(i);
+    uMin = Math.min(uMin, u); uMax = Math.max(uMax, u);
+    vMin = Math.min(vMin, v); vMax = Math.max(vMax, v);
+    mx += pos.getX(i); my += pos.getY(i); mu += u; mv += v;
+  }
+  mx /= n; my /= n; mu /= n; mv /= n;
+  for (let i = 0; i < n; i++) {
+    cx += (pos.getX(i) - mx) * (uv.getX(i) - mu);
+    cy += (pos.getY(i) - my) * (uv.getY(i) - mv);
+  }
+  return { uMin, uMax, vMin, vMax, mirrorU: cx < 0, flipV: cy < 0 };
+}
+
+/** The shared wallpaper re-mapped onto a screen whose UVs cover only part of 0…1 or run backwards. */
+function fitted(wallpaper: Texture, geometry: BufferGeometry) {
+  const f = screenUvFrame(geometry);
+  if (!f) return wallpaper;
+  const full = f.uMin < 0.02 && f.uMax > 0.98 && f.vMin < 0.02 && f.vMax > 0.98;
+  if (full && !f.mirrorU && !f.flipV) return wallpaper;
+  const t = wallpaper.clone();
+  const w = Math.max(1e-4, f.uMax - f.uMin);
+  const h = Math.max(1e-4, f.vMax - f.vMin);
+  // canvas texture (flipY): v = 1 is the top of the picture, u = 0 its left edge
+  t.repeat.set(f.mirrorU ? -1 / w : 1 / w, f.flipV ? -1 / h : 1 / h);
+  t.offset.set(f.mirrorU ? f.uMax / w : -f.uMin / w, f.flipV ? f.vMax / h : -f.vMin / h);
+  t.needsUpdate = true;
+  return t;
+}
 
 /** onLoaded callback that puts the project wallpaper on the monitor GLB's "Screen" material. */
 export function useMonitorWallpaper() {
@@ -21,7 +65,8 @@ export function useMonitorWallpaper() {
       materials.forEach(material => {
         if (material.name !== 'Screen') return;
         const m = material as MeshStandardMaterial;
-        m.map = wallpaper; m.emissiveMap = wallpaper;
+        const map = fitted(wallpaper, mesh.geometry);
+        m.map = map; m.emissiveMap = map;
         m.color.set('#ffffff'); m.emissive.set('#ffffff'); m.emissiveIntensity = 0.65;
         m.roughness = 0.27; m.metalness = 0; m.needsUpdate = true;
       });

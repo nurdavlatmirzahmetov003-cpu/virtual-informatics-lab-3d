@@ -1,0 +1,31 @@
+{
+  "name": "hs-hyperx-cloud-iii",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/wireless_headphones.glb",
+  "output": "assets-src/blender/products/hs-hyperx-cloud-iii.glb",
+  "rotate": 90,
+  "realSize": [
+    0.18,
+    0.095,
+    0.2
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/hs-hyperx-cloud-iii.jpg"
+  }
+}

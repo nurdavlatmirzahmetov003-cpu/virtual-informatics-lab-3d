@@ -250,6 +250,50 @@ for (const name of names) {
 }
 await writeFile(resolve(root, 'public/assets/models/hardware/optimization-report.json'), JSON.stringify(report, null, 2) + '\n');
 
+// Catalog products (V2-2a): Blender pipeline output (assets-src/blender/products,
+// normalised to real metres, logos removed) → three levels per product:
+//   <id>.glb       High/Ultra — ≤ 80k triangles, ≤ 2048 px textures (adaptive)
+//   <id>_lod1.glb  Medium     — ≤ 55 % and ≤ 30k triangles, ≤ 1024 px
+//   <id>_lod2.glb  Low        — ≤ 25 % and ≤ 8k triangles, ≤ 512 px (the Low texture cap)
+// (budgets: AUDIT_V2.md §3.4; meshes that cannot simplify further keep more)
+// Named nodes (parts, `Screen`/`DeskTop` materials) and extras are preserved.
+const PRODUCT_LEVELS = [
+  { suffix: '', ratio: 1, budget: 80000, error: 0.001, texture: 2048, adaptive: true, quantize: 16 },
+  { suffix: '_lod1', ratio: 0.55, budget: 30000, error: 0.002, texture: 1024, adaptive: true, quantize: 14 },
+  { suffix: '_lod2', ratio: 0.25, budget: 8000, error: 0.004, texture: 512, adaptive: true, quantize: 14 },
+];
+const productSrc = resolve(root, 'assets-src/blender/products');
+const productOut = resolve(root, 'public/assets/models/products');
+const productReport = [];
+if (existsSync(productSrc)) {
+  await mkdir(productOut, { recursive: true });
+  const { readdir } = await import('node:fs/promises');
+  for (const name of (await readdir(productSrc)).filter((f) => f.endsWith('.glb')).sort()) {
+    const id = name.replace(/\.glb$/, '');
+    const input = resolve(productSrc, name);
+    const source = await io.read(input);
+    source.setLogger(new Logger(Logger.Verbosity.WARN));
+    await source.transform(prune({ keepExtras: true, keepAttributes: true }), dedup(), weld(), join({ keepNamed: true }));
+    const entry = { id, source: `assets-src/blender/products/${name}`, sourceBytes: (await stat(input)).size, levels: [] };
+    for (const level of PRODUCT_LEVELS) {
+      const doc = cloneDocument(source);
+      doc.setLogger(new Logger(Logger.Verbosity.WARN));
+      const ratio = Math.min(level.ratio, level.budget / Math.max(1, triangles(doc)));
+      if (ratio < 1) await doc.transform(simplify({ simplifier: MeshoptSimplifier, ratio, error: level.error, lockBorder: true }));
+      await adaptiveTextures(doc, level.texture, level.adaptive);
+      // keep UVs even where a texture became a flat colour: the site maps its own wallpaper onto `Screen`
+      const keep = { keepExtras: true, keepAttributes: true };
+      await doc.transform(prune(keep), meshopt({ encoder: MeshoptEncoder, level: 'high', quantizePosition: level.quantize }), prune(keep));
+      const file = id + level.suffix + '.glb';
+      await io.write(resolve(productOut, file), doc);
+      entry.levels.push({ file, bytes: (await stat(resolve(productOut, file))).size, triangles: triangles(doc), textureMB: +(textureBytes(doc) / 1048576).toFixed(1) });
+    }
+    productReport.push(entry);
+    console.log(`products/${id}: ` + entry.levels.map((l) => `${l.file} ${(l.bytes / 1e6).toFixed(2)} MB ${Math.round(l.triangles / 100) / 10}k △`).join(' · '));
+  }
+  await writeFile(resolve(productOut, 'optimization-report.json'), JSON.stringify(productReport, null, 2) + '\n');
+}
+
 // Room/desk textures: 512 px copies for the Low preset (phones), so they are
 // not downloaded at 2K only to be shrunk on the GPU.
 const textureDir = resolve(root, 'public/assets/textures');

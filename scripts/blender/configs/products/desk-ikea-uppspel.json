@@ -1,0 +1,33 @@
+{
+  "name": "desk-ikea-uppspel",
+  "description": "Catalog product model (V2-2a).",
+  "input": "assets-src/sketchfab/v2/office_desk_140x60.glb",
+  "output": "assets-src/blender/products/desk-ikea-uppspel.glb",
+  "rotate": 0,
+  "realSize": [
+    1.8,
+    0.8,
+    0.75
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {
+      "^TBL0003_Desk$": "DeskTop"
+    },
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/desk-ikea-uppspel.jpg"
+  }
+}

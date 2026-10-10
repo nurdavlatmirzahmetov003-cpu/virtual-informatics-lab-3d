@@ -15,6 +15,8 @@ import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { resolveBuild, type ResolvedBuild } from '@/lib/studio/build';
 import { framingScale } from '@/lib/three/framing';
 import { Desk } from '@/scenes/DeskScene/models/Desk';
+import { isTieredModel } from '@/lib/three/modelUrls';
+import { ProductDesk } from '../ProductDesk';
 import { Room } from '@/scenes/DeskScene/models/Room';
 import type { PartId } from '@/scenes/DeskScene/pc/parts';
 import { pcRig } from '@/scenes/DeskScene/pc/pcRig';
@@ -210,7 +212,7 @@ export default function AssemblyScene() {
       <AssemblyCamera />
       <AssemblyPcController build={build} />
       <Room orbit />
-      <Desk surface={finish.desk} />
+      {build.desk && isTieredModel(build.desk.modelPath) ? <ProductDesk key={build.desk.id} product={build.desk} surface={finish.desk} /> : <Desk surface={finish.desk} />}
       <SetupItems build={build} finish={finish} animated />
     </>
   );

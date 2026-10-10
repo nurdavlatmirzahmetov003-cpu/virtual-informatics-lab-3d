@@ -445,6 +445,24 @@ Renders: `docs/blender/gpu_triple_fan_assembled.jpg`, `docs/blender/gpu_triple_f
 - **Port markers** are the anchors for V2-6 cable plugging: the cable end snaps to `port_<type>_<n>` and aligns with its `dir`.
 - **Teardown (V2-5)** reads `explode` and `order` from the node extras. No coordinates are hard-coded in React.
 
+## 6b. Batch 1 result (V2-2a, 2026-10-10)
+
+- **Downloaded:** 26 GLBs by the owner.
+  - 21 of the 24 planned.
+  - Not downloaded: HyperX "Headphones HyperX", Logitech K120, Dell UltraSharp.
+  - 5 the owner picked: "Wireless Headphones" (uliana), "Keyboard" (thethieme), "Gaming keyboard" (ZxTulz), "Satellite Enhanced" (rendysix), "Low poly – Computer Mouse" (IQINISO).
+- **Substitutes used:**
+
+  | Product | Model used |
+  |---|---|
+  | HyperX Cloud III | Wireless Headphones |
+  | Logitech K120 | Keyboard |
+  | Dell U2724D | 27″ monitor base, silver, taller |
+  | Logitech PRO X TKL and Razer Huntsman TKL | Gaming keyboard, TKL |
+  | Creative Pebble V3 | Satellite |
+
+- **Result:** all 28 products of batch 1 have their own model (ASSET_MANIFEST.md, "Setup Studio per-product models").
+
 ## 7. What the owner needs to do
 
 ### (a) Models to download: owner signs in to Sketchfab

@@ -1,0 +1,57 @@
+{
+  "name": "mon-asus-xg27aqmr",
+  "description": "Same family, gunmetal finish, deeper stand.",
+  "input": "assets-src/sketchfab/v2/asus__tuf_gaming_monitor.glb",
+  "output": "assets-src/blender/products/mon-asus-xg27aqmr.glb",
+  "rotate": 180,
+  "realSize": [
+    0.6145,
+    0.24,
+    0.49
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "materials": "^Material\\.00[89]$"
+      }
+    ],
+    "paint": [
+      {
+        "image": "Image_3",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#0b0d12"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {
+      "^material$": "Screen"
+    },
+    "paint": [
+      {
+        "materials": "^main$",
+        "color": "#2c3038",
+        "metallic": 0.45,
+        "roughness": 0.38
+      }
+    ]
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/mon-asus-xg27aqmr.jpg"
+  }
+}

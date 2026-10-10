@@ -1,0 +1,31 @@
+{
+  "name": "kb-razer-huntsman-v3-pro-tkl",
+  "description": "TKL base, taller (analog switches), green accents.",
+  "input": "assets-src/sketchfab/v2/gaming_keyboard.glb",
+  "output": "assets-src/blender/products/kb-razer-huntsman-v3-pro-tkl.glb",
+  "rotate": 0,
+  "realSize": [
+    0.361,
+    0.14,
+    0.04
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "preview": {
+    "assembled": "assets-src/blender/products/kb-razer-huntsman-v3-pro-tkl.jpg"
+  }
+}

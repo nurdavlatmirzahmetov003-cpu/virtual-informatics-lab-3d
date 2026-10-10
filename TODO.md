@@ -9,8 +9,11 @@
 - [ ] Low-да MSAA қалсын ба — пайдаланушы шешімі
 - [ ] A2: жұқа қабырғалы (кулер/радиатор) модельдердің LOD1-і — текстура/normal map
 ## V2-2 (ASSET_SOURCING.md)
-- [ ] Жүктеу 1-топ (V2-2a, 24 модель) — пайдаланушы Sketchfab-қа кіреді, әр жүктеуге рұқсат сұралады
-- [ ] `optimize-assets.mjs`-ке бөлшектерді біріктірмейтін профиль (Blender шығысы үшін)
+- [x] Жүктеу 1-топ (V2-2a) — 26 GLB (пайдаланушы жүктеді); 28 өнімге жеке модель
+- [x] `optimize-assets.mjs`: өнімдер үшін бөлшек/атау сақталатын үш деңгейлі профиль
+- [ ] V2-2b: ПК бөлшектерінің 2-тобы (16 модель) + порт/слот маркерлері
+- [ ] Creative Pebble — сфералық пішінді Blender-де жасау (қазір сателлит қорап)
+- [ ] Razer Huntsman TKL мен Logitech PRO X TKL бір негізде (түсі мен биіктігі ғана бөлек) — бөлек модель табу
 
 - [x] PC Assembly Lab: 3D drag/snap + ghost ұяшық + keyboard, order/compatibility, boot/grade
 - [x] Progress core: versioned local persistence, best scores, attempts, achievements; AnatomyQuiz connected
