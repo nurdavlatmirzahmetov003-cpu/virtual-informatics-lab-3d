@@ -56,7 +56,7 @@
   font-weight: 600;
   letter-spacing: -0.02em;
   text-wrap: balance;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 30px var(--text-halo);
 }
 
 .subtitle {
@@ -81,20 +81,20 @@
   padding: 0 var(--space-5);
   border: 0;
   border-radius: var(--radius-pill);
-  background: linear-gradient(180deg, #4fe0fb, var(--accent-strong));
-  color: #00131c;
+  background: linear-gradient(180deg, var(--accent-bright), var(--accent-strong));
+  color: var(--on-accent);
   font-weight: 700;
   font-size: var(--fs-sm);
   cursor: pointer;
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+    0 0 0 1px rgb(var(--ink-rgb) / 0.18) inset,
     0 10px 30px -10px var(--accent-glow);
   transition: box-shadow var(--dur-med) var(--ease-out);
 }
 
 .primary:hover {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.25) inset,
+    0 0 0 1px rgb(var(--ink-rgb) / 0.25) inset,
     0 14px 40px -10px var(--accent-glow);
 }
 
@@ -127,7 +127,7 @@
   padding: var(--space-5);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, rgba(18, 21, 30, 0.72), rgba(10, 12, 18, 0.66));
+  background: linear-gradient(180deg, rgb(var(--panel-rgb) / 0.72), rgb(var(--panel-rgb) / 0.66));
   backdrop-filter: blur(var(--blur)) saturate(1.2);
   box-shadow: var(--shadow-lg);
   transform: translateY(-50%);
@@ -175,7 +175,7 @@
 
 .spec {
   padding: var(--space-2) var(--space-3);
-  background: rgba(10, 12, 18, 0.85);
+  background: rgb(var(--panel-rgb) / 0.85);
 }
 
 .spec dt {
@@ -228,7 +228,7 @@
   height: 28px;
   border: 1px solid var(--border-strong);
   border-radius: 50%;
-  background: rgba(10, 12, 18, 0.6);
+  background: rgb(var(--panel-rgb) / 0.6);
   color: var(--text-muted);
   font: 600 var(--fs-xs) / 1 var(--font-sans);
   font-variant-numeric: tabular-nums;
@@ -248,7 +248,7 @@
 .partChip[aria-current='true'] {
   background: var(--accent);
   border-color: var(--accent);
-  color: #00131c;
+  color: var(--on-accent);
   box-shadow: 0 0 12px var(--accent-glow);
 }
 
@@ -348,7 +348,7 @@
   right: 0;
   bottom: 0;
   height: 2px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgb(var(--ink-rgb) / 0.05);
 }
 
 .progressFill {

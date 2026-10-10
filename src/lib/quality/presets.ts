@@ -14,6 +14,13 @@ export interface QualityPreset {
   postprocessing: boolean;
   /** MSAA samples for the post-processing composer. */
   multisampling: number;
+  /**
+   * SMAA pass in the post chain (on top of MSAA): smooths specular and
+   * sub-pixel edges MSAA cannot (thin fins, grilles). Needs post-processing.
+   */
+  smaa: boolean;
+  /** Anisotropic filtering for model and scene textures (capped by the GPU). */
+  anisotropy: number;
   bloom: boolean;
   /** Focus blur on the active object (scroll story). */
   depthOfField: boolean;
@@ -36,17 +43,22 @@ export interface QualityPreset {
    */
   maxTextureSize: 512 | 1024 | 2048;
   contactShadowResolution: number;
+  /** 2K close-up textures (`_hd.glb`), loaded on demand when a model fills the view. */
+  hdTextures: boolean;
 }
 
 export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
   low: {
     level: 'low',
     dpr: [0.75, 1],
-    antialias: false,
+    // MSAA is cheap at DPR ≤ 1 and removes the worst staircase edges (AUDIT_V2 A1)
+    antialias: true,
     shadows: false,
     shadowMapSize: 512,
     postprocessing: false,
     multisampling: 0,
+    smaa: false,
+    anisotropy: 4,
     bloom: false,
     depthOfField: false,
     transmission: false,
@@ -56,6 +68,7 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     lodBias: 2,
     maxTextureSize: 512,
     contactShadowResolution: 256,
+    hdTextures: false,
   },
   medium: {
     level: 'medium',
@@ -65,6 +78,8 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     shadowMapSize: 1024,
     postprocessing: false,
     multisampling: 0,
+    smaa: false,
+    anisotropy: 8,
     bloom: false,
     depthOfField: false,
     transmission: false,
@@ -74,15 +89,19 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     lodBias: 1,
     maxTextureSize: 2048,
     contactShadowResolution: 512,
+    hdTextures: false,
   },
   high: {
     level: 'high',
-    dpr: [1, 1.5],
+    // High is auto-picked only for discrete GPUs: render HiDPI screens at up to 2×
+    dpr: [1, 2],
     antialias: true,
     shadows: true,
     shadowMapSize: 2048,
     postprocessing: true,
     multisampling: 4,
+    smaa: true,
+    anisotropy: 16,
     bloom: true,
     depthOfField: true,
     transmission: false,
@@ -92,6 +111,7 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     lodBias: 0,
     maxTextureSize: 2048,
     contactShadowResolution: 1024,
+    hdTextures: true,
   },
   ultra: {
     level: 'ultra',
@@ -101,6 +121,8 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     shadowMapSize: 4096,
     postprocessing: true,
     multisampling: 8,
+    smaa: true,
+    anisotropy: 16,
     bloom: true,
     depthOfField: true,
     transmission: true,
@@ -110,6 +132,7 @@ export const QUALITY_PRESETS: Record<QualityLevel, QualityPreset> = {
     lodBias: 0,
     maxTextureSize: 2048,
     contactShadowResolution: 2048,
+    hdTextures: true,
   },
 };
 

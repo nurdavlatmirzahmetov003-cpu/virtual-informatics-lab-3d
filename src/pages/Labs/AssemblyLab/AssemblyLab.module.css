@@ -35,7 +35,7 @@
   padding: var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: rgba(10, 13, 20, 0.78);
+  background: rgb(var(--panel-rgb) / 0.78);
   backdrop-filter: blur(var(--blur));
 }
 
@@ -57,7 +57,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #ffb547;
+  color: var(--warning);
 }
 
 .head h1 {
@@ -81,14 +81,14 @@
   height: 6px;
   overflow: hidden;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(var(--ink-rgb) / 0.08);
 }
 
 .bar span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #ffb547, #3ddc97);
+  background: linear-gradient(90deg, var(--warning), var(--success));
   transition: width var(--dur-med) var(--ease-out);
 }
 
@@ -107,7 +107,7 @@
 .stats div {
   padding: 6px 8px;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgb(var(--ink-rgb) / 0.04);
 }
 
 .stats dt {
@@ -159,7 +159,7 @@
   overscroll-behavior: contain;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: rgba(10, 13, 20, 0.82);
+  background: rgb(var(--panel-rgb) / 0.82);
   backdrop-filter: blur(var(--blur));
 }
 
@@ -198,7 +198,7 @@
 }
 
 .message[data-tone='hint'] {
-  --tone: #7cf4da;
+  --tone: var(--mint);
 }
 
 @keyframes pop {
@@ -223,7 +223,7 @@
   border-radius: var(--radius-sm);
   font-size: var(--fs-sm);
   font-weight: 700;
-  color: #7cf4da;
+  color: var(--mint);
 }
 
 .hintButton:hover:not(:disabled) {
@@ -309,12 +309,12 @@
 
 .steps li[data-state='hinted'] {
   background: rgba(124, 244, 218, 0.1);
-  box-shadow: inset 2px 0 0 #7cf4da;
+  box-shadow: inset 2px 0 0 var(--mint);
 }
 
 .steps li[data-state='hinted'] .num {
-  border-color: #7cf4da;
-  color: #7cf4da;
+  border-color: var(--mint);
+  color: var(--mint);
 }
 
 .restart {
@@ -355,7 +355,7 @@
   border-radius: var(--radius-pill);
   font-size: var(--fs-xs);
   color: var(--text-muted);
-  background: rgba(10, 13, 20, 0.72);
+  background: rgb(var(--panel-rgb) / 0.72);
   backdrop-filter: blur(var(--blur));
   white-space: nowrap;
   pointer-events: none;

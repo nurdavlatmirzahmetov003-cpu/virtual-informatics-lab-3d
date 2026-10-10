@@ -41,11 +41,17 @@ export function useModelFile(file: string) {
  * Texture files loaded with drei's useTexture: limited to the preset's
  * texture size and released (disposed, cache cleared) once unused.
  */
-export function useSceneTextures(urls: string[], textures: Texture[], maxSize: number) {
+export function useSceneTextures(urls: string[], textures: Texture[], maxSize: number, anisotropy = 8) {
   const key = urls.join('|');
   useEffect(() => {
-    textures.forEach((t) => capTextureSize(t, maxSize));
-  }, [textures, maxSize]);
+    textures.forEach((t) => {
+      capTextureSize(t, maxSize);
+      if (t.anisotropy !== anisotropy) {
+        t.anisotropy = anisotropy;
+        t.needsUpdate = true;
+      }
+    });
+  }, [textures, maxSize, anisotropy]);
   useEffect(
     () =>
       retainAsset(`tex:${key}`, () => {

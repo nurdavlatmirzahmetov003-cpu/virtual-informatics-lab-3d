@@ -16,13 +16,20 @@
     "language": "Language",
     "quality": "Graphics quality",
     "qualityAuto": "Auto",
-    "qualityDetected": "{level} (auto)"
+    "qualityDetected": "{level} (auto)",
+    "theme": "Theme",
+    "themeCurrent": "Theme: {theme} (switch)"
   },
   "quality": {
     "low": "Low",
     "medium": "Medium",
     "high": "High",
     "ultra": "Ultra"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
   },
   "loader": {
     "title": "Loading the 3D lab",

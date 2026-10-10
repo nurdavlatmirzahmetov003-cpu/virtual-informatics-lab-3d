@@ -1,6 +1,6 @@
 import { useEffect, useRef, type JSX } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Bloom, DepthOfField, EffectComposer, ToneMapping, Vignette } from '@react-three/postprocessing';
+import { Bloom, DepthOfField, EffectComposer, SMAA, ToneMapping, Vignette } from '@react-three/postprocessing';
 import { ToneMappingMode, type DepthOfFieldEffect } from 'postprocessing';
 import { NeutralToneMapping, NoToneMapping } from 'three';
 import type { QualityPreset } from '@/lib/quality/presets';
@@ -9,7 +9,7 @@ import { sceneFocus } from '@/lib/three/sceneFocus';
 /**
  * Restrained post chain: subtle bloom for emissive screens/RGB, optional
  * depth of field following `sceneFocus`, gentle vignette, Khronos PBR
- * Neutral tone mapping. Only mounted on High/Ultra.
+ * Neutral tone mapping, SMAA. Only mounted on High/Ultra.
  */
 export function PostEffects({ preset }: { preset: QualityPreset }) {
   const gl = useThree((s) => s.gl);
@@ -41,6 +41,9 @@ export function PostEffects({ preset }: { preset: QualityPreset }) {
   }
   effects.push(<Vignette key="vignette" offset={0.32} darkness={0.55} />);
   effects.push(<ToneMapping key="tone" mode={ToneMappingMode.NEUTRAL} />);
+  // after tone mapping: SMAA works on display-referred colour; MSAA (composer
+  // multisampling) handles geometry edges, SMAA the specular / sub-pixel shimmer
+  if (preset.smaa) effects.push(<SMAA key="smaa" />);
 
   return (
     <EffectComposer multisampling={preset.multisampling} enableNormalPass={false}>

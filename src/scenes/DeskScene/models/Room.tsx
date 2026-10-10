@@ -1,12 +1,14 @@
 /**
- * Minimal studio room: polished concrete floor, dark plaster wall with an
- * oak acoustic slat panel behind the desk, monitor bias light on the wall.
+ * Minimal studio room, coloured by the theme's scene palette: polished
+ * concrete floor, plaster wall with an oak acoustic slat panel behind the
+ * desk, monitor bias light on the wall.
  */
 import { useLayoutEffect, useRef, useState } from 'react';
 import { ContactShadows, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { Matrix4, Object3D, RepeatWrapping, SRGBColorSpace, type InstancedMesh, type Group } from 'three';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
+import { useScenePalette } from '@/hooks/useTheme';
 import { useSceneTextures } from '@/lib/three/modelAssets';
 import { DESK, DESK_TOP, MONITOR } from '../layout';
 
@@ -19,6 +21,7 @@ const SLATS = { count: 44, width: 0.028, pitch: 0.046, height: 2.1, depth: 0.018
 
 export function Room({ orbit = false }: { orbit?: boolean }) {
   const preset = useQualityPreset();
+  const palette = useScenePalette();
   const slats = useRef<InstancedMesh>(null);
   const wall = useRef<Group>(null);
   useFrame(({ camera }) => {
@@ -37,7 +40,7 @@ export function Room({ orbit = false }: { orbit?: boolean }) {
     });
   });
 
-  useSceneTextures(floor, [map, roughnessMap], preset.maxTextureSize);
+  useSceneTextures(floor, [map, roughnessMap], preset.maxTextureSize, preset.anisotropy);
 
   useLayoutEffect(() => {
     const mesh = slats.current;
@@ -58,21 +61,21 @@ export function Room({ orbit = false }: { orbit?: boolean }) {
     <group>
       <mesh rotation-x={-Math.PI / 2} receiveShadow>
         <planeGeometry args={[24, 24]} />
-        <meshStandardMaterial map={map} roughnessMap={roughnessMap} color="#3d4048" envMapIntensity={0.3} />
+        <meshStandardMaterial map={map} roughnessMap={roughnessMap} color={palette.floorTint} envMapIntensity={0.3} />
       </mesh>
       <group ref={wall}>
       <mesh position={[0, 1.6, WALL_Z]} receiveShadow>
         <planeGeometry args={[10, 3.2]} />
-        <meshStandardMaterial color="#111217" roughness={0.92} />
+        <meshStandardMaterial color={palette.wall} roughness={0.92} />
       </mesh>
       {/* felt backing + oak slats */}
       <mesh position={[0, SLATS.bottom + SLATS.height / 2, WALL_Z + 0.006]} receiveShadow>
         <boxGeometry args={[panelWidth, SLATS.height + 0.02, 0.012]} />
-        <meshStandardMaterial color="#0a0a0c" roughness={1} />
+        <meshStandardMaterial color={palette.wallPanel} roughness={1} />
       </mesh>
       <instancedMesh ref={slats} args={[undefined, undefined, SLATS.count]} castShadow receiveShadow>
         <boxGeometry args={[SLATS.width, SLATS.height, SLATS.depth]} />
-        <meshStandardMaterial color="#5b432f" roughness={0.7} envMapIntensity={0.4} />
+        <meshStandardMaterial color={palette.slats} roughness={0.7} envMapIntensity={0.4} />
       </instancedMesh>
 
       {/* monitor bias light washing the wall */}

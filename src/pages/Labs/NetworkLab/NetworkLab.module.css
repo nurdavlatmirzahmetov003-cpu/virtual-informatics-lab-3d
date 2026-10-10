@@ -1,10 +1,10 @@
 .page {
-  --net-host: #38d6f5;
-  --net-server: #a78bfa;
-  --net-router: #ffb547;
-  --net-switch: #3ddc97;
-  --net-ok: #3ddc97;
-  --net-fail: #ff5c7a;
+  --net-host: var(--accent);
+  --net-server: var(--violet);
+  --net-router: var(--warning);
+  --net-switch: var(--success);
+  --net-ok: var(--success);
+  --net-fail: var(--danger);
   max-width: 1520px;
   margin: 0 auto;
   padding: calc(var(--topbar-h) + var(--space-6)) var(--gutter) var(--space-7);
@@ -82,7 +82,7 @@
   background:
     radial-gradient(120% 90% at 0% 0%, var(--accent-soft), transparent 70%),
     var(--surface-strong);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent), 0 12px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent), 0 12px 30px rgb(var(--shadow-rgb) / 0.3);
 }
 
 .modeCard b {
@@ -112,7 +112,7 @@
   border-radius: var(--radius-pill);
   font-size: 0.7rem;
   color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgb(var(--ink-rgb) / 0.05);
 }
 
 .modeScore[data-done='true'] {
@@ -247,7 +247,7 @@
   font-weight: 600;
   color: var(--text);
   background: color-mix(in srgb, var(--bg-elevated) 88%, var(--tone));
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 24px color-mix(in srgb, var(--tone) 30%, transparent);
+  box-shadow: 0 14px 40px rgb(var(--shadow-rgb) / 0.5), 0 0 24px color-mix(in srgb, var(--tone) 30%, transparent);
   transform: translate(-50%, -50%) rotate(-2deg);
   pointer-events: none;
 }
@@ -265,8 +265,8 @@
   border-radius: var(--radius-lg);
   background:
     radial-gradient(90% 70% at 50% 0%, rgba(56, 214, 245, 0.05), transparent 70%),
-    #090b11;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), var(--shadow-lg);
+    var(--bg-elevated);
+  box-shadow: inset 0 1px 0 rgb(var(--ink-rgb) / 0.04), var(--shadow-lg);
 }
 
 .svg {
@@ -285,7 +285,7 @@
 }
 
 .gridDot {
-  fill: rgba(255, 255, 255, 0.09);
+  fill: rgb(var(--ink-rgb) / 0.09);
 }
 
 .emptyText {
@@ -357,10 +357,10 @@
 }
 
 .tile {
-  fill: #141821;
-  stroke: rgba(255, 255, 255, 0.1);
+  fill: var(--bg-elevated);
+  stroke: rgb(var(--ink-rgb) / 0.1);
   stroke-width: 1.2;
-  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 10px 16px rgb(var(--shadow-rgb) / 0.45));
   transition:
     stroke var(--dur-fast),
     fill var(--dur-fast);
@@ -368,14 +368,14 @@
 
 .device:hover .tile {
   fill: #181d28;
-  stroke: rgba(255, 255, 255, 0.2);
+  stroke: rgb(var(--ink-rgb) / 0.2);
 }
 
 .device[data-selected='true'] .tile,
 .device:focus-visible .tile {
   stroke: var(--tone);
   stroke-width: 2;
-  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--tone) 45%, transparent)) drop-shadow(0 10px 16px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--tone) 45%, transparent)) drop-shadow(0 10px 16px rgb(var(--shadow-rgb) / 0.45));
 }
 
 .device[data-target='true'] .tile {
@@ -438,8 +438,8 @@
 }
 
 .portDot {
-  fill: #0b0d13;
-  stroke: #6c7486;
+  fill: var(--bg);
+  stroke: var(--text-dim);
   stroke-width: 2;
   transition:
     fill var(--dur-fast),
@@ -558,7 +558,7 @@
   padding: 6px 12px;
   border-radius: var(--radius-pill);
   font-size: var(--fs-xs);
-  background: rgba(7, 8, 12, 0.85);
+  background: rgb(var(--panel-rgb) / 0.85);
   border: 1px solid var(--accent);
   pointer-events: none;
 }
@@ -680,7 +680,7 @@
   border-radius: var(--radius-sm);
   font-size: var(--fs-sm);
   line-height: 1.5;
-  background: rgba(255, 255, 255, 0.025);
+  background: rgb(var(--ink-rgb) / 0.025);
 }
 
 .pingResult svg {
@@ -761,7 +761,7 @@
 .sideTabs button[aria-selected='true'] {
   color: var(--text);
   border-bottom-color: var(--accent);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgb(var(--ink-rgb) / 0.02);
 }
 
 .sideBody {
@@ -1032,7 +1032,7 @@
 .fieldError {
   font-size: var(--fs-xs);
   line-height: 1.45;
-  color: #ff8fa3;
+  color: var(--danger-soft);
 }
 
 .subnet {
@@ -1047,7 +1047,7 @@
   font-size: var(--fs-sm);
   line-height: 1.55;
   color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.035);
+  background: rgb(var(--ink-rgb) / 0.035);
 }
 
 .ifaceList {
@@ -1104,7 +1104,7 @@
   padding: 5px 6px 5px 10px;
   border-radius: var(--radius-sm);
   font-size: var(--fs-xs);
-  background: rgba(255, 255, 255, 0.035);
+  background: rgb(var(--ink-rgb) / 0.035);
 }
 
 .linkList span {
@@ -1161,7 +1161,7 @@
   border-radius: var(--radius-sm);
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: #ff8fa3;
+  color: var(--danger-soft);
 }
 
 .dangerButton:hover {

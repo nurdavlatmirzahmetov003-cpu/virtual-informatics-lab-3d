@@ -19,3 +19,25 @@ export function lodFile(file: string): string | null {
   const name = file.match(/([^/]+)\.glb$/)?.[1];
   return name && LOD_MODELS.has(name) ? file.replace(/\.glb$/, '_lod1.glb') : null;
 }
+
+/**
+ * Models with a `<name>_hd.glb` close-up level (V2-1): same geometry, 2K KTX2
+ * (UASTC) textures. Loaded on demand on High/Ultra when the model fills the
+ * view, and only its textures are swapped in.
+ */
+export const HD_MODELS: ReadonlySet<string> = new Set([
+  'keyboard_mech',
+  'motherboard_x570',
+  'cpu_am4',
+  'ram_rgb',
+  'cooler_tower',
+  'gpu_triple_fan',
+  'ssd_m2',
+  'headset_gaming',
+  'speakers',
+]);
+
+export function hdFile(file: string): string | null {
+  const name = file.match(/([^/]+)\.glb$/)?.[1];
+  return name && HD_MODELS.has(name) ? file.replace(/\.glb$/, '_hd.glb') : null;
+}

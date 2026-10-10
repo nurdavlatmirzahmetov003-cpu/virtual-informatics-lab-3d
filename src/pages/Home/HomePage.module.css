@@ -19,8 +19,8 @@
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(7, 8, 12, 0.55) 0%, rgba(7, 8, 12, 0) 38%),
-    linear-gradient(0deg, rgba(7, 8, 12, 0.45) 0%, rgba(7, 8, 12, 0) 20%);
+    linear-gradient(90deg, rgb(var(--panel-rgb) / 0.55) 0%, rgb(var(--panel-rgb) / 0) 38%),
+    linear-gradient(0deg, rgb(var(--panel-rgb) / 0.45) 0%, rgb(var(--panel-rgb) / 0) 20%);
 }
 
 .outro {
@@ -54,7 +54,7 @@
 @media (max-width: 720px) {
   .stage::after {
     background:
-      linear-gradient(180deg, rgba(7, 8, 12, 0.7) 0%, rgba(7, 8, 12, 0) 45%),
-      linear-gradient(0deg, rgba(7, 8, 12, 0.6) 0%, rgba(7, 8, 12, 0) 30%);
+      linear-gradient(180deg, rgb(var(--panel-rgb) / 0.7) 0%, rgb(var(--panel-rgb) / 0) 45%),
+      linear-gradient(0deg, rgb(var(--panel-rgb) / 0.6) 0%, rgb(var(--panel-rgb) / 0) 30%);
   }
 }

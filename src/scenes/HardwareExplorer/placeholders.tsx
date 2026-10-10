@@ -37,7 +37,7 @@ export function Microphone() {
       {/* steel mesh head with an inner foam windscreen */}
       <mesh position-y={0.2} castShadow>
         <cylinderGeometry args={[0.031, 0.031, 0.04, 40, 1, true]} />
-        <meshStandardMaterial color="#b9bec6" metalness={0.9} roughness={0.35} alphaMap={grille} alphaTest={0.5} side={2} />
+        <meshStandardMaterial color="#b9bec6" metalness={0.9} roughness={0.35} alphaMap={grille} alphaTest={0.5} alphaToCoverage side={2} />
       </mesh>
       <mesh position-y={0.2}>
         <cylinderGeometry args={[0.027, 0.027, 0.04, 32]} />
@@ -45,7 +45,7 @@ export function Microphone() {
       </mesh>
       <mesh position-y={0.22} castShadow>
         <sphereGeometry args={[0.031, 40, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        <meshStandardMaterial color="#b9bec6" metalness={0.9} roughness={0.35} alphaMap={grille} alphaTest={0.5} side={2} />
+        <meshStandardMaterial color="#b9bec6" metalness={0.9} roughness={0.35} alphaMap={grille} alphaTest={0.5} alphaToCoverage side={2} />
       </mesh>
       {/* mute LED + gain knob */}
       <mesh position={[0, 0.16, 0.0302]}>

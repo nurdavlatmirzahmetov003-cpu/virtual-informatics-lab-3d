@@ -1,6 +1,28 @@
+import { useEffect, useMemo } from 'react';
 import { Environment, Lightformer } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
+import { CanvasTexture, SRGBColorSpace } from 'three';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
+import { useScenePalette } from '@/hooks/useTheme';
 import { useRetainedEnvironment } from '@/lib/three/modelAssets';
+
+/** Vertical backdrop gradient (screen space): cheap, and no banding at 256 px. */
+function gradientTexture(top: string, bottom: string) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 2;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    const g = ctx.createLinearGradient(0, 0, 0, 256);
+    g.addColorStop(0, top);
+    g.addColorStop(1, bottom);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 2, 256);
+  }
+  const texture = new CanvasTexture(canvas);
+  texture.colorSpace = SRGBColorSpace;
+  return texture;
+}
 
 interface EnvironmentLightingProps {
   /** Equirectangular .hdr used for image-based reflections (not shown as background). */
@@ -9,6 +31,7 @@ interface EnvironmentLightingProps {
   environmentIntensity?: number;
   /** Scales the direct key / fill / rim lights. */
   intensity?: number;
+  /** Solid backdrop colour; by default a theme gradient (night lab / day lab). */
   background?: string;
   /** Half-size (m) of the key light's shadow frustum — keep tight for crisp shadows. */
   shadowExtent?: number;
@@ -24,23 +47,39 @@ export function EnvironmentLighting({
   hdri,
   environmentIntensity = 1,
   intensity = 1,
-  background = '#07080c',
+  background,
   shadowExtent = 3,
   fog = [6, 16],
 }: EnvironmentLightingProps) {
   const preset = useQualityPreset();
+  const palette = useScenePalette();
+  const gl = useThree((s) => s.gl);
+  const invalidate = useThree((s) => s.invalidate);
   useRetainedEnvironment(hdri);
+
+  const backdrop = useMemo(() => (background ? null : gradientTexture(palette.skyTop, palette.skyBottom)), [background, palette]);
+  useEffect(() => () => backdrop?.dispose(), [backdrop]);
+
+  // brighter V2 look: exposure per theme (the post chain reads the same value)
+  useEffect(() => {
+    const previous = gl.toneMappingExposure;
+    gl.toneMappingExposure = palette.exposure;
+    invalidate();
+    return () => {
+      gl.toneMappingExposure = previous;
+    };
+  }, [gl, invalidate, palette.exposure]);
 
   return (
     <>
-      <color attach="background" args={[background]} />
-      <fog attach="fog" args={[background, ...fog]} />
+      {backdrop ? <primitive attach="background" object={backdrop} /> : <color attach="background" args={[background!]} />}
+      <fog attach="fog" args={[background ?? palette.fog, ...fog]} />
 
       <Environment
         files={hdri}
         resolution={preset.environmentResolution}
         frames={1}
-        environmentIntensity={environmentIntensity}
+        environmentIntensity={environmentIntensity * palette.envBoost}
       >
         {/* overhead softbox */}
         <Lightformer form="rect" intensity={1.6} position={[0, 5, 0]} rotation-x={Math.PI / 2} scale={[6, 3, 1]} />

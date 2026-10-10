@@ -2,6 +2,8 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useT } from '@/hooks/useT';
+import { useTheme } from '@/hooks/useTheme';
+import { applyTheme } from '@/lib/theme';
 import { useSceneStatus } from '@/store/sceneStatusStore';
 import { AchievementToaster } from '@/components/achievements/AchievementToaster';
 import { TopBar } from './TopBar';
@@ -15,9 +17,13 @@ export function AppShell() {
   const language = useSettingsStore((s) => s.language);
   const sceneExpected = useSceneStatus(s=>s.expected);
 
+  const theme = useTheme();
+
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language]);
+
+  useEffect(() => applyTheme(theme), [theme]);
 
   return (
     <>

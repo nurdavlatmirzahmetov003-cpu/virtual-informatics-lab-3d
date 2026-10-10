@@ -102,7 +102,7 @@ export function Chassis({ tex, fan, rgb }: { tex: PcTextures; fan: FanGeometries
       </RoundedBox>
       <mesh position={[0, H / 2 + 0.0004, -0.02]} rotation-x={-Math.PI / 2}>
         <planeGeometry args={[W - 0.05, D - 0.14]} />
-        <meshStandardMaterial color="#0e0f12" roughness={0.6} metalness={0.4} alphaMap={tex.vent} alphaTest={0.5} />
+        <meshStandardMaterial color="#0e0f12" roughness={0.6} metalness={0.4} alphaMap={tex.vent} alphaTest={0.5} alphaToCoverage />
       </mesh>
       <RoundedBox args={[W, T, D]} radius={0.0018} position-y={-H / 2 + T / 2} castShadow receiveShadow>
         <meshStandardMaterial {...powderCoat} />
@@ -129,7 +129,7 @@ export function Chassis({ tex, fan, rgb }: { tex: PcTextures; fan: FanGeometries
       </mesh>
       <mesh position-z={D / 2 + 0.002}>
         <planeGeometry args={[W - 0.026, H - 0.026]} />
-        <meshStandardMaterial color="#0c0d10" metalness={0.5} roughness={0.5} alphaMap={tex.perforated} alphaTest={0.5} side={2} />
+        <meshStandardMaterial color="#0c0d10" metalness={0.5} roughness={0.5} alphaMap={tex.perforated} alphaTest={0.5} alphaToCoverage side={2} />
       </mesh>
       <group position={[0, H / 2 + 0.001, D / 2 - 0.035]}>
         <mesh rotation-x={-Math.PI / 2}>

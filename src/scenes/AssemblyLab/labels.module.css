@@ -5,8 +5,8 @@
   border-radius: 7px;
   font: 600 11px/1.3 var(--font-sans);
   white-space: nowrap;
-  color: #d8e3f0;
-  background: rgba(8, 12, 20, 0.82);
+  color: var(--text);
+  background: rgb(var(--panel-rgb) / 0.82);
   transition: opacity 0.2s;
   user-select: none;
 }
@@ -16,8 +16,8 @@
 }
 
 .label[data-hinted='true'] {
-  border-color: #7cf4da;
-  color: #7cf4da;
+  border-color: var(--mint);
+  color: var(--mint);
   box-shadow: 0 0 14px rgba(124, 244, 218, 0.45);
 }
 
@@ -26,15 +26,15 @@
   border-radius: 999px;
   font: 700 11px/1.3 var(--font-sans);
   white-space: nowrap;
-  color: #062019;
-  background: #7cf4da;
+  color: var(--on-accent);
+  background: var(--mint);
   pointer-events: none;
 }
 
 .ghostTag[data-snap='false'] {
-  color: #7cf4da;
-  background: rgba(6, 32, 25, 0.85);
-  border: 1px solid #7cf4da;
+  color: var(--mint);
+  background: rgb(var(--panel-rgb) / 0.85);
+  border: 1px solid var(--mint);
 }
 
 .ghostTag[data-hidden='true'] {

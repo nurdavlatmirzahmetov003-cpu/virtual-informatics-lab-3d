@@ -3,6 +3,7 @@ import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { QualitySelect } from '@/components/ui/QualitySelect';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import styles from './TopBar.module.css';
 
 const NAV: ReadonlyArray<{ to: string; label: TranslationKey; end?: boolean }> = [
@@ -39,6 +40,7 @@ export function TopBar() {
 
       <div className={styles.controls}>
         <QualitySelect />
+        <ThemeToggle />
         <LanguageSwitcher />
       </div>
     </header>

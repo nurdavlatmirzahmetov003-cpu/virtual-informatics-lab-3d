@@ -35,7 +35,7 @@
   justify-content: space-between;
   gap: var(--space-3);
   padding: 7px var(--space-3);
-  background: rgba(10, 12, 18, 0.85);
+  background: rgb(var(--panel-rgb) / 0.85);
   font-size: var(--fs-sm);
 }
 
@@ -62,7 +62,7 @@
   grid-template-columns: minmax(96px, 0.8fr) 1.2fr;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
-  background: rgba(10, 12, 18, 0.85);
+  background: rgb(var(--panel-rgb) / 0.85);
 }
 
 .specs dt {

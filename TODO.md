@@ -1,11 +1,12 @@
 # TODO
 
 ## V2-1 (AUDIT_V2.md нәтижелері бойынша)
-- [ ] A1: Low-да арзан AA (MSAA 2–4× немесе SMAA), Intel UHD-де өлшеу
-- [ ] A3: тесік торлы материалдарға `alphaToCoverage` (Chassis, Gpu, Psu, HardwareExplorer/placeholders)
-- [ ] T1: GLB текстураларына сапа бойынша anisotropy (Low 2 / Medium 4 / High 8 / Ultra 16)
-- [ ] T2/T4: hero модельдерге 2K KTX2 тек High/Ultra-да (энкодер орнату — пайдаланушыдан сұрау)
-- [ ] T3/G5: жарқын градиентті стиль, Low жарықтандыруы
+- [x] A1: Low-да MSAA (өлшенді: −3…−10 FPS, 70+ қалды)
+- [x] A3: тесік торлы материалдарға `alphaToCoverage` (GLB MASK-қа емес — дақ береді)
+- [x] T1: anisotropy сапа бойынша (Low 4 / Medium 8 / High–Ultra 16)
+- [ ] T2/T4: 2K KTX2 `_hd.glb` файлдарын жасау — код дайын, toktx (KTX-Software) орнатылуын күтеді → `npm run assets:optimize`
+- [x] T3/G5: жарық/қараңғы тема, градиенттер, 3D бөлме палитрасы мен exposure
+- [ ] Low-да MSAA қалсын ба — пайдаланушы шешімі
 - [ ] A2: жұқа қабырғалы (кулер/радиатор) модельдердің LOD1-і — текстура/normal map
 ## V2-2 (ASSET_SOURCING.md)
 - [ ] Жүктеу 1-топ (V2-2a, 24 модель) — пайдаланушы Sketchfab-қа кіреді, әр жүктеуге рұқсат сұралады

@@ -23,16 +23,16 @@
 }
 
 .primary {
-  background: linear-gradient(180deg, #4fe0fb, var(--accent-strong));
-  color: #00131c;
+  background: linear-gradient(180deg, var(--accent-bright), var(--accent-strong));
+  color: var(--on-accent);
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+    0 0 0 1px rgb(var(--ink-rgb) / 0.18) inset,
     0 10px 30px -10px var(--accent-glow);
 }
 
 .primary:hover {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.25) inset,
+    0 0 0 1px rgb(var(--ink-rgb) / 0.25) inset,
     0 14px 40px -10px var(--accent-glow);
 }
 

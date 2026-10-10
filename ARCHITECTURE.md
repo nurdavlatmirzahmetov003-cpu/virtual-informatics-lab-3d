@@ -138,6 +138,22 @@ legacy/                     ескі ES-module прототип (python http.ser
 
 35. **V2 ассет пайплайны (Blender).** Модельге тән барлық нәрсе JSON конфигте (`scripts/blender/configs/`), Python скрипті жалпы (`pipeline.py`). Бөлшектер = GLB-дегі атаулы node-тар (id snake_case), teardown деректері node extras-та: `part`, `labelKey` (locale кілті), `explode` (метр, glTF осьтері), `order`; React-та координаттар жазылмайды. Порттар = бос node `port_<type>_<n>` бөлшегінің ішінде, +Z — штекер бағыты, extras `{port, dir, labelKey}`; порт түрлерінің тізімі `DEVICE_CATALOG.md`-де (V2-6 кабельдері осы маркерлерге жабысады). Модельдер нақты метрлік өлшемде, жерде, бөлшек origin-і өз ортасында. Аралық файлдар `assets-src/blender/` (git-ке кірмейді); веб-оңтайландыру бөлшектерді біріктірмеуі тиіс. Өнім варианттары жеке GLB немесе `<base>.glb#<product-id>` node.
 
+36. **Тема.**
+    - `lib/theme`: режим `dark | light | system` (settings, әдепкі dark). Шешілген тема `<html data-theme>`-де: main.tsx бірінші кадрға дейін қояды, AppShell жаңартады.
+    - CSS: барлық түс `tokens.css`-те; жарық тема `:root[data-theme='light']` ішінде, сол атаулармен.
+    - Мөлдір түстер арна токендері арқылы жазылады: `rgb(var(--ink-rgb) / a)` (сызық/толтыру), `rgb(var(--panel-rgb) / a)` (шыны панель), `rgb(var(--shadow-rgb) / a)`.
+    - Модуль CSS-те тікелей түс тек мағыналық реңк үшін қалады (success/warning тинттері).
+    - 3D: `useScenePalette()` → `EnvironmentLighting` (градиент фон, тұман, exposure, IBL) және `Room`.
+    - Контраст тестпен тексеріледі (`test:visual`).
+37. **Көрнекі сапа деңгейлері.**
+    - `QualityPreset` өрістері:
+      - `antialias` — контекст MSAA, барлық деңгейде;
+      - `multisampling` + `smaa` — post chain, High/Ultra;
+      - `anisotropy` — жүктелгенде қолданылады, GPU шегіне three өзі қысады;
+      - `hdTextures`.
+    - 2K close-up: `<name>_hd.glb` негізгі файлмен бірдей тазаланған геометриядан жасалады. Сондықтан `HdTextures` mesh пен материалдарды ретімен сәйкестендіріп, тек текстура слоттарын ауыстырады; сәйкес келмесе ештеңе өзгермейді.
+    - Модель экранда > 380 px болғанда HD бір рет сұралады; retain/dispose ортақ кэш арқылы.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

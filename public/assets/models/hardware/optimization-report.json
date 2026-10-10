@@ -30,6 +30,7 @@
       "triangles": 23134,
       "textureMB": 0.4
     },
+    "hd": null,
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -75,6 +76,7 @@
       }
     },
     "lod1": null,
+    "hd": null,
     "edits": {
       "removedNodes": [
         "wire_Keyboard_0",
@@ -152,6 +154,7 @@
       "triangles": 7114,
       "textureMB": 0
     },
+    "hd": null,
     "edits": {
       "removedNodes": [
         "Cord_MousePlug_plastic_B3_0",
@@ -195,6 +198,7 @@
       "triangles": 15729,
       "textureMB": 3.3
     },
+    "hd": null,
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -288,6 +292,7 @@
       }
     },
     "lod1": null,
+    "hd": null,
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -339,6 +344,7 @@
       }
     },
     "lod1": null,
+    "hd": null,
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -401,6 +407,7 @@
       "triangles": 19514,
       "textureMB": 0.3
     },
+    "hd": null,
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -440,6 +447,7 @@
       }
     },
     "lod1": null,
+    "hd": null,
     "edits": {
       "removedNodes": [
         "Object_21",
@@ -526,6 +534,7 @@
       }
     },
     "lod1": null,
+    "hd": null,
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -577,6 +586,7 @@
       }
     },
     "lod1": null,
+    "hd": null,
     "edits": {
       "removedNodes": [
         "Object_78",
@@ -613,6 +623,7 @@
       }
     },
     "lod1": null,
+    "hd": null,
     "edits": {
       "removedNodes": [
         "Object_10"
@@ -647,6 +658,7 @@
       }
     },
     "lod1": null,
+    "hd": null,
     "edits": {
       "removedNodes": [
         "Object_4",
@@ -697,6 +709,7 @@
       "triangles": 17460,
       "textureMB": 3
     },
+    "hd": null,
     "edits": {
       "removedNodes": [],
       "textures": "WebP q88, ≤ 1024px, adaptive size (PSNR ≥ 45 dB); Meshopt; welded and merged static meshes",
@@ -789,6 +802,7 @@
       "triangles": 14782,
       "textureMB": 1
     },
+    "hd": null,
     "edits": {
       "removedNodes": [
         "pCylinder4_blinn1_0",
@@ -843,6 +857,7 @@
       }
     },
     "lod1": null,
+    "hd": null,
     "edits": {
       "removedNodes": [
         "Cube_Material_0",

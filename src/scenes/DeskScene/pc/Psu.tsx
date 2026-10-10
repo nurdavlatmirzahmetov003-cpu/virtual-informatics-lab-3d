@@ -45,7 +45,7 @@ export function Psu({ tex }: { tex: PcTextures }) {
       <group position-z={-PL / 2 - 0.0006}>
         <mesh position-x={-0.02} rotation-y={Math.PI}>
           <planeGeometry args={[0.1, 0.07]} />
-          <meshStandardMaterial color="#0d0e11" metalness={0.5} roughness={0.5} alphaMap={tex.vent} alphaTest={0.5} side={2} />
+          <meshStandardMaterial color="#0d0e11" metalness={0.5} roughness={0.5} alphaMap={tex.vent} alphaTest={0.5} alphaToCoverage side={2} />
         </mesh>
         <mesh position={[0.05, 0.012, -0.004]}>
           <boxGeometry args={[0.03, 0.022, 0.008]} />

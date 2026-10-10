@@ -1,31 +1,60 @@
 /* Design tokens — single source of truth for colors, type, spacing, motion. */
+/*
+ * Two themes share every token name. Dark (default) is the "night lab":
+ * graphite-blue with soft cyan/violet light; light is the "day lab". Colours
+ * that are drawn with alpha use channel tokens: rgb(var(--ink-rgb) / 0.08).
+ * Text colours keep ≥ 4.5:1 contrast on --bg and --bg-elevated in both themes.
+ */
 :root {
   color-scheme: dark;
 
-  /* surfaces: deep graphite → dark glass */
-  --bg: #07080c;
-  --bg-elevated: #0d0f15;
-  --surface: rgba(18, 21, 30, 0.72);
-  --surface-strong: rgba(22, 26, 37, 0.92);
-  --surface-hover: rgba(34, 40, 56, 0.8);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
+  /* surfaces */
+  --bg: #0a0d18;
+  --bg-elevated: #121729;
+  --surface: rgba(20, 26, 46, 0.72);
+  --surface-strong: rgba(23, 30, 52, 0.92);
+  --surface-hover: rgba(40, 50, 82, 0.8);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  /* channels: overlays on top of surfaces (lines, fills) and glass panels */
+  --ink-rgb: 255 255 255;
+  --panel-rgb: 12 16 30;
+  --shadow-rgb: 0 0 0;
+  /* glow behind text drawn over the 3D scene */
+  --text-halo: rgba(0, 0, 0, 0.45);
 
   /* text */
-  --text: #eef1f6;
-  --text-muted: #a3abbb;
-  --text-dim: #6c7486;
+  --text: #f1f4fa;
+  --text-muted: #aab3c5;
+  --text-dim: #8590a6;
+  --on-accent: #04121a;
 
-  /* accent: cold cyan / electric blue */
+  /* accent: cyan → indigo → violet */
   --accent: #38d6f5;
   --accent-strong: #1fb8e0;
+  --accent-bright: #4fe0fb;
   --accent-blue: #3b82ff;
   --accent-glow: rgba(56, 214, 245, 0.35);
   --accent-soft: rgba(56, 214, 245, 0.12);
+  --violet: #a78bfa;
+  --violet-soft: #c4b5fd;
+  --mint: #7cf4da;
+  --pink: #ff7ab6;
+  --gold: #f4c97a;
 
   --success: #3ddc97;
   --warning: #ffb547;
   --danger: #ff5c7a;
+  --danger-soft: #ff8fa3;
+
+  /* gradients */
+  --gradient-accent: linear-gradient(135deg, #38d6f5 0%, #6f8bff 55%, #b07cff 100%);
+  --gradient-page:
+    radial-gradient(1100px 620px at 8% -12%, rgba(56, 214, 245, 0.17), transparent 62%),
+    radial-gradient(900px 560px at 96% -6%, rgba(139, 112, 255, 0.17), transparent 60%),
+    radial-gradient(900px 700px at 50% 115%, rgba(56, 120, 245, 0.1), transparent 60%),
+    linear-gradient(180deg, #0d1226 0%, #0a0d18 55%, #090c16 100%);
+  --gradient-panel: linear-gradient(160deg, rgba(56, 214, 245, 0.07), rgba(139, 112, 255, 0.05) 60%, transparent);
 
   /* typography */
   --font-sans: 'Manrope Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -71,6 +100,53 @@
   --z-overlay: 10;
   --z-topbar: 50;
   --z-loader: 100;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f4f7fc;
+  --bg-elevated: #ffffff;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-strong: rgba(255, 255, 255, 0.95);
+  --surface-hover: rgba(226, 235, 249, 0.92);
+  --border: rgba(15, 23, 42, 0.1);
+  --border-strong: rgba(15, 23, 42, 0.2);
+  --ink-rgb: 15 23 42;
+  --panel-rgb: 255 255 255;
+  --shadow-rgb: 30 41 70;
+  --text-halo: rgba(255, 255, 255, 0.75);
+
+  --text: #0f172a;
+  --text-muted: #3e4a63;
+  --text-dim: #56627c;
+  --on-accent: #ffffff;
+
+  --accent: #0a7396;
+  --accent-strong: #075f7d;
+  --accent-bright: #0b86ad;
+  --accent-blue: #2563eb;
+  --accent-glow: rgba(10, 140, 190, 0.28);
+  --accent-soft: rgba(10, 140, 190, 0.1);
+  --violet: #6d4fd8;
+  --violet-soft: #5b3fc4;
+  --mint: #0f7f6c;
+  --pink: #b8326e;
+  --gold: #8a6200;
+
+  --success: #0b7a57;
+  --warning: #8a6200;
+  --danger: #c62b4a;
+  --danger-soft: #b8324f;
+
+  --gradient-accent: linear-gradient(135deg, #0ea5d0 0%, #5b6cf0 55%, #9a5cf0 100%);
+  --gradient-page:
+    radial-gradient(1100px 620px at 8% -12%, rgba(56, 200, 245, 0.22), transparent 62%),
+    radial-gradient(900px 560px at 96% -6%, rgba(150, 120, 255, 0.2), transparent 60%),
+    radial-gradient(900px 700px at 50% 115%, rgba(80, 140, 255, 0.12), transparent 60%),
+    linear-gradient(180deg, #eef4fd 0%, #f4f7fc 55%, #f7f9fd 100%);
+  --gradient-panel: linear-gradient(160deg, rgba(14, 165, 208, 0.07), rgba(120, 90, 240, 0.05) 60%, transparent);
+  --shadow-lg: 0 24px 60px rgba(30, 41, 70, 0.16);
 }
 
 @media (prefers-reduced-motion: reduce) {

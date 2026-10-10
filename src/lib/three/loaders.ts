@@ -6,7 +6,7 @@ import { QUALITY_PRESETS } from '@/lib/quality/presets';
 import { selectEffectiveQuality, useSettingsStore } from '@/store/settingsStore';
 import { lodFile, splitModelUrl } from './modelUrls';
 
-export { lodFile, splitModelUrl } from './modelUrls';
+export { hdFile, lodFile, splitModelUrl } from './modelUrls';
 
 const base = import.meta.env.BASE_URL;
 

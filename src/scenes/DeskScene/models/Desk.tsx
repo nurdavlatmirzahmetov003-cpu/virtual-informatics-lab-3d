@@ -45,7 +45,7 @@ export function Desk({ surface = 'lightWood' }: { surface?: DeskSurface }) {
     },
   );
 
-  useSceneTextures(wood, [map, normalMap, roughnessMap], preset.maxTextureSize);
+  useSceneTextures(wood, [map, normalMap, roughnessMap], preset.maxTextureSize, preset.anisotropy);
 
   const geo = useDisposable(
     () => ({

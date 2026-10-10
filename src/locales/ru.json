@@ -16,13 +16,20 @@
     "language": "Язык",
     "quality": "Качество графики",
     "qualityAuto": "Авто",
-    "qualityDetected": "{level} (авто)"
+    "qualityDetected": "{level} (авто)",
+    "theme": "Тема",
+    "themeCurrent": "Тема: {theme} (переключить)"
   },
   "quality": {
     "low": "Низкое",
     "medium": "Среднее",
     "high": "Высокое",
     "ultra": "Ультра"
+  },
+  "theme": {
+    "dark": "Тёмная",
+    "light": "Светлая",
+    "system": "Системная"
   },
   "loader": {
     "title": "3D-лаборатория загружается",

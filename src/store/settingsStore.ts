@@ -4,12 +4,14 @@ import { DEFAULT_LANGUAGE, isLanguage, loadLanguage, type Language } from '@/lib
 import { isQualityMode, stepQuality, type QualityLevel, type QualityMode } from '@/lib/quality/presets';
 import { detectQuality } from '@/lib/quality/detect';
 import { STORAGE_KEYS, STORAGE_VERSIONS, safeStorage } from '@/lib/storage';
+import { isThemeMode, type ThemeMode } from '@/lib/theme';
 
 interface PersistedSettings {
   language: Language;
   qualityMode: QualityMode;
   soundEnabled: boolean;
   soundVolume: number;
+  theme: ThemeMode;
 }
 
 interface SettingsState extends PersistedSettings {
@@ -20,6 +22,7 @@ interface SettingsState extends PersistedSettings {
   /** Called by the performance monitor; only affects `auto` mode. */
   degradeAutoQuality: () => void;
   setSoundEnabled: (enabled: boolean) => void;
+  setTheme: (theme: ThemeMode) => void;
 }
 
 const DEFAULTS: PersistedSettings = {
@@ -27,6 +30,8 @@ const DEFAULTS: PersistedSettings = {
   qualityMode: 'auto',
   soundEnabled: false,
   soundVolume: 0.25,
+  // the premium night lab stays the default; light and system are opt-in
+  theme: 'dark',
 };
 
 const memoryStorage = new Map<string, string>();
@@ -59,16 +64,18 @@ export const useSettingsStore = create<SettingsState>()(
         }
       },
       setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
+      setTheme: (theme) => set({ theme }),
     }),
     {
       name: STORAGE_KEYS.settings,
       version: STORAGE_VERSIONS.settings,
       storage,
-      partialize: ({ language, qualityMode, soundEnabled, soundVolume }) => ({
+      partialize: ({ language, qualityMode, soundEnabled, soundVolume, theme }) => ({
         language,
         qualityMode,
         soundEnabled,
         soundVolume,
+        theme,
       }),
       // Validate whatever is on disk instead of trusting it; future schema
       // bumps add their transforms here keyed on `version`.
@@ -80,6 +87,7 @@ export const useSettingsStore = create<SettingsState>()(
           soundEnabled: typeof raw.soundEnabled === 'boolean' ? raw.soundEnabled : DEFAULTS.soundEnabled,
           soundVolume:
             typeof raw.soundVolume === 'number' ? Math.min(1, Math.max(0, raw.soundVolume)) : DEFAULTS.soundVolume,
+          theme: isThemeMode(raw.theme) ? raw.theme : DEFAULTS.theme,
         };
       },
     },

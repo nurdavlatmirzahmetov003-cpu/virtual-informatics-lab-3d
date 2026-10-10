@@ -92,6 +92,28 @@ export function capTextureSize(texture: Texture, max: number) {
   texture.needsUpdate = true;
 }
 
+/**
+ * Anisotropic filtering by quality (three clamps it to the GPU maximum).
+ * GLB cut-out (MASK) materials keep their plain alpha test: alpha-to-coverage
+ * turned minified masks (case top vents) into dark speckle; it is used only
+ * on the project's own grille materials, whose alpha maps are authored for it.
+ */
+export function tuneTreeTextures(root: Object3D, anisotropy: number) {
+  root.traverse((o) => {
+    const mats = (o as Mesh).material;
+    if (!mats) return;
+    for (const m of Array.isArray(mats) ? mats : [mats]) {
+      for (const v of Object.values(m)) {
+        const t = v as Texture | null;
+        if (!t?.isTexture || t.anisotropy === anisotropy) continue;
+        t.anisotropy = anisotropy;
+        // only re-upload a texture that is already on the GPU
+        if (t.version > 0) t.needsUpdate = true;
+      }
+    }
+  });
+}
+
 export function capTreeTextures(root: Object3D, max: number) {
   const seen = new Set<Texture>();
   root.traverse((o) => {

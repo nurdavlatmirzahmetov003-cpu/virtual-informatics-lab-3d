@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## 0.19.0 — 2026-10-10 — V2-1: Көрнекі сапа және жарқын стиль
+- **Антиалиасинг**
+  - Low-да MSAA.
+  - High/Ultra-да MSAA + SMAA (`SMAA` post chain-нің соңында, tone mapping-тен кейін).
+  - High DPR ≤ 2.
+  - Пресеттерге `smaa`, `anisotropy`, `hdTextures` өрістері қосылды.
+- **Текстуралар**
+  - anisotropy: GLB-ге (`tuneTreeTextures`), үстел мен еденге (`useSceneTextures(..., anisotropy)`).
+  - Тор материалдарына `alphaToCoverage`.
+- **2K close-up**
+  - `HD_MODELS` / `hdFile()` (`modelUrls.ts`).
+  - `ModelLoader` → `HdTextures`: экранда > 380 px болғанда, тек High/Ultra-да, тек текстураларды ауыстырады; өз ErrorBoundary/Suspense-і бар.
+  - `optimize-assets.mjs`: toktx бар болса `<name>_hd.glb` жасайды — ≤ 2048 px адаптивті, UASTC, Zstd 18, mipmap, түс sRGB / деректер linear, `KHR_texture_basisu`.
+  - toktx жоқ болса бұл қадам өткізіледі, шығыс файлдары бит-бит бірдей.
+- **Тема**
+  - `lib/theme` (dark/light/system, `SCENE_PALETTES`), `useTheme` / `useScenePalette`, `ThemeToggle` (TopBar).
+  - `data-theme` html-де бірінші кадрға дейін қойылады; settings storage v2 (`theme`, миграция).
+  - `tokens.css`: жаңартылған қараңғы тема + жарық тема, градиенттер (`--gradient-page/accent/panel`), арна токендері; ~210 тікелей түс токенге ауыстырылды.
+  - Жарық темаға түзетілгендер: лаб акценттері (`--x-accent`, `--c-found`, `--l-on`), Network Lab тақталары, AssemblyLab 3D белгілері, анатомия кеңесі.
+- **3D**
+  - `EnvironmentLighting`: тема градиенті фон (CanvasTexture), тұман, exposure, IBL күшейтуі.
+  - `Room`: палитра түстері.
+  - Setup Studio жинау жарығы: `envBoost`.
+- **Құралдар:** `perf-measure.mjs --theme=`; `npm run test:visual` — тема циклі, HD тізімі скриптпен сәйкестігі, пресет инварианттары, екі теманың контрасты ≥ 4.5:1.
+- **Өлшем:** Medium баяулаған жоқ (басты бет 69 → 73 FPS); Low −3…−10 FPS (MSAA, 70+ қалды). Толық кесте — PROJECT_STATE.md.
+
 ## 0.18.0 — 2026-10-10 — V2-0: Аудит, құрылғылар каталогы, ассет жоспары
 - `AUDIT_V2.md`: 4 бет × Low/Medium/High өлшемі (Intel UHD), 12 скриншот + 3 үлкейтілген салыстыру (`docs/audit-v2/`), 15 GLB-нің үшбұрыш/текстура/GPU жады кестесі, тісті жиектер (Low-да AA жоқ; alphaTest тор; жұқа қабырғалар), бұлдыр текстуралар (GLB anisotropy = 1, 1024 px шегі, Low 512 px), V2 бюджеттері.
 - `DEVICE_CATALOG.md`: 60 құрылғы (ПК ішкі 12, жад 9, енгізу 7, шығару 7, желі 9, мобильді/басқа 11, кабель 5), 7 зертхана зонасы, kk/ru/en атаулары, оқушы/ересек түсіндірмесі, бөлшектеу (15 толық, 27 қарапайым), порттар (`port_<type>` кілттері), quiz тақырыптары.

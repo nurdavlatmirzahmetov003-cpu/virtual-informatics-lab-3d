@@ -37,7 +37,7 @@
   padding: 9px var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: rgba(10, 12, 18, 0.6);
+  background: rgb(var(--panel-rgb) / 0.6);
   color: var(--text-muted);
   font-size: var(--fs-sm);
   cursor: pointer;
@@ -141,7 +141,7 @@
 .primary {
   border: 0;
   background: linear-gradient(135deg, var(--accent), var(--accent-blue));
-  color: #00131c;
+  color: var(--on-accent);
 }
 
 .secondary {

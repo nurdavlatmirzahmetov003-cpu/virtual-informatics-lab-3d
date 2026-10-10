@@ -34,6 +34,7 @@ Windows: `start.bat` (қажет болса `npm install` жасайды да, d
 | `npm run assets:optimize` | Шикі лицензияланған GLB → Meshopt + WebP 1K |
 | `npm run assets:validate` | 16 модельдің геометриясы, декодталуы, текстуралары |
 | `npm run blender:pipeline` | Blender 5.1 headless: GLB → тазалау → бөлшектерге бөлу → порт маркерлері → LOD → GLB (`scripts/blender/configs/*.json`, ASSET_SOURCING.md §6) |
+| `npm run test:visual` | Тема, 2K close-up тізімі, сапа пресеттері, екі теманың мәтін контрасты |
 | `npm run test:blender` | Blender конфигтерін және шыққан GLB-ді тексеру (Blender-сіз) |
 
 ## Қарау

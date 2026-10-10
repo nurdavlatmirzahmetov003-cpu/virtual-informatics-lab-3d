@@ -5,6 +5,11 @@
 // lighter level (fewer triangles, ≤ 256 px textures) used far away and on the
 // Low preset / phones.
 //
+// Close-up level (V2-1): hero models also get `<name>_hd.glb` — the same
+// cleaned geometry with ≤ 2048 px textures in KTX2/UASTC (Khronos toktx must be
+// installed: https://github.com/KhronosGroup/KTX-Software; TOKTX=path works
+// too). Without toktx this step is skipped and the site simply keeps 1K.
+//
 // Adaptive textures: each texture keeps the smallest size whose bilinear
 // upscale stays visually lossless against the 1024 px reference
 // (PSNR ≥ 45 dB). Textures with real detail stay at 1024; constant or nearly
@@ -15,8 +20,11 @@ import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
 import { dedup, flatten, join, prune, weld, simplify, meshopt, getBounds, cloneDocument } from '@gltf-transform/functions';
 import { MeshoptEncoder, MeshoptDecoder, MeshoptSimplifier } from 'meshoptimizer';
 import sharp from 'sharp';
-import { mkdir, writeFile, stat } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { mkdir, writeFile, stat, readFile, rm, mkdtemp } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
+import { resolve, join as joinPath } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const out = resolve(root, 'public/assets/models/hardware');
@@ -32,6 +40,12 @@ const LOD1 = {
   monitor_ultrawide: [0.3, 0.006], cooler_tower: [0.25, 0.006], headset_gaming: [0.3, 0.006],
   motherboard_x570: [0.45, 0.004], speakers: [0.35, 0.006], mouse_gaming: [0.4, 0.006],
 };
+/** Close-up level: same geometry, 2K KTX2 textures (keep in sync with HD_MODELS in src/lib/three/modelUrls.ts). */
+const HD = new Set(['keyboard_mech', 'motherboard_x570', 'cpu_am4', 'ram_rgb', 'cooler_tower', 'gpu_triple_fan', 'ssd_m2', 'headset_gaming', 'speakers']);
+const HD_TEXTURE = 2048;
+const TOKTX = [process.env.TOKTX, 'C:/Program Files/KTX-Software/bin/toktx.exe', '/usr/local/bin/toktx', '/usr/bin/toktx'].find((p) => p && existsSync(p))
+  ?? (() => { try { execFileSync('toktx', ['--version'], { stdio: 'ignore' }); return 'toktx'; } catch { return null; } })();
+if (!TOKTX) console.warn('toktx not found: skipping the 2K KTX2 close-up level (_hd.glb)');
 const MAX_TEXTURE = 1024;
 const LOD_TEXTURE = 256;
 const MIN_PSNR = 45;
@@ -87,6 +101,52 @@ async function adaptiveTextures(doc, maxSize, adaptive = true) {
   // the WebP extension tells loaders these images are WebP
   doc.createExtension((await import('@gltf-transform/extensions')).EXTTextureWebP).setRequired(true);
   return decisions;
+}
+
+/** Texture roles: colour data is sRGB, everything else (normal, ORM…) linear. */
+function colourTextures(doc) {
+  const set = new Set();
+  for (const m of doc.getRoot().listMaterials()) {
+    if (m.getBaseColorTexture()) set.add(m.getBaseColorTexture());
+    if (m.getEmissiveTexture()) set.add(m.getEmissiveTexture());
+  }
+  return set;
+}
+
+/** ≤ 2048 px (adaptive), UASTC + Zstandard, full mip chain. */
+async function ktx2Textures(doc) {
+  const dir = await mkdtemp(joinPath(tmpdir(), 'vil3d-ktx-'));
+  const colour = colourTextures(doc);
+  const decisions = [];
+  let gpuBytes = 0;
+  try {
+    for (const [i, texture] of doc.getRoot().listTextures().entries()) {
+      const image = Buffer.from(texture.getImage());
+      const d = await adaptiveSize(image, HD_TEXTURE);
+      // block-compressed formats want multiple-of-4 sizes
+      const [w, h] = d.size.map((v) => Math.max(4, Math.round(v / 4) * 4));
+      const png = joinPath(dir, `${i}.png`);
+      const ktx = joinPath(dir, `${i}.ktx2`);
+      await sharp(image).resize(w, h, { fit: 'fill', kernel: 'lanczos3' }).png().toFile(png);
+      const srgb = colour.has(texture);
+      execFileSync(TOKTX, [
+        '--t2', '--encode', 'uastc', '--uastc_quality', '2', '--zcmp', '18', '--genmipmap',
+        // rate-distortion optimisation only on colour (normal maps keep full precision)
+        ...(srgb ? ['--uastc_rdo_l', '1.0'] : []),
+        '--assign_oetf', srgb ? 'srgb' : 'linear', '--assign_primaries', srgb ? 'bt709' : 'none',
+        ktx, png,
+      ], { stdio: 'ignore' });
+      texture.setImage(new Uint8Array(await readFile(ktx))).setMimeType('image/ktx2');
+      const uri = texture.getURI();
+      if (uri) texture.setURI(uri.replace(/\.\w+$/, '.ktx2'));
+      gpuBytes += w * h * (4 / 3); // BC7/ASTC: 1 byte per pixel + mips
+      decisions.push({ name: texture.getName() || null, from: d.from.join('x'), to: `${w}x${h}`, srgb });
+    }
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+  doc.createExtension((await import('@gltf-transform/extensions')).KHRTextureBasisu).setRequired(true);
+  return { decisions, gpuMB: +(gpuBytes / 1048576).toFixed(1) };
 }
 
 for (const name of names) {
@@ -148,6 +208,8 @@ for (const name of names) {
 
   // the light level starts from the same cleaned geometry and original textures
   const lodDoc = LOD1[name] ? cloneDocument(doc) : null;
+  // the close-up level too: identical meshes, so the site can swap textures only
+  const hdDoc = HD.has(name) && TOKTX ? cloneDocument(doc) : null;
 
   const textures = await adaptiveTextures(doc, MAX_TEXTURE);
   await doc.transform(prune(), meshopt({ encoder: MeshoptEncoder, level: 'high', quantizePosition: 16 }), prune());
@@ -166,14 +228,25 @@ for (const name of names) {
     lod = { file: lodFile, bytes: (await stat(resolve(out, lodFile))).size, triangles: triangles(lodDoc), textureMB: +(textureBytes(lodDoc) / 1048576).toFixed(1) };
   }
 
+  let hd = null;
+  if (hdDoc) {
+    hdDoc.setLogger(new Logger(Logger.Verbosity.WARN));
+    const { decisions, gpuMB } = await ktx2Textures(hdDoc);
+    await hdDoc.transform(prune(), meshopt({ encoder: MeshoptEncoder, level: 'high', quantizePosition: 16 }), prune());
+    const hdName = name + '_hd.glb';
+    await io.write(resolve(out, hdName), hdDoc);
+    hd = { file: hdName, bytes: (await stat(resolve(out, hdName))).size, gpuTextureMB: gpuMB, textures: decisions };
+  }
+
   const entry = {
     source: sourceName + '.glb', file, before,
     after: { bytes: (await stat(resolve(out, file))).size, triangles: triangles(doc), textureMB: +(textureBytes(doc) / 1048576).toFixed(1), primitives: doc.getRoot().listMeshes().reduce((s, m) => s + m.listPrimitives().length, 0), bounds: getBounds(doc.getRoot().listScenes()[0]) },
     lod1: lod,
+    hd,
     edits: { removedNodes: removed, textures: `WebP q${QUALITY}, ≤ ${MAX_TEXTURE}px, adaptive size (PSNR ≥ ${MIN_PSNR} dB); Meshopt; welded and merged static meshes`, textureSizes: textures },
   };
   report.push(entry);
-  console.log(`${file}: ${(before.bytes / 1e6).toFixed(2)} -> ${(entry.after.bytes / 1e6).toFixed(2)} MB, ${Math.round(entry.after.triangles / 1000)}k △, ${entry.after.textureMB} MB GPU tex${lod ? ` · ${lod.file} ${(lod.bytes / 1e6).toFixed(2)} MB, ${Math.round(lod.triangles / 1000)}k △` : ''}`);
+  console.log(`${file}: ${(before.bytes / 1e6).toFixed(2)} -> ${(entry.after.bytes / 1e6).toFixed(2)} MB, ${Math.round(entry.after.triangles / 1000)}k △, ${entry.after.textureMB} MB GPU tex${lod ? ` · ${lod.file} ${(lod.bytes / 1e6).toFixed(2)} MB, ${Math.round(lod.triangles / 1000)}k △` : ''}${hd ? ` · ${hd.file} ${(hd.bytes / 1e6).toFixed(2)} MB, ${hd.gpuTextureMB} MB GPU (KTX2)` : ''}`);
 }
 await writeFile(resolve(root, 'public/assets/models/hardware/optimization-report.json'), JSON.stringify(report, null, 2) + '\n');
 

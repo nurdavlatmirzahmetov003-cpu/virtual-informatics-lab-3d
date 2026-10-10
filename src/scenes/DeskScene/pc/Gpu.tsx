@@ -117,7 +117,7 @@ export function Gpu({ tex, fan, light }: { tex: PcTextures; fan: FanGeometries; 
       <group position={[X0 - 0.06, 0, -0.004]}>
         <mesh>
           <boxGeometry args={[0.12, 0.058, 0.0015]} />
-          <meshStandardMaterial color="#8d9198" metalness={0.9} roughness={0.3} alphaMap={tex.fineMesh} alphaTest={0.5} side={2} />
+          <meshStandardMaterial color="#8d9198" metalness={0.9} roughness={0.3} alphaMap={tex.fineMesh} alphaTest={0.5} alphaToCoverage side={2} />
         </mesh>
         {[-0.04, -0.02, 0.0, 0.025].map((x, i) => (
           <mesh key={x} position={[x, -0.016, -0.0012]}>

@@ -126,7 +126,7 @@ Global rules:
 | # | Stage | Main result |
 |---|---|---|
 | V2-0 ✅ | Audit, device catalog, asset plan | 50+ device list, source and licence per model, Blender pipeline proven — done 2026-10-10 (AUDIT_V2.md, DEVICE_CATALOG.md, ASSET_SOURCING.md, scripts/blender) |
-| V2-1 | Visual quality and brighter style | Anti-aliasing, texture sharpness, 2K/KTX2 hero assets, bright gradient theme |
+| V2-1 ✅ | Visual quality and brighter style | Anti-aliasing, texture sharpness, 2K/KTX2 hero assets, bright gradient theme |
 | V2-2a/b | High-quality, per-product models | Every catalog product has its own model; heavy models with LODs |
 | V2-3 | The large lab space | Zones, navigation, minimap, lazy zones |
 | V2-4a/b | 50+ devices with 360° viewer | Every device in 3D with info and a quiz |

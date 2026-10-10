@@ -9,6 +9,7 @@ import { OrbitControls } from '@react-three/drei';
 import { Vector3, type DirectionalLight, type PerspectiveCamera } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { EnvironmentLighting } from '@/components/3d/EnvironmentLighting';
+import { useScenePalette } from '@/hooks/useTheme';
 import { CAMERA_STATES, type CameraStateName } from '@/data/camera/cameraStates';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { resolveBuild, type ResolvedBuild } from '@/lib/studio/build';
@@ -66,6 +67,7 @@ function AssemblyPcController({ build }: { build: ResolvedBuild }) {
 /** Room light level: scales image-based lighting and the key/fill/rim lights together. */
 function AssemblyLighting() {
   const scene = useThree((s) => s.scene);
+  const { envBoost } = useScenePalette();
   const gl = useThree((s) => s.gl);
   const lights = useRef<DirectionalLight[] | null>(null);
   const refreshUntil = useRef(0);
@@ -93,7 +95,7 @@ function AssemblyLighting() {
       if (found.length) lights.current = found;
     }
     const level = assemblyRig.light;
-    scene.environmentIntensity = 0.6 * (0.35 + 0.65 * level);
+    scene.environmentIntensity = 0.6 * envBoost * (0.35 + 0.65 * level);
     for (const l of lights.current ?? []) l.intensity = (l.userData.baseIntensity as number) * level;
     // objects keep moving until the presentation: keep the shadow map current
     gl.shadowMap.autoUpdate = false;

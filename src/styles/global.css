@@ -14,7 +14,9 @@ body,
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--gradient-page);
+  background-color: var(--bg);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sans);
   font-size: var(--fs-md);
@@ -85,7 +87,7 @@ svg {
   z-index: 1000;
   padding: var(--space-2) var(--space-4);
   background: var(--accent);
-  color: #001018;
+  color: var(--on-accent);
   border-radius: var(--radius-sm);
   font-weight: 700;
 }

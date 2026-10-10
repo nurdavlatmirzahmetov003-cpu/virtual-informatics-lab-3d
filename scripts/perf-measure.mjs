@@ -2,7 +2,7 @@
  * Measures a running build in real Chrome (headless, GPU) over the DevTools
  * protocol — no extra dependencies. Start `npm run preview` first, then:
  *
- *   node scripts/perf-measure.mjs [baseUrl] [--quality=auto|low|medium|high|ultra] [--mobile] [--pages=/,/studio]
+ *   node scripts/perf-measure.mjs [baseUrl] [--quality=auto|low|medium|high|ultra] [--theme=dark|light] [--mobile] [--pages=/,/studio]
  *
  * Per page: bytes downloaded by type, time until the scene is ready, draw
  * calls / triangles / ms per frame (`__vil3d.bench`), rAF FPS over 5 s,
@@ -17,6 +17,8 @@ const args = process.argv.slice(2);
 const base = args.find((a) => !a.startsWith('--')) ?? 'http://localhost:4173';
 const opt = (name, def) => args.find((a) => a.startsWith(`--${name}=`))?.split('=')[1] ?? def;
 const quality = opt('quality', 'auto');
+/** --theme=dark|light|system: colour theme (V2-1) */
+const theme = opt('theme', 'dark');
 const mobile = args.includes('--mobile');
 /** --profile: 3 s CPU profile of the running scene, top functions by self time */
 const cpuProfile = args.includes('--profile');
@@ -126,13 +128,13 @@ if (mobile) {
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 }
 
-// fixed quality (or auto) via the persisted settings
+// fixed quality (or auto) and theme via the persisted settings
 await send('Page.navigate', { url: `${base}/credits` });
 await sleep(1500);
 await evaluate(`(() => {
   const k = 'vil3d:settings';
-  const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":1}');
-  s.state = { ...s.state, qualityMode: ${JSON.stringify(quality)} };
+  const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":2}');
+  s.state = { ...s.state, qualityMode: ${JSON.stringify(quality)}, theme: ${JSON.stringify(theme)} };
   localStorage.setItem(k, JSON.stringify(s));
 })()`);
 
@@ -154,7 +156,7 @@ function topFunctions(prof, n) {
 const kind = (u) =>
   /\.js(\?|$)/.test(u) ? 'js' : /\.css(\?|$)/.test(u) ? 'css' : /\.(glb|gltf|bin)(\?|$)/.test(u) ? 'models' : /\.(jpe?g|png|webp|ktx2)(\?|$)/.test(u) ? 'textures' : /\.hdr(\?|$)/.test(u) ? 'hdr' : /woff2?(\?|$)/.test(u) ? 'fonts' : /\.wasm|decoders\//.test(u) ? 'decoders' : 'other';
 
-const results = { base, quality, mobile, gpu: null, pages: {} };
+const results = { base, quality, theme, mobile, gpu: null, pages: {} };
 for (const p of pages) {
   requests.clear();
   errors.length = 0;
