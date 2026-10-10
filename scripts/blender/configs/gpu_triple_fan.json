@@ -1,0 +1,97 @@
+{
+  "name": "gpu_triple_fan",
+  "description": "Pipeline proof (V2-0): MSI RTX 3080 Gaming X Trio by M E U (CC BY 4.0) → teardown-ready GPU with port markers. Blender axes: card lying flat, fans facing +Z, I/O bracket at -X, PCIe edge at -Y.",
+  "input": "assets-src/sketchfab/gpu_triple_fan.glb",
+  "output": "assets-src/blender/gpu_triple_fan/gpu_triple_fan.glb",
+  "realSize": 0.323,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 0.00001,
+    "remove": [
+      { "materials": "^(msilogo1|msilogopng|geforcertx|gfrtx2)$" }
+    ]
+  },
+  "parts": [
+    {
+      "id": "gpu_chip",
+      "label": "devices.gpu.parts.chip",
+      "order": 6,
+      "explode": [0, 0, 0.22],
+      "rules": [{ "groups": "^(Cube\\.147_202|Plane\\.013_236)$" }]
+    },
+    {
+      "id": "fan_1",
+      "label": "devices.gpu.parts.fan",
+      "order": 1,
+      "explode": [-0.12, 0, 0.95],
+      "rules": [{ "groups": "^(Cylinder\\.004_5|Cylinder\\.052_254)$" }]
+    },
+    {
+      "id": "fan_2",
+      "label": "devices.gpu.parts.fan",
+      "order": 1,
+      "explode": [0, 0, 0.95],
+      "rules": [{ "groups": "^(Cylinder\\.078_400|Cylinder\\.050_252)$" }]
+    },
+    {
+      "id": "fan_3",
+      "label": "devices.gpu.parts.fan",
+      "order": 1,
+      "explode": [0.12, 0, 0.95],
+      "rules": [{ "groups": "^(Cylinder\\.006_6|Cylinder\\.051_253)$" }]
+    },
+    {
+      "id": "shroud",
+      "label": "devices.gpu.parts.shroud",
+      "order": 2,
+      "explode": [0, 0, 0.7],
+      "rules": [{ "groups": "^(Cube_0|Plane\\.0(0[4-9]|10)_\\d+)$" }]
+    },
+    {
+      "id": "io_bracket",
+      "label": "devices.gpu.parts.bracket",
+      "order": 4,
+      "explode": [-0.3, 0, 0],
+      "rules": [{ "groups": "^(Cube\\.002_2|Cube\\.184_238|Cylinder\\.088_265)$" }]
+    },
+    {
+      "id": "backplate",
+      "label": "devices.gpu.parts.backplate",
+      "order": 5,
+      "explode": [0, 0, -0.35],
+      "rules": [{ "groups": "^Cube\\.003_3$" }]
+    },
+    {
+      "id": "pcb",
+      "label": "devices.gpu.parts.pcb",
+      "order": 7,
+      "explode": [0, 0, 0],
+      "rules": [
+        { "groups": "^(Cube\\.146_159|Cube\\.18[5-6]_\\d+|Cube\\.193_\\d+)$" },
+        { "center": { "max": [1000, 1000, 0.75] }, "materials": "^(?!metal1$)" }
+      ]
+    },
+    {
+      "id": "heatsink",
+      "label": "devices.gpu.parts.heatsink",
+      "order": 3,
+      "explode": [0, 0, 0.42],
+      "fallback": true
+    }
+  ],
+  "ports": [
+    { "type": "pcie_x16", "part": "pcb", "at": [0.24, 0.0, 0.3], "dir": [0, -1, 0], "label": "ports.pcieX16" },
+    { "type": "displayport", "part": "io_bracket", "object": "Cube.002_2", "at": [0, 0.366, 0.707], "dir": [-1, 0, 0], "label": "ports.displayport" },
+    { "type": "displayport", "part": "io_bracket", "object": "Cube.002_2", "at": [0, 0.534, 0.707], "dir": [-1, 0, 0], "label": "ports.displayport" },
+    { "type": "hdmi", "part": "io_bracket", "object": "Cube.002_2", "at": [0, 0.703, 0.707], "dir": [-1, 0, 0], "label": "ports.hdmi" },
+    { "type": "displayport", "part": "io_bracket", "object": "Cube.002_2", "at": [0, 0.871, 0.707], "dir": [-1, 0, 0], "label": "ports.displayport" },
+    { "type": "pcie_8pin", "part": "pcb", "object": "Cube.189_241", "at": [0.5, 1, 0.5], "dir": [0, 1, 0], "label": "ports.pcie8pin" },
+    { "type": "pcie_8pin", "part": "pcb", "object": "Cube.190_242", "at": [0.5, 1, 0.5], "dir": [0, 1, 0], "label": "ports.pcie8pin" },
+    { "type": "pcie_8pin", "part": "pcb", "object": "Cube.191_243", "at": [0.5, 1, 0.5], "dir": [0, 1, 0], "label": "ports.pcie8pin" }
+  ],
+  "lod": { "ratio": 0.45, "minTris": 1500, "planarAngle": 2 },
+  "preview": {
+    "assembled": "docs/blender/gpu_triple_fan_assembled.jpg",
+    "exploded": "docs/blender/gpu_triple_fan_exploded.jpg"
+  }
+}

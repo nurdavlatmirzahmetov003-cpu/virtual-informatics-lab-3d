@@ -1,0 +1,68 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readdirSync } from 'node:fs';
+import path from 'node:path';
+import { validateConfig, checkOutput, verify } from './blender/verify-glb.mjs';
+
+const base = {
+  name: 'demo',
+  input: 'assets-src/sketchfab/demo.glb',
+  output: 'assets-src/blender/demo/demo.glb',
+  parts: [
+    { id: 'shell', rules: [{ groups: '^Case' }], explode: [0, 0, 1] },
+    { id: 'board', fallback: true },
+  ],
+  ports: [{ type: 'usb_a', part: 'shell' }],
+};
+
+test('validateConfig accepts a minimal valid config', () => {
+  assert.deepEqual(validateConfig(base), []);
+});
+
+test('validateConfig rejects duplicate ids, missing fallback, bad regex and unknown port parts', () => {
+  const bad = {
+    ...base,
+    parts: [
+      { id: 'shell', rules: [{ groups: '(' }] },
+      { id: 'shell', rules: [{ materials: 'x' }] },
+      { id: 'Bad-Id', rules: [] },
+    ],
+    ports: [{ type: 'hdmi', part: 'nowhere' }],
+  };
+  const errors = validateConfig(bad);
+  assert.ok(errors.some((e) => e.includes('unique')));
+  assert.ok(errors.some((e) => e.includes('fallback')));
+  assert.ok(errors.some((e) => e.includes('regex')));
+  assert.ok(errors.some((e) => e.includes('snake_case')));
+  assert.ok(errors.some((e) => e.includes('no rules')));
+  assert.ok(errors.some((e) => e.includes('unknown part')));
+});
+
+test('checkOutput finds missing parts, misplaced ports and a LOD that is not lighter', () => {
+  const info = {
+    triangles: 100,
+    parts: { shell: { node: 'shell', triangles: 60, explode: [0, 1, 0] } },
+    ports: [{ name: 'port_usb_a_1', type: 'usb_a', parent: 'board' }],
+  };
+  const errors = checkOutput(base, info, { triangles: 120 });
+  assert.ok(errors.some((e) => e.includes('"board" missing')));
+  assert.ok(errors.some((e) => e.includes('expected "shell"')));
+  assert.ok(errors.some((e) => e.includes('LOD1')));
+
+  const ok = {
+    triangles: 100,
+    parts: { shell: { node: 'shell', triangles: 60, explode: [0, 1, 0] }, board: { node: 'board', triangles: 40, explode: [0, 0, 0] } },
+    ports: [{ name: 'port_usb_a_1', type: 'usb_a', parent: 'shell' }],
+  };
+  assert.deepEqual(checkOutput(base, ok, { triangles: 50 }), []);
+});
+
+test('every committed pipeline config is valid (and its output, when built, matches it)', async () => {
+  const dir = path.join(import.meta.dirname, 'blender', 'configs');
+  const files = readdirSync(dir).filter((f) => f.endsWith('.json'));
+  assert.ok(files.length > 0);
+  for (const f of files) {
+    const r = await verify(path.join(dir, f));
+    assert.deepEqual(r.errors, [], `${f}: ${r.errors.join('; ')}`);
+  }
+});

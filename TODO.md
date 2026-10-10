@@ -1,5 +1,16 @@
 # TODO
 
+## V2-1 (AUDIT_V2.md нәтижелері бойынша)
+- [ ] A1: Low-да арзан AA (MSAA 2–4× немесе SMAA), Intel UHD-де өлшеу
+- [ ] A3: тесік торлы материалдарға `alphaToCoverage` (Chassis, Gpu, Psu, HardwareExplorer/placeholders)
+- [ ] T1: GLB текстураларына сапа бойынша anisotropy (Low 2 / Medium 4 / High 8 / Ultra 16)
+- [ ] T2/T4: hero модельдерге 2K KTX2 тек High/Ultra-да (энкодер орнату — пайдаланушыдан сұрау)
+- [ ] T3/G5: жарқын градиентті стиль, Low жарықтандыруы
+- [ ] A2: жұқа қабырғалы (кулер/радиатор) модельдердің LOD1-і — текстура/normal map
+## V2-2 (ASSET_SOURCING.md)
+- [ ] Жүктеу 1-топ (V2-2a, 24 модель) — пайдаланушы Sketchfab-қа кіреді, әр жүктеуге рұқсат сұралады
+- [ ] `optimize-assets.mjs`-ке бөлшектерді біріктірмейтін профиль (Blender шығысы үшін)
+
 - [x] PC Assembly Lab: 3D drag/snap + ghost ұяшық + keyboard, order/compatibility, boot/grade
 - [x] Progress core: versioned local persistence, best scores, attempts, achievements; AnatomyQuiz connected
 - [x] Educational labs: network, 5 algorithms, logic, 8 experiments; 40 assignments/progress percentage
