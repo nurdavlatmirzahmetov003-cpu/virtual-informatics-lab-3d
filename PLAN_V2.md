@@ -139,7 +139,7 @@ Global rules:
 | V2-11a/b | Gamification v2 and real-time | XP, levels, leaderboards, live quizzes, assembly races |
 | V2-12 | QA, security, hosting readiness | Tests, audit, Docker, deployment guide |
 
-Order: V2-0 → V2-1 → … → V2-12. The backend (V2-8) does not depend on the 3D stages and may start any time after V2-3 if preferred.
+Order: V2-0 → V2-1 → … → V2-12. **Owner decision (2026-10-10): build everything fully local first (no GitHub/cloud for now); buying a domain and hosting comes only after the local version is 100% complete.** The backend (V2-8) does not depend on the 3D stages and may start any time after V2-3 if preferred.
 
 ---
 
