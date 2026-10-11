@@ -15,7 +15,7 @@ import path from 'node:path';
 
 const args = process.argv.slice(2);
 const base = args.find((a) => !a.startsWith('--')) ?? 'http://localhost:4173';
-const opt = (name, def) => args.find((a) => a.startsWith(`--${name}=`))?.split('=')[1] ?? def;
+const opt = (name, def) => args.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? def;
 const quality = opt('quality', 'auto');
 /** --theme=dark|light|system: colour theme (V2-1) */
 const theme = opt('theme', 'dark');

@@ -3052,7 +3052,9 @@
     "maxScore": "{max} points",
     "labProgress": "{done}/{total} completed",
     "empty": "No tasks match this filter.",
-    "expected": "Expected result"
+    "expected": "Expected result",
+    "deviceSummary": "3 questions about a lab device: purpose, specs and use.",
+    "deviceInstructions": "Look at the device in the 3D lab (360°), read its details and answer 3 questions."
   },
   "achievements": {
     "toast": {
@@ -3227,6 +3229,1144 @@
         "description": "In the middle of the hall, a premium case on a turntable, with a monitor, gaming chair, keyboard and headset from the Setup Studio catalog around it.",
         "action": "Setup Studio"
       }
+    }
+  },
+  "devices": {
+    "cpu": {
+      "adult": "Executes instructions: cores and threads, clock speed (GHz), L1–L3 cache, TDP, socket (AM5, LGA1700/1851). F-series chips have no integrated graphics, so a graphics card is required.",
+      "use": "In every computer, laptop and smartphone: running programs, calculations, game logic, video encoding."
+    },
+    "cooler_air": {
+      "adult": "Heat pipes carry heat from the base to the fin stack and the fan blows it away. What matters: TDP rating, height (case clearance), mounting bracket, 4-pin PWM.",
+      "use": "In most home and school PCs: quiet, affordable and reliable cooling."
+    },
+    "motherboard": {
+      "adult": "Chipset, VRM power stages, DIMM slots, PCIe x16/x1, M.2, SATA, front-panel header. Form factors: ATX, mATX, Mini-ITX; the socket and memory type (DDR4/DDR5) must match the CPU.",
+      "use": "The base of every build: choosing parts starts with the motherboard."
+    },
+    "ram": {
+      "adult": "DDR4/DDR5 DIMM modules: capacity (GB), speed (MT/s), latency (CL). Two modules run faster in dual channel; DDR4 and DDR5 have different key notches and do not swap.",
+      "use": "Browser tabs, games, video editing and programming tools all use a lot of memory."
+    },
+    "gpu": {
+      "adult": "Graphics processor and video memory (VRAM), PCIe x16 bus, extra power (8-pin or 12V-2x6), HDMI/DisplayPort outputs. The monitor plugs into the graphics card.",
+      "use": "Games, 3D modelling, video editing, training AI models."
+    },
+    "psu": {
+      "adult": "Turns 230 V AC into 12/5/3.3 V DC. What matters: wattage, 80 PLUS efficiency, modular cables, the ATX 3.x standard.",
+      "use": "In every system unit. If it is too weak, the PC shuts down under heavy load."
+    },
+    "case_fan": {
+      "adult": "120/140 mm, speed (RPM), PWM (4-pin) or voltage (3-pin) control; static pressure vs airflow. Front fans take air in, rear and top fans push it out.",
+      "use": "Air exchange inside the case: the CPU and graphics card get cool air."
+    },
+    "hdd_35": {
+      "adult": "Magnetic platters, read/write head, actuator; 5400/7200 rpm, about 150–250 MB/s. Cheap per TB, but shock-sensitive and slower than an SSD.",
+      "use": "Photo and video archives, backups, CCTV recordings, NAS."
+    },
+    "ssd_nvme": {
+      "adult": "PCIe 3.0/4.0/5.0 ×4, 3500–14000 MB/s, M.2 2280, M-key. Speed depends on the controller and NAND; not every M.2 slot is NVMe, so check the board.",
+      "use": "System drive: Windows boots in seconds, games and programs open fast."
+    },
+    "monitor": {
+      "adult": "Diagonal, resolution, refresh rate (Hz), panel type (IPS/VA/OLED), response time, HDR, inputs (HDMI, DisplayPort, USB-C).",
+      "use": "Study, work, design (colour accuracy), esports (144–360 Hz)."
+    },
+    "keyboard": {
+      "adult": "Membrane vs mechanical switches, layouts (ANSI/ISO, KZ/RU), size (full, TKL, 75 %), connection (wired, 2.4 GHz, Bluetooth), polling rate.",
+      "use": "Typing, programming, shortcuts, games."
+    },
+    "mouse": {
+      "adult": "Optical sensor, DPI (sensitivity), polling rate (Hz), weight, wired or 2.4 GHz / Bluetooth receiver.",
+      "use": "Pointing, drawing, design, aiming in games."
+    },
+    "microphone": {
+      "adult": "Dynamic or condenser capsule, polar pattern, USB (digital) or XLR/3.5 mm (analogue), sample rate.",
+      "use": "Online lessons, podcasts, streaming, voice recording."
+    },
+    "webcam": {
+      "adult": "Resolution (1080p/4K), frame rate (30/60 fps), field of view, privacy shutter, built-in mic.",
+      "use": "Video calls, remote learning, streaming."
+    },
+    "speakers": {
+      "adult": "2.0 or 2.1 (with subwoofer), power (W RMS), frequency range, active vs passive, 3.5 mm or Bluetooth.",
+      "use": "Playing videos in class, music, films, games."
+    },
+    "headset": {
+      "adult": "Closed or open-back, drivers, impedance (ohms), microphone; 3.5 mm TRRS, USB or 2.4 GHz wireless.",
+      "use": "Online lessons, language learning, team chat in games."
+    },
+    "printer_inkjet": {
+      "adult": "The print head sprays ink droplets; cartridges or an ink tank, resolution (dpi), CMYK colours.",
+      "use": "Photos, colour posters, documents at home."
+    },
+    "cooler_liquid": {
+      "name": "AIO liquid cooler",
+      "student": "Liquid carries the processor’s heat to a radiator, where fans cool it down.",
+      "purpose": "To cool a powerful CPU quietly and efficiently.",
+      "adult": "Closed loop: pump block → tubes → 240/360 mm radiator → 2–3 fans. The pump connects to CPU_FAN/PUMP; the radiator mounts at the top or front of the case.",
+      "use": "Gaming and workstation PCs, showcase builds with glass cases.",
+      "specs": {
+        "radiator": {
+          "label": "Radiator",
+          "value": "240 or 360 mm"
+        },
+        "fans": {
+          "label": "Fans",
+          "value": "2–3 × 120 mm"
+        },
+        "pump": {
+          "label": "Pump",
+          "value": "In the block, 2500–3000 rpm"
+        },
+        "mount": {
+          "label": "Mounting",
+          "value": "Top or front of the case"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What carries the heat in an AIO cooler?",
+          "a": "Only air",
+          "b": "A liquid",
+          "c": "Electric current",
+          "explain": "The pump circulates liquid that carries heat from the CPU to the radiator."
+        },
+        "q2": {
+          "question": "How many 120 mm fans fit on a 360 mm radiator?",
+          "a": "Three",
+          "b": "Two",
+          "c": "One",
+          "explain": "360 ÷ 120 = 3. A longer radiator removes more heat."
+        },
+        "q3": {
+          "question": "Which header does the pump plug into?",
+          "a": "SATA data",
+          "b": "HDMI",
+          "c": "CPU_FAN / PUMP",
+          "explain": "The board controls the pump through the CPU_FAN or PUMP header."
+        }
+      }
+    },
+    "case": {
+      "name": "PC case",
+      "student": "The “house” for every part of the computer: it protects them from dust and knocks.",
+      "purpose": "To hold the parts, organise airflow and provide front-panel ports.",
+      "adult": "Form factors: ATX mid-tower, mATX, Mini-ITX. What matters: airflow (in at the front, out at the back and top), dust filters, clearance for GPU length and cooler height, front panel (USB, audio).",
+      "use": "Any desktop PC; glass-panel cases show off the build.",
+      "specs": {
+        "form": {
+          "label": "Form factor",
+          "value": "ATX mid-tower (≈ 45 × 23 × 47 cm)"
+        },
+        "airflow": {
+          "label": "Airflow",
+          "value": "In at the front → out at the back/top"
+        },
+        "panel": {
+          "label": "Front panel",
+          "value": "USB-A, USB-C, 3.5 mm audio, power button"
+        },
+        "clearance": {
+          "label": "Clearance",
+          "value": "GPU ≤ 36 cm, cooler ≤ 17 cm"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "How does air usually move through a case?",
+          "a": "In at the back, out at the front",
+          "b": "It does not move",
+          "c": "In at the front, out at the back and top",
+          "explain": "Cool air enters at the front; hot air rises and leaves through the rear and top fans."
+        },
+        "q2": {
+          "question": "What should you check in a case for a long graphics card?",
+          "a": "Its colour",
+          "b": "The maximum GPU length",
+          "c": "Its weight",
+          "explain": "The maker lists the longest card that fits, e.g. 360 mm."
+        },
+        "q3": {
+          "question": "What are the front-panel USB ports for?",
+          "a": "To plug in drives and devices conveniently",
+          "b": "To cool the case",
+          "c": "To connect the monitor",
+          "explain": "Front USB ports are wired to an internal board header, so you need not reach round the back."
+        }
+      }
+    },
+    "thermal_paste": {
+      "name": "Thermal paste",
+      "student": "A paste that fills tiny gaps between the CPU and the cooler and passes heat well.",
+      "purpose": "So heat flows from the CPU to the cooler without a barrier.",
+      "adult": "Displaces air (a poor conductor) from the micro-roughness of the metal faces. Thermal conductivity 4–12 W/m·K; a pea-sized drop is enough, more does not help.",
+      "use": "When fitting a cooler and replacing it every 2–3 years; when servicing laptops and consoles.",
+      "specs": {
+        "conductivity": {
+          "label": "Conductivity",
+          "value": "4–12 W/m·K"
+        },
+        "amount": {
+          "label": "Amount",
+          "value": "A pea-sized drop (≈ 0.1 ml)"
+        },
+        "base": {
+          "label": "Base",
+          "value": "Silicone + metal oxides"
+        },
+        "lifetime": {
+          "label": "Lifetime",
+          "value": "2–5 years"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Why is thermal paste needed?",
+          "a": "To push air out of the gaps and pass heat to the cooler",
+          "b": "To glue the cooler on",
+          "c": "To insulate the CPU electrically",
+          "explain": "Air conducts heat poorly; the paste fills the micro-gaps."
+        },
+        "q2": {
+          "question": "How much paste should you apply?",
+          "a": "The whole tube",
+          "b": "None at all",
+          "c": "A small pea-sized drop",
+          "explain": "The cooler’s pressure spreads the drop thinly; too much makes cooling worse."
+        },
+        "q3": {
+          "question": "What happens to a CPU without paste?",
+          "a": "It runs faster",
+          "b": "It overheats, throttles or shuts down",
+          "c": "Nothing changes",
+          "explain": "Heat cannot reach the cooler, so the CPU protects itself by slowing down (throttling)."
+        }
+      }
+    },
+    "internal_cables": {
+      "name": "Internal cables",
+      "student": "Cables that power the parts and connect them to each other.",
+      "purpose": "To bring power from the PSU and connect drives to the board.",
+      "adult": "ATX 24-pin (board), EPS 8-pin (CPU), PCIe 8-pin / 12V-2x6 (GPU), SATA power and data, front-panel and fan cables. Connectors are keyed, so they only fit one way.",
+      "use": "When building a PC; tidy cable management improves airflow.",
+      "specs": {
+        "atx": {
+          "label": "ATX 24-pin",
+          "value": "Main board power"
+        },
+        "eps": {
+          "label": "EPS 8-pin",
+          "value": "CPU power"
+        },
+        "pcie": {
+          "label": "PCIe 8-pin / 12V-2x6",
+          "value": "Extra GPU power"
+        },
+        "sata": {
+          "label": "SATA",
+          "value": "Drive power and data"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Which cable is the board’s main power?",
+          "a": "SATA",
+          "b": "ATX 24-pin",
+          "c": "HDMI",
+          "explain": "The 24-pin ATX cable feeds 12/5/3.3 V to the board."
+        },
+        "q2": {
+          "question": "Which cable powers the CPU?",
+          "a": "USB-C",
+          "b": "SATA data",
+          "c": "EPS 8-pin",
+          "explain": "The CPU is fed through the EPS 8-pin header at the top corner of the board."
+        },
+        "q3": {
+          "question": "Why can’t a connector go in the wrong way?",
+          "a": "They are keyed (a notch or tab)",
+          "b": "They are magnetic",
+          "c": "Cables are never confused",
+          "explain": "The key lets a plug go in only one way, so nothing gets damaged."
+        }
+      }
+    },
+    "cmos_battery": {
+      "name": "CMOS battery",
+      "student": "A small battery that keeps the clock and settings while the PC is off.",
+      "purpose": "So the UEFI (BIOS) settings and time are not lost.",
+      "adult": "A CR2032 lithium cell (3 V) powers the real-time clock (RTC) and UEFI settings; lasts 3–10 years. When it dies, the time and settings reset at every power-on.",
+      "use": "On every motherboard; if an old PC loses the time, the battery is the first thing to replace.",
+      "specs": {
+        "type": {
+          "label": "Type",
+          "value": "CR2032 (lithium)"
+        },
+        "voltage": {
+          "label": "Voltage",
+          "value": "3 V"
+        },
+        "life": {
+          "label": "Lifetime",
+          "value": "3–10 years"
+        },
+        "keeps": {
+          "label": "Keeps",
+          "value": "Time, date, UEFI settings"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What happens when the CMOS battery dies?",
+          "a": "The graphics card fails",
+          "b": "The PC gets faster",
+          "c": "The clock and settings reset at every power-on",
+          "explain": "The battery powers the RTC clock and UEFI settings when unplugged."
+        },
+        "q2": {
+          "question": "Which battery is usually on the board?",
+          "a": "CR2032",
+          "b": "AA",
+          "c": "A laptop battery",
+          "explain": "A CR2032 is a 3 V lithium cell, 20 mm across and 3.2 mm thick."
+        },
+        "q3": {
+          "question": "What is UEFI (BIOS)?",
+          "a": "A game",
+          "b": "Firmware that runs first when the PC starts",
+          "c": "An antivirus",
+          "explain": "UEFI checks the hardware and loads the OS; its settings live in CMOS memory."
+        }
+      }
+    },
+    "hdd_25": {
+      "name": "2.5″ hard disk",
+      "student": "A smaller hard disk for laptops: it stores data on a spinning magnetic platter.",
+      "purpose": "To store lots of data cheaply in laptops and external drives.",
+      "adult": "2.5″ form factor, 7–9.5 mm thick, 5400 rpm, SATA. Lighter and more frugal than 3.5″ but slower; in laptops it has been replaced by SSDs.",
+      "use": "External USB drives, older laptops, game consoles.",
+      "specs": {
+        "form": {
+          "label": "Form factor",
+          "value": "2.5″ (≈ 100 × 70 × 7 mm)"
+        },
+        "rpm": {
+          "label": "Spindle speed",
+          "value": "5400 rpm"
+        },
+        "capacity": {
+          "label": "Capacity",
+          "value": "500 GB – 5 TB"
+        },
+        "use": {
+          "label": "Where",
+          "value": "Laptop, external drive"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "How does a 2.5″ HDD differ from a 3.5″ one?",
+          "a": "Smaller, lighter, uses less power",
+          "b": "Always faster",
+          "c": "Has no moving parts",
+          "explain": "It still has a spinning platter inside, just smaller."
+        },
+        "q2": {
+          "question": "Where are 2.5″ HDDs used most?",
+          "a": "In server racks",
+          "b": "In external drives and older laptops",
+          "c": "In graphics cards",
+          "explain": "Its small size and USB power suit portable drives."
+        },
+        "q3": {
+          "question": "Why must you not drop a hard disk?",
+          "a": "It loses its magnetism",
+          "b": "It only fears cold",
+          "c": "The head can strike the spinning platter and destroy data",
+          "explain": "The head flies nanometres above the platter; a knock makes it touch the surface."
+        }
+      }
+    },
+    "ssd_sata": {
+      "name": "SATA SSD (2.5″)",
+      "student": "A fast drive with no moving parts: it stores data in flash memory chips.",
+      "purpose": "To speed up an older PC: Windows and programs open quickly.",
+      "adult": "NAND flash + controller in a 2.5″ shell. The SATA III interface caps it at ≈ 550–560 MB/s: slower than NVMe but 3–5× faster than an HDD; fits any PC with SATA.",
+      "use": "Upgrading old PCs and laptops, a second drive, a game library.",
+      "specs": {
+        "form": {
+          "label": "Form factor",
+          "value": "2.5″, 7 mm thick"
+        },
+        "interface": {
+          "label": "Interface",
+          "value": "SATA III (6 Gbit/s)"
+        },
+        "speed": {
+          "label": "Read speed",
+          "value": "≈ 550 MB/s"
+        },
+        "parts": {
+          "label": "Inside",
+          "value": "NAND chips + controller"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Why is a SATA SSD faster than an HDD?",
+          "a": "Its platter spins faster",
+          "b": "No mechanics: data is read from flash at once",
+          "c": "Its cable is thicker",
+          "explain": "An SSD has no head or platter, so access takes microseconds."
+        },
+        "q2": {
+          "question": "What limits a SATA SSD’s speed?",
+          "a": "The monitor",
+          "b": "Its colour",
+          "c": "The SATA III interface (≈ 550 MB/s)",
+          "explain": "The NAND could go faster, but SATA tops out at 6 Gbit/s."
+        },
+        "q3": {
+          "question": "Which cables does a SATA SSD need?",
+          "a": "SATA data and SATA power",
+          "b": "Only HDMI",
+          "c": "None",
+          "explain": "The data cable goes to the board, the power cable to the PSU."
+        }
+      }
+    },
+    "usb_flash": {
+      "name": "USB flash drive",
+      "student": "A pocket-sized drive that carries files between computers over USB.",
+      "purpose": "To carry files, bring a presentation to class, install Windows.",
+      "adult": "NAND + USB controller; USB 2.0 (≈ 30 MB/s) or USB 3.x (100–400 MB/s). File system FAT32 (files ≤ 4 GB) or exFAT. Use “safely remove” before pulling it out.",
+      "use": "Handing in schoolwork, bootable installers, moving data.",
+      "specs": {
+        "capacity": {
+          "label": "Capacity",
+          "value": "16 GB – 1 TB"
+        },
+        "interface": {
+          "label": "Interface",
+          "value": "USB-A or USB-C"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "USB 2.0 ≈ 30 MB/s; USB 3.x 100–400 MB/s"
+        },
+        "fs": {
+          "label": "File system",
+          "value": "FAT32 / exFAT"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Why is a USB 3.x stick faster than USB 2.0?",
+          "a": "It is blue",
+          "b": "Its shell is metal",
+          "c": "The interface has more bandwidth",
+          "explain": "USB 2.0 is 480 Mbit/s, USB 3.2 Gen 1 is 5 Gbit/s: almost ten times more."
+        },
+        "q2": {
+          "question": "Why can’t a 6 GB file go on a FAT32 stick?",
+          "a": "FAT32 limits one file to 4 GB",
+          "b": "The stick is full",
+          "c": "The file is a virus",
+          "explain": "exFAT or NTFS allow large files."
+        },
+        "q3": {
+          "question": "What should you do before pulling out a stick?",
+          "a": "Turn off the PC",
+          "b": "Use “Safely remove”",
+          "c": "Nothing",
+          "explain": "If a write has not finished, files can be corrupted."
+        }
+      }
+    },
+    "sd_card": {
+      "name": "SD / microSD card",
+      "student": "A tiny memory card for cameras and phones.",
+      "purpose": "To store photos, videos and files in small devices.",
+      "adult": "Formats SD/SDHC (≤ 32 GB)/SDXC (≤ 2 TB), microSD + adapter. Speed classes: U1/U3, V30 (for 4K video), A1/A2 (apps on phones).",
+      "use": "Cameras, action cams, drones, Raspberry Pi, Nintendo Switch.",
+      "specs": {
+        "formats": {
+          "label": "Formats",
+          "value": "SD, microSD (with adapter)"
+        },
+        "capacity": {
+          "label": "Capacity",
+          "value": "SDHC ≤ 32 GB, SDXC ≤ 2 TB"
+        },
+        "speed": {
+          "label": "Speed mark",
+          "value": "U3 / V30 — at least 30 MB/s writes"
+        },
+        "use": {
+          "label": "Where",
+          "value": "Camera, drone, Raspberry Pi"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does “V30” on a card mean?",
+          "a": "Writes at least 30 MB/s (fine for 4K video)",
+          "b": "Capacity is 30 GB",
+          "c": "It can be written 30 times",
+          "explain": "The V class is the minimum sustained video write speed."
+        },
+        "q2": {
+          "question": "How do you use a microSD card in a full SD slot?",
+          "a": "You cannot",
+          "b": "With a USB cable",
+          "c": "With an SD adapter",
+          "explain": "The adapter gives microSD the SD shape; the contacts are the same."
+        },
+        "q3": {
+          "question": "Where are SD cards used most?",
+          "a": "In servers",
+          "b": "In cameras and drones",
+          "c": "Inside the motherboard",
+          "explain": "Being tiny and light makes it ideal for cameras."
+        }
+      }
+    },
+    "external_drive": {
+      "name": "External drive",
+      "student": "A drive in a box that plugs in over USB for backups and carrying big files.",
+      "purpose": "To back up data and move lots of files.",
+      "adult": "A 2.5″ HDD or SSD in a USB enclosure, USB 3.2 / USB-C, powered over USB. The 3-2-1 rule: 3 copies of your data, on 2 kinds of media, 1 kept elsewhere.",
+      "use": "Backups, photo/video archives, moving games to a console.",
+      "specs": {
+        "inside": {
+          "label": "Inside",
+          "value": "2.5″ HDD or SSD"
+        },
+        "interface": {
+          "label": "Connection",
+          "value": "USB 3.2, USB-C"
+        },
+        "power": {
+          "label": "Power",
+          "value": "Over USB"
+        },
+        "use": {
+          "label": "For",
+          "value": "Backups (3-2-1)"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does the 3-2-1 backup rule ask for?",
+          "a": "3 PCs, 2 monitors, 1 printer",
+          "b": "3 copies, 2 kinds of media, 1 elsewhere",
+          "c": "Save 3 times a day",
+          "explain": "Even if a device fails or a fire happens, the data survives."
+        },
+        "q2": {
+          "question": "Where does an external drive usually get power?",
+          "a": "From the USB cable",
+          "b": "From a battery",
+          "c": "From HDMI",
+          "explain": "2.5″ drives run on USB’s 5 V."
+        },
+        "q3": {
+          "question": "Why is an external SSD better than an external HDD?",
+          "a": "It is cheaper",
+          "b": "It always holds more",
+          "c": "Faster and shock-resistant",
+          "explain": "An SSD has no moving parts, though a TB still costs more."
+        }
+      }
+    },
+    "optical_disc": {
+      "name": "Optical disc (CD/DVD/Blu-ray)",
+      "student": "A shiny disc read by a laser: it holds music, films or software.",
+      "purpose": "To keep and distribute data (music, films, games).",
+      "adult": "Data is stored as pits and lands along a spiral track. CD 700 MB (780 nm laser), DVD 4.7/8.5 GB (650 nm), Blu-ray 25–100 GB (405 nm blue laser): a shorter wavelength packs data more densely.",
+      "use": "Archives, films, game consoles, music collections.",
+      "specs": {
+        "cd": {
+          "label": "CD",
+          "value": "700 MB"
+        },
+        "dvd": {
+          "label": "DVD",
+          "value": "4.7 GB (dual layer 8.5 GB)"
+        },
+        "bd": {
+          "label": "Blu-ray",
+          "value": "25–100 GB"
+        },
+        "laser": {
+          "label": "Laser",
+          "value": "780 / 650 / 405 nm"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Why does a Blu-ray hold more than a DVD?",
+          "a": "It is bigger",
+          "b": "It is heavier",
+          "c": "The blue laser’s shorter wavelength makes smaller, denser pits",
+          "explain": "Both are 12 cm across; density depends on the laser."
+        },
+        "q2": {
+          "question": "How much data fits on a regular CD?",
+          "a": "70 GB",
+          "b": "700 MB",
+          "c": "7 TB",
+          "explain": "A CD holds about 700 MB or 80 minutes of audio."
+        },
+        "q3": {
+          "question": "What reads the data on a disc?",
+          "a": "A laser beam",
+          "b": "A magnetic head",
+          "c": "A needle",
+          "explain": "The laser reflects differently from pits and lands: that is 0 and 1."
+        }
+      }
+    },
+    "optical_drive": {
+      "name": "Optical drive",
+      "student": "A device that reads and writes CD, DVD or Blu-ray discs.",
+      "purpose": "To install software from discs, watch films and burn data.",
+      "adult": "Fits a 5.25″ bay and connects over SATA; laser unit, tray, motor. External USB versions exist. Modern cases and laptops usually lack one, since software is downloaded.",
+      "use": "Copying data from old discs, archiving, libraries.",
+      "specs": {
+        "bay": {
+          "label": "Bay",
+          "value": "5.25″ or external USB"
+        },
+        "interface": {
+          "label": "Interface",
+          "value": "SATA"
+        },
+        "formats": {
+          "label": "Discs",
+          "value": "CD, DVD, Blu-ray"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "DVD 24×, BD 16×"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Why do modern PCs rarely have an optical drive?",
+          "a": "Software and films are downloaded",
+          "b": "It is banned",
+          "c": "It is too fast",
+          "explain": "USB sticks, the cloud and the internet replaced discs."
+        },
+        "q2": {
+          "question": "How does an internal optical drive connect to the board?",
+          "a": "Via HDMI",
+          "b": "Via PCIe x16",
+          "c": "Via SATA",
+          "explain": "Data over a SATA cable, power over SATA power."
+        },
+        "q3": {
+          "question": "What is the difference between reading and writing in a drive?",
+          "a": "There is none",
+          "b": "Writing uses a stronger laser that leaves marks on the disc",
+          "c": "Only coloured discs can be written",
+          "explain": "The laser heats the recording layer; when reading, a weak laser only measures reflection."
+        }
+      }
+    },
+    "graphics_tablet": {
+      "name": "Graphics tablet",
+      "student": "A board with a special pen for drawing on the computer as on paper.",
+      "purpose": "Digital drawing, design and handwritten notes.",
+      "adult": "An electromagnetic (EMR) pen needs no battery; 4096–8192 pressure levels, active area (inches), screen and screenless models; USB-C or Bluetooth.",
+      "use": "Artists, animators, designers and teachers writing formulas in online lessons.",
+      "specs": {
+        "pen": {
+          "label": "Pen",
+          "value": "EMR, battery-free"
+        },
+        "pressure": {
+          "label": "Pressure levels",
+          "value": "4096–8192"
+        },
+        "area": {
+          "label": "Active area",
+          "value": "6–13 inches"
+        },
+        "type": {
+          "label": "Type",
+          "value": "Screenless or with a screen"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What do a tablet’s pressure levels give you?",
+          "a": "Screen brightness",
+          "b": "Press harder for a thicker line, lighter for a thinner one",
+          "c": "Battery capacity",
+          "explain": "More levels mean finer pressure control."
+        },
+        "q2": {
+          "question": "Who uses a graphics tablet most?",
+          "a": "Artists and designers",
+          "b": "Accountants",
+          "c": "Servers",
+          "explain": "Drawing with a pen is far more precise and natural than with a mouse."
+        },
+        "q3": {
+          "question": "Why does an EMR pen need no battery?",
+          "a": "It runs on solar power",
+          "b": "It is wired",
+          "c": "The tablet’s electromagnetic field powers it",
+          "explain": "The board emits a field; the pen draws energy from it and reports its position."
+        }
+      }
+    },
+    "gamepad": {
+      "name": "Gamepad",
+      "student": "A two-handed controller for playing games.",
+      "purpose": "To control characters and vehicles in games comfortably.",
+      "adult": "Two analogue sticks, analogue triggers (they measure how far you press), rumble motors, XInput; USB-C, 2.4 GHz or Bluetooth, rechargeable battery.",
+      "use": "PC and console games, racing and sports titles.",
+      "specs": {
+        "sticks": {
+          "label": "Sticks",
+          "value": "2 analogue"
+        },
+        "triggers": {
+          "label": "Triggers",
+          "value": "Analogue (pressure)"
+        },
+        "feedback": {
+          "label": "Feedback",
+          "value": "Rumble motors"
+        },
+        "connection": {
+          "label": "Connection",
+          "value": "USB-C, 2.4 GHz, Bluetooth"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "How does an analogue stick differ from a button?",
+          "a": "In nothing",
+          "b": "It only makes a sound",
+          "c": "It gives direction and amount, not just on/off",
+          "explain": "Tilt a little to walk slowly, all the way to run."
+        },
+        "q2": {
+          "question": "What makes a gamepad vibrate?",
+          "a": "A speaker",
+          "b": "Small rumble motors",
+          "c": "The battery",
+          "explain": "An off-centre weight on the motor shaft spins and shakes the pad."
+        },
+        "q3": {
+          "question": "How does a wireless gamepad connect to a PC?",
+          "a": "Via Bluetooth or a 2.4 GHz receiver",
+          "b": "Via HDMI",
+          "c": "It cannot",
+          "explain": "A 2.4 GHz receiver usually has lower lag than Bluetooth."
+        }
+      }
+    },
+    "printer_laser": {
+      "name": "Laser printer",
+      "student": "A printer that prints pages fast by fusing toner powder onto paper.",
+      "purpose": "To print many documents quickly and cheaply at school and in offices.",
+      "adult": "The laser draws a charge image on the drum, toner sticks to it and transfers to paper, and the fuser melts it at 180–200 °C. 20–40 pages per minute, duplex, Wi-Fi/Ethernet.",
+      "use": "Schools, offices, libraries: tests, reports, documents.",
+      "specs": {
+        "tech": {
+          "label": "Technology",
+          "value": "Drum + toner + fuser"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "20–40 pages/min"
+        },
+        "resolution": {
+          "label": "Resolution",
+          "value": "600–1200 dpi"
+        },
+        "duplex": {
+          "label": "Duplex",
+          "value": "Yes, automatic"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does a laser printer print with?",
+          "a": "Toner powder",
+          "b": "Liquid ink",
+          "c": "Plastic",
+          "explain": "Toner is a powder of plastic and pigment that the fuser melts onto paper."
+        },
+        "q2": {
+          "question": "Why does a laser printer suit a school?",
+          "a": "It only prints photos",
+          "b": "Fast and cheap per page",
+          "c": "It prints without paper",
+          "explain": "One cartridge lasts thousands of pages and never dries out."
+        },
+        "q3": {
+          "question": "What does the fuser do?",
+          "a": "Cuts the paper",
+          "b": "Adds ink",
+          "c": "Heats the toner to fix it to the paper",
+          "explain": "That is why a freshly printed page is warm."
+        }
+      }
+    },
+    "scanner": {
+      "name": "Scanner",
+      "student": "A device that copies a paper document or photo into the computer.",
+      "purpose": "To digitise, archive and recognise text in documents.",
+      "adult": "Flatbed scanner: a CIS/CCD bar under the glass reads the page line by line; 600–4800 dpi; OCR turns text in the image into editable text; ADF feeds pages automatically.",
+      "use": "Document archives, digitising old photos, libraries.",
+      "specs": {
+        "type": {
+          "label": "Type",
+          "value": "Flatbed (CIS/CCD)"
+        },
+        "resolution": {
+          "label": "Resolution",
+          "value": "600–4800 dpi"
+        },
+        "ocr": {
+          "label": "OCR",
+          "value": "Text recognition"
+        },
+        "adf": {
+          "label": "ADF",
+          "value": "Automatic page feeder"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does OCR do?",
+          "a": "Enlarges the image",
+          "b": "Turns scanned text into editable text",
+          "c": "Prints paper",
+          "explain": "Optical Character Recognition reads letters from an image."
+        },
+        "q2": {
+          "question": "What is the difference between 300 and 1200 dpi?",
+          "a": "Colour",
+          "b": "Only scanner speed",
+          "c": "Dots per inch: 1200 dpi shows more detail",
+          "explain": "300 dpi suits documents; photos need 600–1200 dpi."
+        },
+        "q3": {
+          "question": "What is an ADF?",
+          "a": "An automatic feeder for one page after another",
+          "b": "Colour ink",
+          "c": "A Wi-Fi antenna",
+          "explain": "An ADF scans dozens of pages without changing them by hand."
+        }
+      }
+    },
+    "projector": {
+      "name": "Projector",
+      "student": "A device that shows the computer’s picture large on a wall or screen.",
+      "purpose": "To show slides and videos to the whole class at once.",
+      "adult": "DLP or LCD, brightness (lumens; 3000+ for a classroom), native resolution (1080p), throw ratio (distance to the screen), keystone correction. Connects over HDMI.",
+      "use": "Classrooms, meeting rooms, home cinema.",
+      "specs": {
+        "tech": {
+          "label": "Technology",
+          "value": "DLP / LCD, lamp or LED"
+        },
+        "brightness": {
+          "label": "Brightness",
+          "value": "3000–4000 lumens"
+        },
+        "resolution": {
+          "label": "Resolution",
+          "value": "1920 × 1080"
+        },
+        "throw": {
+          "label": "Throw ratio",
+          "value": "≈ 1.2 : 1"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What is a projector’s brightness measured in?",
+          "a": "Volts",
+          "b": "Gigabytes",
+          "c": "Lumens",
+          "explain": "A bright classroom needs at least 3000 lumens."
+        },
+        "q2": {
+          "question": "How do you connect a laptop to a projector?",
+          "a": "With an HDMI cable",
+          "b": "With a SATA cable",
+          "c": "Only through a printer",
+          "explain": "HDMI carries video and sound in one cable."
+        },
+        "q3": {
+          "question": "What is keystone correction for?",
+          "a": "To boost the sound",
+          "b": "To keep the picture rectangular when the projector is tilted",
+          "c": "To cool the lamp",
+          "explain": "Projecting upwards makes a trapezoid; keystone squares it up."
+        }
+      }
+    },
+    "printer_3d": {
+      "name": "3D printer",
+      "student": "A printer that makes real objects from plastic, layer by layer.",
+      "purpose": "To make prototypes, teaching models and spare parts.",
+      "adult": "FDM: the extruder melts plastic filament (PLA, PETG) at 200–240 °C, the 0.4 mm nozzle moves in X/Y and the bed steps down in Z; layers are 0.1–0.3 mm. A slicer turns the model into G-code.",
+      "use": "School robotics, engineering prototypes, medicine, spare parts.",
+      "specs": {
+        "tech": {
+          "label": "Technology",
+          "value": "FDM (melted plastic)"
+        },
+        "material": {
+          "label": "Material",
+          "value": "PLA, PETG, ABS"
+        },
+        "nozzle": {
+          "label": "Nozzle",
+          "value": "0.4 mm, 200–240 °C"
+        },
+        "layer": {
+          "label": "Layer height",
+          "value": "0.1–0.3 mm"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "How does an FDM printer make an object?",
+          "a": "It lays melted plastic layer by layer",
+          "b": "It cuts metal",
+          "c": "It folds paper",
+          "explain": "Each layer sits on the one before: additive manufacturing."
+        },
+        "q2": {
+          "question": "What does a slicer do?",
+          "a": "Cuts the plastic",
+          "b": "Cleans the printer",
+          "c": "Splits the 3D model into layers and writes G-code",
+          "explain": "G-code is the list of motion commands for the printer."
+        },
+        "q3": {
+          "question": "What nozzle temperature does PLA need?",
+          "a": "20–30 °C",
+          "b": "about 200–215 °C",
+          "c": "1000 °C",
+          "explain": "The nozzle is hot: never touch it!"
+        }
+      }
+    },
+    "interactive_panel": {
+      "name": "Interactive display",
+      "student": "A big touchscreen for the classroom that you can write and draw on with a finger.",
+      "purpose": "To make lessons visual: board, projector and computer in one.",
+      "adult": "A 65–86″ 4K panel, infrared or capacitive touch (20–40 points), built-in Android, an OPS slot for a PC module, HDMI/USB-C inputs, wireless casting from a laptop.",
+      "use": "School classrooms, lecture halls, office meetings.",
+      "specs": {
+        "size": {
+          "label": "Size",
+          "value": "65–86″, 4K"
+        },
+        "touch": {
+          "label": "Touch",
+          "value": "IR or capacitive, 20+ points"
+        },
+        "system": {
+          "label": "System",
+          "value": "Android + OPS PC slot"
+        },
+        "inputs": {
+          "label": "Inputs",
+          "value": "HDMI, USB-C, Ethernet, Wi-Fi"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "How is an interactive display different from a projector?",
+          "a": "In nothing",
+          "b": "It is a touchscreen that makes its own light",
+          "c": "It only plays sound",
+          "explain": "A projector throws light on a screen; the panel is a big monitor you can write on."
+        },
+        "q2": {
+          "question": "How does a teacher connect a laptop to the panel?",
+          "a": "With HDMI/USB-C or wireless casting",
+          "b": "With a SATA cable",
+          "c": "Only with a USB stick",
+          "explain": "One USB-C cable can carry video, touch and charging."
+        },
+        "q3": {
+          "question": "What is the OPS slot for?",
+          "a": "For a USB stick",
+          "b": "For speakers",
+          "c": "To slot a PC module into the panel",
+          "explain": "OPS is a Windows PC inside the panel: no cables needed."
+        }
+      }
+    },
+    "router": {
+      "name": "Router",
+      "student": "Connects home or school devices to the internet and provides Wi-Fi."
+    },
+    "switch": {
+      "name": "Network switch",
+      "student": "Joins many computers into one network with cables."
+    },
+    "modem": {
+      "name": "Modem",
+      "student": "Turns the provider’s signal (fibre, DSL) into one computers understand."
+    },
+    "wifi_adapter": {
+      "name": "Wi-Fi adapter",
+      "student": "Gives a computer without Wi-Fi a wireless connection."
+    },
+    "nic": {
+      "name": "Network card",
+      "student": "Connects a computer to the network over Ethernet."
+    },
+    "ethernet_cable": {
+      "name": "Ethernet cable",
+      "student": "A cable with RJ-45 plugs that links network devices."
+    },
+    "access_point": {
+      "name": "Access point",
+      "student": "Extends Wi-Fi coverage in a large building."
+    },
+    "nas": {
+      "name": "Network storage (NAS)",
+      "student": "A “home cloud” that stores shared files for every device on the network."
+    },
+    "server_rack": {
+      "name": "Server rack",
+      "student": "A cabinet that holds servers and network gear in order."
+    },
+    "ups": {
+      "name": "Uninterruptible power supply (UPS)",
+      "student": "Keeps the computer running on a battery during a power cut so you can save your work."
+    },
+    "docking_station": {
+      "name": "Docking station",
+      "student": "Connects a monitor, keyboard, network and charging to a laptop through one cable."
+    },
+    "usb_hub": {
+      "name": "USB hub",
+      "student": "Turns one USB port into several."
+    },
+    "card_reader": {
+      "name": "Card reader",
+      "student": "Lets a computer read SD and microSD cards."
+    },
+    "hdmi_cable": {
+      "name": "HDMI cable",
+      "student": "Carries video and sound to a monitor, TV or projector."
+    },
+    "displayport_cable": {
+      "name": "DisplayPort cable",
+      "student": "A cable for high-refresh video to a monitor."
+    },
+    "usb_c_cable": {
+      "name": "USB-C cable",
+      "student": "A reversible all-round cable: charging, data and video."
+    },
+    "usb_a_cable": {
+      "name": "USB-A cable",
+      "student": "The common cable for mice, keyboards, sticks and more."
+    },
+    "audio_cable": {
+      "name": "Audio cable (3.5 mm)",
+      "student": "A cable that carries sound to speakers and headphones."
+    },
+    "laptop": {
+      "name": "Laptop",
+      "student": "A portable computer with a screen, keyboard and battery."
+    },
+    "all_in_one": {
+      "name": "All-in-one PC",
+      "student": "A computer with every part built into the monitor."
+    },
+    "smartphone": {
+      "name": "Smartphone",
+      "student": "A pocket computer: calls, internet, camera, apps."
+    },
+    "tablet": {
+      "name": "Tablet",
+      "student": "A light computer with a big touchscreen."
+    },
+    "smartwatch": {
+      "name": "Smartwatch",
+      "student": "A tiny computer on your wrist: notifications, steps, heart rate."
+    },
+    "sbc": {
+      "name": "Single-board computer (Raspberry Pi)",
+      "student": "A whole computer on one small board, for robotics and coding."
+    }
+  },
+  "deviceUi": {
+    "open": "Open details",
+    "close": "Close",
+    "viewer": "360° view: drag to rotate, scroll to zoom",
+    "viewerLabel": "{name} — 3D model",
+    "autoRotate": "Auto-rotate",
+    "tabs": {
+      "info": "Info",
+      "quiz": "Quiz"
+    },
+    "level": "Explanation level",
+    "levels": {
+      "student": "Student",
+      "adult": "Adult"
+    },
+    "sections": {
+      "purpose": "What it is for",
+      "specs": "Specifications",
+      "ports": "Ports and connection",
+      "use": "Real-world use",
+      "noPorts": "No ports: it sits in or on another part."
+    },
+    "zoneOf": "Zone: {zone}",
+    "soon": "The full description and test of this device come in the next update.",
+    "quizShared": "This is the same test as in Computer Anatomy: the result counts once.",
+    "catalog": "Devices",
+    "catalogTitle": "Lab devices",
+    "search": "Search devices",
+    "all": "All",
+    "none": "Nothing found",
+    "count": "{n} devices",
+    "clickHint": "Click a device to open its details",
+    "done": "Test passed",
+    "portTypes": {
+      "cpu_socket": "CPU socket",
+      "fan_4pin": "4-pin fan (PWM)",
+      "pump_3pin": "3-pin pump",
+      "usb_internal": "Internal USB 2.0",
+      "dimm": "DIMM slot",
+      "pcie_x16": "PCIe x16",
+      "m2": "M.2 (M-key)",
+      "sata_data": "SATA data",
+      "sata_power": "SATA power",
+      "atx_24pin": "ATX 24-pin",
+      "eps_8pin": "EPS 8-pin (CPU)",
+      "pcie_8pin": "PCIe 8-pin power",
+      "usb_a": "USB-A",
+      "usb_b": "USB-B",
+      "usb_c": "USB-C",
+      "rj45": "Ethernet (RJ-45)",
+      "hdmi": "HDMI",
+      "displayport": "DisplayPort",
+      "audio_35": "3.5 mm audio",
+      "iec_c14": "Mains cable (C14)",
+      "power_button": "Power button",
+      "sd_slot": "SD card slot",
+      "wireless": "Wireless (2.4 GHz / Wi-Fi)",
+      "bluetooth": "Bluetooth"
     }
   }
 }

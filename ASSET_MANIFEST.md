@@ -147,6 +147,9 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | `ssd-samsung-990-pro-2tb` | [M.2 NVMe SSD Samsung 990 PRO 1TB](https://sketchfab.com/3d-models/m2-nvme-ssd-samsung-990-pro-1tb-3d-model-41b7bfda7eab40f8b13330913fd66fc2) | lime.ball.animations | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 2 texture areas repainted (logos / print) |
 | `ssd-wd-sn850x-1tb` | [m2ssd_Painter](https://sketchfab.com/3d-models/m2ssd-painter-ccda7c201091445087c02692444641c2) | Igor.Jop | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 1 texture areas repainted (logos / print) |
 
+### Зертхана құрылғылары (V2-4a, 2026-10-11)
+Жаңа ассет жүктелмеді. Көрме мен 360° көрсеткіш каталог өнімдерін (V2-2a/b), анатомия placeholders және жаңа процедуралық [PLACEHOLDER] модельдерді (`scenes/LabSpace/devices/`) қолданады. Өзгеріс: `cpu-amd-am5` — «AMD Ryzen» бедері normal/roughness/occlusion картасынан алынды (`materials.paint.flat`). Лицензиялы модельдерге үміткерлер — ASSET_SOURCING.md §3.
+
 ### 3D зертхана (V2-3, 2026-10-11)
 Жаңа ассет жүктелмеді. Зал, жиһаз, тақтайшалар, кесте және [PLACEHOLDER] құрылғылар процедуралық (`scenes/LabSpace/`). Қайта қолданылғандар: еден roughness картасы (`floor_rough*.webp`), Poly Haven HDRI `studio_small_09_1k.hdr` (CC0), каталог өнімдерінің GLB-лері (жоғарыдағы V2-2a/b кестелері), анатомия placeholders. Бренд атаулары (кестеде өнім атауы) — тек мәтін.
 

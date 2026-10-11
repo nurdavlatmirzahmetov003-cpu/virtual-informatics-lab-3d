@@ -16,25 +16,16 @@ import { useTheme } from '@/hooks/useTheme';
 import { roundedSlab } from '@/lib/three/geometry';
 import { useLabStore } from '@/store/labStore';
 import { SIGN_ASPECT, signTexture } from './signTexture';
-import { AssemblyZone, ShowcaseZone, WorkstationZone } from './zones/pcZones';
-import { PeripheralsZone, StorageZone } from './zones/deviceZones';
-import { MobileZone, NetworkZone, PeripheralExtras, PowerZone, PrintMediaZone } from './zones/techZones';
+import { ShowcaseZone, WorkstationZone } from './zones/pcZones';
+import { AssemblyZone, PeripheralsZone, PrintMediaZone, StorageZone } from './zones/exhibitZones';
+import { MobileZone, NetworkZone, PowerZone } from './zones/techZones';
 import type { ZoneContentProps } from './zones/zoneData';
-
-function Peripherals(props: ZoneContentProps) {
-  return (
-    <>
-      <PeripheralsZone {...props} />
-      {props.detail === 'full' && <PeripheralExtras />}
-    </>
-  );
-}
 
 const CONTENT: Record<LabZoneId, ComponentType<ZoneContentProps>> = {
   workstation: WorkstationZone,
   assembly: AssemblyZone,
   storage: StorageZone,
-  peripherals: Peripherals,
+  peripherals: PeripheralsZone,
   print_media: PrintMediaZone,
   network: NetworkZone,
   power: PowerZone,

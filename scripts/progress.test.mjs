@@ -16,6 +16,8 @@ import { QUIZZES } from '../src/labs/AlgorithmLab/quizzes.ts';
 import { ASSEMBLY_EXERCISE } from '../src/labs/AssemblyLab/exercise.ts';
 import { ANATOMY_ITEMS } from '../src/data/hardware/anatomy.ts';
 import { anatomyExercise } from '../src/data/hardware/anatomyQuiz.ts';
+import { OWN_QUIZ_DEVICES } from '../src/data/devices/devices.ts';
+import { deviceExercise } from '../src/data/devices/deviceQuiz.ts';
 import * as cpuTemp from '../src/labs/Experiments/cpuTemp.ts';
 import * as memory from '../src/labs/Experiments/memory.ts';
 import * as storage from '../src/labs/Experiments/storage.ts';
@@ -43,6 +45,7 @@ test('catalog matches every real exercise: ids, types, max score and instruction
   const experiments = { cpuTemp, memory, storage, latency, binaryData: binary, cpuCycle, rgb, resolution, refresh };
   const real = [
     ...ANATOMY_ITEMS.map(anatomyExercise),
+    ...OWN_QUIZ_DEVICES.map(deviceExercise),
     ASSEMBLY_EXERCISE,
     ...Object.values(NETWORK_TASKS),
     ...Object.values(QUIZZES),

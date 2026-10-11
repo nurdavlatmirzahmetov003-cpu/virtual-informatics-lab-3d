@@ -259,6 +259,16 @@ def edit_materials(cfg, report):
                     if base.is_linked and not rule.get("keepTexture", False):
                         mat.node_tree.links.remove(base.links[0])
                     base.default_value = hex_rgb(rule["color"]) + [1.0]
+                if rule.get("flat"):
+                    # engraved logos also live in the normal / roughness / occlusion maps: drop them all
+                    for name in ("Normal", "Metallic", "Roughness"):
+                        for link in list(node.inputs[name].links):
+                            mat.node_tree.links.remove(link)
+                    for other in mat.node_tree.nodes:
+                        if other.type == "GROUP" and other.node_tree and "gltf" in other.node_tree.name.lower():
+                            for inp in other.inputs:
+                                for link in list(inp.links):
+                                    mat.node_tree.links.remove(link)
                 if "metallic" in rule and not node.inputs["Metallic"].is_linked:
                     node.inputs["Metallic"].default_value = rule["metallic"]
                 if "roughness" in rule and not node.inputs["Roughness"].is_linked:

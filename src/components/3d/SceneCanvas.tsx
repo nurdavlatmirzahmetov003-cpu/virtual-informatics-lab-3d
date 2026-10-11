@@ -26,6 +26,8 @@ interface SceneCanvasProps {
    * gesture; `pan-y` keeps vertical swipes scrolling the page (scroll stories).
    */
   touchAction?: 'none' | 'pan-y';
+  /** Stop rendering (e.g. while a full-screen viewer covers the scene). */
+  paused?: boolean;
 }
 
 /** Mounted inside the scene's Suspense boundary: renders only once every asset resolved. */
@@ -43,7 +45,7 @@ function ReadySignal() {
  * inside it; unmounting the page disposes the renderer and GPU resources,
  * so laboratories are never all resident at once.
  */
-export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, className, touchAction = 'none' }: SceneCanvasProps) {
+export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, className, touchAction = 'none', paused = false }: SceneCanvasProps) {
   const t = useT();
   const preset = useQualityPreset();
   const visible = usePageVisible();
@@ -98,7 +100,7 @@ export function SceneCanvas({ children, initialCamera = 'HOME_WIDE', label, clas
           key={`${attempt}-${preset.antialias ? 'aa' : 'noaa'}`}
           className={styles.canvas}
           style={{ touchAction }}
-          frameloop={visible ? 'always' : 'never'}
+          frameloop={visible && !paused ? 'always' : 'never'}
           dpr={preset.dpr}
           shadows={preset.shadows ? 'percentage' : false}
           camera={{ position: [...cam.position], fov: cam.fov, near: 0.03, far: 60 }}

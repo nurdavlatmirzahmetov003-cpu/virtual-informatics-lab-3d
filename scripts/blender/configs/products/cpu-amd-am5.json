@@ -1,6 +1,6 @@
 {
   "name": "cpu-amd-am5",
-  "description": "AM5 package; heat-spreader print removed.",
+  "description": "AM5 package; heat-spreader print and its engraving (normal map) removed.",
   "input": "assets-src/sketchfab/v2/amd_ryzen_9.glb",
   "output": "assets-src/blender/products/cpu-amd-am5.glb",
   "rotate": [
@@ -35,7 +35,15 @@
   },
   "materials": {
     "rename": {},
-    "paint": []
+    "paint": [
+      {
+        "materials": "^metal1$",
+        "color": "#cfcac4",
+        "metallic": 0.85,
+        "roughness": 0.35,
+        "flat": true
+      }
+    ]
   },
   "parts": [
     {

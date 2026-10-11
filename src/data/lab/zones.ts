@@ -43,22 +43,22 @@ export const LAB_ZONES: readonly LabZone[] = [
   },
   {
     id: 'assembly', accent: '#4ade80', center: [-6.2, -5.2], size: [3.2, 2.4], facing: BACK,
-    view: { distance: 2.9, height: 1.8, targetY: 0.8 },
+    view: { distance: 3.5, height: 2.0, targetY: 0.75 },
     devices: ['cpu', 'cooler_air', 'cooler_liquid', 'motherboard', 'ram', 'gpu', 'psu', 'case', 'case_fan', 'thermal_paste', 'internal_cables', 'cmos_battery'],
   },
   {
     id: 'storage', accent: '#f5b83d', center: [6.2, -5.2], size: [3.2, 2.4], facing: BACK,
-    view: { distance: 3.0, height: 1.6, targetY: 1.35 },
+    view: { distance: 3.5, height: 1.95, targetY: 1.0 },
     devices: ['hdd_35', 'hdd_25', 'ssd_sata', 'ssd_nvme', 'usb_flash', 'sd_card', 'external_drive', 'optical_disc', 'optical_drive'],
   },
   {
     id: 'peripherals', accent: '#a78bfa', center: [8.2, -0.6], size: [3.2, 2.4], facing: FROM_RIGHT,
-    view: { distance: 2.7, height: 1.6, targetY: 0.95 },
+    view: { distance: 3.5, height: 1.95, targetY: 0.8 },
     devices: ['keyboard', 'mouse', 'graphics_tablet', 'gamepad', 'microphone', 'webcam', 'monitor', 'speakers', 'headset'],
   },
   {
     id: 'print_media', accent: '#fb7185', center: [8.2, 4.2], size: [3.2, 2.4], facing: FROM_RIGHT,
-    view: { distance: 3.4, height: 1.7, targetY: 1.15 },
+    view: { distance: 3.6, height: 1.95, targetY: 0.95 },
     devices: ['printer_laser', 'printer_inkjet', 'scanner', 'projector', 'printer_3d', 'interactive_panel'],
   },
   {

@@ -15,6 +15,13 @@ export const ANATOMY_TASKS = [
   'monitor', 'keyboard', 'mouse', 'headset', 'microphone', 'webcam', 'speaker', 'printer',
   'motherboard', 'cpu', 'ram', 'gpu', 'ssd', 'hdd', 'psu', 'cooler', 'fans', 'nic',
 ] as const;
+/** Lab devices with their own test (V2-4a); the others share an Anatomy test. Checked against data/devices. */
+export const DEVICE_TASKS = [
+  'cooler_liquid', 'case', 'thermal_paste', 'internal_cables', 'cmos_battery',
+  'hdd_25', 'ssd_sata', 'usb_flash', 'sd_card', 'external_drive', 'optical_disc', 'optical_drive',
+  'graphics_tablet', 'gamepad',
+  'printer_laser', 'scanner', 'projector', 'printer_3d', 'interactive_panel',
+] as const;
 export const NETWORK_TASKS = ['connect3', 'routerLan', 'addressing', 'repair'] as const;
 export const ALGORITHM_TASKS = ['nextSwap', 'binarySteps', 'bubblePass'] as const;
 export const LOGIC_TASKS = ['and', 'notOr', 'xorBasic', 'table'] as const;
@@ -51,6 +58,21 @@ const anatomy = ANATOMY_TASKS.map(
     title: `anatomy.items.${task}.name`,
     summary: 'tasks.anatomySummary',
     instructions: 'tasks.anatomyInstructions',
+    expected: 'tasks.quizExpected',
+    maxScore: 10,
+  }),
+);
+
+const devices = DEVICE_TASKS.map(
+  (task): Draft => ({
+    id: `device:${task}`,
+    lab: 'hardware',
+    task,
+    type: 'device',
+    path: `/lab?device=${task}`,
+    title: `devices.${task}.name`,
+    summary: 'tasks.deviceSummary',
+    instructions: 'tasks.deviceInstructions',
     expected: 'tasks.quizExpected',
     maxScore: 10,
   }),
@@ -130,7 +152,7 @@ const experiments = EXPERIMENT_TASKS.map(
 );
 
 /** All tasks in the suggested learning order: explore → build → network → algorithms → logic → experiments. */
-export const TASKS: readonly TaskInfo[] = [...anatomy, assembly, ...network, ...algorithms, ...logic, ...experiments].map((t, order) => ({ ...t, order }));
+export const TASKS: readonly TaskInfo[] = [...anatomy, ...devices, assembly, ...network, ...algorithms, ...logic, ...experiments].map((t, order) => ({ ...t, order }));
 
 const BY_ID = new Map(TASKS.map((t) => [t.id, t]));
 export const taskById = (id: string): TaskInfo | undefined => BY_ID.get(id);
@@ -142,7 +164,7 @@ export function labOf(exerciseId: string): LabId | undefined {
   const known = BY_ID.get(exerciseId)?.lab;
   if (known) return known;
   const [prefix, rest] = exerciseId.split(':');
-  const map: Record<string, LabId> = { anatomy: 'hardware', assembly: 'assembly', network: 'network', algorithm: 'algorithms', logic: 'logic', experiment: 'experiments' };
+  const map: Record<string, LabId> = { anatomy: 'hardware', device: 'hardware', assembly: 'assembly', network: 'network', algorithm: 'algorithms', logic: 'logic', experiment: 'experiments' };
   if (prefix === 'legacy') return isLabId(rest) ? rest : undefined;
   return map[prefix];
 }

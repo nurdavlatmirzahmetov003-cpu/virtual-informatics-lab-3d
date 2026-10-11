@@ -277,25 +277,25 @@
   {
     "id": "cpu-amd-am5",
     "source": "assets-src/blender/products/cpu-amd-am5.glb",
-    "sourceBytes": 16096740,
+    "sourceBytes": 10200744,
     "levels": [
       {
         "file": "cpu-amd-am5.glb",
-        "bytes": 366080,
+        "bytes": 233484,
         "triangles": 1975,
-        "textureMB": 30.7
+        "textureMB": 32
       },
       {
         "file": "cpu-amd-am5_lod1.glb",
-        "bytes": 171196,
+        "bytes": 139740,
         "triangles": 1387,
-        "textureMB": 14.7
+        "textureMB": 16
       },
       {
         "file": "cpu-amd-am5_lod2.glb",
-        "bytes": 74540,
+        "bytes": 71028,
         "triangles": 1317,
-        "textureMB": 3.7
+        "textureMB": 4
       }
     ]
   },

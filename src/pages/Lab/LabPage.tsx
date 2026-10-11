@@ -1,6 +1,7 @@
 import { lazy, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useProgress } from '@react-three/drei';
-import { ArrowLeft, ArrowRight, Keyboard, LayoutGrid, Minus, Plus, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Keyboard, LayoutGrid, List, Minus, Plus, RotateCcw } from 'lucide-react';
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
 import { ButtonLink } from '@/components/ui/Button';
 import { zoneById, type LabZoneId } from '@/data/lab/zones';
@@ -10,6 +11,10 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import { useLabStore } from '@/store/labStore';
 import { LabMinimap } from './LabMinimap';
+import { DevicePanel } from './DevicePanel';
+import { DeviceCatalog } from './DeviceCatalog';
+import { deviceById } from '@/data/devices/devices';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import styles from './LabPage.module.css';
 
 const LabScene = lazy(() => import('@/scenes/LabSpace/LabScene'));
@@ -37,7 +42,9 @@ function useLabKeyboard() {
       if (!action) return;
       e.preventDefault();
       const s = useLabStore.getState();
-      if (action.type === 'focus') s.focusZone(action.zone);
+      // Escape closes an open device first, then returns to the overview
+      if (action.type === 'overview' && e.key === 'Escape' && s.device) s.closeDevice();
+      else if (action.type === 'focus') s.focusZone(action.zone);
       else if (action.type === 'overview') s.focusZone(null);
       else if (action.type === 'step') s.step(action.dir);
       else if (action.type === 'zoom') s.zoom(action.dir);
@@ -61,6 +68,7 @@ function ZonePanel() {
         {zone ? t(key(`lab.zones.${zone.id}.name`)) : t('lab.title')}
       </h1>
       <p className={styles.lead}>{zone ? t(key(`lab.zones.${zone.id}.description`)) : t('lab.lead')}</p>
+      {zone && zone.devices.length > 0 && <p className={styles.clickHint}>{t('deviceUi.clickHint')}</p>}
       <div className={styles.actions}>
         <button type="button" className={styles.iconBtn} onClick={() => step(-1)} aria-label={t('lab.prev')} title={t('lab.prev')}>
           <ArrowLeft size={18} aria-hidden="true" />
@@ -84,12 +92,16 @@ function ZonePanel() {
   );
 }
 
-function ViewTools() {
+function ViewTools({ catalog, onCatalog }: { catalog: boolean; onCatalog: () => void }) {
   const t = useT();
   const [showKeys, setShowKeys] = useState(false);
   const { zoom, resetView } = useLabStore.getState();
   return (
     <div className={styles.tools}>
+      <button type="button" className={styles.textBtn} aria-expanded={catalog} onClick={onCatalog} aria-label={t('deviceUi.catalog')} title={t('deviceUi.catalog')}>
+        <List size={16} aria-hidden="true" />
+        <span className={styles.btnLabel}>{t('deviceUi.catalog')}</span>
+      </button>
       <button type="button" className={styles.iconBtn} onClick={() => zoom(1)} aria-label={t('lab.zoomIn')} title={t('lab.zoomIn')}>
         <Plus size={18} aria-hidden="true" />
       </button>
@@ -132,19 +144,36 @@ function Status() {
   );
 }
 
+/** `/lab?device=<id>` (links from the task list) opens that device. */
+function useDeviceParam() {
+  const [params] = useSearchParams();
+  const requested = params.get('device');
+  useEffect(() => {
+    if (requested && deviceById(requested)) useLabStore.getState().openDevice(requested);
+  }, [requested]);
+}
+
 export default function LabPage() {
   const t = useT();
   useDocumentTitle(t('lab.title'));
   useLabKeyboard();
+  useDeviceParam();
+  const device = useLabStore((s) => s.device);
+  const [catalog, setCatalog] = useState(false);
+  const phone = useMediaQuery('(max-width: 760px)');
+  // a device panel replaces the catalog; closing the device returns to it
+  useEffect(() => () => useLabStore.getState().closeDevice(), []);
+  const side = device ? <DevicePanel /> : catalog ? <DeviceCatalog onClose={() => setCatalog(false)} /> : null;
   return (
     <div className={styles.stage}>
-      <SceneCanvas initialCamera="LAB_OVERVIEW" label={t('lab.sceneLabel')}>
+      {/* the scene sleeps while a full-screen panel covers it on phones */}
+      <SceneCanvas initialCamera="LAB_OVERVIEW" label={t('lab.sceneLabel')} paused={phone && side !== null}>
         <LabScene />
       </SceneCanvas>
       <div className={styles.overlay}>
         <ZonePanel />
-        <LabMinimap />
-        <ViewTools />
+        {side ? <div className={styles.side}>{side}</div> : <LabMinimap />}
+        <ViewTools catalog={catalog} onCatalog={() => setCatalog((v) => !v)} />
         <Status />
         <p className={styles.hint}>{t('lab.hint')}</p>
       </div>
