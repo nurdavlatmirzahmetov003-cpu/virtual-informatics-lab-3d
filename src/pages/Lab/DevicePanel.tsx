@@ -1,9 +1,10 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { Pause, Play, X } from 'lucide-react';
+import { Pause, Play, Wrench, X } from 'lucide-react';
 import { anatomyItem } from '@/data/hardware/anatomy';
 import { deviceById, deviceKey, deviceSpecs, type Device } from '@/data/devices/devices';
 import { deviceExercise } from '@/data/devices/deviceQuiz';
 import { zoneById } from '@/data/lab/zones';
+import { teardownOfDevice } from '@/data/teardown/teardowns';
 import { ChoiceQuiz } from '@/components/quiz/ChoiceQuiz';
 import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
@@ -66,6 +67,7 @@ export function DevicePanel() {
   const t = useT();
   const id = useLabStore((s) => s.device);
   const close = useLabStore((s) => s.closeDevice);
+  const openTeardown = useLabStore((s) => s.openTeardown);
   const device = id ? deviceById(id) : undefined;
   const [tab, setTab] = useState<Tab>('info');
   const [level, setLevel] = useState<Level>('student');
@@ -74,6 +76,7 @@ export function DevicePanel() {
   const best = useProgressStore((s) => (exercise ? s.exercises[exercise.id]?.best?.percent : undefined));
   if (!device) return null;
   const zone = zoneById(device.zone);
+  const teardown = teardownOfDevice(device.id);
   const name = t(key(deviceKey(device, 'name')));
   const answers = device.anatomy ? anatomyItem(device.anatomy).answers : device.answers;
 
@@ -99,6 +102,13 @@ export function DevicePanel() {
         </button>
         <p className={styles.hint}>{t('deviceUi.viewer')}</p>
       </div>
+
+      {teardown && (
+        <button type="button" className={styles.teardown} onClick={() => openTeardown(teardown)}>
+          <Wrench size={16} aria-hidden="true" />
+          {t('teardown.ui.open')}
+        </button>
+      )}
 
       <div className={styles.tabs} role="tablist">
         {(['info', 'quiz'] as const).map((k) => (

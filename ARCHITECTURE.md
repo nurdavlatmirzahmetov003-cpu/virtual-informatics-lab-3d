@@ -185,6 +185,13 @@ legacy/                     ескі ES-module прототип (python http.ser
     - `ChoiceQuiz` — a/b/c тест компоненті, анатомия мен зертханаға ортақ.
     - V2-4b: барлық 60 құрылғы толық (`full` белгісі алынды); `OWN_QUIZ_DEVICES` = анатомиясыз 43 құрылғы = прогресс `DEVICE_TASKS`. Шолуда ауыр процедуралық модельдің жеңіл нұсқасы болуы мүмкін (`RackShell`). Тур күйін (`focusZone(null)`) canvas сыртындағы `LabPage` тазалайды — R3F түбірі кеш жабылады.
 
+42. **Бөлшектеу (V2-5a).**
+    - `lib/teardown/timeline.ts` — таза функциялар: `partProgress(s, i, n)` (бөлшектер ретімен), `stepValue/stepAt/activeIndex`, `ease`, `pathPoint` (сынық сызық бойымен бірқалыпты), `route` (ұядан шығу → көтерілу → үстелге қою), `approach` (reduced-motion → секіру).
+    - `data/teardown/teardowns.ts` — құрылғылар мен бөлшектер реті, `teardownOfDevice` (case → system_unit, laptop → laptop). Мәтіндер `teardown.<id>.parts.<part>.{name,text}`.
+    - `scenes/Teardown/rig.ts` — бір көріністің өзгермелі күйі (`shown`, `goal`, `rate`, `selected`) + DOM-ға `useSyncExternalStore` арқылы snapshot (тек қадам/таңдау өзгергенде re-render). `TeardownStage` ішіндегі `Driver` әр кадрда `shown`-ды `goal`-ға жылжытады.
+    - Жүйелік блок `Chassis` + `HardwarePart` (V2-2b өнімдері) арқылы жиналады; ортақ `pcRig`-ті `RigSync` басқарады (шыны жасырын, кабельдер 2-қадамнан жоқ). Басқа беттердің `PcRigController`-і `pcRig`-ті әр кадрда қайта жазатындықтан, қалпына келтіру керек емес; зертхана canvas-ы бұл кезде кідіреді.
+    - Жаңа бөлшектеу қосу: `TEARDOWNS`-қа рет, `teardown.<id>` мәтіндері, `scenes/Teardown/<Device>Teardown.tsx`-те әр бөлшекке `PartMotion` (at, rot, path, turn, label), `TeardownStage.SCENES/SHOTS`-қа жазу.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

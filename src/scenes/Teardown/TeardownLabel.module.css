@@ -1,0 +1,82 @@
+.anchor {
+  pointer-events: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 999px;
+  background: rgb(10 14 24 / 0.82);
+  color: #eef2f8;
+  font: 600 12px/1.2 var(--font-body, sans-serif);
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(4px) scale(0.96);
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+  backdrop-filter: blur(6px);
+}
+
+.tag[data-show='false'] {
+  pointer-events: none;
+}
+
+.tag[data-show='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* only the current part (or the one under the pointer) shows its name */
+.name {
+  display: none;
+}
+
+.tag[data-active='true'],
+.tag:hover,
+.tag:focus-visible {
+  padding-right: 9px;
+}
+
+.tag[data-active='true'] .name,
+.tag:hover .name,
+.tag:focus-visible .name {
+  display: inline;
+}
+
+.tag[data-active='true'] {
+  background: #38d6f5;
+  border-color: #38d6f5;
+  color: #05070d;
+}
+
+.tag:focus-visible {
+  outline: 2px solid #38d6f5;
+  outline-offset: 2px;
+}
+
+.num {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #38d6f5;
+  color: #05070d;
+  font-weight: 800;
+  font-size: 11px;
+}
+
+.tag[data-active='true'] .num {
+  background: #05070d;
+  color: #38d6f5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tag {
+    transition: none;
+  }
+}

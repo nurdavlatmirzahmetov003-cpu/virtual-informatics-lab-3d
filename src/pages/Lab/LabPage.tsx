@@ -14,6 +14,8 @@ import { LabMinimap } from './LabMinimap';
 import { DevicePanel } from './DevicePanel';
 import { DeviceCatalog } from './DeviceCatalog';
 import { deviceById } from '@/data/devices/devices';
+import { isTeardownId } from '@/data/teardown/teardowns';
+import { TeardownView } from './TeardownView';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import styles from './LabPage.module.css';
 
@@ -35,7 +37,8 @@ const ZONE_LINKS: Partial<Record<LabZoneId, string>> = {
 function useLabKeyboard() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      // the teardown view has its own keys
+      if (e.altKey || e.ctrlKey || e.metaKey || useLabStore.getState().teardown) return;
       const el = e.target as HTMLElement | null;
       if (el && (el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName))) return;
       const action = keyAction(e.key);
@@ -144,13 +147,17 @@ function Status() {
   );
 }
 
-/** `/lab?device=<id>` (links from the task list) opens that device. */
+/** `/lab?device=<id>` (links from the task list) opens that device; `&teardown=<id>` its teardown. */
 function useDeviceParam() {
   const [params] = useSearchParams();
   const requested = params.get('device');
+  const teardown = params.get('teardown');
   useEffect(() => {
     if (requested && deviceById(requested)) useLabStore.getState().openDevice(requested);
   }, [requested]);
+  useEffect(() => {
+    if (isTeardownId(teardown)) useLabStore.getState().openTeardown(teardown);
+  }, [teardown]);
 }
 
 export default function LabPage() {
@@ -159,6 +166,8 @@ export default function LabPage() {
   useLabKeyboard();
   useDeviceParam();
   const device = useLabStore((s) => s.device);
+  const teardown = useLabStore((s) => s.teardown);
+  const closeTeardown = useLabStore((s) => s.closeTeardown);
   const [catalog, setCatalog] = useState(false);
   const phone = useMediaQuery('(max-width: 760px)');
   // leaving the page resets the tour. Done here, not inside the canvas: the
@@ -168,8 +177,8 @@ export default function LabPage() {
   const side = device ? <DevicePanel /> : catalog ? <DeviceCatalog onClose={() => setCatalog(false)} /> : null;
   return (
     <div className={styles.stage}>
-      {/* the scene sleeps while a full-screen panel covers it on phones */}
-      <SceneCanvas initialCamera="LAB_OVERVIEW" label={t('lab.sceneLabel')} paused={phone && side !== null}>
+      {/* the scene sleeps while a full-screen panel covers it (phones, teardown view) */}
+      <SceneCanvas initialCamera="LAB_OVERVIEW" label={t('lab.sceneLabel')} paused={(phone && side !== null) || teardown !== null}>
         <LabScene />
       </SceneCanvas>
       <div className={styles.overlay}>
@@ -179,6 +188,7 @@ export default function LabPage() {
         <Status />
         <p className={styles.hint}>{t('lab.hint')}</p>
       </div>
+      {teardown && <TeardownView key={teardown} id={teardown} onClose={closeTeardown} />}
     </div>
   );
 }

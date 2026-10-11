@@ -5436,5 +5436,113 @@
       "cellular": "Cellular (4G/5G)",
       "magnetic_charger": "Magnetic charger"
     }
+  },
+  "teardown": {
+    "ui": {
+      "open": "Take it apart",
+      "title": "Teardown",
+      "close": "Close",
+      "slider": "Assembled ↔ taken apart",
+      "assembled": "Assembled",
+      "apart": "Taken apart",
+      "prev": "Previous step",
+      "next": "Next step",
+      "playApart": "Take all apart",
+      "playAssemble": "Put it back together",
+      "step": "Step {n} / {total}",
+      "start": "The device is assembled. Press “Next step” or move the slider.",
+      "parts": "Teardown order",
+      "hint": "Drag to rotate · wheel to zoom · click a label",
+      "sceneLabel": "Teardown view: {name}",
+      "placeholder": "The laptop is a temporary procedural model."
+    },
+    "system_unit": {
+      "title": "Taking a system unit apart",
+      "intro": "A technician always takes a computer apart in this order: unplug it, remove the side panel, take out the parts mounted on the board, and the motherboard itself last.",
+      "parts": {
+        "panel": {
+          "name": "Side panel",
+          "text": "The glass panel keeps dust off the parts. Before removing it, shut the PC down, unplug the power cable and discharge static by touching the metal case."
+        },
+        "gpu": {
+          "name": "Graphics card",
+          "text": "It computes the picture and sends it to the monitor. Unplug its power cable, undo the rear screws, press the PCIe slot latch and pull it out."
+        },
+        "ram": {
+          "name": "Memory (RAM)",
+          "text": "It holds running programs and data for the moment. Open the latches at the ends of the slot and the module pops up."
+        },
+        "cooler": {
+          "name": "CPU cooler",
+          "text": "Heat pipes and fins carry the CPU’s heat to the fan. Unplug the fan cable and loosen the mounting screws in a cross pattern."
+        },
+        "cpu": {
+          "name": "Processor (CPU)",
+          "text": "The “brain” that runs every program’s instructions. Lift the socket lever and lift the CPU straight up by its edges; never touch the contacts."
+        },
+        "ssd": {
+          "name": "M.2 SSD",
+          "text": "The operating system and files live here and survive without power. Undo one screw and slide the module out at 30°."
+        },
+        "psu": {
+          "name": "Power supply",
+          "text": "It turns 230 V AC from the socket into the 12, 5 and 3.3 V DC the parts need. Unplug all its cables and undo the four rear screws."
+        },
+        "fans": {
+          "name": "Case fans",
+          "text": "The front fans pull cool air in; hot air leaves at the back and top. Unplug their cables and undo the screws."
+        },
+        "motherboard": {
+          "name": "Motherboard",
+          "text": "The main board that links every part. It comes out last: unplug the 24- and 8-pin cables and front-panel wires, then undo the standoff screws."
+        }
+      }
+    },
+    "laptop": {
+      "title": "Taking a laptop apart",
+      "intro": "In a laptop every part is packed tightly into a thin case. Once the bottom cover is off, the battery is disconnected first: that prevents short circuits.",
+      "parts": {
+        "lid": {
+          "name": "Display lid",
+          "text": "The lid holds the screen, webcam and Wi-Fi antennas. It sits on hinges: open it first and lay the laptop on a soft cloth."
+        },
+        "bottom_cover": {
+          "name": "Bottom cover",
+          "text": "It covers the insides and carries the air vents. Undo 8–10 screws and gently release the clips with a plastic pry tool."
+        },
+        "battery": {
+          "name": "Battery",
+          "text": "The lithium-ion battery runs the laptop for 6–15 hours. It is disconnected first; never puncture a swollen battery."
+        },
+        "ssd": {
+          "name": "M.2 SSD",
+          "text": "The drive with the system and files. One screw holds it: the easiest part of a laptop to upgrade."
+        },
+        "ram": {
+          "name": "Memory (SO-DIMM)",
+          "text": "The short laptop memory module. Spread the side latches and it tilts up 30°. In thin laptops memory may be soldered to the board."
+        },
+        "wifi": {
+          "name": "Wi-Fi module",
+          "text": "An M.2 2230 card for wireless and Bluetooth. First unclip the two antenna leads that run to the antennas in the lid."
+        },
+        "display_cable": {
+          "name": "Display cable (eDP)",
+          "text": "A thin cable carries the picture and camera signal from the board to the screen. Pull its connector straight out by the tab."
+        },
+        "speakers": {
+          "name": "Speakers",
+          "text": "Two small speakers sit in the front corners and fire downwards. One connector links them to the board."
+        },
+        "cooling": {
+          "name": "Cooling",
+          "text": "A copper heat pipe carries CPU and GPU heat to a radiator and a small fan blows it out. Renew the thermal paste whenever you remove it."
+        },
+        "motherboard": {
+          "name": "Motherboard",
+          "text": "In a laptop the CPU and graphics are soldered to the board, so they cannot be swapped on their own. The board comes out last."
+        }
+      }
+    }
   }
 }

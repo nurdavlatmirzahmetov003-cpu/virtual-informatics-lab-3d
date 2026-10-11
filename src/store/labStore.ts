@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { LabZoneId } from '@/data/lab/zones';
 import { stepZone } from '@/lib/lab/navigation';
 import { deviceById } from '@/data/devices/devices';
+import type { TeardownId } from '@/data/teardown/teardowns';
 
 interface LabState {
   /** Focused zone; null = overview of the whole hall. */
@@ -12,6 +13,8 @@ interface LabState {
   device: string | null;
   /** Device under the pointer (its display pad glows). */
   hoveredDevice: string | null;
+  /** Full-screen teardown view (V2-5a); the lab scene sleeps meanwhile. */
+  teardown: TeardownId | null;
   /** Bumped to re-run the flight to the current shot (e.g. "reset camera"). */
   flightToken: number;
   /** Zoom / orbit nudges from the keyboard and on-screen buttons, consumed by LabCamera. */
@@ -26,6 +29,8 @@ interface LabState {
   openDevice: (id: string) => void;
   closeDevice: () => void;
   hoverDevice: (id: string | null) => void;
+  openTeardown: (id: TeardownId) => void;
+  closeTeardown: () => void;
 }
 
 export const useLabStore = create<LabState>()((set, get) => ({
@@ -33,10 +38,11 @@ export const useLabStore = create<LabState>()((set, get) => ({
   hovered: null,
   device: null,
   hoveredDevice: null,
+  teardown: null,
   flightToken: 0,
   nudge: { zoom: 0, orbit: 0 },
   // leaving a zone also closes its device
-  focusZone: (focus) => set((s) => ({ focus, flightToken: s.flightToken + 1, device: s.device && deviceById(s.device)?.zone === focus ? s.device : null })),
+  focusZone: (focus) => set((s) => ({ focus, flightToken: s.flightToken + 1, device: s.device && deviceById(s.device)?.zone === focus ? s.device : null, teardown: focus ? s.teardown : null })),
   step: (dir) => get().focusZone(stepZone(get().focus, dir)),
   hover: (hovered) => set({ hovered }),
   resetView: () => set((s) => ({ flightToken: s.flightToken + 1 })),
@@ -49,6 +55,8 @@ export const useLabStore = create<LabState>()((set, get) => ({
   },
   closeDevice: () => set({ device: null }),
   hoverDevice: (hoveredDevice) => set((s) => (s.hoveredDevice === hoveredDevice ? s : { hoveredDevice })),
+  openTeardown: (teardown) => set({ teardown }),
+  closeTeardown: () => set({ teardown: null }),
 }));
 
 /** Camera pose for the minimap, written every frame by LabCamera (no React re-render). */
