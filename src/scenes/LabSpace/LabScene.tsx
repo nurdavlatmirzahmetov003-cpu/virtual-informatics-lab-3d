@@ -50,8 +50,6 @@ function usePrefetchNeighbours() {
 export default function LabScene() {
   const focus = useLabStore((s) => s.focus);
   usePrefetchNeighbours();
-  // leaving the page resets the tour
-  useEffect(() => () => useLabStore.getState().focusZone(null), []);
   return (
     <>
       <LabLighting />

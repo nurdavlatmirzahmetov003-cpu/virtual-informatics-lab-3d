@@ -18,7 +18,3 @@ export const PRODUCT: Record<string, string> = {
 /** Product files a set of devices uses, for prefetching. */
 export const deviceProducts = (ids: readonly string[]) => ids.map((id) => PRODUCT[id]).filter(Boolean);
 
-
-/** Devices without a 3D model yet (the viewer then shows the text only). */
-const NO_MODEL = new Set(['modem', 'wifi_adapter', 'access_point', 'nas']);
-export const hasDeviceModel = (id: string) => !NO_MODEL.has(id);

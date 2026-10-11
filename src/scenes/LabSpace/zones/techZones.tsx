@@ -1,12 +1,11 @@
 /**
- * Network, power & cables and mobile zones (devices detailed in V2-4b).
- * Devices stand in tidy rows on pads with name plates, like the V2-4a
- * exhibits; a click opens the device's name and short description.
- * [PLACEHOLDER] models: devices/v24bDevices.tsx.
+ * Network, power & cables and mobile zones (V2-4b). Devices stand in tidy
+ * rows on pads with name plates, like the V2-4a exhibits; a click opens the
+ * info panel, 360° viewer and test. [PLACEHOLDER] models: devices/v24bDevices.tsx.
  */
 import { DeviceSpot, ExhibitTable } from '../devices/Exhibit';
 import { DeviceModel } from '../devices/DeviceModel';
-import { CableCoil } from '../devices/v24bDevices';
+import { CableCoil, RackShell } from '../devices/v24bDevices';
 import type { ZoneContentProps } from './zoneData';
 
 export function NetworkZone({ detail, accent }: ZoneContentProps) {
@@ -15,17 +14,21 @@ export function NetworkZone({ detail, accent }: ZoneContentProps) {
     <>
       <group position={[-1.05, 0, -0.55]}>
         <DeviceSpot id="server_rack" accent={accent} padSize={[0.7, 0.66]} plate={full} plateZ={0.42}>
-          <DeviceModel id="server_rack" />
+          {/* overview: the shell only (two draw calls instead of ~25) */}
+          {full ? <DeviceModel id="server_rack" /> : <RackShell />}
         </DeviceSpot>
       </group>
-      <group position={[0.45, 0, -0.35]}>
+      <group position={[0.42, 0, -0.32]}>
         <ExhibitTable
-          width={1.9}
-          depth={0.7}
+          width={2.0}
+          depth={0.95}
           accent={accent}
           detail={detail}
           hero={['router']}
-          rows={[{ z: -0.02, depth: 0.3, items: [{ id: 'router', w: 1.2 }, { id: 'switch', w: 1.1 }, { id: 'nic' }, { id: 'ethernet_cable', w: 0.9 }] }]}
+          rows={[
+            { z: -0.22, riser: 0.12, depth: 0.28, items: [{ id: 'router', w: 1.2 }, { id: 'switch', w: 1.1 }, { id: 'access_point', w: 1.1 }, { id: 'ethernet_cable', w: 0.9 }] },
+            { z: 0.24, items: [{ id: 'nic' }, { id: 'wifi_adapter', w: 0.9 }, { id: 'modem', w: 1.1 }, { id: 'nas' }] },
+          ]}
         />
       </group>
     </>
@@ -75,13 +78,18 @@ export function PowerZone({ detail, accent }: ZoneContentProps) {
 
 export function MobileZone({ detail, accent }: ZoneContentProps) {
   return (
-    <ExhibitTable
-      width={3.0}
-      depth={0.8}
-      accent={accent}
-      detail={detail}
-      hero={['laptop']}
-      rows={[{ z: 0, depth: 0.34, items: [{ id: 'laptop', w: 1.2 }, { id: 'smartphone', w: 0.8 }, { id: 'tablet' }, { id: 'all_in_one', w: 1.6 }, { id: 'smartwatch', w: 0.7 }, { id: 'sbc', w: 0.7 }] }]}
-    />
+    <group position-z={-0.1}>
+      <ExhibitTable
+        width={2.4}
+        depth={0.95}
+        accent={accent}
+        detail={detail}
+        hero={['laptop']}
+        rows={[
+          { z: -0.22, riser: 0.12, depth: 0.3, items: [{ id: 'laptop', w: 1.1 }, { id: 'all_in_one', w: 1.4 }, { id: 'tablet' }] },
+          { z: 0.25, items: [{ id: 'smartphone' }, { id: 'smartwatch' }, { id: 'sbc' }] },
+        ]}
+      />
+    </group>
   );
 }

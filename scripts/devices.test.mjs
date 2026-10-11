@@ -18,18 +18,17 @@ test('all 60 lab devices: unique, each in the zone that lists it', () => {
     const zone = LAB_ZONES.find((z) => z.id === d.zone);
     assert.ok(zone?.devices.includes(d.id), `${d.id} listed in zone ${d.zone}`);
   }
-  // V2-4a: PC build bench, storage, I/O and print zones are complete
-  const full = DEVICES.filter((d) => d.full).map((d) => d.zone);
-  assert.deepEqual([...new Set(full)].sort(), ['assembly', 'peripherals', 'print_media', 'storage']);
-  assert.equal(DEVICES.filter((d) => d.full).length, 36);
+  // V2-4a + V2-4b: all seven device zones are complete, each device has ports, specs and a test
+  const zones = [...new Set(DEVICES.map((d) => d.zone))].sort();
+  assert.deepEqual(zones, ['assembly', 'mobile', 'network', 'peripherals', 'power', 'print_media', 'storage']);
+  assert.equal(OWN_QUIZ_DEVICES.length, 43);
+  for (const d of DEVICES) assert.ok(d.anatomy || d.answers, `${d.id} has a test`);
 });
 
 test('every device text exists in kk, ru and en (both levels, specs, ports, quiz)', () => {
   for (const [lang, dict] of Object.entries(dicts)) {
     for (const d of DEVICES) {
-      const parts = d.full ? ['name', 'student', 'purpose', 'adult', 'use'] : ['name', 'student'];
-      for (const p of parts) assert.equal(typeof get(dict, deviceKey(d, p)), 'string', `${lang}: ${d.id}.${p}`);
-      if (!d.full) continue;
+      for (const p of ['name', 'student', 'purpose', 'adult', 'use']) assert.equal(typeof get(dict, deviceKey(d, p)), 'string', `${lang}: ${d.id}.${p}`);
       assert.ok(specs(d).length >= 3, `${d.id} has specs`);
       for (const s of specs(d)) {
         assert.equal(typeof get(dict, `${deviceKey(d, 'specs')}.${s}.label`), 'string', `${lang}: ${d.id} spec ${s}`);
@@ -42,7 +41,7 @@ test('every device text exists in kk, ru and en (both levels, specs, ports, quiz
 });
 
 test('tests: shared Anatomy tests keep their ids, own tests are catalogued and graded', () => {
-  for (const d of DEVICES.filter((x) => x.full)) {
+  for (const d of DEVICES) {
     const ex = deviceExercise(d);
     assert.ok(ex, `${d.id} has a test`);
     assert.equal(ex.id, d.anatomy ? `anatomy:${d.anatomy}` : `device:${d.id}`);
@@ -50,10 +49,9 @@ test('tests: shared Anatomy tests keep their ids, own tests are catalogued and g
     assert.equal(ex.maxScore, 10);
   }
   assert.deepEqual([...DEVICE_TASKS].sort(), OWN_QUIZ_DEVICES.map((d) => d.id).sort());
-  for (const d of DEVICES.filter((x) => !x.full)) assert.equal(deviceExercise(d), null);
   // answers are spread over a, b and c (no "always a" pattern)
   const letters = OWN_QUIZ_DEVICES.flatMap((d) => d.answers);
-  for (const l of ['a', 'b', 'c']) assert.ok(letters.filter((x) => x === l).length >= 15, `answer ${l} used often enough`);
+  for (const l of ['a', 'b', 'c']) assert.ok(letters.filter((x) => x === l).length >= 40, `answer ${l} used often enough`);
 });
 
 test('a perfect answer sheet scores 10, an empty one 0', async () => {
@@ -64,5 +62,13 @@ test('a perfect answer sheet scores 10, an empty one 0', async () => {
     assert.equal(grade(ex, { answers: good }, startAttempt(ex.id)).report.score, 10, d.id);
     const empty = { q1: null, q2: null, q3: null };
     assert.equal(grade(ex, { answers: empty }, startAttempt(ex.id)).report.score, 0, d.id);
+  }
+});
+
+test('no unused port labels and no near-empty explanations', () => {
+  const used = new Set(DEVICES.flatMap((d) => d.ports));
+  for (const [lang, dict] of Object.entries(dicts)) {
+    assert.deepEqual(Object.keys(dict.deviceUi.portTypes).filter((p) => !used.has(p)), [], `${lang}: every port label is used`);
+    for (const d of DEVICES) assert.ok(get(dict, deviceKey(d, 'adult')).length > 80, `${lang}: ${d.id} adult text is substantial`);
   }
 });

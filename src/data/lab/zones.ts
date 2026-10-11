@@ -63,7 +63,7 @@ export const LAB_ZONES: readonly LabZone[] = [
   },
   {
     id: 'network', accent: '#22d3ee', center: [-8.2, -0.6], size: [3.2, 2.4], facing: FROM_LEFT,
-    view: { distance: 2.9, height: 1.65, targetY: 1.1 },
+    view: { distance: 3.4, height: 1.85, targetY: 0.9 },
     devices: ['router', 'switch', 'modem', 'wifi_adapter', 'nic', 'ethernet_cable', 'access_point', 'nas', 'server_rack'],
   },
   {
@@ -73,8 +73,8 @@ export const LAB_ZONES: readonly LabZone[] = [
   },
   {
     // front left, beside the entrance: the showcase is seen from the open middle
-    id: 'mobile', accent: '#60a5fa', center: [-2.8, 5.0], size: [3.6, 1.8], facing: BACK,
-    view: { distance: 2.5, height: 1.55, targetY: 0.9 },
+    id: 'mobile', accent: '#60a5fa', center: [-2.8, 4.7], size: [3.6, 1.8], facing: BACK,
+    view: { distance: 2.95, height: 1.6, targetY: 0.85 },
     devices: ['laptop', 'all_in_one', 'smartphone', 'tablet', 'smartwatch', 'sbc'],
   },
   {

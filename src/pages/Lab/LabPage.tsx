@@ -161,8 +161,10 @@ export default function LabPage() {
   const device = useLabStore((s) => s.device);
   const [catalog, setCatalog] = useState(false);
   const phone = useMediaQuery('(max-width: 760px)');
+  // leaving the page resets the tour. Done here, not inside the canvas: the
+  // canvas root unmounts late and would close a device opened by ?device=.
+  useEffect(() => () => useLabStore.getState().focusZone(null), []);
   // a device panel replaces the catalog; closing the device returns to it
-  useEffect(() => () => useLabStore.getState().closeDevice(), []);
   const side = device ? <DevicePanel /> : catalog ? <DeviceCatalog onClose={() => setCatalog(false)} /> : null;
   return (
     <div className={styles.stage}>

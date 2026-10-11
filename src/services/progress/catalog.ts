@@ -15,12 +15,16 @@ export const ANATOMY_TASKS = [
   'monitor', 'keyboard', 'mouse', 'headset', 'microphone', 'webcam', 'speaker', 'printer',
   'motherboard', 'cpu', 'ram', 'gpu', 'ssd', 'hdd', 'psu', 'cooler', 'fans', 'nic',
 ] as const;
-/** Lab devices with their own test (V2-4a); the others share an Anatomy test. Checked against data/devices. */
+/** Lab devices with their own test (V2-4a/b); the others share an Anatomy test. Checked against data/devices. */
 export const DEVICE_TASKS = [
   'cooler_liquid', 'case', 'thermal_paste', 'internal_cables', 'cmos_battery',
   'hdd_25', 'ssd_sata', 'usb_flash', 'sd_card', 'external_drive', 'optical_disc', 'optical_drive',
   'graphics_tablet', 'gamepad',
   'printer_laser', 'scanner', 'projector', 'printer_3d', 'interactive_panel',
+  // V2-4b
+  'router', 'switch', 'modem', 'wifi_adapter', 'nic', 'ethernet_cable', 'access_point', 'nas', 'server_rack',
+  'ups', 'docking_station', 'usb_hub', 'card_reader', 'hdmi_cable', 'displayport_cable', 'usb_c_cable', 'usb_a_cable', 'audio_cable',
+  'laptop', 'all_in_one', 'smartphone', 'tablet', 'smartwatch', 'sbc',
 ] as const;
 export const NETWORK_TASKS = ['connect3', 'routerLan', 'addressing', 'repair'] as const;
 export const ALGORITHM_TASKS = ['nextSwap', 'binarySteps', 'bubblePass'] as const;

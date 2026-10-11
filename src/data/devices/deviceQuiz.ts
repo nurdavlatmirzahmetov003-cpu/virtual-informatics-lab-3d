@@ -10,7 +10,7 @@ import { QUIZ_OPTIONS, type Device } from './devices';
  */
 export function deviceExercise(device: Device): Exercise<QuizWork> | null {
   if (device.anatomy) return anatomyExercise(anatomyItem(device.anatomy));
-  if (!device.full || !device.answers) return null;
+  if (!device.answers) return null;
   const base = `devices.${device.id}.quiz`;
   return makeChoiceQuiz({
     id: `device:${device.id}`,

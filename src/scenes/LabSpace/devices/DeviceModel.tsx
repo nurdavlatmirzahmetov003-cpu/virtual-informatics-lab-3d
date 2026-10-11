@@ -16,7 +16,7 @@ import {
   OpticalDisc, OpticalDrive, Printer3d, Projector, Scanner, SdCards, ThermalPaste, UsbFlash,
 } from './procedural';
 import { PRODUCT } from './deviceAssets';
-import { AllInOne, CableCoil, Gadget, Laptop, NetworkSwitch, Rack, Router, SingleBoard, Slate, Smartwatch, Ups } from './v24bDevices';
+import { AccessPoint, AllInOne, CableCoil, CardReader, DockingStation, Laptop, Modem, Nas, NetworkSwitch, Rack, Router, SingleBoard, Slate, Smartwatch, Ups, UsbHub, WifiAdapter } from './v24bDevices';
 
 interface Pose {
   /** Magnification on the exhibit table. */
@@ -50,6 +50,14 @@ const POSE: Record<string, Pose> = {
   webcam: { scale: 2 },
   microphone: { scale: 1.2 },
   graphics_tablet: { tilt: 0.35, half: 0.1 },
+  nic: { scale: 1.6 },
+  wifi_adapter: { scale: 1.4 },
+  access_point: { tilt: 1.0, half: 0.1 },
+  docking_station: { scale: 1.5 },
+  usb_hub: { scale: 2 },
+  card_reader: { scale: 2.5 },
+  smartwatch: { scale: 1.8 },
+  sbc: { scale: 2.2, tilt: 0.9, half: 0.028 },
 };
 
 function HeadsetOnStand({ light }: { light: boolean }) {
@@ -162,23 +170,31 @@ function Model({ id, light }: { id: string; light: boolean }): ReactNode {
       return <Printer3d />;
     case 'interactive_panel':
       return <WithWallpaper render={(t) => <InteractivePanel wallpaper={t} />} />;
-    // V2-4b devices (procedural until their models arrive)
+    // network, power and mobile devices (V2-4b; procedural until licensed models arrive)
     case 'router':
       return <Router />;
     case 'switch':
       return <NetworkSwitch />;
     case 'nic':
       return <NetworkCard />;
+    case 'modem':
+      return <Modem />;
+    case 'wifi_adapter':
+      return <WifiAdapter />;
+    case 'access_point':
+      return <AccessPoint />;
+    case 'nas':
+      return <Nas />;
     case 'server_rack':
       return <Rack />;
     case 'ups':
       return <Ups />;
     case 'docking_station':
-      return <Gadget size={[0.2, 0.03, 0.08]} glow="#38d6f5" />;
+      return <DockingStation />;
     case 'usb_hub':
-      return <Gadget size={[0.11, 0.015, 0.035]} color="#e6e8ec" glow="#4ade80" />;
+      return <UsbHub />;
     case 'card_reader':
-      return <Gadget size={[0.06, 0.012, 0.04]} color="#1a1d23" />;
+      return <CardReader />;
     case 'hdmi_cable':
     case 'displayport_cable':
     case 'usb_c_cable':

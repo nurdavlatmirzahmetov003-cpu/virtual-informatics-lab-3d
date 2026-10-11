@@ -147,6 +147,9 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | `ssd-samsung-990-pro-2tb` | [M.2 NVMe SSD Samsung 990 PRO 1TB](https://sketchfab.com/3d-models/m2-nvme-ssd-samsung-990-pro-1tb-3d-model-41b7bfda7eab40f8b13330913fd66fc2) | lime.ball.animations | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 2 texture areas repainted (logos / print) |
 | `ssd-wd-sn850x-1tb` | [m2ssd_Painter](https://sketchfab.com/3d-models/m2ssd-painter-ccda7c201091445087c02692444641c2) | Igor.Jop | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 1 texture areas repainted (logos / print) |
 
+### Зертхана құрылғылары, 2-бөлім (V2-4b, 2026-10-12)
+Жаңа ассет жүктелмеді. Жаңа процедуралық [PLACEHOLDER] модельдер: модем, Wi-Fi адаптері, қатынау нүктесі, NAS, шкафтың жеңіл қабығы (`scenes/LabSpace/devices/v24bDevices.tsx`); жапсырмалар canvas-та салынған, бренд жоқ.
+
 ### Зертхана құрылғылары (V2-4a, 2026-10-11)
 Жаңа ассет жүктелмеді. Көрме мен 360° көрсеткіш каталог өнімдерін (V2-2a/b), анатомия placeholders және жаңа процедуралық [PLACEHOLDER] модельдерді (`scenes/LabSpace/devices/`) қолданады. Өзгеріс: `cpu-amd-am5` — «AMD Ryzen» бедері normal/roughness/occlusion картасынан алынды (`materials.paint.flat`). Лицензиялы модельдерге үміткерлер — ASSET_SOURCING.md §3.
 

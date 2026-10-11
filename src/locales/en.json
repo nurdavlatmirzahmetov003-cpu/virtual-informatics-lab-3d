@@ -3210,13 +3210,13 @@
       "network": {
         "name": "Network corner",
         "caption": "Router, switch, rack",
-        "description": "Switches and patch cables in the server rack; a Wi-Fi router and a network card on the desk. This is how computers join a network.",
+        "description": "Switches and patch cables in the server rack; on the table a router, switch, fibre modem, access point, network card, Wi-Fi adapter and NAS. This is how the internet reaches a building.",
         "action": "Network lab"
       },
       "power": {
         "name": "Power & cables",
         "caption": "UPS, cables, hubs",
-        "description": "A UPS, a surge protector, a docking station and a USB hub. HDMI, DisplayPort, USB-C, USB-A, audio and power cables hang on the wall."
+        "description": "An uninterruptible power supply (UPS), a docking station, a USB hub and a card reader. HDMI, DisplayPort, USB-C, USB-A and audio cables hang on the wall."
       },
       "mobile": {
         "name": "Mobile devices",
@@ -4214,99 +4214,1155 @@
     },
     "router": {
       "name": "Router",
-      "student": "Connects home or school devices to the internet and provides Wi-Fi."
+      "student": "Connects home or school devices to the internet and provides Wi-Fi.",
+      "purpose": "To share one internet connection with every device at home or in class and to provide Wi-Fi.",
+      "adult": "The WAN port goes to the provider (modem); the LAN ports and Wi-Fi form the local network. The router shares one public IP through NAT, hands out addresses with DHCP and filters incoming connections with a firewall. Wi-Fi 6 (802.11ax), 2.4 and 5 GHz.",
+      "use": "In every home, school and café: phones, laptops and TVs reach the internet through it.",
+      "specs": {
+        "wan": {
+          "label": "WAN port",
+          "value": "1 × RJ-45, 1 Gbit/s"
+        },
+        "lan": {
+          "label": "LAN ports",
+          "value": "4 × RJ-45, 1 Gbit/s"
+        },
+        "wifi": {
+          "label": "Wi-Fi",
+          "value": "Wi-Fi 6, 2.4 + 5 GHz"
+        },
+        "services": {
+          "label": "Services",
+          "value": "DHCP, NAT, firewall"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does a router do with the internet connection?",
+          "a": "Stores files",
+          "b": "Prints documents",
+          "c": "Shares one connection with many devices",
+          "explain": "Through NAT the router lets every home device share one public address."
+        },
+        "q2": {
+          "question": "Which router port goes to the provider (modem)?",
+          "a": "The WAN (internet) port",
+          "b": "Any LAN port",
+          "c": "The USB port",
+          "explain": "WAN is the outside network, LAN the inside one. The WAN port is usually a different colour."
+        },
+        "q3": {
+          "question": "What does DHCP in a router do?",
+          "a": "Speeds up the processor",
+          "b": "Gives devices IP addresses automatically",
+          "c": "Charges your phone",
+          "explain": "Without DHCP you would have to type an IP address into every device by hand."
+        }
+      }
     },
     "switch": {
       "name": "Network switch",
-      "student": "Joins many computers into one network with cables."
+      "student": "Joins many computers into one network with cables.",
+      "purpose": "Building one shared local network for every PC, printer and server in a classroom or office.",
+      "adult": "A switch works at layer 2 (the OSI data-link layer): it learns which MAC address sits behind each port and sends a frame only to the right port. 1–10 Gbit/s per port; managed models add VLANs, QoS and PoE; SFP+ slots take fibre.",
+      "use": "Computer classrooms, offices and server racks: every wired device ends up at a switch.",
+      "specs": {
+        "ports": {
+          "label": "Ports",
+          "value": "8–48 × RJ-45"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "1 Gbit/s per port"
+        },
+        "mac": {
+          "label": "How it works",
+          "value": "MAC address table"
+        },
+        "uplink": {
+          "label": "Uplink",
+          "value": "SFP+, 10 Gbit/s"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "How does a switch differ from a router?",
+          "a": "A switch joins devices inside one network; a router links networks (e.g. to the internet)",
+          "b": "A switch provides Wi-Fi",
+          "c": "There is no difference",
+          "explain": "A switch is the hub of the local network; a router is its gateway to the outside world."
+        },
+        "q2": {
+          "question": "How does a switch know which port to send data to?",
+          "a": "It picks one at random",
+          "b": "From its MAC address table",
+          "c": "It always sends to every port",
+          "explain": "The switch remembers the sender of every frame and later sends data only to that port."
+        },
+        "q3": {
+          "question": "What do you need to cable 25 classroom computers into one network?",
+          "a": "A modem",
+          "b": "A USB hub",
+          "c": "A 48-port switch",
+          "explain": "Each computer gets its own cable to a switch port; 48 ports leave room to spare for 25 devices."
+        }
+      }
     },
     "modem": {
       "name": "Modem",
-      "student": "Turns the provider’s signal (fibre, DSL) into one computers understand."
+      "student": "Turns the provider’s signal (fibre, DSL) into one computers understand.",
+      "purpose": "Letting the internet into a building: the bridge between the provider and the home network.",
+      "adult": "“Modem” = modulator–demodulator. On fibre it is an ONT (GPON terminal) that turns light pulses into an electrical signal at 1–2.5 Gbit/s. A DSL modem works over the phone line (RJ-11). Provider boxes often combine modem, router and Wi-Fi in one case.",
+      "use": "It sits where the internet enters a home or school; the router plugs in after it.",
+      "specs": {
+        "type": {
+          "label": "Type",
+          "value": "ONT (GPON) or DSL"
+        },
+        "line": {
+          "label": "Line",
+          "value": "Fibre / phone line"
+        },
+        "lan": {
+          "label": "Output",
+          "value": "1–4 × RJ-45"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "up to 2.5 Gbit/s (GPON)"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does the word “modem” stand for?",
+          "a": "Mobile device",
+          "b": "Modulator–demodulator",
+          "c": "Monitor–desktop",
+          "explain": "A modem modulates the signal it sends down the line and demodulates the one it receives."
+        },
+        "q2": {
+          "question": "What is the box that converts the light signal on fibre internet called?",
+          "a": "SSD",
+          "b": "UPS",
+          "c": "ONT (optical terminal)",
+          "explain": "An ONT takes the provider’s fibre and gives you an Ethernet port: it is a fibre modem."
+        },
+        "q3": {
+          "question": "Can a modem and a router be in one box?",
+          "a": "Yes, most provider devices are like that",
+          "b": "No, never",
+          "c": "Only in phones",
+          "explain": "Such an all-in-one box does the job of the modem, router and Wi-Fi point together."
+        }
+      }
     },
     "wifi_adapter": {
       "name": "Wi-Fi adapter",
-      "student": "Gives a computer without Wi-Fi a wireless connection."
+      "student": "Gives a computer without Wi-Fi a wireless connection.",
+      "purpose": "Getting a PC online without a cable, or swapping old Wi-Fi for a faster standard.",
+      "adult": "Comes as USB (a tiny dongle or one with an antenna) or a PCIe x1 card. Standards: Wi-Fi 5 (802.11ac) or Wi-Fi 6/6E (802.11ax) on 2.4 / 5 / 6 GHz. 2.4 GHz reaches further but is slower and busier; 5 GHz is faster but passes walls poorly. External antennas improve reception.",
+      "use": "Getting an old or desktop PC online without running a cable.",
+      "specs": {
+        "standard": {
+          "label": "Standard",
+          "value": "Wi-Fi 6 (802.11ax)"
+        },
+        "bands": {
+          "label": "Bands",
+          "value": "2.4 and 5 GHz"
+        },
+        "interface": {
+          "label": "Interface",
+          "value": "USB 3.0 or PCIe x1"
+        },
+        "antenna": {
+          "label": "Antenna",
+          "value": "Internal or external"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "When do you need a Wi-Fi adapter?",
+          "a": "To cool the processor",
+          "b": "To print",
+          "c": "When the computer has no built-in Wi-Fi",
+          "explain": "Laptops usually have Wi-Fi but many desktops do not; an adapter fills the gap."
+        },
+        "q2": {
+          "question": "Which band is faster but has a shorter range?",
+          "a": "2.4 GHz",
+          "b": "5 GHz",
+          "c": "They are the same",
+          "explain": "Higher frequency means more speed but weaker penetration through walls."
+        },
+        "q3": {
+          "question": "What do a Wi-Fi adapter’s external antennas give you?",
+          "a": "Better signal reception",
+          "b": "Only looks",
+          "c": "They charge the device",
+          "explain": "Larger antennas catch weak signals better, especially in a room far from the router."
+        }
+      }
     },
     "nic": {
       "name": "Network card",
-      "student": "Connects a computer to the network over Ethernet."
+      "student": "Connects a computer to the network over Ethernet.",
+      "purpose": "A steady, fast, low-latency wired connection.",
+      "adult": "A network card (NIC) splits data into frames and sends them down the cable as electrical signals. Every card has a unique 48-bit MAC address from the factory. Motherboards carry a built-in 1–2.5 Gbit/s chip; an add-in PCIe card gives 10 Gbit/s or SFP+ fibre.",
+      "use": "A wired link is steadier and faster: gaming, servers, classroom PCs.",
+      "specs": {
+        "interface": {
+          "label": "Interface",
+          "value": "PCIe x1 / x4"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "1, 2.5 or 10 Gbit/s"
+        },
+        "port": {
+          "label": "Port",
+          "value": "RJ-45 (sometimes SFP+)"
+        },
+        "mac": {
+          "label": "Address",
+          "value": "Unique MAC (48-bit)"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does every network card have that is unique?",
+          "a": "A password",
+          "b": "A MAC address",
+          "c": "A screen",
+          "explain": "The MAC address is set at the factory; switches tell devices apart by it."
+        },
+        "q2": {
+          "question": "Where does an add-in network card go in a desktop PC?",
+          "a": "Into a PCIe slot on the motherboard",
+          "b": "Into a DIMM slot",
+          "c": "Into the power supply",
+          "explain": "A network card is an expansion card; it goes into a PCIe x1 or x4 slot."
+        },
+        "q3": {
+          "question": "How do most modern motherboards handle networking?",
+          "a": "They have none",
+          "b": "They need two separate cards",
+          "c": "A network chip is built in, with RJ-45 on the rear panel",
+          "explain": "An add-in card is only needed for more speed (10 Gbit/s) or fibre."
+        }
+      }
     },
     "ethernet_cable": {
       "name": "Ethernet cable",
-      "student": "A cable with RJ-45 plugs that links network devices."
+      "student": "A cable with RJ-45 plugs that links network devices.",
+      "purpose": "To link network devices (PC, router, switch) with a reliable wired connection.",
+      "adult": "Inside are 4 twisted pairs (8 wires) with RJ-45 (8P8C) plugs on the ends. Categories: Cat5e 1 Gbit/s, Cat6 10 Gbit/s up to 55 m, Cat6a 10 Gbit/s up to 100 m. One run may be at most 100 m long. Twisting cuts interference between pairs (crosstalk); wires are crimped in T568B order.",
+      "use": "From every classroom PC to the switch, from router to modem, between servers.",
+      "specs": {
+        "category": {
+          "label": "Category",
+          "value": "Cat5e / Cat6 / Cat6a"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "1–10 Gbit/s"
+        },
+        "length": {
+          "label": "Max run",
+          "value": "100 m"
+        },
+        "pairs": {
+          "label": "Inside",
+          "value": "4 twisted pairs, 8 wires"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "How long can a single Ethernet run be?",
+          "a": "5 m",
+          "b": "1 km",
+          "c": "100 m",
+          "explain": "Beyond 100 m the signal fades: put a switch in between or use fibre."
+        },
+        "q2": {
+          "question": "Why are the wires twisted in pairs?",
+          "a": "For looks",
+          "b": "To reduce interference (crosstalk)",
+          "c": "To save copper",
+          "explain": "Outside noise hits both wires of a pair equally and cancels out."
+        },
+        "q3": {
+          "question": "Which category carries 10 Gbit/s up to 100 m?",
+          "a": "Cat6a",
+          "b": "Cat3",
+          "c": "Cat5",
+          "explain": "Cat6a is better shielded; Cat6 holds 10 Gbit/s only up to 55 m."
+        }
+      }
     },
     "access_point": {
       "name": "Access point",
-      "student": "Extends Wi-Fi coverage in a large building."
+      "student": "Extends Wi-Fi coverage in a large building.",
+      "purpose": "Removing Wi-Fi dead spots in corridors and classrooms and serving many students at once.",
+      "adult": "An access point (AP) turns the wired network into a wireless one but does no NAT/DHCP like a router. It mounts on a ceiling or wall and takes power over PoE through the same Ethernet cable. Several APs with one network name (SSID) hand a device from room to room without a drop (roaming). Wi-Fi 6/6E, 100+ clients.",
+      "use": "Schools, universities, offices and airports: one AP in every corridor.",
+      "specs": {
+        "standard": {
+          "label": "Standard",
+          "value": "Wi-Fi 6 / 6E"
+        },
+        "power": {
+          "label": "Power",
+          "value": "PoE (over the Ethernet cable)"
+        },
+        "clients": {
+          "label": "Clients",
+          "value": "100+ devices"
+        },
+        "mount": {
+          "label": "Mounting",
+          "value": "Ceiling or wall"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Why does a school use several access points instead of one router?",
+          "a": "To save electricity",
+          "b": "To cover the whole building with Wi-Fi",
+          "c": "For printing",
+          "explain": "One device’s signal fades through walls and floors; every area needs its own AP."
+        },
+        "q2": {
+          "question": "What is PoE?",
+          "a": "Power over Ethernet: data and power through one cable",
+          "b": "A Wi-Fi password",
+          "c": "A kind of virus",
+          "explain": "PoE means no separate socket at the ceiling: the switch supplies the power."
+        },
+        "q3": {
+          "question": "Where is an access point usually mounted?",
+          "a": "Inside a computer",
+          "b": "In a desk drawer",
+          "c": "On the ceiling or high on a wall",
+          "explain": "Up high, furniture and people block the signal less."
+        }
+      }
     },
     "nas": {
       "name": "Network storage (NAS)",
-      "student": "A “home cloud” that stores shared files for every device on the network."
+      "student": "A “home cloud” that stores shared files for every device on the network.",
+      "purpose": "Keeping a family’s or class’s photos, documents and backups in one place on its own network.",
+      "adult": "A NAS is a small computer with its own CPU and OS and 2–4 drive bays. Files are reached over the network (SMB, web, app). RAID 1 writes every file to two drives at once, so data survives if one fails. RAID is not a backup, though: a file deleted by mistake or encrypted by ransomware is gone from both drives.",
+      "use": "A family photo archive, shared school folders, CCTV recordings.",
+      "specs": {
+        "bays": {
+          "label": "Bays",
+          "value": "2–4 × 3.5″ / 2.5″"
+        },
+        "raid": {
+          "label": "Protection",
+          "value": "RAID 1: mirror copy"
+        },
+        "access": {
+          "label": "Access",
+          "value": "Over the network: SMB, web"
+        },
+        "network": {
+          "label": "Network",
+          "value": "1–2.5 Gbit/s RJ-45"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does RAID 1 do in a NAS?",
+          "a": "Writes an identical copy of every file to a second drive",
+          "b": "Only makes things faster",
+          "c": "Deletes old files",
+          "explain": "The two drives mirror each other: if one dies, the other still has everything."
+        },
+        "q2": {
+          "question": "How do computers reach the files on a NAS?",
+          "a": "Only via USB",
+          "b": "By post",
+          "c": "Over the local network",
+          "explain": "The NAS is cabled to the network, and its files show up on every computer as a network drive."
+        },
+        "q3": {
+          "question": "Does RAID replace a backup?",
+          "a": "Yes, completely",
+          "b": "No, you still need a separate backup",
+          "c": "Only in winter",
+          "explain": "A deleted or ransomware-encrypted file vanishes from both drives; a backup must live elsewhere."
+        }
+      }
     },
     "server_rack": {
       "name": "Server rack",
-      "student": "A cabinet that holds servers and network gear in order."
+      "student": "A cabinet that holds servers and network gear in order.",
+      "purpose": "To keep servers, switches, UPS units and cables in one place, tidy, secure and cool.",
+      "adult": "The standard width is 19 inches and height is counted in units: 1U = 44.45 mm, racks are 22U–42U. Inside: a patch panel (every cable ends neatly in one place), switches, servers, a PDU (power strip) and a UPS. Air enters at the front and leaves at the back; doors are vented and cables run through organisers.",
+      "use": "School server rooms, offices, data centres.",
+      "specs": {
+        "height": {
+          "label": "Height",
+          "value": "22U–42U (1U = 44.45 mm)"
+        },
+        "width": {
+          "label": "Width",
+          "value": "19-inch standard"
+        },
+        "inside": {
+          "label": "Inside",
+          "value": "Patch panel, switch, server, UPS"
+        },
+        "cooling": {
+          "label": "Cooling",
+          "value": "Air front to back"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does “1U” mean in a rack?",
+          "a": "One user",
+          "b": "One USB port",
+          "c": "One rack unit, 44.45 mm high",
+          "explain": "Device heights are given in units: a 1U switch, a 2U server and so on."
+        },
+        "q2": {
+          "question": "What is the standard width of a server rack?",
+          "a": "10 cm",
+          "b": "19 inches",
+          "c": "1 metre",
+          "explain": "The 19-inch standard lets gear from any maker fit the same rack."
+        },
+        "q3": {
+          "question": "What is a patch panel for?",
+          "a": "To end every cable neatly in one place",
+          "b": "For cooling",
+          "c": "For printing",
+          "explain": "Cables from the rooms are fixed to the panel; short patch cords run to the switch."
+        }
+      }
     },
     "ups": {
       "name": "Uninterruptible power supply (UPS)",
-      "student": "Keeps the computer running on a battery during a power cut so you can save your work."
+      "student": "Keeps the computer running on a battery during a power cut so you can save your work.",
+      "purpose": "Not losing data in a sudden power cut, and protecting equipment from voltage spikes.",
+      "adult": "Rated in VA and W (e.g. 1500 VA / 900 W). Line-interactive units correct low or high voltage (AVR); online units always feed the load through the battery. A 12 V lead-acid battery keeps a PC going 5–15 minutes, enough to save work and shut down properly. Over USB the computer shuts itself down when the charge runs low.",
+      "use": "School servers, network cabinets, tills, medical and home computers.",
+      "specs": {
+        "power": {
+          "label": "Power",
+          "value": "1500 VA / 900 W"
+        },
+        "battery": {
+          "label": "Battery",
+          "value": "12 V, 5–15 min"
+        },
+        "type": {
+          "label": "Type",
+          "value": "Line-interactive, AVR"
+        },
+        "outlets": {
+          "label": "Outlets",
+          "value": "Battery + surge-only"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does a UPS do during a power cut?",
+          "a": "Turns the PC off at once",
+          "b": "Runs the PC from its battery for a few minutes",
+          "c": "Speeds up the internet",
+          "explain": "The switch-over takes milliseconds, so the computer stays on."
+        },
+        "q2": {
+          "question": "How long does a home UPS usually keep a PC running?",
+          "a": "5–15 minutes: enough to save work and shut down properly",
+          "b": "Several days",
+          "c": "For ever",
+          "explain": "A UPS is not a generator; its job is to give you time to shut down safely without losing data."
+        },
+        "q3": {
+          "question": "Why connect a UPS to the computer over USB?",
+          "a": "To charge a phone",
+          "b": "To play music",
+          "c": "So the PC shuts down properly by itself when the battery runs low",
+          "explain": "Even with no one around (at night) the server saves its data and shuts down in order."
+        }
+      }
     },
     "docking_station": {
       "name": "Docking station",
-      "student": "Connects a monitor, keyboard, network and charging to a laptop through one cable."
+      "student": "Connects a monitor, keyboard, network and charging to a laptop through one cable.",
+      "purpose": "Turning a laptop into a full workstation in one move and solving the shortage of ports.",
+      "adult": "It links to the laptop over USB-C or Thunderbolt 4 (40 Gbit/s). Inside are a USB hub, video outputs (HDMI, DisplayPort: two 4K monitors), a network chip (RJ-45) and audio. With Power Delivery (PD) it charges the laptop through the same cable at up to 90–100 W; the dock has its own power brick.",
+      "use": "In offices and on teachers’ desks: one cable turns a laptop into a full workstation.",
+      "specs": {
+        "link": {
+          "label": "Link",
+          "value": "USB-C / Thunderbolt 4"
+        },
+        "displays": {
+          "label": "Displays",
+          "value": "2 × 4K (HDMI + DP)"
+        },
+        "pd": {
+          "label": "Charging (PD)",
+          "value": "up to 90–100 W"
+        },
+        "ports": {
+          "label": "Ports",
+          "value": "USB-A, USB-C, RJ-45, 3.5 mm"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What is the main benefit of a docking station?",
+          "a": "It speeds up the processor",
+          "b": "It enlarges the battery",
+          "c": "One cable connects the laptop to everything on the desk",
+          "explain": "Monitors, keyboard, network and charger stay plugged into the dock; only one cable goes to the laptop."
+        },
+        "q2": {
+          "question": "What is Power Delivery (PD)?",
+          "a": "Charging the laptop through the same USB-C cable",
+          "b": "A kind of Wi-Fi",
+          "c": "A printer mode",
+          "explain": "With PD the devices negotiate and raise the voltage from 5 V up to 20 V, which carries high power."
+        },
+        "q3": {
+          "question": "How does a dock usually connect to the laptop?",
+          "a": "VGA",
+          "b": "USB-C or Thunderbolt",
+          "c": "PS/2",
+          "explain": "A single USB-C/Thunderbolt cable carries data, video and power at once."
+        }
+      }
     },
     "usb_hub": {
       "name": "USB hub",
-      "student": "Turns one USB port into several."
+      "student": "Turns one USB port into several.",
+      "purpose": "Plugging several devices at once into a laptop with few ports.",
+      "adult": "All hub ports share the bandwidth of one upstream port: 5 Gbit/s in total for USB 3.2 Gen 1. A bus-powered hub suits low-power devices such as mice and sticks; external HDDs need an active hub with its own adapter. USB 3.x sockets usually have a blue insert.",
+      "use": "Thin laptops with few ports, a student desk full of sticks and peripherals.",
+      "specs": {
+        "ports": {
+          "label": "Ports",
+          "value": "4 × USB-A"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "USB 3.2 Gen 1, 5 Gbit/s shared"
+        },
+        "power": {
+          "label": "Power",
+          "value": "Bus or own adapter"
+        },
+        "link": {
+          "label": "Plug",
+          "value": "USB-C or USB-A"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Does a hub increase the total USB speed?",
+          "a": "No: all its ports share the speed of one port",
+          "b": "Yes, it doubles it",
+          "c": "Yes, four times",
+          "explain": "Copy to two sticks at once and each gets roughly half the speed."
+        },
+        "q2": {
+          "question": "When does a hub need its own power adapter?",
+          "a": "Never",
+          "b": "Only for a mouse",
+          "c": "For power-hungry devices such as an external HDD",
+          "explain": "One USB port supplies limited current; split among several devices, a drive may fail to spin up."
+        },
+        "q3": {
+          "question": "What colour is the plastic inside a USB 3.0 port usually?",
+          "a": "Black",
+          "b": "Blue",
+          "c": "Red",
+          "explain": "Black means USB 2.0, blue USB 3.x; the blue port has extra contacts."
+        }
+      }
     },
     "card_reader": {
       "name": "Card reader",
-      "student": "Lets a computer read SD and microSD cards."
+      "student": "Lets a computer read SD and microSD cards.",
+      "purpose": "To read and write the memory cards of cameras, drones and phones on a computer.",
+      "adult": "SD and microSD slots, sometimes CFexpress. Card and reader must share the bus standard: UHS-I up to 104 MB/s, UHS-II (a second row of pins) up to 312 MB/s. A UHS-II card in a UHS-I reader runs at UHS-I speed only. It plugs in over USB 3.2; eject the card safely before pulling it out.",
+      "use": "Photographers, video bloggers, writing an OS for a Raspberry Pi, copying files off an old phone.",
+      "specs": {
+        "slots": {
+          "label": "Slots",
+          "value": "SD, microSD"
+        },
+        "standard": {
+          "label": "Bus",
+          "value": "UHS-I / UHS-II"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "up to 104 / 312 MB/s"
+        },
+        "link": {
+          "label": "Link",
+          "value": "USB 3.2 (A or C)"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Which cards does a card reader read?",
+          "a": "SIM cards",
+          "b": "Bank cards",
+          "c": "SD and microSD memory cards",
+          "explain": "Here “card” means a flash memory card that stores photos and files."
+        },
+        "q2": {
+          "question": "Why is a fast UHS-II card slow in a cheap reader?",
+          "a": "The card is broken",
+          "b": "The reader only supports UHS-I, so the card runs at that speed",
+          "c": "The monitor is small",
+          "explain": "A chain is as fast as its slowest link: UHS-II needs a UHS-II reader too."
+        },
+        "q3": {
+          "question": "What should you do before pulling a card out of the reader?",
+          "a": "Eject it safely",
+          "b": "Shake it",
+          "c": "Restart the computer",
+          "explain": "Pulling it out mid-write can corrupt the files and the file system."
+        }
+      }
     },
     "hdmi_cable": {
       "name": "HDMI cable",
-      "student": "Carries video and sound to a monitor, TV or projector."
+      "student": "Carries video and sound to a monitor, TV or projector.",
+      "purpose": "Putting a laptop screen on the classroom projector, or a game on the TV.",
+      "adult": "A digital signal (TMDS / FRL). Versions: HDMI 1.4 = 4K 30 Hz, 2.0 = 4K 60 Hz (18 Gbit/s), 2.1 = 4K 120 Hz and 8K 60 Hz (48 Gbit/s, “Ultra High Speed” cable). ARC/eARC sends TV sound back to a soundbar; CEC lets one remote control several devices. 19 pins; plugs A (full), C (mini), D (micro).",
+      "use": "Laptop to projector, games console to TV, PC to monitor.",
+      "specs": {
+        "versions": {
+          "label": "Versions",
+          "value": "1.4 / 2.0 / 2.1"
+        },
+        "bandwidth": {
+          "label": "Bandwidth",
+          "value": "up to 48 Gbit/s (2.1)"
+        },
+        "max": {
+          "label": "Maximum",
+          "value": "4K 120 Hz, 8K 60 Hz"
+        },
+        "extra": {
+          "label": "Extras",
+          "value": "Audio, ARC/eARC, CEC"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What does an HDMI cable carry?",
+          "a": "Video and sound together",
+          "b": "Only power",
+          "c": "Only sound",
+          "explain": "That is why a TV or projector needs no separate audio cable."
+        },
+        "q2": {
+          "question": "Which cable do you need for 4K at 120 Hz?",
+          "a": "Any old cable",
+          "b": "VGA",
+          "c": "HDMI 2.1 (Ultra High Speed)",
+          "explain": "4K 120 Hz needs about 40+ Gbit/s; an older cable passes only up to 18 Gbit/s."
+        },
+        "q3": {
+          "question": "What does HDMI ARC let you do?",
+          "a": "Charge a phone",
+          "b": "Send TV sound back to a soundbar over the same cable",
+          "c": "Speed up the internet",
+          "explain": "ARC stands for Audio Return Channel."
+        }
+      }
     },
     "displayport_cable": {
       "name": "DisplayPort cable",
-      "student": "A cable for high-refresh video to a monitor."
+      "student": "A cable for high-refresh video to a monitor.",
+      "purpose": "Using a gaming monitor’s full refresh rate (144+ Hz) and several monitors.",
+      "adult": "A packet-based digital link. DP 1.2 = 21.6 Gbit/s, 1.4 = 32.4 Gbit/s (4K 240 Hz with DSC compression), 2.1 = up to 80 Gbit/s. MST chains several monitors from one port. Adaptive sync (G-Sync, FreeSync) removes tearing. The plug has a latch: press its button to pull it out.",
+      "use": "Gaming monitors (144–360 Hz), multi-monitor workstations, graphics cards.",
+      "specs": {
+        "versions": {
+          "label": "Versions",
+          "value": "DP 1.2 / 1.4 / 2.1"
+        },
+        "bandwidth": {
+          "label": "Bandwidth",
+          "value": "up to 80 Gbit/s (2.1)"
+        },
+        "max": {
+          "label": "Maximum",
+          "value": "4K 240 Hz (DSC), 8K 60 Hz"
+        },
+        "feature": {
+          "label": "Features",
+          "value": "Latch, MST, G-Sync/FreeSync"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Why do gamers prefer DisplayPort?",
+          "a": "It is cheaper",
+          "b": "It carries Wi-Fi",
+          "c": "High refresh rates and adaptive sync",
+          "explain": "Most graphics cards deliver 144–360 Hz and G-Sync/FreeSync first and foremost over DP."
+        },
+        "q2": {
+          "question": "What is DisplayPort MST?",
+          "a": "Chaining several monitors from one port",
+          "b": "A charging mode",
+          "c": "An audio format",
+          "explain": "MST = Multi-Stream Transport: several video streams share one cable."
+        },
+        "q3": {
+          "question": "How does a DP plug stay in its socket?",
+          "a": "With a magnet",
+          "b": "With a latch: press its button to release",
+          "c": "With screws",
+          "explain": "Do not yank the cable: press the latch button first."
+        }
+      }
     },
     "usb_c_cable": {
       "name": "USB-C cable",
-      "student": "A reversible all-round cable: charging, data and video."
+      "student": "A reversible all-round cable: charging, data and video.",
+      "purpose": "Charging and connecting everything with one cable instead of a different one per device.",
+      "adult": "A symmetrical 24-pin plug that fits either way up. Speed depends on the cable: USB 2.0 480 Mbit/s, USB 3.2 10–20 Gbit/s, USB4 / Thunderbolt 40–80 Gbit/s. Power Delivery: 60 W (3 A), or 100 W / 240 W with an e-marker chip. DisplayPort Alt Mode sends video to a monitor. Cables that look alike can do very different things.",
+      "use": "Charging phones, laptops and tablets; connecting docks, monitors, external SSDs.",
+      "specs": {
+        "plug": {
+          "label": "Plug",
+          "value": "Reversible, 24 pins"
+        },
+        "data": {
+          "label": "Data",
+          "value": "480 Mbit/s – 80 Gbit/s"
+        },
+        "power": {
+          "label": "Power (PD)",
+          "value": "60 / 100 / 240 W"
+        },
+        "video": {
+          "label": "Video",
+          "value": "DisplayPort Alt Mode"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What is special about the USB-C plug?",
+          "a": "It fits either way up",
+          "b": "It fits only printers",
+          "c": "It is round",
+          "explain": "The pins are mirrored on both sides, so there is no “right way up”."
+        },
+        "q2": {
+          "question": "Are all USB-C cables the same?",
+          "a": "Yes, all of them",
+          "b": "Only the colour differs",
+          "c": "No: speed, power and video support differ",
+          "explain": "A cheap cable gives only 480 Mbit/s and 60 W; a monitor or 240 W needs a special one."
+        },
+        "q3": {
+          "question": "How can a monitor work over USB-C?",
+          "a": "Via Bluetooth",
+          "b": "Via DisplayPort Alt Mode",
+          "c": "It cannot",
+          "explain": "In Alt Mode some of the USB-C lanes carry a DisplayPort signal."
+        }
+      }
     },
     "usb_a_cable": {
       "name": "USB-A cable",
-      "student": "The common cable for mice, keyboards, sticks and more."
+      "student": "The common cable for mice, keyboards, sticks and more.",
+      "purpose": "Connecting printers, scanners and older devices to a computer.",
+      "adult": "One end is USB-A (the computer side), the other USB-B (printers, scanners), micro-B (older phones) or USB-C. USB 2.0 = 480 Mbit/s, 4 pins; USB 3.x = 5–10 Gbit/s, 9 pins, blue insert. A standard port gives 5 V at 0.5 A (USB 2.0) or 0.9 A (USB 3.0). The A plug is not reversible: it fits one way only.",
+      "use": "Hooking printers and scanners to a PC, charging older devices, peripherals.",
+      "specs": {
+        "ends": {
+          "label": "Ends",
+          "value": "USB-A ↔ USB-B / micro-B / USB-C"
+        },
+        "speed": {
+          "label": "Speed",
+          "value": "480 Mbit/s – 10 Gbit/s"
+        },
+        "power": {
+          "label": "Power",
+          "value": "5 V, 0.5–0.9 A"
+        },
+        "sign": {
+          "label": "USB 3 sign",
+          "value": "Blue insert"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Where is the squarish USB-B end usually used?",
+          "a": "Headphones",
+          "b": "Printers and scanners",
+          "c": "Smartphones",
+          "explain": "The B end marks the device side and the A end the computer side, so you cannot mix them up."
+        },
+        "q2": {
+          "question": "How much power does a standard USB 2.0 port supply?",
+          "a": "5 V, 0.5 A (2.5 W)",
+          "b": "220 V",
+          "c": "12 V, 10 A",
+          "explain": "That is why an external HDD sometimes needs two USB plugs or its own power brick."
+        },
+        "q3": {
+          "question": "How can you recognise a USB 3.0 port?",
+          "a": "It is red",
+          "b": "It is round",
+          "c": "A blue insert and extra contacts",
+          "explain": "Blue is the agreed sign of USB 3.x; you may also see “SS” (SuperSpeed) next to it."
+        }
+      }
     },
     "audio_cable": {
       "name": "Audio cable (3.5 mm)",
-      "student": "A cable that carries sound to speakers and headphones."
+      "student": "A cable that carries sound to speakers and headphones.",
+      "purpose": "Sending the computer’s sound to speakers and talking into a microphone.",
+      "adult": "The 3.5 mm mini-jack. TRS (3 contacts) is stereo: left, right, ground. TRRS (4 contacts) is stereo plus microphone (a headset). The signal is analogue, so long cables can pick up noise. PC colour codes: green = output (speakers, headphones), pink = microphone, blue = line in.",
+      "use": "Speakers, headphones, headsets, a classroom projector or stereo.",
+      "specs": {
+        "plug": {
+          "label": "Plug",
+          "value": "3.5 mm (mini-jack)"
+        },
+        "contacts": {
+          "label": "Contacts",
+          "value": "TRS stereo, TRRS + mic"
+        },
+        "signal": {
+          "label": "Signal",
+          "value": "Analogue"
+        },
+        "colors": {
+          "label": "PC colours",
+          "value": "Green out, pink mic"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Which colour PC jack takes headphones or speakers?",
+          "a": "Pink",
+          "b": "Blue",
+          "c": "Green",
+          "explain": "Green is sound out, pink is microphone in, blue is line in."
+        },
+        "q2": {
+          "question": "What does a TRRS plug (4 contacts) add to TRS?",
+          "a": "A microphone",
+          "b": "Wi-Fi",
+          "c": "Video",
+          "explain": "Phone headsets carry both sound and the microphone through one plug."
+        },
+        "q3": {
+          "question": "What kind of signal does a 3.5 mm cable carry?",
+          "a": "Digital",
+          "b": "Analogue",
+          "c": "Optical",
+          "explain": "The sound card turns digital audio into a voltage wave, which travels down the cable in analogue form."
+        }
+      }
     },
     "laptop": {
       "name": "Laptop",
-      "student": "A portable computer with a screen, keyboard and battery."
+      "student": "A portable computer with a screen, keyboard and battery.",
+      "purpose": "To use a computer anywhere: in class, on the move, at home.",
+      "adult": "Every part fits a thin case: a mobile CPU (15–45 W), usually integrated graphics, LPDDR5 memory (often soldered), an M.2 NVMe SSD and a 50–99 Wh lithium-ion battery. Cooling is a heat pipe and a small fan. Upgrades are limited: usually only the SSD, sometimes the memory.",
+      "use": "Study, programming, office work, online lessons, travel.",
+      "specs": {
+        "cpu": {
+          "label": "Processor",
+          "value": "Mobile, 15–45 W"
+        },
+        "screen": {
+          "label": "Screen",
+          "value": "13–16″, IPS / OLED"
+        },
+        "battery": {
+          "label": "Battery",
+          "value": "50–99 Wh, 6–15 h"
+        },
+        "weight": {
+          "label": "Weight",
+          "value": "1.2–2.5 kg"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Why does a laptop CPU use less power than a desktop one?",
+          "a": "To save battery and limit heat in a thin case",
+          "b": "Because it is cheaper",
+          "c": "It does not use less",
+          "explain": "A thin case cannot fit a big heatsink, so mobile chips are built to be frugal."
+        },
+        "q2": {
+          "question": "What does “Wh” on a battery mean?",
+          "a": "Wi-Fi hours",
+          "b": "Watt-hours: the battery’s energy capacity",
+          "c": "Its weight",
+          "explain": "A 60 Wh battery runs a laptop drawing 10 W for about 6 hours."
+        },
+        "q3": {
+          "question": "What can you usually upgrade in a laptop?",
+          "a": "The processor",
+          "b": "The graphics card",
+          "c": "The SSD, and the memory if it is not soldered",
+          "explain": "The CPU and graphics are soldered on; the SSD and sometimes the memory sit in slots."
+        }
+      }
     },
     "all_in_one": {
       "name": "All-in-one PC",
-      "student": "A computer with every part built into the monitor."
+      "student": "A computer with every part built into the monitor.",
+      "purpose": "A full computer that takes little desk space and plugs in with one cable.",
+      "adult": "An all-in-one puts the motherboard, CPU, memory, SSD, speakers and webcam behind the screen. Laptop-class parts are common, since cooling must fit a slim case. External or internal power supply; Wi-Fi/Bluetooth built in. Drawbacks: limited upgrades, and if the screen breaks the whole computer goes in for repair.",
+      "use": "Libraries, reception desks, school offices, the family computer at home.",
+      "specs": {
+        "screen": {
+          "label": "Screen",
+          "value": "24–27″, sometimes touch"
+        },
+        "inside": {
+          "label": "Inside",
+          "value": "Laptop-class parts"
+        },
+        "cables": {
+          "label": "Cables",
+          "value": "One power cable"
+        },
+        "upgrade": {
+          "label": "Upgrades",
+          "value": "Limited: sometimes RAM / SSD"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Where are an all-in-one’s parts?",
+          "a": "In a separate tower",
+          "b": "Inside the keyboard",
+          "c": "Behind the screen, in one case",
+          "explain": "Hence “all-in-one”: everything is in one unit."
+        },
+        "q2": {
+          "question": "What is an advantage of an all-in-one?",
+          "a": "Few cables and a tidy, compact desk",
+          "b": "The graphics card is easy to swap",
+          "c": "It is always the cheapest",
+          "explain": "There are no cables between tower and monitor, just one power cable."
+        },
+        "q3": {
+          "question": "What is a drawback of an all-in-one?",
+          "a": "It cannot show pictures",
+          "b": "If the screen breaks, the whole computer goes in for repair",
+          "c": "It cannot go online",
+          "explain": "With a normal PC you just swap the monitor; in an all-in-one they cannot be separated."
+        }
+      }
     },
     "smartphone": {
       "name": "Smartphone",
-      "student": "A pocket computer: calls, internet, camera, apps."
+      "student": "A pocket computer: calls, internet, camera, apps.",
+      "purpose": "Calls, internet, photos, navigation and learning apps: a computer in your pocket.",
+      "adult": "Its heart is an SoC (System on a Chip): ARM CPU, GPU, neural engine (NPU) and cellular modem on one chip. 8–16 GB LPDDR5, UFS 4.0 storage. Sensors: accelerometer, gyroscope, GPS, compass, proximity. A 6–7″ OLED screen at 60–120 Hz, a 4000–5000 mAh battery, fast charging over USB-C.",
+      "use": "Everyday contact, mobile banking, maps, photos and video, learning apps.",
+      "specs": {
+        "soc": {
+          "label": "Chip",
+          "value": "SoC: CPU + GPU + NPU + modem"
+        },
+        "screen": {
+          "label": "Screen",
+          "value": "6–7″ OLED, 60–120 Hz"
+        },
+        "sensors": {
+          "label": "Sensors",
+          "value": "Accelerometer, gyroscope, GPS"
+        },
+        "battery": {
+          "label": "Battery",
+          "value": "4000–5000 mAh"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What is an SoC?",
+          "a": "A sock",
+          "b": "A system on a chip: CPU, graphics and modem together",
+          "c": "A SIM card",
+          "explain": "With everything on one chip, the phone stays small and efficient."
+        },
+        "q2": {
+          "question": "Which sensor rotates the screen when you turn the phone?",
+          "a": "The accelerometer and gyroscope",
+          "b": "The microphone",
+          "c": "GPS",
+          "explain": "The accelerometer senses which way gravity points; the gyroscope measures rotation."
+        },
+        "q3": {
+          "question": "What does “mAh” measure?",
+          "a": "Screen size",
+          "b": "Processor speed",
+          "c": "Battery capacity",
+          "explain": "A 5000 mAh battery can deliver 500 mA for about 10 hours."
+        }
+      }
     },
     "tablet": {
       "name": "Tablet",
-      "student": "A light computer with a big touchscreen."
+      "student": "A light computer with a big touchscreen.",
+      "purpose": "Reading textbooks, taking notes and drawing anywhere, without a laptop.",
+      "adult": "Built on a mobile SoC like a phone, but with an 8–13″ screen. You mainly use your fingers; a stylus (an active pen with 4096 pressure levels) and a clip-on keyboard bring it close to a laptop. OS: iPadOS, Android or Windows. A 7000–10000 mAh battery lasts about 10 hours.",
+      "use": "E-textbooks, classroom quizzes, drawing, video lessons.",
+      "specs": {
+        "screen": {
+          "label": "Screen",
+          "value": "8–13″ touch"
+        },
+        "soc": {
+          "label": "Chip",
+          "value": "Mobile SoC (ARM)"
+        },
+        "pen": {
+          "label": "Pen",
+          "value": "Stylus, 4096 levels"
+        },
+        "os": {
+          "label": "Operating system",
+          "value": "iPadOS, Android, Windows"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "What mainly sets a tablet apart from a laptop?",
+          "a": "It is run mainly by touch; a keyboard is optional",
+          "b": "It has no screen",
+          "c": "It cannot go online",
+          "explain": "A tablet is a single touchscreen slab; you add a keyboard or pen if you like."
+        },
+        "q2": {
+          "question": "What is a stylus for?",
+          "a": "Charging",
+          "b": "Cooling",
+          "c": "Writing and drawing precisely on the screen",
+          "explain": "An active stylus senses pressure, so lines come out as if drawn with a pen."
+        },
+        "q3": {
+          "question": "Which of these is NOT a tablet operating system?",
+          "a": "iPadOS",
+          "b": "BIOS",
+          "c": "Android",
+          "explain": "BIOS/UEFI is firmware that runs at power-on, not an operating system."
+        }
+      }
     },
     "smartwatch": {
       "name": "Smartwatch",
-      "student": "A tiny computer on your wrist: notifications, steps, heart rate."
+      "student": "A tiny computer on your wrist: notifications, steps, heart rate.",
+      "purpose": "To show notifications and track activity and health: a tiny computer on your wrist.",
+      "adult": "A small SoC and a 1.2–2″ AMOLED screen. Green LEDs and a light sensor on the back (PPG) measure your pulse, an accelerometer counts steps, GPS records a run, and some have SpO₂ and ECG. They talk to the phone over Bluetooth Low Energy. Magnetic or wireless charging; the battery lasts 1–14 days.",
+      "use": "Sport and health, notifications, phone-free payments, GPS watches for children.",
+      "specs": {
+        "sensors": {
+          "label": "Sensors",
+          "value": "Heart rate, SpO₂, accelerometer, GPS"
+        },
+        "link": {
+          "label": "Link",
+          "value": "Bluetooth LE to the phone"
+        },
+        "battery": {
+          "label": "Battery",
+          "value": "1–14 days"
+        },
+        "screen": {
+          "label": "Screen",
+          "value": "1.2–2″ AMOLED"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "How does a smartwatch measure your pulse?",
+          "a": "With a microphone",
+          "b": "With green LEDs and a light sensor on the back",
+          "c": "With a camera on the screen",
+          "explain": "Each heartbeat makes the blood absorb more light; the sensor counts those changes (PPG)."
+        },
+        "q2": {
+          "question": "How does a smartwatch usually get notifications?",
+          "a": "Over Bluetooth from the paired phone",
+          "b": "Over HDMI",
+          "c": "Over USB-A",
+          "explain": "Bluetooth Low Energy uses little power, so the watch battery lasts."
+        },
+        "q3": {
+          "question": "How is a smartwatch usually charged?",
+          "a": "With AA batteries",
+          "b": "Over Ethernet",
+          "c": "With a magnetic or wireless charger",
+          "explain": "With no open sockets the case is better protected against water."
+        }
+      }
     },
     "sbc": {
       "name": "Single-board computer (Raspberry Pi)",
-      "student": "A whole computer on one small board, for robotics and coding."
+      "student": "A whole computer on one small board, for robotics and coding.",
+      "purpose": "A cheap, tiny computer for robotics, coding, small servers and smart-home projects.",
+      "adult": "Raspberry Pi 5: a 4-core ARM Cortex-A76 (2.4 GHz), 2–16 GB LPDDR4X, the OS on a microSD card (or an NVMe SSD via PCIe). 2 × micro-HDMI (4K), USB 3.0, gigabit Ethernet, Wi-Fi 5, Bluetooth 5. A 40-pin GPIO header for LEDs, sensors and motors. Runs Linux (Raspberry Pi OS) and is programmed in Python. Powered over USB-C, 5 V / 5 A.",
+      "use": "School robotics, IoT projects, weather stations, media centres, learning Python.",
+      "specs": {
+        "soc": {
+          "label": "Processor",
+          "value": "4-core ARM, 2.4 GHz"
+        },
+        "ram": {
+          "label": "Memory",
+          "value": "2–16 GB"
+        },
+        "storage": {
+          "label": "Storage",
+          "value": "microSD or NVMe SSD"
+        },
+        "gpio": {
+          "label": "GPIO",
+          "value": "40 pins: sensors, LEDs, motors"
+        }
+      },
+      "quiz": {
+        "q1": {
+          "question": "Where is a Raspberry Pi’s operating system usually stored?",
+          "a": "On a DVD",
+          "b": "On a floppy disk",
+          "c": "On a microSD card",
+          "explain": "You write the OS to a microSD on a computer and slot the card in, so switching systems is easy."
+        },
+        "q2": {
+          "question": "What are the GPIO pins for?",
+          "a": "Connecting LEDs, sensors and motors",
+          "b": "Charging a phone",
+          "c": "Connecting a monitor",
+          "explain": "GPIO = General Purpose Input/Output: a program switches or reads the voltage on a pin."
+        },
+        "q3": {
+          "question": "What architecture is the Raspberry Pi’s processor?",
+          "a": "x86, like most PCs",
+          "b": "ARM, as in smartphones",
+          "c": "It has no processor",
+          "explain": "ARM draws little power, so the board runs passively or with a tiny fan."
+        }
+      }
     }
   },
   "deviceUi": {
@@ -4332,7 +5388,6 @@
       "noPorts": "No ports: it sits in or on another part."
     },
     "zoneOf": "Zone: {zone}",
-    "soon": "The full description and test of this device come in the next update.",
     "quizShared": "This is the same test as in Computer Anatomy: the result counts once.",
     "catalog": "Devices",
     "catalogTitle": "Lab devices",
@@ -4366,7 +5421,20 @@
       "power_button": "Power button",
       "sd_slot": "SD card slot",
       "wireless": "Wireless (2.4 GHz / Wi-Fi)",
-      "bluetooth": "Bluetooth"
+      "bluetooth": "Bluetooth",
+      "dc_in": "DC power input",
+      "sfp": "SFP+ (optical module)",
+      "fiber": "Optical fibre (SC/APC)",
+      "rj11": "Phone line (RJ-11, DSL)",
+      "pcie_x1": "PCIe x1",
+      "poe": "PoE (power over Ethernet)",
+      "outlet": "Output sockets",
+      "thunderbolt": "Thunderbolt 4",
+      "microsd_slot": "microSD slot",
+      "micro_hdmi": "micro-HDMI",
+      "gpio": "GPIO (40-pin)",
+      "cellular": "Cellular (4G/5G)",
+      "magnetic_charger": "Magnetic charger"
     }
   }
 }

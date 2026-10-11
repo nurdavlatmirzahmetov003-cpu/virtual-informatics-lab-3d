@@ -14,6 +14,23 @@ import { Cable, ScreenPanel } from '../zones/common';
 const dark = { color: '#1a1d23', metalness: 0.35, roughness: 0.45 } as const;
 const white = { color: '#e6e8ec', metalness: 0.05, roughness: 0.4 } as const;
 
+/** The rack as seen from afar (hall overview): its shell and the face of its units, two draw calls. */
+export function RackShell() {
+  const face = useDisposable(() => labelTexture(['24 × RJ-45', 'SFP+  ·  PoE'], { w: 256, h: 96, bg: '#14171d', accent: '#22d3ee' }), []);
+  return (
+    <group>
+      <mesh position-y={0.8} castShadow>
+        <boxGeometry args={[0.62, 1.6, 0.6]} />
+        <meshStandardMaterial {...dark} />
+      </mesh>
+      <mesh position={[0, 1.0, 0.301]}>
+        <planeGeometry args={[0.54, 0.75]} />
+        <meshStandardMaterial map={face} roughness={0.5} />
+      </mesh>
+    </group>
+  );
+}
+
 /** 22U server rack, front open, switches and a patch panel, blinking link LEDs. */
 export function Rack({ blink = true }: { blink?: boolean }) {
   const face = useDisposable(() => labelTexture(['24 × RJ-45  ·  1 Gbit/s', 'SFP+  ·  PoE'], { w: 512, h: 48, bg: '#14171d', accent: '#22d3ee' }), []);
@@ -117,15 +134,29 @@ export function Ups() {
   );
 }
 
-/** Small accessory box (dock, hub, card reader): size in metres, colour. */
-export function Gadget({ size, color = '#2a2e36', glow }: { size: readonly [number, number, number]; color?: string; glow?: string }) {
+/** A port opening on a gadget's front: x offset, width, height (m) and the colour of its insert. */
+type PortHole = readonly [x: number, w: number, h: number, insert?: string];
+
+/** Common port openings (width, height in m) for the gadget fronts. */
+const USB_A = [0.0125, 0.0045] as const;
+const USB_C = [0.009, 0.0032] as const;
+
+/** Small accessory box (dock, hub, card reader): size in metres, colour, port openings on the front. */
+export function Gadget({ size, color = '#2a2e36', glow, ports = [] }: { size: readonly [number, number, number]; color?: string; glow?: string; ports?: readonly PortHole[] }) {
+  const [w, h, d] = size;
   return (
     <group>
-      <RoundedBox args={[...size]} radius={Math.min(0.01, size[1] / 2.2)} position-y={size[1] / 2} castShadow>
+      <RoundedBox args={[...size]} radius={Math.min(0.01, h / 2.2)} position-y={h / 2} castShadow>
         <meshStandardMaterial color={color} metalness={0.5} roughness={0.38} />
       </RoundedBox>
+      {ports.map(([x, pw, ph, insert = '#0b0d11'], i) => (
+        <mesh key={i} position={[x, h / 2, d / 2 + 0.0006]}>
+          <planeGeometry args={[pw, ph]} />
+          <meshStandardMaterial color={insert} roughness={0.6} />
+        </mesh>
+      ))}
       {glow && (
-        <mesh position={[size[0] / 2 - 0.012, size[1] / 2, size[2] / 2 + 0.0005]}>
+        <mesh position={[w / 2 - 0.012, h / 2 + 0.002, d / 2 + 0.0006]}>
           <circleGeometry args={[0.002, 12]} />
           <meshStandardMaterial color="#000" emissive={glow} emissiveIntensity={1.6} toneMapped={false} />
         </mesh>
@@ -133,6 +164,21 @@ export function Gadget({ size, color = '#2a2e36', glow }: { size: readonly [numb
     </group>
   );
 }
+
+/** Port layouts of the power-zone gadgets (front faces). */
+const DOCK_PORTS: readonly PortHole[] = [
+  [-0.075, ...USB_C], [-0.058, ...USB_C], [-0.036, ...USB_A, '#2563eb'], [-0.017, ...USB_A, '#2563eb'],
+  [0.006, 0.015, 0.006], [0.028, 0.013, 0.0055], [0.05, 0.014, 0.011], [0.072, 0.0055, 0.0055],
+];
+const HUB_PORTS: readonly PortHole[] = [-0.039, -0.013, 0.013, 0.039].map((x) => [x, ...USB_A, '#2563eb'] as const);
+const READER_PORTS: readonly PortHole[] = [
+  [-0.008, 0.026, 0.0024],
+  [0.017, 0.012, 0.0016],
+];
+
+export const DockingStation = () => <Gadget size={[0.2, 0.03, 0.08]} glow="#38d6f5" ports={DOCK_PORTS} />;
+export const UsbHub = () => <Gadget size={[0.11, 0.015, 0.035]} color="#e6e8ec" glow="#4ade80" ports={HUB_PORTS} />;
+export const CardReader = () => <Gadget size={[0.06, 0.012, 0.04]} color="#1a1d23" glow="#38d6f5" ports={READER_PORTS} />;
 
 /** Cable colours / plug tints of the cable coils (HDMI, DisplayPort, USB-C, USB-A, audio). */
 const COILS = {
@@ -248,6 +294,113 @@ export function SingleBoard() {
           <meshStandardMaterial color={i < 2 ? '#c0c4cc' : '#111'} metalness={i < 2 ? 0.8 : 0.2} roughness={0.35} />
         </mesh>
       ))}
+    </group>
+  );
+}
+
+/** Fibre ONT (modem): white box, status LEDs, the yellow fibre patch cord with its green SC/APC plug at the back. */
+export function Modem() {
+  const face = useDisposable(() => labelTexture(['PWR  PON  LOS  LAN'], { w: 256, h: 32, bg: '#e9ebef', accent: '#22c55e' }), []);
+  return (
+    <group>
+      <RoundedBox args={[0.18, 0.034, 0.13]} radius={0.01} position-y={0.017} castShadow>
+        <meshStandardMaterial {...white} />
+      </RoundedBox>
+      <mesh position={[0, 0.017, 0.0655]}>
+        <planeGeometry args={[0.15, 0.019]} />
+        <meshStandardMaterial map={face} roughness={0.45} />
+      </mesh>
+      {[-0.05, -0.025, 0, 0.025].map((x, i) => (
+        <mesh key={x} position={[x + 0.012, 0.0345, 0.05]} rotation-x={-Math.PI / 2}>
+          <circleGeometry args={[0.0025, 12]} />
+          <meshStandardMaterial color="#000" emissive={i === 2 ? '#f59e0b' : '#4ade80'} emissiveIntensity={1.6} toneMapped={false} />
+        </mesh>
+      ))}
+      <RoundedBox args={[0.01, 0.012, 0.03]} radius={0.002} position={[-0.04, 0.017, -0.075]} castShadow>
+        <meshStandardMaterial color="#16a34a" roughness={0.4} />
+      </RoundedBox>
+      <Cable points={[[-0.04, 0.017, -0.09], [-0.04, 0.012, -0.14], [-0.1, 0.004, -0.17], [-0.16, 0.004, -0.12]]} radius={0.0018} color="#facc15" />
+    </group>
+  );
+}
+
+/** Desktop USB Wi-Fi adapter on its stand with two antennas and the USB cable. */
+export function WifiAdapter() {
+  return (
+    <group>
+      <mesh position-y={0.004} castShadow>
+        <cylinderGeometry args={[0.032, 0.036, 0.008, 32]} />
+        <meshStandardMaterial {...dark} />
+      </mesh>
+      <RoundedBox args={[0.05, 0.075, 0.022]} radius={0.006} position-y={0.0455} castShadow>
+        <meshStandardMaterial {...dark} metalness={0.5} />
+      </RoundedBox>
+      <mesh position={[0, 0.07, 0.0115]}>
+        <circleGeometry args={[0.0025, 12]} />
+        <meshStandardMaterial color="#000" emissive="#38d6f5" emissiveIntensity={1.8} toneMapped={false} />
+      </mesh>
+      {[-1, 1].map((s) => (
+        <mesh key={s} position={[s * 0.018, 0.14, -0.004]} rotation-z={-s * 0.18} castShadow>
+          <capsuleGeometry args={[0.005, 0.11, 4, 12]} />
+          <meshStandardMaterial {...dark} />
+        </mesh>
+      ))}
+      <Cable points={[[0, 0.015, -0.012], [0, 0.006, -0.05], [0.05, 0.004, -0.08], [0.11, 0.004, -0.06]]} radius={0.0022} color="#1a1d23" />
+      <RoundedBox args={[0.016, 0.008, 0.03]} radius={0.002} position={[0.125, 0.004, -0.055]} rotation-y={-0.9} castShadow>
+        <meshStandardMaterial color="#b8bec8" metalness={0.85} roughness={0.3} />
+      </RoundedBox>
+    </group>
+  );
+}
+
+/** Ceiling access point: a white disc with its status ring (shown leaning on a stand). */
+export function AccessPoint() {
+  return (
+    <group>
+      <mesh position-y={0.016} castShadow>
+        <cylinderGeometry args={[0.1, 0.095, 0.032, 48]} />
+        <meshStandardMaterial {...white} />
+      </mesh>
+      <mesh position-y={0.0325} rotation-x={-Math.PI / 2}>
+        <ringGeometry args={[0.022, 0.028, 40]} />
+        <meshStandardMaterial color="#000" emissive="#38bdf8" emissiveIntensity={1.8} toneMapped={false} />
+      </mesh>
+      <mesh position-y={0.0322} rotation-x={-Math.PI / 2}>
+        <circleGeometry args={[0.085, 48]} />
+        <meshStandardMaterial color="#f4f5f7" roughness={0.3} />
+      </mesh>
+    </group>
+  );
+}
+
+/** Two-bay NAS: black tower, drive trays with handles, status LEDs, power button. */
+export function Nas() {
+  const face = useDisposable(() => labelTexture(['NAS', 'RAID 1 · 2 × 4 TB'], { w: 256, h: 96, bg: '#14171d', accent: '#22d3ee' }), []);
+  return (
+    <group>
+      <RoundedBox args={[0.11, 0.17, 0.22]} radius={0.008} position-y={0.085} castShadow receiveShadow>
+        <meshStandardMaterial {...dark} />
+      </RoundedBox>
+      {[-0.024, 0.024].map((x) => (
+        <group key={x} position={[x, 0.085, 0.1105]}>
+          <mesh>
+            <planeGeometry args={[0.042, 0.14]} />
+            <meshStandardMaterial color="#262a32" metalness={0.5} roughness={0.4} />
+          </mesh>
+          <mesh position={[0, -0.05, 0.002]}>
+            <boxGeometry args={[0.03, 0.012, 0.004]} />
+            <meshStandardMaterial color="#3a3f4b" metalness={0.6} roughness={0.35} />
+          </mesh>
+          <mesh position={[0, 0.06, 0.001]}>
+            <circleGeometry args={[0.002, 10]} />
+            <meshStandardMaterial color="#000" emissive="#4ade80" emissiveIntensity={1.6} toneMapped={false} />
+          </mesh>
+        </group>
+      ))}
+      <mesh position={[0, 0.12, -0.1105]} rotation-y={Math.PI}>
+        <planeGeometry args={[0.09, 0.034]} />
+        <meshStandardMaterial map={face} roughness={0.5} />
+      </mesh>
     </group>
   );
 }

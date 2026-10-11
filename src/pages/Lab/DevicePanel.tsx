@@ -9,7 +9,6 @@ import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
 import { useLabStore } from '@/store/labStore';
 import { useProgressStore } from '@/store/progressStore';
-import { hasDeviceModel } from '@/scenes/LabSpace/devices/deviceAssets';
 import styles from './DevicePanel.module.css';
 
 const DeviceViewer3D = lazy(() => import('./DeviceViewer3D'));
@@ -90,55 +89,44 @@ export function DevicePanel() {
         </button>
       </header>
 
-      {hasDeviceModel(device.id) && (
-        <div className={styles.viewer}>
-          <Suspense fallback={null}>
-            <DeviceViewer3D key={device.id} id={device.id} autoRotate={spin} label={t('deviceUi.viewerLabel', { name })} />
-          </Suspense>
-          <button type="button" className={styles.spin} onClick={() => setSpin((v) => !v)} aria-pressed={spin}>
-            {spin ? <Pause size={14} aria-hidden="true" /> : <Play size={14} aria-hidden="true" />}
-            {t('deviceUi.autoRotate')}
-          </button>
-          <p className={styles.hint}>{t('deviceUi.viewer')}</p>
-        </div>
-      )}
+      <div className={styles.viewer}>
+        <Suspense fallback={null}>
+          <DeviceViewer3D key={device.id} id={device.id} autoRotate={spin} label={t('deviceUi.viewerLabel', { name })} />
+        </Suspense>
+        <button type="button" className={styles.spin} onClick={() => setSpin((v) => !v)} aria-pressed={spin}>
+          {spin ? <Pause size={14} aria-hidden="true" /> : <Play size={14} aria-hidden="true" />}
+          {t('deviceUi.autoRotate')}
+        </button>
+        <p className={styles.hint}>{t('deviceUi.viewer')}</p>
+      </div>
 
-      {device.full ? (
+      <div className={styles.tabs} role="tablist">
+        {(['info', 'quiz'] as const).map((k) => (
+          <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>
+            {t(`deviceUi.tabs.${k}`)}
+            {k === 'quiz' && best === 100 ? ' ✓' : ''}
+          </button>
+        ))}
+      </div>
+      {tab === 'info' ? (
         <>
-          <div className={styles.tabs} role="tablist">
-            {(['info', 'quiz'] as const).map((k) => (
-              <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>
-                {t(`deviceUi.tabs.${k}`)}
-                {k === 'quiz' && best === 100 ? ' ✓' : ''}
+          <div className={styles.levels} role="radiogroup" aria-label={t('deviceUi.level')}>
+            {(['student', 'adult'] as const).map((l) => (
+              <button key={l} type="button" role="radio" aria-checked={level === l} onClick={() => setLevel(l)}>
+                {t(`deviceUi.levels.${l}`)}
               </button>
             ))}
           </div>
-          {tab === 'info' ? (
-            <>
-              <div className={styles.levels} role="radiogroup" aria-label={t('deviceUi.level')}>
-                {(['student', 'adult'] as const).map((l) => (
-                  <button key={l} type="button" role="radio" aria-checked={level === l} onClick={() => setLevel(l)}>
-                    {t(`deviceUi.levels.${l}`)}
-                  </button>
-                ))}
-              </div>
-              <Info device={device} level={level} />
-            </>
-          ) : (
-            exercise &&
-            answers && (
-              <div className={styles.quiz}>
-                {device.anatomy && <p className={styles.muted}>{t('deviceUi.quizShared')}</p>}
-                <ChoiceQuiz key={exercise.id} answers={answers} keyBase={deviceKey(device, 'quiz')} exercise={exercise} />
-              </div>
-            )
-          )}
+          <Info device={device} level={level} />
         </>
       ) : (
-        <div className={styles.info}>
-          <p className={styles.explain}>{t(key(`devices.${device.id}.student`))}</p>
-          <p className={styles.muted}>{t('deviceUi.soon')}</p>
-        </div>
+        exercise &&
+        answers && (
+          <div className={styles.quiz}>
+            {device.anatomy && <p className={styles.muted}>{t('deviceUi.quizShared')}</p>}
+            <ChoiceQuiz key={exercise.id} answers={answers} keyBase={deviceKey(device, 'quiz')} exercise={exercise} />
+          </div>
+        )
       )}
     </aside>
   );
