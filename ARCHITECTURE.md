@@ -190,6 +190,8 @@ legacy/                     ескі ES-module прототип (python http.ser
     - `data/teardown/teardowns.ts` — құрылғылар мен бөлшектер реті, `teardownOfDevice` (case → system_unit, laptop → laptop). Мәтіндер `teardown.<id>.parts.<part>.{name,text}`.
     - `scenes/Teardown/rig.ts` — бір көріністің өзгермелі күйі (`shown`, `goal`, `rate`, `selected`) + DOM-ға `useSyncExternalStore` арқылы snapshot (тек қадам/таңдау өзгергенде re-render). `TeardownStage` ішіндегі `Driver` әр кадрда `shown`-ды `goal`-ға жылжытады.
     - Жүйелік блок `Chassis` + `HardwarePart` (V2-2b өнімдері) арқылы жиналады; ортақ `pcRig`-ті `RigSync` басқарады (шыны жасырын, кабельдер 2-қадамнан жоқ). Басқа беттердің `PcRigController`-і `pcRig`-ті әр кадрда қайта жазатындықтан, қалпына келтіру керек емес; зертхана canvas-ы бұл кезде кідіреді.
+    - V2-5b: `SubMotion` (бөлшектің бөліктері әрқайсысы өз жолымен — `PartContext` арқылы бөлшектің progress-ін оқиды, белгіні біреуі алып жүреді), `rig.print` (принтер демо-басуы; `Driver` алға жылжытады, `PrintFollow` бас/үстел/гантриді жылжытады және бөлшек шыққанда ығысуды сөндіреді).
+    - Тапсырма: `data/teardown/teardownQuiz.ts` — `TEARDOWNS[id].quiz` үш бөлшегі, әрқайсысына сол құрылғының басқа екі бөлшегінің `does` жолы (детерминистік, дұрыс жауап орны 1/0/2), `makeChoiceQuiz` → `teardown:<id>`; UI — `components/quiz/QuizForm` (ChoiceQuiz та соны қолданады).
     - Жаңа бөлшектеу қосу: `TEARDOWNS`-қа рет, `teardown.<id>` мәтіндері, `scenes/Teardown/<Device>Teardown.tsx`-те әр бөлшекке `PartMotion` (at, rot, path, turn, label), `TeardownStage.SCENES/SHOTS`-қа жазу.
 
 ## Legacy → жаңа архитектураға көшу жоспары

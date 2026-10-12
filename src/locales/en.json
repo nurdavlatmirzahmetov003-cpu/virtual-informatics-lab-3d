@@ -3054,7 +3054,9 @@
     "empty": "No tasks match this filter.",
     "expected": "Expected result",
     "deviceSummary": "3 questions about a lab device: purpose, specs and use.",
-    "deviceInstructions": "Look at the device in the 3D lab (360°), read its details and answer 3 questions."
+    "deviceInstructions": "Look at the device in the 3D lab (360°), read its details and answer 3 questions.",
+    "teardownSummary": "3 questions: what the parts you took out do.",
+    "teardownInstructions": "Take the device apart in the 3D lab, read about its parts and say what each one does."
   },
   "achievements": {
     "toast": {
@@ -5454,7 +5456,20 @@
       "parts": "Teardown order",
       "hint": "Drag to rotate · wheel to zoom · click a label",
       "sceneLabel": "Teardown view: {name}",
-      "placeholder": "The laptop is a temporary procedural model."
+      "placeholder": "This device’s 3D model is a temporary procedural one; a licensed model will replace it.",
+      "tabs": {
+        "parts": "Parts",
+        "task": "Task"
+      },
+      "does": "What it does",
+      "how": "How it comes out",
+      "quizIntro": "Find what each part does. Three questions; the grade is saved to “My results”.",
+      "print": "Print",
+      "printStop": "Stop",
+      "printing": "Printing: {p}%",
+      "printDone": "Done! The part was printed layer by layer.",
+      "printHint": "Put the printer back together to print.",
+      "printAbout": "The nozzle lays a thin line of molten plastic while the bed moves back and forth and the head left and right; after each layer the head rises 0.2 mm."
     },
     "system_unit": {
       "title": "Taking a system unit apart",
@@ -5462,39 +5477,57 @@
       "parts": {
         "panel": {
           "name": "Side panel",
-          "text": "The glass panel keeps dust off the parts. Before removing it, shut the PC down, unplug the power cable and discharge static by touching the metal case."
+          "text": "The glass panel keeps dust off the parts. Before removing it, shut the PC down, unplug the power cable and discharge static by touching the metal case.",
+          "does": "Keeps dust and knocks off the parts",
+          "ask": "What does the side panel do?"
         },
         "gpu": {
           "name": "Graphics card",
-          "text": "It computes the picture and sends it to the monitor. Unplug its power cable, undo the rear screws, press the PCIe slot latch and pull it out."
+          "text": "It computes the picture and sends it to the monitor. Unplug its power cable, undo the rear screws, press the PCIe slot latch and pull it out.",
+          "does": "Computes the picture and sends it to the monitor",
+          "ask": "What does the graphics card do?"
         },
         "ram": {
           "name": "Memory (RAM)",
-          "text": "It holds running programs and data for the moment. Open the latches at the ends of the slot and the module pops up."
+          "text": "It holds running programs and data for the moment. Open the latches at the ends of the slot and the module pops up.",
+          "does": "Holds running programs for the moment",
+          "ask": "What does the memory (RAM) do?"
         },
         "cooler": {
           "name": "CPU cooler",
-          "text": "Heat pipes and fins carry the CPU’s heat to the fan. Unplug the fan cable and loosen the mounting screws in a cross pattern."
+          "text": "Heat pipes and fins carry the CPU’s heat to the fan. Unplug the fan cable and loosen the mounting screws in a cross pattern.",
+          "does": "Carries the heat away from the CPU",
+          "ask": "What does the CPU cooler do?"
         },
         "cpu": {
           "name": "Processor (CPU)",
-          "text": "The “brain” that runs every program’s instructions. Lift the socket lever and lift the CPU straight up by its edges; never touch the contacts."
+          "text": "The “brain” that runs every program’s instructions. Lift the socket lever and lift the CPU straight up by its edges; never touch the contacts.",
+          "does": "Runs the programs’ instructions",
+          "ask": "What does the processor (CPU) do?"
         },
         "ssd": {
           "name": "M.2 SSD",
-          "text": "The operating system and files live here and survive without power. Undo one screw and slide the module out at 30°."
+          "text": "The operating system and files live here and survive without power. Undo one screw and slide the module out at 30°.",
+          "does": "Stores the system and files for good",
+          "ask": "What does the M.2 SSD do?"
         },
         "psu": {
           "name": "Power supply",
-          "text": "It turns 230 V AC from the socket into the 12, 5 and 3.3 V DC the parts need. Unplug all its cables and undo the four rear screws."
+          "text": "It turns 230 V AC from the socket into the 12, 5 and 3.3 V DC the parts need. Unplug all its cables and undo the four rear screws.",
+          "does": "Turns mains power into the voltages the parts need",
+          "ask": "What does the power supply do?"
         },
         "fans": {
           "name": "Case fans",
-          "text": "The front fans pull cool air in; hot air leaves at the back and top. Unplug their cables and undo the screws."
+          "text": "The front fans pull cool air in; hot air leaves at the back and top. Unplug their cables and undo the screws.",
+          "does": "Pull cool air into the case",
+          "ask": "What does the case fans do?"
         },
         "motherboard": {
           "name": "Motherboard",
-          "text": "The main board that links every part. It comes out last: unplug the 24- and 8-pin cables and front-panel wires, then undo the standoff screws."
+          "text": "The main board that links every part. It comes out last: unplug the 24- and 8-pin cables and front-panel wires, then undo the standoff screws.",
+          "does": "Links every part together",
+          "ask": "What does the motherboard do?"
         }
       }
     },
@@ -5504,43 +5537,249 @@
       "parts": {
         "lid": {
           "name": "Display lid",
-          "text": "The lid holds the screen, webcam and Wi-Fi antennas. It sits on hinges: open it first and lay the laptop on a soft cloth."
+          "text": "The lid holds the screen, webcam and Wi-Fi antennas. It sits on hinges: open it first and lay the laptop on a soft cloth.",
+          "does": "Holds the screen, camera and Wi-Fi antennas",
+          "ask": "What does the display lid do?"
         },
         "bottom_cover": {
           "name": "Bottom cover",
-          "text": "It covers the insides and carries the air vents. Undo 8–10 screws and gently release the clips with a plastic pry tool."
+          "text": "It covers the insides and carries the air vents. Undo 8–10 screws and gently release the clips with a plastic pry tool.",
+          "does": "Covers the insides and lets air in",
+          "ask": "What does the bottom cover do?"
         },
         "battery": {
           "name": "Battery",
-          "text": "The lithium-ion battery runs the laptop for 6–15 hours. It is disconnected first; never puncture a swollen battery."
+          "text": "The lithium-ion battery runs the laptop for 6–15 hours. It is disconnected first; never puncture a swollen battery.",
+          "does": "Powers the laptop away from a socket",
+          "ask": "What does the battery do?"
         },
         "ssd": {
           "name": "M.2 SSD",
-          "text": "The drive with the system and files. One screw holds it: the easiest part of a laptop to upgrade."
+          "text": "The drive with the system and files. One screw holds it: the easiest part of a laptop to upgrade.",
+          "does": "Stores the system and files for good",
+          "ask": "What does the M.2 SSD do?"
         },
         "ram": {
           "name": "Memory (SO-DIMM)",
-          "text": "The short laptop memory module. Spread the side latches and it tilts up 30°. In thin laptops memory may be soldered to the board."
+          "text": "The short laptop memory module. Spread the side latches and it tilts up 30°. In thin laptops memory may be soldered to the board.",
+          "does": "Holds running programs for the moment",
+          "ask": "What does the memory (SO-DIMM) do?"
         },
         "wifi": {
           "name": "Wi-Fi module",
-          "text": "An M.2 2230 card for wireless and Bluetooth. First unclip the two antenna leads that run to the antennas in the lid."
+          "text": "An M.2 2230 card for wireless and Bluetooth. First unclip the two antenna leads that run to the antennas in the lid.",
+          "does": "Provides wireless networking and Bluetooth",
+          "ask": "What does the Wi-Fi module do?"
         },
         "display_cable": {
           "name": "Display cable (eDP)",
-          "text": "A thin cable carries the picture and camera signal from the board to the screen. Pull its connector straight out by the tab."
+          "text": "A thin cable carries the picture and camera signal from the board to the screen. Pull its connector straight out by the tab.",
+          "does": "Carries the picture from the board to the screen",
+          "ask": "What does the display cable (eDP) do?"
         },
         "speakers": {
           "name": "Speakers",
-          "text": "Two small speakers sit in the front corners and fire downwards. One connector links them to the board."
+          "text": "Two small speakers sit in the front corners and fire downwards. One connector links them to the board.",
+          "does": "Play the sound",
+          "ask": "What does the speakers do?"
         },
         "cooling": {
           "name": "Cooling",
-          "text": "A copper heat pipe carries CPU and GPU heat to a radiator and a small fan blows it out. Renew the thermal paste whenever you remove it."
+          "text": "A copper heat pipe carries CPU and GPU heat to a radiator and a small fan blows it out. Renew the thermal paste whenever you remove it.",
+          "does": "Moves CPU and graphics heat out of the case",
+          "ask": "What does the cooling do?"
         },
         "motherboard": {
           "name": "Motherboard",
-          "text": "In a laptop the CPU and graphics are soldered to the board, so they cannot be swapped on their own. The board comes out last."
+          "text": "In a laptop the CPU and graphics are soldered to the board, so they cannot be swapped on their own. The board comes out last.",
+          "does": "Carries the processor and links every module",
+          "ask": "What does the motherboard do?"
+        }
+      }
+    },
+    "smartphone": {
+      "title": "Taking a smartphone apart",
+      "intro": "In a smartphone the parts are held by glue and tiny screws. The SIM tray comes out first, the screen is warmed and lifted with a suction cup, and the battery connector is unplugged first.",
+      "parts": {
+        "sim_tray": {
+          "name": "SIM tray",
+          "text": "It holds the SIM card that connects the phone to the carrier. Press a pin into the side hole and pull the tray out.",
+          "does": "Holds the SIM card that links the phone to the carrier",
+          "ask": "What does the SIM tray do?"
+        },
+        "display": {
+          "name": "Display",
+          "text": "The OLED panel and touch glass are one module: it shows the picture and senses your finger. Warm the edges, lift with a suction cup and unplug its two cables.",
+          "does": "Shows the picture and senses touch",
+          "ask": "What does the display do?"
+        },
+        "battery": {
+          "name": "Battery",
+          "text": "A flat lithium-polymer battery (4000–5000 mAh) powers the phone all day. Pull its stretch-release adhesive tabs; never bend or puncture it.",
+          "does": "Powers the phone all day",
+          "ask": "What does the battery do?"
+        },
+        "cameras": {
+          "name": "Cameras",
+          "text": "Main, ultra-wide and front cameras, each with a lens, sensor and stabiliser. Unplug their cables and lift them out.",
+          "does": "Turn light into photos",
+          "ask": "What does the cameras do?"
+        },
+        "mainboard": {
+          "name": "Mainboard and SoC",
+          "text": "A stacked board: the SoC (CPU, graphics, neural engine and modem on one chip), memory, storage and the Wi-Fi and cellular chips. Undo its screws, unplug every cable and lift it out.",
+          "does": "Does all the computing: the phone’s brain",
+          "ask": "What does the mainboard and SoC do?"
+        },
+        "speaker": {
+          "name": "Speaker",
+          "text": "The bottom speaker plays ringtones and music, the top one is for calls. Undo its screw and lift it by the edge.",
+          "does": "Plays ringtones and music",
+          "ask": "What does the speaker do?"
+        },
+        "vibration": {
+          "name": "Vibration motor",
+          "text": "A linear motor shakes a small weight back and forth so you feel notifications. Unplug its cable and peel it off.",
+          "does": "Vibrates for notifications",
+          "ask": "What does the vibration motor do?"
+        }
+      }
+    },
+    "tablet": {
+      "title": "Taking a tablet apart",
+      "intro": "A tablet is a scaled-up phone: a big screen, a two-cell battery and speakers in the four corners. The screen is warmed and opened all round with thin plastic cards.",
+      "parts": {
+        "display": {
+          "name": "Display",
+          "text": "The 10–13″ touchscreen shows the picture and senses fingers and the stylus. Warm the edges, work round with plastic cards and unplug its cables.",
+          "does": "Shows the picture and senses fingers and stylus",
+          "ask": "What does the display do?"
+        },
+        "battery": {
+          "name": "Battery",
+          "text": "The two-cell battery (7000–10000 mAh) is the largest part and gives about 10 hours. Free it from its glue carefully with isopropyl alcohol.",
+          "does": "Powers the tablet for about 10 hours",
+          "ask": "What does the battery do?"
+        },
+        "cameras": {
+          "name": "Cameras",
+          "text": "The rear camera scans documents, the front one is for video calls. Unplug their cables and lift them out.",
+          "does": "Scan documents and make video calls",
+          "ask": "What does the cameras do?"
+        },
+        "mainboard": {
+          "name": "Mainboard and SoC",
+          "text": "A long narrow board sits between the battery cells: SoC, memory, storage and wireless chips. Undo its screws and unplug its cables.",
+          "does": "Does all the computing",
+          "ask": "What does the mainboard and SoC do?"
+        },
+        "speakers": {
+          "name": "Speakers",
+          "text": "Four corner speakers give stereo sound whichever way you hold the tablet. One screw holds each.",
+          "does": "Give stereo sound in any orientation",
+          "ask": "What does the speakers do?"
+        },
+        "usb_port": {
+          "name": "USB-C port board",
+          "text": "The port for charging, data and video output. It sits on its own small board, so a worn port means swapping just that board.",
+          "does": "Provides the charging and data port",
+          "ask": "What does the USB-C port board do?"
+        }
+      }
+    },
+    "all_in_one": {
+      "title": "Taking an all-in-one apart",
+      "intro": "Every part of an all-in-one is behind the screen. Lay it face down on a soft cloth, remove the stand and open the back cover.",
+      "parts": {
+        "stand": {
+          "name": "Stand",
+          "text": "It holds the screen and sets its tilt. Undo the four screws under the stand cover.",
+          "does": "Holds the screen and sets its tilt",
+          "ask": "What does the stand do?"
+        },
+        "back_cover": {
+          "name": "Back cover",
+          "text": "A plastic or aluminium cover hides the insides; vents along the top let hot air out. Release its clips all round with a plastic pry tool.",
+          "does": "Covers the insides and lets hot air out",
+          "ask": "What does the back cover do?"
+        },
+        "speakers": {
+          "name": "Speakers",
+          "text": "Two speakers along the bottom edge fire forwards. Unplug the cable and undo the screws.",
+          "does": "Play the sound",
+          "ask": "What does the speakers do?"
+        },
+        "cooling": {
+          "name": "Cooling",
+          "text": "A heat pipe takes the CPU’s heat to a radiator and a blower pushes it out through the top vents. Renew the thermal paste when you remove it.",
+          "does": "Moves the CPU’s heat out of the case",
+          "ask": "What does the cooling do?"
+        },
+        "ram": {
+          "name": "Memory (SO-DIMM)",
+          "text": "Short modules as in a laptop; many all-in-ones are upgraded this way. Spread the latches and the module tilts up.",
+          "does": "Holds running programs for the moment",
+          "ask": "What does the memory (SO-DIMM) do?"
+        },
+        "ssd": {
+          "name": "M.2 SSD",
+          "text": "The drive with the system and files. It sits in the board’s M.2 slot under one screw, the easiest part of an all-in-one to upgrade.",
+          "does": "Stores the system and files for good",
+          "ask": "What does the M.2 SSD do?"
+        },
+        "motherboard": {
+          "name": "Motherboard",
+          "text": "A compact board for a slim case: the CPU (usually soldered), memory slots, M.2 and ports. Unplug every cable and undo its screws.",
+          "does": "Carries the CPU and links every part",
+          "ask": "What does the motherboard do?"
+        },
+        "power_board": {
+          "name": "Power board",
+          "text": "It turns 230 V from the socket into the DC voltages for the board and the screen backlight. Its capacitors can stay charged: do not touch them.",
+          "does": "Turns mains power into DC voltages",
+          "ask": "What does the power board do?"
+        }
+      }
+    },
+    "printer_3d": {
+      "title": "Taking a 3D printer apart",
+      "intro": "An FDM printer melts plastic filament and builds the object layer by layer. Before taking it apart, switch it off and let the nozzle and bed cool: they reach 200 °C.",
+      "parts": {
+        "extruder": {
+          "name": "Extruder and nozzle",
+          "text": "Gears push the filament into the hot nozzle, where it melts at 200 °C and comes out as a 0.4 mm line. A fan cools each new layer at once.",
+          "does": "Melts the plastic and lays it down in a thin line",
+          "ask": "What does the extruder and nozzle do?"
+        },
+        "heated_bed": {
+          "name": "Heated bed",
+          "text": "The flat plate the object is printed on heats to 60 °C so the first layer sticks and the part does not warp. Undo its four levelling wheels and unplug its cable.",
+          "does": "Holds the first layer down and stops warping",
+          "ask": "What does the heated bed do?"
+        },
+        "steppers": {
+          "name": "Stepper motors",
+          "text": "Four motors (X, Y, Z and extruder) turn in exact 1.8° steps, so the head and bed move to within hundredths of a millimetre.",
+          "does": "Move the head and bed in exact steps",
+          "ask": "What does the stepper motors do?"
+        },
+        "belts": {
+          "name": "Belts and lead screw",
+          "text": "Toothed belts turn the motors’ rotation into X and Y travel; the Z lead screw lifts the head for each layer.",
+          "does": "Turn motor rotation into straight motion",
+          "ask": "What does the belts and lead screw do?"
+        },
+        "control_board": {
+          "name": "Control board",
+          "text": "A microcontroller reads the G-code line by line, sends step pulses to the motors and holds the nozzle and bed temperatures.",
+          "does": "Reads the G-code and drives the motors and heaters",
+          "ask": "What does the control board do?"
+        },
+        "psu": {
+          "name": "Power supply",
+          "text": "It turns 230 V into 24 V DC for the motors and heaters (up to 350 W). Unplug it and wait a few minutes before disconnecting it.",
+          "does": "Supplies 24 V to the motors and heaters",
+          "ask": "What does the power supply do?"
         }
       }
     }

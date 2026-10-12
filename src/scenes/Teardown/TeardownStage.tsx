@@ -9,25 +9,37 @@ import { Environment, Lightformer, OrbitControls } from '@react-three/drei';
 import { NeutralToneMapping, SRGBColorSpace, Vector3 } from 'three';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
-import { approach } from '@/lib/teardown/timeline';
+import { advancePrint, approach } from '@/lib/teardown/timeline';
 import type { TeardownId } from '@/data/teardown/teardowns';
 import { publish, RigContext, type TeardownRig } from './rig';
 
 const SCENES = {
   system_unit: lazy(() => import('./SystemUnitTeardown')),
   laptop: lazy(() => import('./LaptopTeardown')),
+  smartphone: lazy(() => import('./SmartphoneTeardown')),
+  tablet: lazy(() => import('./TabletTeardown')),
+  all_in_one: lazy(() => import('./AllInOneTeardown')),
+  printer_3d: lazy(() => import('./PrinterTeardown')),
 };
 
 /** Framing of each teardown: the device and the bench where its parts land. */
 const SHOTS: Record<TeardownId, { position: [number, number, number]; target: [number, number, number]; mat: [number, number, number, number] }> = {
   system_unit: { position: [-0.17, 1.2, 1.95], target: [-0.17, 0.1, 0.32], mat: [-0.2, 0.3, 2.2, 1.5] },
   laptop: { position: [0.1, 0.8, 1.25], target: [0.1, 0.05, 0.17], mat: [0.12, 0.16, 1.3, 0.9] },
+  smartphone: { position: [0.02, 0.34, 0.36], target: [0.02, 0, 0.005], mat: [0.02, 0, 0.52, 0.38] },
+  tablet: { position: [0.02, 0.72, 0.92], target: [0.02, 0, 0.1], mat: [0.02, 0.06, 0.9, 0.85] },
+  all_in_one: { position: [0, 0.95, 1.3], target: [0, 0, 0.1], mat: [0, 0.06, 1.35, 1.35] },
+  printer_3d: { position: [0.06, 1.2, 1.72], target: [0.04, 0.21, 0.27], mat: [0.05, 0.28, 1.25, 1.3] },
 };
 
 function Driver({ rig }: { rig: TeardownRig }) {
   const reduced = useReducedMotion();
   useFrame((_, dt) => {
     rig.shown = approach(rig.shown, rig.goal, dt, rig.rate, reduced);
+    if (rig.print.active) {
+      rig.print.t = advancePrint(rig.print.t, dt, reduced);
+      if (rig.print.t >= 1) rig.print.active = false;
+    }
     publish(rig);
   });
   return null;

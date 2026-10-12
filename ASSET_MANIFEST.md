@@ -147,6 +147,9 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | `ssd-samsung-990-pro-2tb` | [M.2 NVMe SSD Samsung 990 PRO 1TB](https://sketchfab.com/3d-models/m2-nvme-ssd-samsung-990-pro-1tb-3d-model-41b7bfda7eab40f8b13330913fd66fc2) | lime.ball.animations | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 2 texture areas repainted (logos / print) |
 | `ssd-wd-sn850x-1tb` | [m2ssd_Painter](https://sketchfab.com/3d-models/m2ssd-painter-ccda7c201091445087c02692444641c2) | Igor.Jop | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 1 texture areas repainted (logos / print) |
 
+### Бөлшектеу, 2-бөлім (V2-5b, 2026-10-12)
+Жаңа ассет жүктелмеді. Смартфон, планшет, моноблок, 3D-принтер және олардың ішкі бөлшектері — процедуралық [PLACEHOLDER] (`scenes/Teardown/*Teardown.tsx`, `pieces.tsx`); экрандардағы сурет — жобаның өз тұсқағазы (canvas).
+
 ### Бөлшектеу (V2-5a, 2026-10-12)
 Жаңа ассет жүктелмеді. Жүйелік блок — көрме жинағының бар өнім модельдері (CC BY, жоғарыдағы кестелер); ноутбук пен оның ішкі бөлшектері — процедуралық [PLACEHOLDER] (`scenes/Teardown/LaptopTeardown.tsx`); жарық — Lightformer (файлсыз).
 

@@ -10,14 +10,13 @@
  */
 import { useMemo, type ReactNode } from 'react';
 import { RoundedBox } from '@react-three/drei';
-import { useDisposable } from '@/hooks/useDisposable';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
-import { pcbTexture } from '@/lib/three/proceduralTextures';
 import { route, type Vec3 } from '@/lib/teardown/timeline';
 import { TEARDOWNS } from '@/data/teardown/teardowns';
 import { Cable, ScreenPanel } from '@/scenes/LabSpace/zones/common';
 import { useWallpaper } from '@/scenes/LabSpace/zones/useWallpaper';
+import { Card } from './pieces';
 import { TeardownPart, type PartMotion } from './TeardownPart';
 
 const ORDER = TEARDOWNS.laptop.parts;
@@ -133,25 +132,6 @@ function Battery() {
         <boxGeometry args={[0.02, 0.002, 0.008]} />
         <meshStandardMaterial color="#e6e8ec" />
       </mesh>
-    </group>
-  );
-}
-
-/** A small M.2 / SO-DIMM style card: PCB with chips. */
-function Card({ size, chips, color = '#14532d', seed }: { size: Vec3; chips: readonly (readonly [number, number, number])[]; color?: string; seed: number }) {
-  const pcb = useDisposable(() => pcbTexture(color, 128, 64, seed), [color, seed]);
-  return (
-    <group>
-      <mesh castShadow>
-        <boxGeometry args={[...size]} />
-        <meshStandardMaterial map={pcb} roughness={0.55} />
-      </mesh>
-      {chips.map(([x, z, w], i) => (
-        <mesh key={i} position={[x, size[1] / 2 + 0.0006, z]}>
-          <boxGeometry args={[w, 0.0012, Math.min(w, size[2] * 0.7)]} />
-          <meshStandardMaterial color="#111317" metalness={0.3} roughness={0.4} />
-        </mesh>
-      ))}
     </group>
   );
 }

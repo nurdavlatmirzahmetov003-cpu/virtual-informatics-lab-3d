@@ -81,3 +81,15 @@ export function route(out: Vec3, to: Vec3, clear = 0.08): Vec3[] {
   const y = Math.max(out[1], to[1]) + clear;
   return [out, [out[0], y, out[2]], [to[0], y, to[2]], to];
 }
+
+/** Offset that takes a part from `from` (installed) to `to` (rest). */
+export const rel = (from: Vec3, to: Vec3): Vec3 => [to[0] - from[0], to[1] - from[1], to[2] - from[2]];
+
+/** Seconds a 3D-printer demo print takes. */
+export const PRINT_SECONDS = 16;
+
+/** Advances a demo print; returns the new progress (0 … 1). */
+export function advancePrint(t: number, dt: number, reduced: boolean): number {
+  if (reduced) return 1;
+  return Math.min(1, t + Math.min(dt, 0.1) / PRINT_SECONDS);
+}

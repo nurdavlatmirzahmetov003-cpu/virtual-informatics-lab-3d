@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { activeIndex, approach, ease, partProgress, pathPoint, route, stepAt, stepValue } from '../src/lib/teardown/timeline.ts';
+import { activeIndex, advancePrint, approach, ease, partProgress, pathPoint, PRINT_SECONDS, rel, route, stepAt, stepValue } from '../src/lib/teardown/timeline.ts';
+import { teardownExercise, teardownQuestions } from '../src/data/teardown/teardownQuiz.ts';
+import { TEARDOWN_TASKS } from '../src/services/progress/catalog.ts';
 import { TEARDOWNS, TEARDOWN_IDS, isTeardownId, teardownOfDevice } from '../src/data/teardown/teardowns.ts';
 import { deviceById } from '../src/data/devices/devices.ts';
 
@@ -64,7 +66,7 @@ test('approach: moves at the rate, never overshoots, reduced motion jumps', () =
 });
 
 test('teardowns: realistic order and every text in kk, ru and en', () => {
-  assert.deepEqual([...TEARDOWN_IDS], ['system_unit', 'laptop']);
+  assert.deepEqual([...TEARDOWN_IDS], ['system_unit', 'laptop', 'smartphone', 'tablet', 'all_in_one', 'printer_3d']);
   const su = TEARDOWNS.system_unit.parts;
   assert.equal(su[0], 'panel', 'the side panel comes off first');
   assert.equal(su.at(-1), 'motherboard', 'the board comes out last');
@@ -73,16 +75,27 @@ test('teardowns: realistic order and every text in kk, ru and en', () => {
   assert.deepEqual(lp.slice(0, 3), ['lid', 'bottom_cover', 'battery'], 'lid, cover, then the battery first for safety');
   assert.equal(lp.at(-1), 'motherboard');
   for (const p of ['ram', 'ssd', 'wifi', 'cooling', 'speakers', 'display_cable']) assert.ok(lp.includes(p), `laptop has ${p}`);
+  const ph = TEARDOWNS.smartphone.parts;
+  assert.equal(ph[0], 'sim_tray', 'the SIM tray comes out before the phone is opened');
+  assert.ok(ph.indexOf('battery') < ph.indexOf('mainboard'), 'battery before the board');
+  for (const p of ['display', 'battery', 'mainboard', 'cameras', 'speaker', 'vibration']) assert.ok(ph.includes(p), `smartphone has ${p}`);
+  assert.deepEqual(TEARDOWNS.all_in_one.parts.slice(0, 2), ['stand', 'back_cover'], 'all-in-one: stand, then the back cover');
+  for (const p of ['extruder', 'heated_bed', 'steppers', 'control_board']) assert.ok(TEARDOWNS.printer_3d.parts.includes(p), `3D printer has ${p}`);
   for (const [lang, d] of Object.entries(dicts)) {
-    for (const k of ['open', 'title', 'close', 'slider', 'prev', 'next', 'playApart', 'playAssemble', 'step', 'start', 'parts', 'hint', 'sceneLabel']) {
+    for (const k of ['open', 'title', 'close', 'slider', 'prev', 'next', 'playApart', 'playAssemble', 'step', 'start', 'parts', 'hint', 'sceneLabel', 'does', 'how', 'quizIntro', 'print', 'printStop', 'printing', 'printDone', 'printHint', 'printAbout', 'placeholder']) {
       assert.equal(typeof d.teardown.ui[k], 'string', `${lang}: teardown.ui.${k}`);
     }
     for (const id of TEARDOWN_IDS) {
       assert.ok(d.teardown[id].title && d.teardown[id].intro, `${lang}: ${id} title/intro`);
       for (const p of TEARDOWNS[id].parts) {
-        assert.ok(d.teardown[id].parts[p]?.name, `${lang}: ${id}.${p}.name`);
-        assert.ok(d.teardown[id].parts[p]?.text.length > 60, `${lang}: ${id}.${p}.text`);
+        const part = d.teardown[id].parts[p];
+        assert.ok(part?.name, `${lang}: ${id}.${p}.name`);
+        assert.ok(part?.text.length > 60, `${lang}: ${id}.${p}.text`);
+        assert.ok(part?.does.length > 8 && part.does.length < 90, `${lang}: ${id}.${p}.does is a short line`);
+        assert.ok(part?.ask.includes(part.name) || part.ask.toLowerCase().includes(part.name.toLowerCase()), `${lang}: ${id}.${p}.ask names the part`);
       }
+      const does = TEARDOWNS[id].parts.map((p) => d.teardown[id].parts[p].does);
+      assert.equal(new Set(does).size, does.length, `${lang}: ${id} parts do different things`);
       assert.deepEqual(Object.keys(d.teardown[id].parts).sort(), [...TEARDOWNS[id].parts].sort(), `${lang}: no stray part texts`);
     }
   }
@@ -92,8 +105,46 @@ test('lab devices open their teardown', () => {
   assert.equal(teardownOfDevice('case'), 'system_unit');
   assert.equal(teardownOfDevice('laptop'), 'laptop');
   assert.equal(teardownOfDevice('mouse'), undefined);
-  for (const d of ['case', 'laptop']) assert.ok(deviceById(d), `${d} is a lab device`);
+  for (const d of ['case', 'laptop', 'smartphone', 'tablet', 'all_in_one', 'printer_3d']) {
+    assert.ok(deviceById(d), `${d} is a lab device`);
+    assert.ok(teardownOfDevice(d), `${d} opens a teardown`);
+  }
   assert.ok(isTeardownId('laptop'));
   assert.ok(!isTeardownId('toaster'));
   assert.ok(!isTeardownId(null));
+});
+
+test('"What does this part do?": 3 questions, the right answer among two other parts, graded to 10', async () => {
+  const { grade, startAttempt } = await import('../src/services/grading/index.ts');
+  assert.deepEqual([...TEARDOWN_TASKS], [...TEARDOWN_IDS], 'every teardown has a progress task');
+  const positions = [];
+  for (const id of TEARDOWN_IDS) {
+    const qs = teardownQuestions(id);
+    assert.equal(qs.length, 3);
+    assert.deepEqual(qs.map((q) => q.part), [...TEARDOWNS[id].quiz]);
+    for (const q of qs) {
+      assert.equal(q.options.length, 3, `${id}.${q.part}: three options`);
+      assert.equal(new Set(q.options).size, 3, `${id}.${q.part}: distinct options`);
+      assert.equal(q.options[q.correct], q.part, `${id}.${q.part}: right option is the part itself`);
+      for (const o of q.options) assert.ok(TEARDOWNS[id].parts.includes(o), `${id}: ${o} is a part`);
+      positions.push(q.correct);
+    }
+    const ex = teardownExercise(id);
+    assert.equal(ex.id, `teardown:${id}`);
+    assert.equal(ex.type, 'teardown');
+    assert.equal(ex.maxScore, 10);
+    const good = Object.fromEntries(qs.map((q) => [q.id, q.correct]));
+    assert.equal(grade(ex, { answers: good }, startAttempt(ex.id)).report.score, 10, `${id} perfect`);
+    const bad = Object.fromEntries(qs.map((q) => [q.id, (q.correct + 1) % 3]));
+    assert.equal(grade(ex, { answers: bad }, startAttempt(ex.id)).report.score, 0, `${id} all wrong`);
+  }
+  for (const p of [0, 1, 2]) assert.ok(positions.includes(p), `right answer appears at position ${p}`);
+});
+
+test('helpers: offsets to rest and the demo print', () => {
+  assert.deepEqual(rel([1, 2, 3], [1.5, 0, 3]), [0.5, -2, 0]);
+  close(advancePrint(0, 1, false), 0.1 / PRINT_SECONDS, 1e-12); // long frames are capped
+  assert.equal(advancePrint(0.99, 0.1, false), Math.min(1, 0.99 + 0.1 / PRINT_SECONDS));
+  assert.equal(advancePrint(0.999999, 0.1, false), 1);
+  assert.equal(advancePrint(0, 0.016, true), 1, 'reduced motion: the print is shown finished');
 });

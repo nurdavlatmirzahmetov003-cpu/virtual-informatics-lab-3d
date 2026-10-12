@@ -26,6 +26,8 @@ export const DEVICE_TASKS = [
   'ups', 'docking_station', 'usb_hub', 'card_reader', 'hdmi_cable', 'displayport_cable', 'usb_c_cable', 'usb_a_cable', 'audio_cable',
   'laptop', 'all_in_one', 'smartphone', 'tablet', 'smartwatch', 'sbc',
 ] as const;
+/** Teardowns with a "What does this part do?" task (V2-5b). Checked against data/teardown. */
+export const TEARDOWN_TASKS = ['system_unit', 'laptop', 'smartphone', 'tablet', 'all_in_one', 'printer_3d'] as const;
 export const NETWORK_TASKS = ['connect3', 'routerLan', 'addressing', 'repair'] as const;
 export const ALGORITHM_TASKS = ['nextSwap', 'binarySteps', 'bubblePass'] as const;
 export const LOGIC_TASKS = ['and', 'notOr', 'xorBasic', 'table'] as const;
@@ -77,6 +79,21 @@ const devices = DEVICE_TASKS.map(
     title: `devices.${task}.name`,
     summary: 'tasks.deviceSummary',
     instructions: 'tasks.deviceInstructions',
+    expected: 'tasks.quizExpected',
+    maxScore: 10,
+  }),
+);
+
+const teardowns = TEARDOWN_TASKS.map(
+  (task): Draft => ({
+    id: `teardown:${task}`,
+    lab: 'hardware',
+    task,
+    type: 'teardown',
+    path: `/lab?teardown=${task}`,
+    title: `teardown.${task}.title`,
+    summary: 'tasks.teardownSummary',
+    instructions: 'tasks.teardownInstructions',
     expected: 'tasks.quizExpected',
     maxScore: 10,
   }),
@@ -156,7 +173,7 @@ const experiments = EXPERIMENT_TASKS.map(
 );
 
 /** All tasks in the suggested learning order: explore → build → network → algorithms → logic → experiments. */
-export const TASKS: readonly TaskInfo[] = [...anatomy, ...devices, assembly, ...network, ...algorithms, ...logic, ...experiments].map((t, order) => ({ ...t, order }));
+export const TASKS: readonly TaskInfo[] = [...anatomy, ...devices, ...teardowns, assembly, ...network, ...algorithms, ...logic, ...experiments].map((t, order) => ({ ...t, order }));
 
 const BY_ID = new Map(TASKS.map((t) => [t.id, t]));
 export const taskById = (id: string): TaskInfo | undefined => BY_ID.get(id);
@@ -168,7 +185,7 @@ export function labOf(exerciseId: string): LabId | undefined {
   const known = BY_ID.get(exerciseId)?.lab;
   if (known) return known;
   const [prefix, rest] = exerciseId.split(':');
-  const map: Record<string, LabId> = { anatomy: 'hardware', device: 'hardware', assembly: 'assembly', network: 'network', algorithm: 'algorithms', logic: 'logic', experiment: 'experiments' };
+  const map: Record<string, LabId> = { anatomy: 'hardware', device: 'hardware', teardown: 'hardware', assembly: 'assembly', network: 'network', algorithm: 'algorithms', logic: 'logic', experiment: 'experiments' };
   if (prefix === 'legacy') return isLabId(rest) ? rest : undefined;
   return map[prefix];
 }
