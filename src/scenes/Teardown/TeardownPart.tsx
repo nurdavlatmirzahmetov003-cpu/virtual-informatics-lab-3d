@@ -8,12 +8,16 @@
  * A part made of pieces that land apart (a 3D printer's four motors) keeps
  * its group still and moves each piece with <SubMotion>, which follows the
  * same progress; one of them carries the label (`motion.label` null).
+ *
+ * While a part is current and out, a dashed "its place" marker stays where
+ * it was installed, so students see where it sits inside the device.
  */
 import { useCallback, useContext, useMemo, useRef, type ReactNode } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import type { Group } from 'three';
 import { ease, partProgress, pathPoint, type Vec3 } from '@/lib/teardown/timeline';
+import { useT } from '@/hooks/useT';
 import { PartContext, publish, RigContext, type PartCtx } from './rig';
 import styles from './TeardownLabel.module.css';
 
@@ -34,6 +38,8 @@ export function TeardownPart({ id, index, name, motion, children }: { id: string
   const rig = useContext(RigContext)!;
   const group = useRef<Group>(null);
   const tag = useRef<HTMLButtonElement>(null);
+  const home = useRef<HTMLSpanElement>(null);
+  const t = useT();
   const p = useRef(0);
   const rot = motion.rot ?? [0, 0, 0];
   const turn = motion.turn ?? [0, 0, 0];
@@ -53,6 +59,8 @@ export function TeardownPart({ id, index, name, motion, children }: { id: string
       el.dataset.show = String(e > 0.02 || current);
       el.dataset.active = String(current);
     }
+    // where the current part sat before it came out
+    if (home.current) home.current.dataset.show = String(e > 0.35 && (rig.selected ? rig.selected === id : rig.snapshot.active === index));
   });
 
   const label = useCallback(
@@ -84,6 +92,15 @@ export function TeardownPart({ id, index, name, motion, children }: { id: string
         {children}
         {motion.label && label(motion.label)}
       </group>
+      {/* parts whose pieces move on their own (motion.label null) have no single place */}
+      {motion.label && (
+        <Html position={[...motion.at]} center zIndexRange={[19, 0]} className={styles.anchor}>
+          <span ref={home} className={styles.home} data-show="false" title={t('teardown.ui.home')}>
+            <span>{index + 1}</span>
+            <small>{t('teardown.ui.home')}</small>
+          </span>
+        </Html>
+      )}
     </PartContext.Provider>
   );
 }

@@ -17,6 +17,7 @@ import { TEARDOWNS } from '@/data/teardown/teardowns';
 import { Cable, ScreenPanel } from '@/scenes/LabSpace/zones/common';
 import { useWallpaper } from '@/scenes/LabSpace/zones/useWallpaper';
 import { Card } from './pieces';
+import { XRay } from './XRay';
 import { TeardownPart, type PartMotion } from './TeardownPart';
 
 const ORDER = TEARDOWNS.laptop.parts;
@@ -256,7 +257,10 @@ export default function LaptopTeardown() {
   );
   return (
     <group position-y={LAPTOP_HOVER}>
-      <TopCase />
+      {/* once the bottom cover is off, the top case turns to glass: the parts are seen in their places */}
+      <XRay after={ORDER.indexOf('bottom_cover')}>
+        <TopCase />
+      </XRay>
       {ORDER.map((id, i) => (
         <TeardownPart key={id} id={id} index={i} name={name(id)} motion={MOTION[id]}>
           {content[id]}

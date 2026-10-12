@@ -5469,7 +5469,8 @@
       "printing": "Printing: {p}%",
       "printDone": "Done! The part was printed layer by layer.",
       "printHint": "Put the printer back together to print.",
-      "printAbout": "The nozzle lays a thin line of molten plastic while the bed moves back and forth and the head left and right; after each layer the head rises 0.2 mm."
+      "printAbout": "The nozzle lays a thin line of molten plastic while the bed moves back and forth and the head left and right; after each layer the head rises 0.2 mm.",
+      "home": "Its place"
     },
     "system_unit": {
       "title": "Taking a system unit apart",
