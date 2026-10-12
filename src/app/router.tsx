@@ -12,6 +12,7 @@ const NotFoundPage = lazy(() => import('@/pages/NotFound/NotFoundPage'));
 const CreditsPage = lazy(() => import('@/pages/Credits/CreditsPage'));
 const ExplorerPage = lazy(() => import('@/pages/Explorer/ExplorerPage'));
 const AssemblyLabPage = lazy(() => import('@/pages/Labs/AssemblyLab/AssemblyLabPage'));
+const ConnectLabPage = lazy(() => import('@/pages/Labs/ConnectLab/ConnectLabPage'));
 const NetworkLabPage = lazy(() => import('@/pages/Labs/NetworkLab/NetworkLabPage'));
 const AlgorithmLabPage = lazy(() => import('@/pages/Labs/AlgorithmLab/AlgorithmLabPage'));
 const LogicLabPage = lazy(() => import('@/pages/Labs/LogicLab/LogicLabPage'));
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
       { path: 'labs', element: <LabsPage /> },
       { path: 'labs/assembly', element: <AssemblyLabPage /> },
       { path: 'labs/network', element: <NetworkLabPage /> },
+      { path: 'labs/connect', element: <ConnectLabPage /> },
       { path: 'labs/algorithms', element: <AlgorithmLabPage /> },
       { path: 'labs/logic', element: <LogicLabPage /> },
       { path: 'labs/experiments', element: <ExperimentLabPage /> },

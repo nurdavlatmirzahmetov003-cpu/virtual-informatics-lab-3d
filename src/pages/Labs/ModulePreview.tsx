@@ -45,6 +45,7 @@ const BACK: Record<ModuleId, ReactNode> = {
   space: grid,
   hardware: grid,
   assembly: grid,
+  connect: grid,
   network: grid,
   algorithms: grid,
   logic: grid,
@@ -92,6 +93,19 @@ const FRONT: Record<ModuleId, (face: string) => ReactNode> = {
       ))}
       <rect x="194" y="16" width="6" height="58" rx="1.5" fill="var(--tone)" opacity="0.85" className={styles.float} />
       <path d="M100 112 h70" {...line} opacity="0.6" />
+    </>
+  ),
+  // the back of a PC: a column of sockets, a cable sliding into one of them
+  connect: (face) => (
+    <>
+      <rect x="150" y="22" width="78" height="118" rx="6" {...line} fill={face} />
+      {[0, 1, 2, 3, 4].map((i) => (
+        <rect key={i} x="166" y={38 + i * 16} width="18" height="8" rx="2" {...dim} />
+      ))}
+      <rect x="196" y="38" width="16" height="60" rx="2" {...dim} />
+      <rect x="166" y="54" width="18" height="8" rx="2" fill="var(--tone)" opacity="0.5" className={styles.pulse} />
+      <path d="M40 118 C 80 118, 96 58, 132 58 H 150" {...line} />
+      <rect x="128" y="52" width="22" height="12" rx="2" fill="var(--tone)" className={styles.float} />
     </>
   ),
   network: (face) => (

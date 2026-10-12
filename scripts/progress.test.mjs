@@ -20,6 +20,7 @@ import { OWN_QUIZ_DEVICES } from '../src/data/devices/devices.ts';
 import { deviceExercise } from '../src/data/devices/deviceQuiz.ts';
 import { TEARDOWN_IDS } from '../src/data/teardown/teardowns.ts';
 import { teardownExercise } from '../src/data/teardown/teardownQuiz.ts';
+import { CONNECT_EXERCISES } from '../src/labs/ConnectLab/index.ts';
 import * as cpuTemp from '../src/labs/Experiments/cpuTemp.ts';
 import * as memory from '../src/labs/Experiments/memory.ts';
 import * as storage from '../src/labs/Experiments/storage.ts';
@@ -50,6 +51,7 @@ test('catalog matches every real exercise: ids, types, max score and instruction
     ...OWN_QUIZ_DEVICES.map(deviceExercise),
     ...TEARDOWN_IDS.map(teardownExercise),
     ASSEMBLY_EXERCISE,
+    ...Object.values(CONNECT_EXERCISES),
     ...Object.values(NETWORK_TASKS),
     ...Object.values(QUIZZES),
     ...Object.values(LOGIC_TASKS),
@@ -224,12 +226,16 @@ test('achievements unlock from real conditions and are never taken back', () => 
   assert.ok(!ids(s).includes('perfectBuild'), 'mistakes rule out Perfect Build');
   s = applyAttempt(s, rec('assembly', 100, 2, { status: 'completed' }));
   assert.ok(ids(s).includes('perfectBuild'));
-  assert.ok(ids(s).includes('lab100'), 'the one-task assembly lab at 100 %');
+  assert.ok(!ids(s).includes('lab100'), 'the assembly lab also holds "connect the PC"');
+  s = complete(s, ['connect:pc']);
+  assert.ok(ids(s).includes('lab100'), 'both assembly-lab tasks at 100 %');
 
   s = complete(s, ['network:connect3', 'network:routerLan', 'network:addressing']);
   assert.ok(!ids(s).includes('networkMaster'));
   assert.equal(evaluateAchievements(summarize(s)).find((a) => a.id === 'networkMaster').current, 3);
   s = complete(s, ['network:repair']);
+  assert.ok(!ids(s).includes('networkMaster'), 'the Ethernet and Wi-Fi tasks count for networking too');
+  s = complete(s, ['connect:ethernet', 'connect:wifi']);
   assert.ok(ids(s).includes('networkMaster'));
 
   let p = emptySnapshot();

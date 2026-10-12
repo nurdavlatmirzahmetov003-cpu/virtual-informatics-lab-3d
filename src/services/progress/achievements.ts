@@ -40,7 +40,8 @@ const count = (n: number, target: number) => ({ current: Math.min(n, target), ta
 
 const CHECKS: Record<AchievementId, Check> = {
   firstStep: (s) => count(s.totals.completed, 1),
-  firstComputer: (s) => completedIn(s, 'assembly'),
+  // the PC build itself (the assembly lab also holds the V2-6 "connect the PC" task)
+  firstComputer: (s) => count(s.tasks.some((t) => t.info.id === 'assembly' && t.status === 'completed') ? 1 : 0, 1),
   // the whole build with nothing wrong: 10/10, no mistakes, no hints
   perfectBuild: (s) => {
     const best = s.tasks.find((t) => t.info.id === 'assembly')?.progress?.best;

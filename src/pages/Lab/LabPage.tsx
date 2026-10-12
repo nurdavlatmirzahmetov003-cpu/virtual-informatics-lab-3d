@@ -30,6 +30,7 @@ const ZONE_LINKS: Partial<Record<LabZoneId, string>> = {
   peripherals: '/explorer',
   print_media: '/explorer?device=printer',
   network: '/labs/network',
+  power: '/labs/connect',
   showcase: '/studio',
 };
 

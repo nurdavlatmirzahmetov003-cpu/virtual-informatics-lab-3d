@@ -16,6 +16,10 @@ function countsOf(id: ModuleId, summary: ProgressSummary) {
     return { done: lab.completed, total: lab.total };
   }
   if (id === 'assignments' || id === 'results') return { done: summary.totals.completed, total: summary.totals.tasks };
+  if (id === 'connect') {
+    const tasks = summary.tasks.filter((t) => t.info.type === 'connect');
+    return { done: tasks.filter((t) => t.status === 'completed').length, total: tasks.length };
+  }
   return { done: 0, total: 0 };
 }
 

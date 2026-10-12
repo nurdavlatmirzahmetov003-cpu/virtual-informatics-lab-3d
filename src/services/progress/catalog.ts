@@ -28,6 +28,8 @@ export const DEVICE_TASKS = [
 ] as const;
 /** Teardowns with a "What does this part do?" task (V2-5b). Checked against data/teardown. */
 export const TEARDOWN_TASKS = ['system_unit', 'laptop', 'smartphone', 'tablet', 'all_in_one', 'printer_3d'] as const;
+/** Connection Lab (V2-6): the PC task counts for assembly, the two network ones for networking. */
+export const CONNECT_TASKS = ['pc', 'ethernet', 'wifi'] as const;
 export const NETWORK_TASKS = ['connect3', 'routerLan', 'addressing', 'repair'] as const;
 export const ALGORITHM_TASKS = ['nextSwap', 'binarySteps', 'bubblePass'] as const;
 export const LOGIC_TASKS = ['and', 'notOr', 'xorBasic', 'table'] as const;
@@ -112,6 +114,21 @@ const assembly: Draft = {
   maxScore: 10,
 };
 
+const connect = CONNECT_TASKS.map(
+  (task): Draft => ({
+    id: `connect:${task}`,
+    lab: task === 'pc' ? 'assembly' : 'network',
+    task,
+    type: 'connect',
+    path: `/labs/connect?task=${task}`,
+    title: `connect.tasks.${task}.title`,
+    summary: `connect.tasks.${task}.short`,
+    instructions: `connect.tasks.${task}.instructions`,
+    expected: `connect.tasks.${task}.expected`,
+    maxScore: 10,
+  }),
+);
+
 const network = NETWORK_TASKS.map(
   (task): Draft => ({
     id: `network:${task}`,
@@ -173,7 +190,7 @@ const experiments = EXPERIMENT_TASKS.map(
 );
 
 /** All tasks in the suggested learning order: explore → build → network → algorithms → logic → experiments. */
-export const TASKS: readonly TaskInfo[] = [...anatomy, ...devices, ...teardowns, assembly, ...network, ...algorithms, ...logic, ...experiments].map((t, order) => ({ ...t, order }));
+export const TASKS: readonly TaskInfo[] = [...anatomy, ...devices, ...teardowns, assembly, connect[0], ...network, ...connect.slice(1), ...algorithms, ...logic, ...experiments].map((t, order) => ({ ...t, order }));
 
 const BY_ID = new Map(TASKS.map((t) => [t.id, t]));
 export const taskById = (id: string): TaskInfo | undefined => BY_ID.get(id);
@@ -185,7 +202,7 @@ export function labOf(exerciseId: string): LabId | undefined {
   const known = BY_ID.get(exerciseId)?.lab;
   if (known) return known;
   const [prefix, rest] = exerciseId.split(':');
-  const map: Record<string, LabId> = { anatomy: 'hardware', device: 'hardware', teardown: 'hardware', assembly: 'assembly', network: 'network', algorithm: 'algorithms', logic: 'logic', experiment: 'experiments' };
+  const map: Record<string, LabId> = { anatomy: 'hardware', device: 'hardware', teardown: 'hardware', connect: 'network', assembly: 'assembly', network: 'network', algorithm: 'algorithms', logic: 'logic', experiment: 'experiments' };
   if (prefix === 'legacy') return isLabId(rest) ? rest : undefined;
   return map[prefix];
 }

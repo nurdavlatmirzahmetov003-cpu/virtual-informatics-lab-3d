@@ -194,6 +194,20 @@ legacy/                     ескі ES-module прототип (python http.ser
     - Тапсырма: `data/teardown/teardownQuiz.ts` — `TEARDOWNS[id].quiz` үш бөлшегі, әрқайсысына сол құрылғының басқа екі бөлшегінің `does` жолы (детерминистік, дұрыс жауап орны 1/0/2), `makeChoiceQuiz` → `teardown:<id>`; UI — `components/quiz/QuizForm` (ChoiceQuiz та соны қолданады).
     - Жаңа бөлшектеу қосу: `TEARDOWNS`-қа рет, `teardown.<id>` мәтіндері, `scenes/Teardown/<Device>Teardown.tsx`-те әр бөлшекке `PartMotion` (at, rot, path, turn, label), `TeardownStage.SCENES/SHOTS`-қа жазу.
 
+43. **Жалғау зертханасы (V2-6).**
+    - Логика `labs/ConnectLab` (таза, тесті бар):
+      - `scenarios.ts` — порттар `{owner}.{kind}_{n}`, кабельдер, бос ұштар;
+      - `plugs.ts` — `plugProblem` / `tryPlug`: shape → igpu → wan → occupied → sameDevice, қате `mistakes`-ке жазылады;
+      - `wifi.ts` — желілер, `join`, `dhcpLease`;
+      - `tasks.ts` — 3 `Exercise`, care ережесі partial.
+    - Күй: `store/connectLabStore.ts` (zustand) — plugs, wifi, carrying/dragging, хабарлама, әр тапсырманың attempt/report-ы.
+    - 3D: `scenes/ConnectLab`.
+      - `anchors.ts` — ұялардың әлемдік орны мен шығу бағыты (mutable, re-render жоқ).
+      - `PcScene` маркерлерді `MarkerScan` арқылы өнім модельдерінен оқиды: `HardwarePart` топтарын traverse етеді, жарты секунд сайын жаңартады (LOD ауысуы).
+      - `NetScene` порттарды қолмен тіркейді.
+      - `ConnectKit`: `PortHotspots` (Html батырмалар), `Cable` (CatmullRom → TubeGeometry, ұш қозғалғанда ғана қайта құрылады), `DragController` (камераға перпендикуляр жазықтық; жібергенде экрандағы ең жақын ұя).
+    - Прогресс: `CONNECT_TASKS`; `connect:pc` → assembly, қалғандары → network (TASKS ретінде зертханалар тәртібі сақталады).
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

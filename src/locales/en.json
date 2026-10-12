@@ -106,6 +106,11 @@
         "title": "My results",
         "desc": "Scores, achievements and progress.",
         "tag": "Scores · achievements"
+      },
+      "connect": {
+        "title": "Cables & networking",
+        "desc": "Plug cables into the right sockets, put a laptop online by Ethernet and Wi-Fi, watch DHCP.",
+        "tag": "3 tasks · HDMI · Wi-Fi"
       }
     },
     "available": "Available",
@@ -3056,7 +3061,8 @@
     "deviceSummary": "3 questions about a lab device: purpose, specs and use.",
     "deviceInstructions": "Look at the device in the 3D lab (360°), read its details and answer 3 questions.",
     "teardownSummary": "3 questions: what the parts you took out do.",
-    "teardownInstructions": "Take the device apart in the 3D lab, read about its parts and say what each one does."
+    "teardownInstructions": "Take the device apart in the 3D lab, read about its parts and say what each one does.",
+    "connectSummary": "Cables and networking: the right sockets."
   },
   "achievements": {
     "toast": {
@@ -3218,7 +3224,8 @@
       "power": {
         "name": "Power & cables",
         "caption": "UPS, cables, hubs",
-        "description": "An uninterruptible power supply (UPS), a docking station, a USB hub and a card reader. HDMI, DisplayPort, USB-C, USB-A and audio cables hang on the wall."
+        "description": "An uninterruptible power supply (UPS), a docking station, a USB hub and a card reader. HDMI, DisplayPort, USB-C, USB-A and audio cables hang on the wall.",
+        "action": "Connection Lab"
       },
       "mobile": {
         "name": "Mobile devices",
@@ -5783,6 +5790,156 @@
           "ask": "What does the power supply do?"
         }
       }
+    }
+  },
+  "connect": {
+    "title": "Connection Lab",
+    "eyebrow": "Cables · ports · network",
+    "lead": "Plug the cables into the right sockets, get the computer ready, and put a laptop on the network by cable and over Wi-Fi.",
+    "sceneLabel": "Connection Lab: {task}",
+    "ports": {
+      "usb_a": "USB-A",
+      "usb_c": "USB-C",
+      "hdmi": "HDMI",
+      "displayport": "DisplayPort",
+      "ethernet": "Ethernet (RJ-45)",
+      "audio_3_5": "3.5 mm audio (green = out)",
+      "power_ac": "Mains inlet 230 V (C14)",
+      "dc_in": "DC power input"
+    },
+    "owners": {
+      "motherboard": "Motherboard",
+      "gpu": "Graphics card",
+      "psu": "Power supply",
+      "laptop": "Laptop",
+      "router": "Router"
+    },
+    "roles": {
+      "wan": "WAN — internet",
+      "lan": "LAN {n}"
+    },
+    "portName": "{owner} · {port}",
+    "cables": {
+      "monitor": "Monitor cable (HDMI)",
+      "keyboard": "Keyboard (USB-A)",
+      "mouse": "Mouse (USB-A)",
+      "speakers": "Speakers (3.5 mm)",
+      "power": "Power cable (230 V)",
+      "patch": "Ethernet cable (RJ-45)"
+    },
+    "ends": {
+      "a": "end 1",
+      "b": "end 2"
+    },
+    "why": {
+      "shape": "A {plug} plug does not fit the “{port}” socket — the shapes differ. Look for the socket of the same shape.",
+      "igpu": "This PC has a graphics card, so the picture comes out of its outputs. The motherboard’s HDMI/DisplayPort serve the CPU’s built-in graphics, which is off while a card is fitted — the screen would stay black. Plug the monitor into the graphics card (the vertical row lower down).",
+      "wan": "WAN is the router’s internet side, where the provider’s modem goes. Computers and laptops plug into the LAN ports (1–4).",
+      "occupied": "That socket is taken: one plug per socket.",
+      "sameDevice": "With both ends in one device the cable links nothing. One end goes to the router, the other to the laptop."
+    },
+    "ui": {
+      "tasks": "Tasks",
+      "cables": "Cables",
+      "howTo": "Drag a cable end and drop it on a socket — or click the end, then the socket’s marker. Hover a socket to see its name.",
+      "carrying": "“{cable}” in hand — pick a socket. Esc to cancel.",
+      "pick": "Pick up",
+      "unplug": "Unplug",
+      "free": "Not plugged in",
+      "pluggedIn": "Plugged into {port}",
+      "ok": "Right! “{cable}” → {port}",
+      "check": "Check",
+      "reset": "Start over",
+      "hint": "Hint",
+      "mistakes": "Mistakes: {n}",
+      "progress": "Connected: {done} / {total}",
+      "toNetworkLab": "Set an IP address yourself in the Network Lab",
+      "back": "Labs",
+      "portsHere": "Ports"
+    },
+    "dhcp": {
+      "title": "DHCP gave an address",
+      "discover": "Discover — laptop: “Is there a DHCP server?”",
+      "offer": "Offer — router: “Take {ip}”",
+      "request": "Request — laptop: “I’ll take it”",
+      "ack": "Ack — router: “Confirmed for {hours} h”",
+      "ip": "IP address",
+      "mask": "Subnet mask",
+      "gateway": "Gateway (router)",
+      "dns": "DNS",
+      "waiting": "No network cable — no IP yet."
+    },
+    "wifi": {
+      "title": "Wi-Fi networks",
+      "sticker": "Router sticker",
+      "stickerText": "Network: {ssid} · Key: {key}",
+      "key": "Network key",
+      "connect": "Connect",
+      "disconnect": "Disconnect",
+      "connected": "Connected",
+      "security": {
+        "open": "Open — not encrypted",
+        "wep": "WEP — outdated",
+        "wpa2": "WPA2 — protected",
+        "wpa3": "WPA3 — most secure"
+      },
+      "openWarn": "This is an open network: nothing is encrypted, anyone on it can read your traffic or show you a fake page. Connect anyway?",
+      "openProceed": "Connect anyway",
+      "cancel": "Cancel",
+      "wrongKey": "Wrong key. Check the router sticker — capital letters matter.",
+      "wep": "WEP is outdated encryption that can be cracked in minutes. School devices do not join WEP networks.",
+      "joined": "You joined “{ssid}”.",
+      "openJoined": "You are on an open network — your data is not encrypted. Disconnect and pick a protected one.",
+      "why": "WPA2 and WPA3 encrypt everything on the air: without the key nothing can be read. WPA3 also resists password guessing."
+    },
+    "tasks": {
+      "pc": {
+        "title": "Fully connect the computer",
+        "short": "Monitor, keyboard, mouse, speakers, power",
+        "instructions": "Plug the monitor, keyboard, mouse, speakers and power cable into the right sockets on the back of the system unit.",
+        "expected": "All five cables in place: monitor in the graphics card, keyboard and mouse in USB, speakers in the green audio out, power in the PSU.",
+        "hint": "The graphics card’s ports are below the board’s, in a vertical row. The power inlet is at the very bottom, on the PSU."
+      },
+      "ethernet": {
+        "title": "Connect the laptop by Ethernet",
+        "short": "Router LAN → laptop RJ-45, DHCP",
+        "instructions": "Plug one end of the Ethernet cable into the router and the other into the laptop, then watch the laptop get an IP address.",
+        "expected": "The cable is in a router LAN port and the laptop’s RJ-45 socket; DHCP gave an address.",
+        "hint": "The router’s blue port is WAN (internet), the yellow ones are LAN. The laptop’s RJ-45 is the widest square socket."
+      },
+      "wifi": {
+        "title": "Join Wi-Fi securely",
+        "short": "Protected network, right key",
+        "instructions": "Put the laptop on the school Wi-Fi: pick the right network and enter the key from the router sticker.",
+        "expected": "The laptop is on “Mektep-WiFi” (WPA3), never joined an open network, key right first time.",
+        "hint": "A strong open network may be a trap. Choose one with a lock — WPA2/WPA3."
+      }
+    },
+    "feedback": {
+      "rule": {
+        "monitor": "Monitor in the graphics card",
+        "input": "Keyboard and mouse in USB",
+        "audio": "Speakers in the audio out",
+        "power": "Power cable in the PSU",
+        "care": "Careful: few mistakes",
+        "laptopPort": "Cable in the laptop’s RJ-45",
+        "routerLan": "Cable in a router LAN port",
+        "schoolNetwork": "The protected school network",
+        "noOpen": "Never joined an open network",
+        "key": "Key right first time"
+      },
+      "monitorMissing": "The monitor is not in the graphics card yet.",
+      "inputMissing": "Plug the keyboard and mouse into USB-A.",
+      "audioMissing": "Plug the speakers into the green 3.5 mm out.",
+      "powerMissing": "The power cable is not in the PSU.",
+      "mistakes": "Wrong attempts: {n}.",
+      "laptopMissing": "The cable is not in the laptop.",
+      "lanMissing": "The cable is not in a router LAN port.",
+      "notJoined": "The laptop is not on any network.",
+      "insecureJoined": "“{ssid}” is not protected.",
+      "wrongNetwork": "“{ssid}” is not the school network.",
+      "joinedOpen": "You joined an open network — your data was not encrypted.",
+      "wrongKeys": "Wrong key {n} time(s)."
     }
   }
 }
