@@ -38,7 +38,7 @@ async function boot() {
 test('migrations: every table, applied once, recorded', () => {
   const db = openDb(':memory:');
   const first = migrate(db);
-  assert.deepEqual(first, ['001_init']);
+  assert.deepEqual(first, ['001_init', '002_classroom']);
   assert.deepEqual(migrate(db), [], 'a second run applies nothing');
   const tables = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all().map((r) => r.name);
   for (const t of ['users', 'schools', 'classes', 'class_members', 'assignments', 'submissions', 'attempts', 'grades', 'announcements', 'messages', 'achievements', 'xp_events', 'sessions', 'audit_log', 'schema_migrations']) {
@@ -123,8 +123,8 @@ test('roles: every endpoint checks who is asking', async () => {
   assert.equal(list.status, 200);
   assert.equal(list.body.users.length, 3);
   assert.equal((await s.call('/api/progress', { cookie: tea.cookie })).status, 403, 'progress is a student thing');
-  assert.equal((await s.call('/api/teacher/overview', { cookie: stu.cookie })).status, 403);
-  assert.equal((await s.call('/api/teacher/overview', { cookie: tea.cookie })).status, 200);
+  assert.equal((await s.call('/api/teacher/classes', { cookie: stu.cookie })).status, 403);
+  assert.equal((await s.call('/api/teacher/classes', { cookie: tea.cookie })).status, 200);
   // admin creates a teacher; weak passwords and duplicate logins are refused
   const np = pw('new');
   const created = await s.call('/api/admin/users', { method: 'POST', cookie: adm.cookie, csrf: adm.csrf, body: { login: 'new.teacher', displayName: 'Жаңа', role: 'teacher', password: np } });
@@ -212,7 +212,7 @@ test('auth texts exist in kk, ru and en; .env.example holds no secrets', async (
   const get = (o, k) => k.split('.').reduce((x, p) => x?.[p], o);
   for (const lang of ['kk', 'ru', 'en']) {
     const d = JSON.parse(readFileSync(new URL(`../src/locales/${lang}.json`, import.meta.url), 'utf8'));
-    for (const k of ['title', 'login', 'password', 'signIn', 'signOut', 'offline', 'errors.invalidCredentials', 'errors.rateLimited', 'errors.offline', 'roles.admin', 'roles.teacher', 'roles.student', 'forbidden.title', 'teacher.title', 'admin.title', 'admin.errors.password_tooShort', 'admin.errors.loginTaken']) {
+    for (const k of ['title', 'login', 'password', 'signIn', 'signOut', 'offline', 'errors.invalidCredentials', 'errors.rateLimited', 'errors.offline', 'roles.admin', 'roles.teacher', 'roles.student', 'forbidden.title', 'admin.title', 'admin.errors.password_tooShort', 'admin.errors.loginTaken']) {
       assert.equal(typeof get(d.auth, k), 'string', `${lang}: auth.${k}`);
     }
   }

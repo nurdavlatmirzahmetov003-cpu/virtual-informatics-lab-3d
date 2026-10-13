@@ -21,7 +21,10 @@ const ExperimentLabPage = lazy(() => import('@/pages/Labs/ExperimentLab/Experime
 const TasksPage = lazy(() => import('@/pages/Tasks/TasksPage'));
 const LabPage = lazy(() => import('@/pages/Lab/LabPage'));
 const LoginPage = lazy(() => import('@/pages/Auth/LoginPage'));
-const TeacherPage = lazy(() => import('@/pages/Auth/TeacherPage'));
+const TeacherHome = lazy(() => import('@/pages/Classroom/TeacherHome'));
+const ClassPage = lazy(() => import('@/pages/Classroom/ClassPage'));
+const StudentHome = lazy(() => import('@/pages/Classroom/StudentHome'));
+const JoinPage = lazy(() => import('@/pages/Classroom/JoinPage'));
 const AdminPage = lazy(() => import('@/pages/Auth/AdminPage'));
 
 export const router = createBrowserRouter([
@@ -45,7 +48,10 @@ export const router = createBrowserRouter([
       { path: 'progress', element: <ProgressPage /> },
       { path: 'credits', element: <CreditsPage /> },
       { path: 'login', element: <LoginPage /> },
-      { path: 'teacher', element: <TeacherPage /> },
+      { path: 'teacher', element: <TeacherHome /> },
+      { path: 'teacher/class/:id', element: <ClassPage /> },
+      { path: 'student', element: <StudentHome /> },
+      { path: 'join', element: <JoinPage /> },
       { path: 'admin', element: <AdminPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],

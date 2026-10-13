@@ -228,6 +228,13 @@ legacy/                     ескі ES-module прототип (python http.ser
     - Фронт күйі: `store/authStore.ts` (`init` → `/api/auth/me`; `signIn` қонақ прогресін аккаунтқа қосады; `signOut` flush → logout → қонақ). Беттер `pages/Auth/*`, рөлді `RequireRole` тексереді. Сервер өшік болса (`server-offline` не желі қатесі) — `serverOnline=false`, бәрі қонақ режимінде.
     - Кілттер мен құпиялар тек серверде (`.env`, `VITE_` префиксі жоқ); `data/` git-ке кірмейді.
 
+46. **Сынып (V2-9).**
+    - Сервер: `classroom.ts` — деректер мен рұқсат ережелері бір жерде (`ownClass` — мұғалім не әкімші, `studentClass` — мүше; әйтпесе 404). `computeCells(assignments, students, attempts, submissions)` — таза функция: мерзімге дейінгі ең жақсы әрекет (жоқ болса кешіккені + `late`), `auto = round(percent × points / 100)`, `final = grade ?? auto`. Мұғалім журналы да, оқушы беті де осы ережені қолданады.
+    - `classroomRoutes.ts` — `:param` үлгілі шағын маршрутизатор; `createApp` оған `requireUser` мен `checkCsrf` береді. Қате қосылу кодтары үшін бөлек `LoginLimiter`.
+    - Тіркеу: `names.ts` (кириллица → латын логин, `node:crypto` арқылы кездейсоқ құпия сөз мен код); scrypt хэштері параллель есептеліп, бір транзакцияда жазылады. Құпия сөз жауапта бір рет қайтады, дерекқорда тек хэш.
+    - Фронт: `services/classroom/api.ts` (типтер мен шақырулар), `stats.ts` (күй, статистика, CSV/JSON — таза). `pages/Classroom/` бөлімдері бір `ClassDetail`-ді бөліседі, әр өзгерістен кейін қайта жүктеледі (`reload`). Уақыт `useNow()` (ортақ 30 с сағат, render таза қалады).
+    - QR: `lib/qr/qr.ts` — byte mode, M деңгейі, 1–9 нұсқа, Reed–Solomon GF(256), 8 маска + айыппұл; `QrCode` бір SVG path салады. Басып шығару карточкалары `body`-ге portal арқылы шығады, `@media print` қалғанын жасырады.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

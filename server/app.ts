@@ -11,7 +11,8 @@
  *   PUT  /api/progress                student (csrf) { snapshot } → merged snapshot
  *   GET  /api/admin/users             admin
  *   POST /api/admin/users             admin (csrf) { login, displayName, role, password }
- *   GET  /api/teacher/overview        teacher | admin
+ *   …and the classroom routes (classes, assignments, grades, messages) in
+ *   classroomRoutes.ts.
  *
  * Every state-changing request needs the session's CSRF token in
  * `x-csrf-token` and, when the browser sends one, an allowed Origin.
@@ -26,11 +27,14 @@ import { LoginLimiter } from './auth/rateLimit';
 import { SESSION_COOKIE, createSession, destroySession, findSession, type SessionRow } from './auth/sessions';
 import { createUser, listUsers, normalizeLogin, publicUser, userById, userByLogin, type Role, type UserRow } from './users';
 import { loadProgress, saveProgress } from './progress';
+import { classroomRoutes } from './classroomRoutes';
 
 export interface AppOptions {
   db: Db;
   config: ServerConfig;
   limiter?: LoginLimiter;
+  /** Wrong class join codes (per student + IP). */
+  joinLimiter?: LoginLimiter;
   /** Other route handlers (the AI assistant); return true when they answered. */
   extra?: Array<(req: IncomingMessage, res: ServerResponse) => Promise<boolean>>;
   now?: () => number;
@@ -46,7 +50,7 @@ interface Ctx {
 
 const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
-export function createApp({ db, config, limiter = new LoginLimiter(), extra = [], now = Date.now }: AppOptions) {
+export function createApp({ db, config, limiter = new LoginLimiter(), joinLimiter = new LoginLimiter(10, 30), extra = [], now = Date.now }: AppOptions) {
   const clearCookie = cookie(SESSION_COOKIE, '', { maxAge: 0, secure: config.cookieSecure });
 
   function requireUser(ctx: Ctx, ...roles: Role[]): UserRow {
@@ -64,6 +68,14 @@ export function createApp({ db, config, limiter = new LoginLimiter(), extra = []
     const origin = req.headers.origin;
     if (origin && !config.allowedOrigins.includes(origin)) throw new HttpError(403, 'origin');
   }
+
+  const classroom = classroomRoutes({
+    db,
+    now,
+    requireUser: (ctx, ...roles) => requireUser(ctx as Ctx, ...roles),
+    checkCsrf: (ctx) => checkCsrf(ctx as Ctx),
+    joinLimiter,
+  });
 
   async function login(ctx: Ctx) {
     const body = await readJson<{ login?: unknown; password?: unknown }>(ctx.req, 4096);
@@ -129,11 +141,7 @@ export function createApp({ db, config, limiter = new LoginLimiter(), extra = []
       }
     }
 
-    if (path === '/api/teacher/overview' && method === 'GET') {
-      const t = requireUser(ctx, 'teacher', 'admin');
-      const classes = (db.prepare('SELECT COUNT(*) AS n FROM classes WHERE teacher_id = ?').get(t.id) as { n: number }).n;
-      return json(ctx.res, 200, { classes });
-    }
+    if (await classroom(ctx, method, path)) return;
 
     throw new HttpError(404, 'not-found');
   }

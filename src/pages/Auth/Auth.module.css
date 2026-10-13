@@ -86,7 +86,8 @@
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
   min-height: 42px;
   padding: 0 12px;
   border: 1px solid var(--border);
@@ -98,9 +99,16 @@
 }
 
 .field input:focus-visible,
-.field select:focus-visible {
+.field select:focus-visible,
+.field textarea:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
+}
+
+.field textarea {
+  padding: 10px 12px;
+  line-height: 1.5;
+  resize: vertical;
 }
 
 .field small {

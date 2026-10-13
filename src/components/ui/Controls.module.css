@@ -91,3 +91,15 @@
   color: var(--accent);
   border-color: var(--border-strong);
 }
+
+@media (max-width: 480px) {
+  .select {
+    gap: 4px;
+    padding: 0 8px;
+  }
+
+  .select select {
+    max-width: 92px;
+    text-overflow: ellipsis;
+  }
+}

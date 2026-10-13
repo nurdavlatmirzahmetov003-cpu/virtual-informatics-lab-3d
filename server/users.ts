@@ -60,6 +60,11 @@ export async function createUser(db: Db, input: { login: string; displayName: st
     created_at: now,
     last_login_at: null,
   };
+  insertUser(db, row);
+  return row;
+}
+
+export function insertUser(db: Db, row: UserRow) {
   db.prepare('INSERT INTO users (id, login, display_name, role, password_hash, school_id, disabled, created_at, last_login_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').run(
     row.id,
     row.login,
@@ -71,7 +76,6 @@ export async function createUser(db: Db, input: { login: string; displayName: st
     row.created_at,
     row.last_login_at,
   );
-  return row;
 }
 
 export function listUsers(db: Db) {

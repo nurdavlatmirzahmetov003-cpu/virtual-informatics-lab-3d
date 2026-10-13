@@ -6167,12 +6167,6 @@
       "text": "Each role has its own page. The button below takes you to yours.",
       "home": "To my page"
     },
-    "teacher": {
-      "title": "Teacher room",
-      "classes": "My classes",
-      "soon": "Creating classes, adding students, assignments and grading arrive in the next stage (V2-9).",
-      "labs": "Open the labs"
-    },
     "admin": {
       "title": "Admin: users",
       "users": "Users ({n})",
@@ -6199,6 +6193,219 @@
         "offline": "The server is not answering.",
         "server": "Server error."
       }
+    }
+  },
+  "classroom": {
+    "close": "Close",
+    "status": {
+      "graded": "Graded",
+      "done": "Done",
+      "late": "Late",
+      "answered": "Answered",
+      "overdue": "Overdue",
+      "todo": "To do"
+    },
+    "errors": {
+      "badName": "Enter a name (up to 60 characters).",
+      "badNames": "One student per line, at most 60 at a time.",
+      "badTitle": "Enter a title (up to 120 characters).",
+      "badDescription": "The description is too long.",
+      "badBody": "Write the text (not too long).",
+      "badExercise": "There is no such lab task.",
+      "badDue": "The deadline is not valid.",
+      "badPoints": "Points must be from 1 to 100.",
+      "badScore": "The score must be between 0 and the assignment's points.",
+      "badComment": "The comment is too long.",
+      "badCode": "No class has this code. Ask your teacher for it again.",
+      "rateLimited": "Too many wrong codes. Try again in {min} min.",
+      "notFound": "Not found — it may have been deleted.",
+      "forbidden": "You are not allowed to do that.",
+      "csrf": "Your session is stale — reload the page.",
+      "unauthenticated": "Please sign in again.",
+      "loginTaken": "Login taken — try again.",
+      "offline": "The server is not answering.",
+      "server": "Something went wrong on the server. Try later."
+    },
+    "teacher": {
+      "title": "Teacher room",
+      "subtitle": "{name}, your classes and your students’ work are here.",
+      "classes": "My classes",
+      "noClasses": "No classes yet. Create the first one on the right.",
+      "studentsN": "Students: {n}",
+      "assignmentsN": "Assignments: {n}",
+      "newClass": "New class",
+      "className": "Class name",
+      "classPlaceholder": "e.g. 7A",
+      "newClassHint": "The class gets a join code and a QR code. You can also register students from a list.",
+      "create": "Create class"
+    },
+    "class": {
+      "eyebrow": "Class",
+      "back": "All classes",
+      "code": "Join code",
+      "tabs": "Class sections"
+    },
+    "tabs": {
+      "journal": "Gradebook",
+      "students": "Students",
+      "assignments": "Assignments",
+      "announcements": "Announcements",
+      "messages": "Messages",
+      "stats": "Statistics"
+    },
+    "join": {
+      "title": "Joining the class",
+      "how": "After signing in, a student scans the QR code or types the code on the “My classes” page.",
+      "qrLabel": "QR code of the join link for class {code}",
+      "copy": "Copy link",
+      "newCode": "New code",
+      "newCodeConfirm": "A new code will be made and the old one will stop working. Continue?"
+    },
+    "joinPage": {
+      "lead": "{name}, join this class? Your teacher will post assignments and announcements here.",
+      "notStudent": "Only a student account can join a class."
+    },
+    "journal": {
+      "hint": "Click a cell: the lab result, time, mistakes and hints, the answer and your grade.",
+      "noStudents": "No students in the class yet.",
+      "noAssignments": "No assignments yet.",
+      "pts": "pts",
+      "total": "Total"
+    },
+    "grade": {
+      "auto": "Automatic score",
+      "time": "Time",
+      "errors": "Mistakes",
+      "hints": "Hints",
+      "attempts": "Attempts",
+      "when": "When",
+      "noAttempt": "The student has not done this lab task yet.",
+      "answer": "Student's answer",
+      "score": "Score (0–{max})",
+      "comment": "Comment",
+      "commentPlaceholder": "What went well, what to improve…",
+      "save": "Save grade",
+      "useAuto": "Back to the automatic score"
+    },
+    "students": {
+      "title": "Students ({n})",
+      "none": "No students yet. Register them from a list or share the join code.",
+      "name": "Name",
+      "done": "Done",
+      "lastSeen": "Last sign-in",
+      "never": "never",
+      "actions": "Actions",
+      "work": "View work",
+      "message": "Message",
+      "reset": "New password",
+      "resetConfirm": "A new password will be made for {name}; the old one stops working. Continue?",
+      "remove": "Remove from class",
+      "removeConfirm": "{name} will be removed from the class. The account and results stay. Continue?",
+      "add": "Register from a list",
+      "list": "Names, one per line",
+      "listPlaceholder": "Aliya Seitkyzy\nNurlan Zhumabayev\nDana Akhmetova",
+      "listHint": "{n} students (up to {max} at a time). Logins come from the names in Latin letters, passwords are random.",
+      "create": "Create {n} accounts",
+      "creating": "Creating…",
+      "orCode": "Students who already have an account can join themselves: code {code}."
+    },
+    "sheet": {
+      "title": "New logins and passwords ({n})",
+      "once": "Passwords are shown only now: the server keeps just their hash. Print or copy them.",
+      "print": "Print (cards)",
+      "copy": "Copy",
+      "copied": "Copied",
+      "close": "Hide",
+      "keepSecret": "Keep your password to yourself."
+    },
+    "work": {
+      "title": "{name}: work",
+      "assignments": "Class assignments",
+      "attempts": "All lab attempts",
+      "none": "No attempts yet.",
+      "task": "Task"
+    },
+    "settings": {
+      "title": "Class settings",
+      "rename": "Save name",
+      "delete": "Delete class",
+      "deleteConfirm": "Class “{name}” with its assignments, grades and messages will be deleted. Student accounts stay. Delete?",
+      "deleteHint": "Deleting keeps the student accounts and their lab results."
+    },
+    "assignments": {
+      "none": "No assignments yet. Create the first one on the right.",
+      "new": "New assignment",
+      "task": "Lab task",
+      "written": "Written work (no lab)",
+      "autoHint": "The score comes automatically from the student's best attempt before the deadline. You can change it.",
+      "writtenHint": "The student sends a written answer; you grade it.",
+      "title": "Title",
+      "description": "Instructions (optional)",
+      "due": "Deadline",
+      "points": "Points",
+      "create": "Assign",
+      "pointsN": "{n} pts",
+      "noDue": "No deadline",
+      "doneN": "{done}/{total} done",
+      "delete": "Delete assignment",
+      "deleteConfirm": "Assignment “{title}” and its grades will be deleted. Delete?"
+    },
+    "due": {
+      "overdue": "Past due",
+      "hours": "{n} h left",
+      "days": "{n} days left"
+    },
+    "announcements": {
+      "none": "No announcements.",
+      "new": "New announcement",
+      "title": "Title",
+      "body": "Text",
+      "publish": "Publish",
+      "delete": "Delete",
+      "deleteConfirm": "Delete the announcement “{title}”?"
+    },
+    "messages": {
+      "people": "Students",
+      "pick": "Pick a student on the left.",
+      "empty": "No messages with {name} yet.",
+      "placeholder": "Write a message… (Ctrl+Enter sends)",
+      "send": "Send",
+      "refresh": "Refresh",
+      "read": "read"
+    },
+    "stats": {
+      "students": "Students",
+      "assignments": "Assignments",
+      "completion": "Completion",
+      "average": "Average result",
+      "csv": "CSV (Excel)",
+      "json": "JSON (full)",
+      "byAssignment": "By assignment",
+      "byStudent": "By student",
+      "done": "Done",
+      "avgScore": "Average score",
+      "late": "Late"
+    },
+    "student": {
+      "title": "My classes",
+      "subtitle": "{name}, your assignments, grades and teacher announcements are here.",
+      "assignments": "My assignments",
+      "noAssignments": "No assignments yet. They appear here once your teacher sets them.",
+      "noClasses": "You are not in a class yet. Join with your teacher's code.",
+      "join": "Join a class",
+      "joinHint": "Your teacher's 6-character code (or scan the QR code).",
+      "joinButton": "Join",
+      "joined": "You joined “{name}”!",
+      "classes": "My classes",
+      "message": "Message teacher",
+      "chatWith": "Messages: {name}",
+      "grades": "My grades",
+      "teacherComment": "Teacher's comment",
+      "writeAnswer": "Write an answer",
+      "editAnswer": "Edit answer",
+      "send": "Send",
+      "cancel": "Cancel",
+      "resultsSynced": "Your lab results are saved on the server"
     }
   }
 }

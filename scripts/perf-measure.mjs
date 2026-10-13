@@ -36,6 +36,8 @@ const loseContext = args.includes('--lose-context');
 const leaveTo = opt('leave', null);
 /** --shots=dir: PNG of every page once ready (visual comparison of builds) */
 const shots = opt('shots', null);
+/** --media=print: take the --shots with print CSS (e.g. the classroom's printable login cards) */
+const shotMedia = opt('media', null);
 /** --storage=file.json: { "localStorage key": value } written before measuring (e.g. a Setup Studio build) */
 const storageFile = opt('storage', null);
 /** --probe=file.js: an expression evaluated on every page once ready; its JSON result is reported as `probe` */
@@ -253,7 +255,9 @@ for (const p of pages) {
   const probed = probe ? await evaluate(`(async () => JSON.stringify(await (${probe})))()`).then((r) => JSON.parse(r ?? 'null')).catch((e) => String(e)) : undefined;
   if (shots) {
     mkdirSync(shots, { recursive: true });
+    if (shotMedia) await send('Emulation.setEmulatedMedia', { media: shotMedia });
     const { data } = await send('Page.captureScreenshot', { format: 'png' });
+    if (shotMedia) await send('Emulation.setEmulatedMedia', { media: '' });
     writeFileSync(path.join(shots, `${p.replace(/[^a-z0-9]+/gi, '_') || 'home'}.png`), Buffer.from(data, 'base64'));
   }
   let hot = null;

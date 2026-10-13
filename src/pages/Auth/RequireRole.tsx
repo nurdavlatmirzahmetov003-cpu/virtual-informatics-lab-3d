@@ -18,7 +18,7 @@ export function RequireRole({ roles, children }: { roles: readonly Role[]; child
   const status = useAuthStore((s) => s.status);
   const user = useAuthStore((s) => s.user);
   if (status === 'loading') return <div className={styles.page} aria-busy="true" />;
-  if (!user) return <Navigate to={`/login?next=${encodeURIComponent(location.pathname)}`} replace />;
+  if (!user) return <Navigate to={`/login?next=${encodeURIComponent(location.pathname + location.search)}`} replace />;
   if (!roles.includes(user.role)) {
     return (
       <div className={styles.page}>

@@ -34,7 +34,7 @@ export class ApiError extends Error {
   }
 }
 
-async function call<T>(path: string, init: { method?: string; body?: unknown; csrf?: string } = {}): Promise<T> {
+export async function call<T>(path: string, init: { method?: string; body?: unknown; csrf?: string } = {}): Promise<T> {
   let res: Response;
   try {
     res = await fetch(path, {
@@ -75,8 +75,4 @@ export const adminApi = {
   users: () => call<{ users: AdminUser[] }>('/api/admin/users'),
   createUser: (input: { login: string; displayName: string; role: Role; password: string }, csrf: string) =>
     call<{ user: User }>('/api/admin/users', { method: 'POST', body: input, csrf }),
-};
-
-export const teacherApi = {
-  overview: () => call<{ classes: number }>('/api/teacher/overview'),
 };

@@ -244,3 +244,17 @@
     display: none;
   }
 }
+
+/* a phone fits the logo, quality, theme, language and the account icon in one row */
+@media (max-width: 480px) {
+  .controls {
+    gap: 4px;
+  }
+
+  .account {
+    justify-content: center;
+    width: 34px;
+    min-height: 34px;
+    padding: 0;
+  }
+}
