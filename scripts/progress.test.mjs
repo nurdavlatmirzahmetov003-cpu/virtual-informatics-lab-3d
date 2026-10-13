@@ -21,6 +21,7 @@ import { deviceExercise } from '../src/data/devices/deviceQuiz.ts';
 import { TEARDOWN_IDS } from '../src/data/teardown/teardowns.ts';
 import { teardownExercise } from '../src/data/teardown/teardownQuiz.ts';
 import { CONNECT_EXERCISES } from '../src/labs/ConnectLab/index.ts';
+import { FIX_EXERCISE } from '../src/labs/SystemSim/index.ts';
 import * as cpuTemp from '../src/labs/Experiments/cpuTemp.ts';
 import * as memory from '../src/labs/Experiments/memory.ts';
 import * as storage from '../src/labs/Experiments/storage.ts';
@@ -56,6 +57,7 @@ test('catalog matches every real exercise: ids, types, max score and instruction
     ...Object.values(QUIZZES),
     ...Object.values(LOGIC_TASKS),
     ...Object.entries(experiments).map(([, m]) => m.exercise()),
+    FIX_EXERCISE,
   ];
   assert.equal(real.length, TASKS.length, 'every exercise is in the catalog and vice versa');
   for (const ex of real) {

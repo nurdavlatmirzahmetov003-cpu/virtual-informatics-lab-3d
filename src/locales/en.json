@@ -111,6 +111,11 @@
         "title": "Cables & networking",
         "desc": "Plug cables into the right sockets, put a laptop online by Ethernet and Wi-Fi, watch DHCP.",
         "tag": "3 tasks · HDMI · Wi-Fi"
+      },
+      "sim": {
+        "title": "Cause & effect",
+        "desc": "What a PC does without a cooler, memory, graphics card or enough power — POST, temperature, throttling.",
+        "tag": "Simulation · repair task"
       }
     },
     "available": "Available",
@@ -5940,6 +5945,193 @@
       "wrongNetwork": "“{ssid}” is not the school network.",
       "joinedOpen": "You joined an open network — your data was not encrypted.",
       "wrongKeys": "Wrong key {n} time(s)."
+    }
+  },
+  "sim": {
+    "title": "Cause & Effect Lab",
+    "eyebrow": "What if a part is missing?",
+    "lead": "Build a computer and switch it on: see what changes on the screen, in the beeps and in the temperature when a part is missing or wrong.",
+    "disclaimer": "This is an educational simulation: the figures are close to real parts (temperature, power, boot time), but it does not emulate a real computer. Never open a computer that is plugged in.",
+    "modes": {
+      "sandbox": "Free play",
+      "fix": "Task: repair"
+    },
+    "build": "The build",
+    "parts": {
+      "cpu": {
+        "label": "Processor",
+        "ryzen": "Ryzen 5 7600 · with graphics",
+        "intelF": "Core i5-14400F · no graphics"
+      },
+      "cooler": {
+        "label": "Cooler",
+        "none": "None",
+        "stock": "Weak",
+        "tower": "Tower"
+      },
+      "ram": {
+        "label": "Memory",
+        "0": "None",
+        "1": "1 module",
+        "2": "2 modules"
+      },
+      "storage": {
+        "label": "Storage",
+        "none": "None",
+        "hdd": "HDD",
+        "sata": "SATA SSD",
+        "nvme": "NVMe SSD"
+      },
+      "gpu": {
+        "label": "Graphics card",
+        "none": "None",
+        "rtx": "RTX 5070"
+      },
+      "psu": {
+        "label": "Power supply",
+        "300": "300 W",
+        "550": "550 W",
+        "750": "750 W"
+      },
+      "monitor": {
+        "label": "Monitor cable",
+        "gpu": "In the card",
+        "board": "In the board"
+      }
+    },
+    "controls": {
+      "power": "Power on",
+      "off": "Power off",
+      "run": "Run the load",
+      "workload": "Load",
+      "sound": "Sound"
+    },
+    "workloads": {
+      "idle": "Idle",
+      "office": "Office",
+      "game": "Game"
+    },
+    "screen": {
+      "off": "The computer is off",
+      "black": "Black screen",
+      "booting": "Starting Windows…",
+      "desktop": "Desktop",
+      "shutdown": "The computer switched off",
+      "game": "Game · {fps} FPS",
+      "office": "A text editor is open",
+      "slow": "Too slow to play"
+    },
+    "beeps": {
+      "ok": "One short beep — POST passed",
+      "memory": "Long repeating beeps — no memory found",
+      "video": "1 long + 3 short — no video output",
+      "heard": "You hear"
+    },
+    "panel": {
+      "temp": "CPU temperature",
+      "power": "System power",
+      "psuOf": "{w} / {psu} W",
+      "throttling": "THROTTLING: the CPU slowed down",
+      "hot": "OVERHEATING",
+      "overload": "POWER OVERLOAD",
+      "bootTime": "Boot: {s} s",
+      "graph": "Temperature graph",
+      "limit": "95 °C throttle · 105 °C shutdown",
+      "what": "What happened?",
+      "compare": "Boot time"
+    },
+    "outcome": {
+      "desktop": {
+        "title": "The desktop is up",
+        "why": "POST passed and Windows started from the {storage} in {s} s. Now run a load and watch the temperature and power."
+      },
+      "noRam": {
+        "title": "Black screen, repeating beeps",
+        "why": "No memory: the CPU has nowhere to run the BIOS, so POST stops. The board reports it with beeps and its DRAM LED. Fit a memory module."
+      },
+      "noVideo": {
+        "title": "It runs, but there is no picture",
+        "why": "The Core i5-14400F is an “F” model with no built-in graphics. Without a graphics card nothing can draw a picture. Fit a card or use a CPU with graphics."
+      },
+      "wrongPort": {
+        "title": "Monitor: “No signal”",
+        "why": "The monitor cable is in the wrong socket. With a graphics card the board’s output is off; without one, the cable belongs in the board."
+      },
+      "noBoot": {
+        "title": "“Boot device not found”",
+        "why": "The BIOS started, but there is no drive with an operating system — nothing to boot. Fit an SSD or HDD."
+      }
+    },
+    "shutdown": {
+      "overheat": {
+        "why": "At {t} s the CPU reached {c} °C and switched the computer off to protect itself. It first slowed down at 95 °C (throttling), but with no cooler the temperature kept rising."
+      },
+      "psu": {
+        "why": "Under load the system wanted {w} W but the PSU gives only {psu} W. Its protection (OPP) cut everything at once. A stronger PSU (550 W or more) is needed."
+      }
+    },
+    "result": {
+      "ok": "{work}: {c} °C, {w} W — all normal.",
+      "throttled": "The CPU got hot and slowed down by {lost}% (throttling). A stronger cooler is needed.",
+      "lowFps": "No graphics card: the game runs at {fps} FPS — unplayable. Built-in graphics are fine for office work only."
+    },
+    "causes": {
+      "ram": "No memory",
+      "gpu": "Nothing to draw the picture",
+      "monitor": "Monitor cable in the wrong socket",
+      "storage": "No storage drive",
+      "cooler": "No CPU cooler",
+      "psu": "Power supply too weak"
+    },
+    "task": {
+      "title": "Fix the broken computer",
+      "short": "Watch the symptoms, find the cause, fix it",
+      "instructions": "Switch the computer on and watch (screen, beeps, temperature, power). Pick the cause from the list, replace the faulty part and press “Check”.",
+      "expected": "The cause is named, the computer boots and survives a game, and no extra parts were changed.",
+      "hint": "Read the symptoms: repeating beeps — memory; no picture — video; “No signal” — the monitor cable; “Boot device” — the drive; switches off in a game — check the temperature graph or the power.",
+      "cause": "What is the cause?",
+      "newFault": "Another fault",
+      "fault": "Fault {n} / {total}",
+      "check": "Check",
+      "reset": "Put it back",
+      "changed": "Parts changed: {n}",
+      "testing": "Testing: boot + one minute of gaming…"
+    },
+    "feedback": {
+      "rule": {
+        "diagnosis": "Cause named correctly",
+        "fixed": "Boots and survives a game",
+        "minimal": "Only the faulty part was changed"
+      },
+      "noCause": "No cause chosen.",
+      "wrongCause": "That is not the cause — look at the symptoms again.",
+      "tooMany": "{n} parts changed — a technician replaces only the faulty one.",
+      "still": {
+        "noRam": "Still no POST: no memory.",
+        "noVideo": "Still no picture.",
+        "wrongPort": "The monitor still says “No signal”.",
+        "noBoot": "Still no boot drive.",
+        "overheat": "It still overheats and switches off in a game.",
+        "psu": "The PSU still cuts out in a game.",
+        "unstable": "The computer is still unstable."
+      }
+    },
+    "bios": {
+      "brand": "American Megatrends · UEFI BIOS v2.3",
+      "cpuRyzen": "CPU : AMD Ryzen 5 7600 6-Core @ 3.8 GHz",
+      "cpuIntel": "CPU : Intel Core i5-14400F @ 2.5 GHz",
+      "memory": "Memory : {gb} GB DDR5-6000 ({ch})",
+      "single": "single channel",
+      "dual": "dual channel",
+      "storageNvme": "NVMe : Samsung 990 PRO 2TB",
+      "storageSata": "SATA : Samsung 870 EVO 1TB",
+      "storageHdd": "SATA : WD Blue 1TB HDD 7200rpm",
+      "storageNone": "No storage device detected",
+      "gpuRtx": "PCIe x16 : NVIDIA GeForce RTX 5070",
+      "gpuIgpu": "Graphics : AMD Radeon (integrated)",
+      "fan": "CPU Fan Error! Press F1 to Resume",
+      "noBoot": "Reboot and Select proper Boot device or Insert Boot Media in selected Boot device and press a key_",
+      "noSignal": "No Signal"
     }
   }
 }

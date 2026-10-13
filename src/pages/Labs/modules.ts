@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
-import { Boxes, BrainCircuit, Cable, ClipboardCheck, Cpu, FlaskConical, LandPlot, Network, Trophy, Workflow, Wrench } from 'lucide-react';
+import { Boxes, BrainCircuit, Cable, ClipboardCheck, Cpu, FlaskConical, Flame, LandPlot, Network, Trophy, Workflow, Wrench } from 'lucide-react';
 
-export type ModuleId = 'space' | 'hardware' | 'assembly' | 'connect' | 'network' | 'algorithms' | 'logic' | 'experiments' | 'studio' | 'assignments' | 'results';
+export type ModuleId = 'space' | 'hardware' | 'assembly' | 'connect' | 'network' | 'algorithms' | 'logic' | 'experiments' | 'sim' | 'studio' | 'assignments' | 'results';
 
 /**
  * ready — finished module · beta — works, still being improved ·
@@ -29,6 +29,7 @@ export const LAB_MODULES: readonly LabModule[] = [
   { id: 'algorithms', icon: Workflow, status: 'ready', to: '/labs/algorithms', tone: '#a78bfa', size: 'normal' },
   { id: 'logic', icon: BrainCircuit, status: 'ready', to: '/labs/logic', tone: '#ff7ab6', size: 'normal' },
   { id: 'experiments', icon: FlaskConical, status: 'ready', to: '/labs/experiments', tone: '#7dd3fc', size: 'normal' },
+  { id: 'sim', icon: Flame, status: 'beta', to: '/labs/sim', tone: '#f87171', size: 'normal' },
   { id: 'studio', icon: Boxes, status: 'ready', to: '/studio', tone: '#3b82ff', size: 'wide' },
   { id: 'assignments', icon: ClipboardCheck, status: 'ready', to: '/assignments', tone: '#facc15', size: 'normal' },
   { id: 'results', icon: Trophy, status: 'ready', to: '/progress', tone: '#3ddc97', size: 'normal' },

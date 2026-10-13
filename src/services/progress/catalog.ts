@@ -189,8 +189,22 @@ const experiments = EXPERIMENT_TASKS.map(
   }),
 );
 
+/** System simulation (V2-7): "Fix the broken computer", the last of the experiments. */
+const simFix: Draft = {
+  id: 'sim:fix',
+  lab: 'experiments',
+  task: 'fix',
+  type: 'sim',
+  path: '/labs/sim?mode=fix',
+  title: 'sim.task.title',
+  summary: 'sim.task.short',
+  instructions: 'sim.task.instructions',
+  expected: 'sim.task.expected',
+  maxScore: 10,
+};
+
 /** All tasks in the suggested learning order: explore → build → network → algorithms → logic → experiments. */
-export const TASKS: readonly TaskInfo[] = [...anatomy, ...devices, ...teardowns, assembly, connect[0], ...network, ...connect.slice(1), ...algorithms, ...logic, ...experiments].map((t, order) => ({ ...t, order }));
+export const TASKS: readonly TaskInfo[] = [...anatomy, ...devices, ...teardowns, assembly, connect[0], ...network, ...connect.slice(1), ...algorithms, ...logic, ...experiments, simFix].map((t, order) => ({ ...t, order }));
 
 const BY_ID = new Map(TASKS.map((t) => [t.id, t]));
 export const taskById = (id: string): TaskInfo | undefined => BY_ID.get(id);
@@ -202,7 +216,7 @@ export function labOf(exerciseId: string): LabId | undefined {
   const known = BY_ID.get(exerciseId)?.lab;
   if (known) return known;
   const [prefix, rest] = exerciseId.split(':');
-  const map: Record<string, LabId> = { anatomy: 'hardware', device: 'hardware', teardown: 'hardware', connect: 'network', assembly: 'assembly', network: 'network', algorithm: 'algorithms', logic: 'logic', experiment: 'experiments' };
+  const map: Record<string, LabId> = { anatomy: 'hardware', device: 'hardware', teardown: 'hardware', connect: 'network', sim: 'experiments', assembly: 'assembly', network: 'network', algorithm: 'algorithms', logic: 'logic', experiment: 'experiments' };
   if (prefix === 'legacy') return isLabId(rest) ? rest : undefined;
   return map[prefix];
 }

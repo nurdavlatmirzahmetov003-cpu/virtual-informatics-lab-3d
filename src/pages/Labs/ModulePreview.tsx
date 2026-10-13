@@ -50,6 +50,7 @@ const BACK: Record<ModuleId, ReactNode> = {
   algorithms: grid,
   logic: grid,
   experiments: grid,
+  sim: grid,
   studio: <path d="M20 128 H300" {...dim} />,
   assignments: grid,
   results: grid,
@@ -106,6 +107,16 @@ const FRONT: Record<ModuleId, (face: string) => ReactNode> = {
       <rect x="166" y="54" width="18" height="8" rx="2" fill="var(--tone)" opacity="0.5" className={styles.pulse} />
       <path d="M40 118 C 80 118, 96 58, 132 58 H 150" {...line} />
       <rect x="128" y="52" width="22" height="12" rx="2" fill="var(--tone)" className={styles.float} />
+    </>
+  ),
+  // a thermometer climbing into the red beside a temperature curve
+  sim: (face) => (
+    <>
+      <rect x="96" y="24" width="20" height="104" rx="10" {...line} fill={face} />
+      <rect x="100" y="60" width="12" height="64" rx="6" fill="var(--tone)" opacity="0.85" className={styles.pulse} />
+      <path d="M140 118 C 170 118, 180 70, 210 52 S 240 40, 262 40" {...line} />
+      <path d="M140 46 H 262" {...dim} strokeDasharray="4 4" />
+      <circle cx="262" cy="40" r="5" fill="var(--tone)" className={styles.pulse} />
     </>
   ),
   network: (face) => (

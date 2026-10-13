@@ -51,3 +51,38 @@ export function playSfx(kind: Sfx) {
     [523, 659, 784, 1047].forEach((f, i) => tone(ac, out, f, t + 0.35 + i * 0.12, 0.35));
   }
 }
+
+/**
+ * POST beep codes (V2-7): one short = OK; long repeating = no memory;
+ * one long + three short = no video. Respects the sound setting.
+ */
+export function playBeepCode(code: 'ok' | 'memory' | 'video') {
+  const { soundEnabled, soundVolume } = useSettingsStore.getState();
+  if (!soundEnabled) return;
+  const ac = context();
+  if (!ac) return;
+  const out = ac.createGain();
+  out.gain.value = Math.max(0, Math.min(1, soundVolume)) * 0.25;
+  out.connect(ac.destination);
+  const t = ac.currentTime + 0.05;
+  const beep = (start: number, length: number) => tone(ac, out, 880, t + start, length, 'square');
+  if (code === 'ok') beep(0, 0.15);
+  if (code === 'memory') [0, 1.1, 2.2].forEach((s) => beep(s, 0.85));
+  if (code === 'video') {
+    beep(0, 0.8);
+    [1.0, 1.3, 1.6].forEach((s) => beep(s, 0.15));
+  }
+}
+
+/** A short two-tone alarm (overheating, overload). */
+export function playAlarm() {
+  const { soundEnabled, soundVolume } = useSettingsStore.getState();
+  if (!soundEnabled) return;
+  const ac = context();
+  if (!ac) return;
+  const out = ac.createGain();
+  out.gain.value = Math.max(0, Math.min(1, soundVolume)) * 0.2;
+  out.connect(ac.destination);
+  const t = ac.currentTime;
+  [0, 0.3, 0.6].forEach((s, i) => tone(ac, out, i % 2 ? 660 : 990, t + s, 0.25, 'triangle'));
+}

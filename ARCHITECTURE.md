@@ -208,6 +208,17 @@ legacy/                     ескі ES-module прототип (python http.ser
       - `ConnectKit`: `PortHotspots` (Html батырмалар), `Cable` (CatmullRom → TubeGeometry, ұш қозғалғанда ғана қайта құрылады), `DragController` (камераға перпендикуляр жазықтық; жібергенде экрандағы ең жақын ұя).
     - Прогресс: `CONNECT_TASKS`; `connect:pc` → assembly, қалғандары → network (TASKS ретінде зертханалар тәртібі сақталады).
 
+44. **Себеп-салдар симуляциясы (V2-7).**
+    - `labs/SystemSim` (таза, тесті бар):
+      - `build.ts` — таңдаулар, қуат пен салқындату тұрақтылары, `GOOD_BUILD`;
+      - `sim.ts` — `post()`: noRam → noVideo / wrongPort (`videoPath`: карта бар болса оның шығысы, жоқ болса iGPU) → noBoot → desktop + жүктелу уақыты; `runLoad()`: бірінші ретті жылу моделі, 95 °C-та троттлинг (ең төменгі қуат = idle × 2), 105 °C-та өшу, жүйе қуаты PSU-дан асса OPP; `gameFps`, `check`;
+      - `faults.ts` — 6 ақау, `FIX_EXERCISE` (diagnosis / fixed / minimal).
+    - UI: `pages/Labs/SystemSim`.
+      - `useSimRunner` — фазалар: off → post → result | booting → desktop → load → shutdown; таймерлер күй жаңартуынан тыс.
+      - `Monitor` (DOM-экран), `Instruments` (термометр, қуат, SVG график, ескерту, «Не болды?»).
+      - Дыбыс: `lib/audio/sfx` `playBeepCode` / `playAlarm`, `settingsStore.soundEnabled` бойынша.
+    - Құрам режим/ақау кілтімен сақталады (`edits.key`), effect-сіз; бөлшек ауысса компьютер өшеді.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |
