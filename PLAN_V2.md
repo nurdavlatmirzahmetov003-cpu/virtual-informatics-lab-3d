@@ -135,7 +135,7 @@ Global rules:
 | V2-7 ✅ | Cause-and-effect simulation | What happens without cooler/RAM/GPU/storage/enough PSU |
 | V2-8 ✅ | Backend and database | Local server, SQLite (PostgreSQL-compatible), auth, 3 roles |
 | V2-9 ✅ | Teacher and student dashboards | Classes, assignments, announcements, grading |
-| V2-10 | Admin panel | Users, content, audit log, security, backups |
+| V2-10 ✅ | Admin panel | Users, content, audit log, security, backups |
 | V2-11a/b | Gamification v2 and real-time | XP, levels, leaderboards, live quizzes, assembly races |
 | V2-12 | QA, security, hosting readiness | Tests, audit, Docker, deployment guide |
 

@@ -24,7 +24,8 @@ export function json(res: ServerResponse, status: number, body: unknown, headers
   res.end(JSON.stringify(body));
 }
 
-export function readBody(req: IncomingMessage, limit: number): Promise<string> {
+/** The raw request body (uploads), at most `limit` bytes. */
+export function readRaw(req: IncomingMessage, limit: number): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     let size = 0;
     const chunks: Buffer[] = [];
@@ -35,9 +36,13 @@ export function readBody(req: IncomingMessage, limit: number): Promise<string> {
         req.destroy();
       } else chunks.push(c);
     });
-    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
     req.on('error', reject);
   });
+}
+
+export async function readBody(req: IncomingMessage, limit: number): Promise<string> {
+  return (await readRaw(req, limit)).toString('utf8');
 }
 
 export async function readJson<T = Record<string, unknown>>(req: IncomingMessage, limit = 64 * 1024): Promise<T> {
@@ -66,4 +71,14 @@ export function cookie(name: string, value: string, opts: { maxAge: number; secu
   return [`${name}=${encodeURIComponent(value)}`, 'Path=/', 'HttpOnly', 'SameSite=Lax', `Max-Age=${opts.maxAge}`, ...(opts.secure ? ['Secure'] : [])].join('; ');
 }
 
-export const clientIp = (req: IncomingMessage) => req.socket.remoteAddress ?? 'unknown';
+const LOOPBACK = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1']);
+
+/** The client's IP; X-Forwarded-For only from a trusted proxy (see ServerConfig.trustProxy). */
+export function clientIp(req: IncomingMessage, trust: 'loopback' | 'none' | 'all' = 'none') {
+  const direct = req.socket.remoteAddress ?? 'unknown';
+  const header = req.headers['x-forwarded-for'];
+  const forwarded = (Array.isArray(header) ? header[0] : header)?.split(',')[0]?.trim();
+  const trusted = trust === 'all' || (trust === 'loopback' && LOOPBACK.has(direct));
+  const ip = trusted && forwarded ? forwarded : direct;
+  return ip.startsWith('::ffff:') ? ip.slice(7) : ip;
+}

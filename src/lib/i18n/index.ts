@@ -64,9 +64,27 @@ function interpolate(text: string, vars?: TranslationVars): string {
   return text.replace(/\{(\w+)\}/g, (match, name: string) => (name in vars ? String(vars[name]) : match));
 }
 
-/** Resolves a key in `lang`, falling back to Kazakh (also while `lang` is loading), then to the key itself. */
+/**
+ * Texts the admin edited on the server (V2-10): a flat key → text map per
+ * language, laid over the shipped dictionaries. Shown as plain text only.
+ */
+let overrides: Partial<Record<Language, Record<string, string>>> = {};
+
+export function setContentOverrides(next: Partial<Record<Language, Record<string, string>>>) {
+  overrides = next;
+}
+
+/** The shipped text of a key (no admin edits) — the admin panel's "default". */
+export function defaultText(lang: Language, key: string): string | undefined {
+  return lookup(dictionaries[lang], key);
+}
+
+/** The shipped dictionary of a loaded language (for the admin's content editor). */
+export const shippedDictionary = (lang: Language) => dictionaries[lang] as Record<string, unknown> | undefined;
+
+/** Resolves a key in `lang` (admin edit first), falling back to Kazakh (also while `lang` is loading), then to the key itself. */
 export function translate(lang: Language, key: TranslationKey, vars?: TranslationVars): string {
-  const text = lookup(dictionaries[lang], key) ?? lookup(dictionaries[DEFAULT_LANGUAGE], key);
+  const text = overrides[lang]?.[key] ?? lookup(dictionaries[lang], key) ?? overrides[DEFAULT_LANGUAGE]?.[key] ?? lookup(dictionaries[DEFAULT_LANGUAGE], key);
   if (text === undefined) {
     if (import.meta.env.DEV) console.warn(`[i18n] missing key "${key}"`);
     return key;

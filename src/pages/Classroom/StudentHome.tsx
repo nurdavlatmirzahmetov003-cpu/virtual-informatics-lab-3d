@@ -12,6 +12,7 @@ import { taskById } from '@/services/progress/catalog';
 import { studentApi, type StudentHome as Home } from '@/services/classroom/api';
 import { cellStatus } from '@/services/classroom/stats';
 import { useAuthStore } from '@/store/authStore';
+import { useSiteStore } from '@/store/siteStore';
 import { RequireRole } from '../Auth/RequireRole';
 import { AnnouncementList } from './AnnouncementsTab';
 import { fmtDateTime } from './format';
@@ -135,6 +136,7 @@ function StudentView() {
   const dueText = useDueText();
   const user = useAuthStore((s) => s.user)!;
   const csrf = useAuthStore((s) => s.csrf);
+  const allowJoin = useSiteStore((s) => s.allowJoinByCode);
   const [home, setHome] = useState<Home | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [joined, setJoined] = useState<string | null>(null);
@@ -236,12 +238,16 @@ function StudentView() {
         </div>
 
         <aside className={styles.side}>
-          <JoinForm
-            onJoined={(name) => {
-              setJoined(name);
-              reload();
-            }}
-          />
+          {allowJoin ? (
+            <JoinForm
+              onJoined={(name) => {
+                setJoined(name);
+                reload();
+              }}
+            />
+          ) : (
+            <p className={styles.emptyBox}>{t('classroom.student.joinOff')}</p>
+          )}
           {!!home?.classes.length && (
             <section className={auth.panel}>
               <h2>{t('classroom.student.classes')}</h2>

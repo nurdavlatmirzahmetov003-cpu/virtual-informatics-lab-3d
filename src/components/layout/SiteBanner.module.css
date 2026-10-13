@@ -1,0 +1,74 @@
+.banner {
+  --c: var(--accent);
+  position: fixed;
+  top: calc(var(--topbar-base) + 8px);
+  left: 50%;
+  z-index: var(--z-topbar);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: min(760px, calc(100% - 32px));
+  padding: 10px 10px 10px 16px;
+  border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--c) 14%, rgb(var(--panel-rgb) / 0.95));
+  backdrop-filter: blur(14px);
+  box-shadow: 0 16px 40px -20px rgb(0 0 0 / 0.6);
+  color: var(--text);
+  font-size: var(--fs-sm);
+  transform: translateX(-50%);
+  animation: drop var(--dur-med) var(--ease-out);
+}
+
+.banner[data-tone='warning'] {
+  --c: var(--warning);
+}
+
+.banner > svg {
+  flex: none;
+  color: var(--c);
+}
+
+.banner p {
+  flex: 1;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.banner button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.banner button:hover,
+.banner button:focus-visible {
+  background: rgb(var(--ink-rgb) / 0.08);
+  color: var(--text);
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+}
+
+@media (max-width: 720px) {
+  .banner {
+    top: calc(var(--topbar-base) + 52px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner {
+    animation: none;
+  }
+}

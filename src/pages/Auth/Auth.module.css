@@ -207,6 +207,8 @@
 
 .panel {
   display: grid;
+  /* one shrinkable column: a wide table scrolls inside instead of widening the page */
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   padding: var(--space-4);
   border: 1px solid var(--border);
@@ -231,6 +233,7 @@
 }
 
 .table {
+  position: relative;
   width: 100%;
   border-collapse: collapse;
   font-size: 0.86rem;

@@ -20,7 +20,7 @@ const db = openDb(config.dbFile);
 const applied = migrate(db);
 purgeExpired(db);
 
-const app = createApp({ db, config, extra: [handleAi] });
+const app = createApp({ db, config, extra: [handleAi], aiStatus });
 const server = createServer((req, res) => void app(req, res));
 
 server.listen(config.port, () => {

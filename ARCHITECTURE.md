@@ -235,6 +235,14 @@ legacy/                     ескі ES-module прототип (python http.ser
     - Фронт: `services/classroom/api.ts` (типтер мен шақырулар), `stats.ts` (күй, статистика, CSV/JSON — таза). `pages/Classroom/` бөлімдері бір `ClassDetail`-ді бөліседі, әр өзгерістен кейін қайта жүктеледі (`reload`). Уақыт `useNow()` (ортақ 30 с сағат, render таза қалады).
     - QR: `lib/qr/qr.ts` — byte mode, M деңгейі, 1–9 нұсқа, Reed–Solomon GF(256), 8 маска + айыппұл; `QrCode` бір SVG path салады. Басып шығару карточкалары `body`-ге portal арқылы шығады, `@media print` қалғанын жасырады.
 
+47. **Әкімші панелі (V2-10).**
+    - Маршруттар: `server/router.ts` (ортақ `:param` маршрутизатор) → `classroomRoutes` мен `adminRoutes`. `createApp` оларға `requireUser`, `checkCsrf`, `settings()`, `refresh()` береді. Әр сұрауда алдымен IP бұғаттау (жадтағы кэш, өзгергенде `refresh`), сосын AI ауыстырғышы тексеріледі.
+    - Баптаулар: `settings.ts` — әр кілттің әдепкі мәні мен валидаторы бар. Сервер өзі сақтатады (сессия ұзақтығы, кодпен қосылу, тіркеу, AI). `/api/public` тек баннер мен қосылу ауыстырғышын береді.
+    - Мәтін түзетулері: `content_overrides (key, lang)`. Сервер `src/locales/*.json`-ді әдепкі мән ретінде оқып, кілтті (тек оқу бөлімдері) және `{орындарды}` тексереді. Браузерде `lib/i18n` `setContentOverrides` — `translate` алдымен түзетуге қарайды. `useT` `siteStore.contentVersion`-ға тәуелді, сондықтан мәтін сақталғанда бәрі қайта сызылады.
+    - Сақтық көшірме: `VACUUM INTO` (бүтін көшірме) → `BACKUP_DIR`. Қалпына келтіру: тексеру (`quick_check`, кестелер, белсенді әкімші) → «before-restore» көшірмесі → `node:sqlite backup()` ашық байланыстың файлын ауыстырады → `migrate` → сессиялар тазаланады. Файл аттары `^[A-Za-z0-9._-]+\.db$` үлгісімен ғана өтеді.
+    - Клиент IP: `clientIp(req, TRUST_PROXY)`. `X-Forwarded-For` тек сенімді proxy-ден қабылданады (әдепкі — осы компьютер, Vite `xfwd`).
+    - Баннер: `SiteBanner` өз биіктігін `--banner-h` арқылы береді, `--topbar-h = --topbar-base + --banner-h`, сондықтан барлық бет өздігінен төмен жылжиды.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

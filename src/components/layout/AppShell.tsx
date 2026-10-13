@@ -7,6 +7,8 @@ import { applyTheme } from '@/lib/theme';
 import { useSceneStatus } from '@/store/sceneStatusStore';
 import { AchievementToaster } from '@/components/achievements/AchievementToaster';
 import { useAuthStore } from '@/store/authStore';
+import { useSiteStore } from '@/store/siteStore';
+import { SiteBanner } from './SiteBanner';
 import { TopBar } from './TopBar';
 import styles from './AppShell.module.css';
 
@@ -27,8 +29,10 @@ export function AppShell() {
   useEffect(() => applyTheme(theme), [theme]);
 
   // who is signed in (or guest mode when the server is not running)
+  // and what the admin set for the whole site: banner, edited texts
   useEffect(() => {
     void useAuthStore.getState().init();
+    void useSiteStore.getState().load();
   }, []);
 
   return (
@@ -37,6 +41,7 @@ export function AppShell() {
         {t('app.skipToContent')}
       </a>
       <TopBar />
+      <SiteBanner />
       <main id="main" className={styles.main} tabIndex={-1}>
         <Suspense fallback={<div className={styles.pageLoading} aria-busy="true" />}>
           <Outlet />

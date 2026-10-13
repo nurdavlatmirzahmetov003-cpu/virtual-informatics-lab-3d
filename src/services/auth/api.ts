@@ -15,12 +15,6 @@ export interface User {
   role: Role;
 }
 
-export interface AdminUser extends User {
-  disabled: boolean;
-  createdAt: number;
-  lastLoginAt: number | null;
-}
-
 export class ApiError extends Error {
   readonly status: number;
   readonly code: string;
@@ -69,10 +63,4 @@ export const authApi = {
 export const progressApi = {
   get: () => call<{ snapshot: ProgressSnapshot }>('/api/progress'),
   put: (snapshot: ProgressSnapshot, csrf: string) => call<{ snapshot: ProgressSnapshot }>('/api/progress', { method: 'PUT', body: { snapshot }, csrf }),
-};
-
-export const adminApi = {
-  users: () => call<{ users: AdminUser[] }>('/api/admin/users'),
-  createUser: (input: { login: string; displayName: string; role: Role; password: string }, csrf: string) =>
-    call<{ user: User }>('/api/admin/users', { method: 'POST', body: input, csrf }),
 };

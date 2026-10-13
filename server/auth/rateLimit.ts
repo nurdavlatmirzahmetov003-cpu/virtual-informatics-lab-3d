@@ -37,4 +37,22 @@ export class LoginLimiter {
   succeed(ip: string, login: string) {
     this.fails.delete(`${ip}|${login}`);
   }
+
+  /** Keys blocked right now: "ip|login" pairs and whole IPs (for the admin's security page). */
+  blocked(now = Date.now()): Array<{ key: string; ip: string; login: string | null; fails: number; retryAfter: number }> {
+    const out: Array<{ key: string; ip: string; login: string | null; fails: number; retryAfter: number }> = [];
+    for (const key of [...this.fails.keys()]) {
+      const list = this.recent(key, now);
+      const isPair = key.includes('|');
+      if (list.length < (isPair ? this.perLogin : this.perIp)) continue;
+      const [ip, login] = isPair ? key.split('|') : [key, null];
+      out.push({ key, ip, login, fails: list.length, retryAfter: Math.ceil((list[0] + this.windowMs - now) / 1000) });
+    }
+    return out;
+  }
+
+  /** Lifts a block early (the admin unblocks someone who mistyped). */
+  clear(key: string): boolean {
+    return this.fails.delete(key);
+  }
 }

@@ -19,7 +19,7 @@ export default function LoginPage() {
   const [params] = useSearchParams();
   const signIn = useAuthStore((s) => s.signIn);
   const serverOnline = useAuthStore((s) => s.serverOnline);
-  const [login, setLogin] = useState('');
+  const [login, setLogin] = useState(() => (params.get('login') ?? '').slice(0, 64));
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -52,6 +52,16 @@ export default function LoginPage() {
         <h1>{t('auth.title')}</h1>
         <p className={styles.lead}>{t('auth.lead')}</p>
 
+        {params.get('reset') && (
+          <p className={styles.ok} role="status">
+            {t('auth.reset.done')}
+          </p>
+        )}
+        {params.get('restored') && (
+          <p className={styles.notice} role="status">
+            {t('auth.restored')}
+          </p>
+        )}
         {serverOnline === false && (
           <p className={styles.notice} role="status">
             <ServerOff size={16} aria-hidden="true" /> {t('auth.offline')}

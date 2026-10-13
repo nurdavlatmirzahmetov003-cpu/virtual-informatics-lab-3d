@@ -95,7 +95,9 @@
   --dur-med: 320ms;
   --dur-slow: 700ms;
 
-  --topbar-h: 64px;
+  /* the bar itself; --topbar-h also covers the admin's site banner (V2-10) when one is shown */
+  --topbar-base: 64px;
+  --topbar-h: calc(var(--topbar-base) + var(--banner-h, 0px));
   --z-canvas: 0;
   --z-overlay: 10;
   --z-topbar: 50;

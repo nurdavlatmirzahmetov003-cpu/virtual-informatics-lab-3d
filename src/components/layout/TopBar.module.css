@@ -6,7 +6,7 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--space-5);
-  height: var(--topbar-h);
+  height: var(--topbar-base);
   padding: 0 var(--gutter);
   background: linear-gradient(180deg, rgb(var(--panel-rgb) / 0.96), rgb(var(--panel-rgb) / 0.82));
   backdrop-filter: blur(16px);
@@ -128,7 +128,7 @@
 @media (max-width: 720px) {
   .root {
     grid-template-columns: auto 1fr;
-    grid-template-rows: var(--topbar-h) auto;
+    grid-template-rows: var(--topbar-base) auto;
     height: auto;
     row-gap: 0;
     padding-bottom: var(--space-2);

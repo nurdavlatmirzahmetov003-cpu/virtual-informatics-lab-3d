@@ -28,19 +28,14 @@
  *   GET    /api/student/classes/:id/messages            → { messages }
  *   POST   /api/student/classes/:id/messages            { body }
  */
-import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Db } from './db';
 import { HttpError, json, readJson } from './http';
 import { audit } from './audit';
 import type { LoginLimiter } from './auth/rateLimit';
 import type { Role, UserRow } from './users';
 import * as C from './classroom';
-
-export interface RouteCtx {
-  req: IncomingMessage;
-  res: ServerResponse;
-  ip: string;
-}
+import { createRouter, type RouteCtx } from './router';
+import type { SiteSettings } from './settings';
 
 export interface ClassroomDeps {
   db: Db;
@@ -49,22 +44,13 @@ export interface ClassroomDeps {
   checkCsrf: (ctx: RouteCtx) => void;
   /** Wrong join codes count like failed logins (per student and IP). */
   joinLimiter: LoginLimiter;
+  /** Site settings (V2-10): joining by code and teacher registration can be switched off. */
+  settings: () => Pick<SiteSettings, 'allowJoinByCode' | 'allowTeacherRegistration'>;
 }
 
-type Handler = (ctx: RouteCtx, p: Record<string, string>) => Promise<void> | void;
-
-function compile(pattern: string) {
-  const names: string[] = [];
-  const re = new RegExp(`^${pattern.replace(/:(\w+)/g, (_, n: string) => (names.push(n), '([^/]+)'))}$`);
-  return (path: string) => {
-    const m = re.exec(path);
-    return m ? Object.fromEntries(names.map((n, i) => [n, decodeURIComponent(m[i + 1])])) : null;
-  };
-}
-
-export function classroomRoutes({ db, now, requireUser, checkCsrf, joinLimiter }: ClassroomDeps) {
-  const routes: Array<{ method: string; match: (p: string) => Record<string, string> | null; handler: Handler }> = [];
-  const on = (method: string, pattern: string, handler: Handler) => routes.push({ method, match: compile(pattern), handler });
+export function classroomRoutes({ db, now, requireUser, checkCsrf, joinLimiter, settings }: ClassroomDeps) {
+  const router = createRouter();
+  const on = router.on;
   const teacher = (ctx: RouteCtx) => requireUser(ctx, 'teacher', 'admin');
   /** Teacher + CSRF for writes. */
   const teacherWrite = (ctx: RouteCtx) => {
@@ -115,6 +101,7 @@ export function classroomRoutes({ db, now, requireUser, checkCsrf, joinLimiter }
   on('POST', '/api/teacher/classes/:id/students', async (ctx, p) => {
     const u = teacherWrite(ctx);
     const cls = C.ownClass(db, u, p.id);
+    if (u.role !== 'admin' && !settings().allowTeacherRegistration) throw new HttpError(403, 'registrationDisabled');
     const b = await readJson<{ names?: unknown }>(ctx.req, 64 * 1024);
     const created = await C.addStudents(db, cls, b.names, now());
     log(ctx, u, 'student.createMany', cls.id, `${created.length}`);
@@ -197,6 +184,7 @@ export function classroomRoutes({ db, now, requireUser, checkCsrf, joinLimiter }
   on('GET', '/api/student/home', (ctx) => json(ctx.res, 200, C.studentHome(db, requireUser(ctx, 'student'))));
   on('POST', '/api/student/join', async (ctx) => {
     const u = studentWrite(ctx);
+    if (!settings().allowJoinByCode) throw new HttpError(403, 'joinDisabled');
     const wait = joinLimiter.retryAfter(ctx.ip, u.id, now());
     if (wait > 0) throw new HttpError(429, 'rateLimited', { retryAfter: wait });
     const b = await readJson<{ code?: unknown }>(ctx.req, 1024);
@@ -228,17 +216,5 @@ export function classroomRoutes({ db, now, requireUser, checkCsrf, joinLimiter }
   });
 
   /** True when a classroom route answered. */
-  return async function route(ctx: RouteCtx, method: string, path: string): Promise<boolean> {
-    let pathMatched = false;
-    for (const r of routes) {
-      const params = r.match(path);
-      if (!params) continue;
-      pathMatched = true;
-      if (r.method !== method) continue;
-      await r.handler(ctx, params);
-      return true;
-    }
-    if (pathMatched) throw new HttpError(405, 'method');
-    return false;
-  };
+  return router.route;
 }

@@ -99,6 +99,8 @@
 }
 
 .tableWrap {
+  /* positioned: absolute children (visually-hidden headers) stay inside the scroll box */
+  position: relative;
   overflow-x: auto;
   margin: 0 calc(var(--space-2) * -1);
   padding: 0 var(--space-2);

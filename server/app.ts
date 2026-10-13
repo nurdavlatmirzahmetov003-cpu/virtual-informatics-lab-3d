@@ -1,21 +1,23 @@
 /**
- * The lab server's request handler (V2-8): authentication, roles, progress
- * sync and the admin user list, next to the AI assistant routes. Kept free
- * of `listen()` so tests drive it on an ephemeral port with an in-memory db.
+ * The lab server's request handler: authentication, roles, progress sync,
+ * next to the AI assistant routes. Kept free of `listen()` so tests drive it
+ * on an ephemeral port with an in-memory db.
  *
  *   GET  /api/health
+ *   GET  /api/public                  → { settings (banner…), content overrides }
  *   GET  /api/auth/me                 → { user | null, csrfToken? }
  *   POST /api/auth/login              { login, password } → { user, csrfToken } + cookie
  *   POST /api/auth/logout             (csrf)
+ *   GET  /api/auth/reset?token=       → { login, displayName } for a valid reset link
+ *   POST /api/auth/reset              { token, password }
  *   GET  /api/progress                student → snapshot
  *   PUT  /api/progress                student (csrf) { snapshot } → merged snapshot
- *   GET  /api/admin/users             admin
- *   POST /api/admin/users             admin (csrf) { login, displayName, role, password }
- *   …and the classroom routes (classes, assignments, grades, messages) in
- *   classroomRoutes.ts.
+ *   …the classroom routes in classroomRoutes.ts (V2-9) and the admin panel
+ *   in adminRoutes.ts (V2-10).
  *
  * Every state-changing request needs the session's CSRF token in
  * `x-csrf-token` and, when the browser sends one, an allowed Origin.
+ * Requests from a blocked IP get 403 before anything else.
  */
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Db } from './db';
@@ -25,9 +27,13 @@ import { audit } from './audit';
 import { dummyHash, verifyPassword } from './auth/password';
 import { LoginLimiter } from './auth/rateLimit';
 import { SESSION_COOKIE, createSession, destroySession, findSession, type SessionRow } from './auth/sessions';
-import { createUser, listUsers, normalizeLogin, publicUser, userById, userByLogin, type Role, type UserRow } from './users';
+import { normalizeLogin, publicUser, userById, userByLogin, type Role, type UserRow } from './users';
 import { loadProgress, saveProgress } from './progress';
 import { classroomRoutes } from './classroomRoutes';
+import { adminRoutes } from './adminRoutes';
+import { checkResetToken, listIpBlocks, redeemResetToken } from './admin';
+import { getSettings, publicSettings } from './settings';
+import { allOverrides, contentVersion } from './content';
 
 export interface AppOptions {
   db: Db;
@@ -35,8 +41,11 @@ export interface AppOptions {
   limiter?: LoginLimiter;
   /** Wrong class join codes (per student + IP). */
   joinLimiter?: LoginLimiter;
+  /** Password-reset link checks (per IP). */
+  resetLimiter?: LoginLimiter;
   /** Other route handlers (the AI assistant); return true when they answered. */
   extra?: Array<(req: IncomingMessage, res: ServerResponse) => Promise<boolean>>;
+  aiStatus?: () => { provider: string | null; model: string | null };
   now?: () => number;
 }
 
@@ -44,14 +53,38 @@ interface Ctx {
   req: IncomingMessage;
   res: ServerResponse;
   ip: string;
+  query: URLSearchParams;
   session: SessionRow | null;
   user: UserRow | null;
 }
 
 const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
-export function createApp({ db, config, limiter = new LoginLimiter(), joinLimiter = new LoginLimiter(10, 30), extra = [], now = Date.now }: AppOptions) {
+export function createApp({
+  db,
+  config,
+  limiter = new LoginLimiter(),
+  joinLimiter = new LoginLimiter(10, 30),
+  resetLimiter = new LoginLimiter(10, 30),
+  extra = [],
+  aiStatus = () => ({ provider: null, model: null }),
+  now = Date.now,
+}: AppOptions) {
   const clearCookie = cookie(SESSION_COOKIE, '', { maxAge: 0, secure: config.cookieSecure });
+  const startedAt = now();
+  const settings = () => getSettings(db, { sessionHours: config.sessionHours });
+
+  // blocked IPs, cached: checked on every request, reloaded when they change
+  let blockedIps = new Map<string, number | null>();
+  const refresh = () => {
+    blockedIps = new Map(listIpBlocks(db, now()).map((b) => [b.ip, b.expiresAt]));
+  };
+  refresh();
+  const isBlocked = (ip: string) => {
+    if (!blockedIps.has(ip)) return false;
+    const until = blockedIps.get(ip);
+    return until == null || until > now();
+  };
 
   function requireUser(ctx: Ctx, ...roles: Role[]): UserRow {
     if (!ctx.user) throw new HttpError(401, 'unauthenticated');
@@ -69,13 +102,14 @@ export function createApp({ db, config, limiter = new LoginLimiter(), joinLimite
     if (origin && !config.allowedOrigins.includes(origin)) throw new HttpError(403, 'origin');
   }
 
-  const classroom = classroomRoutes({
+  const deps = {
     db,
     now,
-    requireUser: (ctx, ...roles) => requireUser(ctx as Ctx, ...roles),
-    checkCsrf: (ctx) => checkCsrf(ctx as Ctx),
-    joinLimiter,
-  });
+    requireUser: (ctx: object, ...roles: Role[]) => requireUser(ctx as Ctx, ...roles),
+    checkCsrf: (ctx: object) => checkCsrf(ctx as Ctx),
+  };
+  const classroom = classroomRoutes({ ...deps, joinLimiter, settings });
+  const adminPanel = adminRoutes({ ...deps, config, limiter, settings, aiStatus, startedAt, refresh, clearCookie });
 
   async function login(ctx: Ctx) {
     const body = await readJson<{ login?: unknown; password?: unknown }>(ctx.req, 4096);
@@ -96,14 +130,23 @@ export function createApp({ db, config, limiter = new LoginLimiter(), joinLimite
       throw new HttpError(401, 'invalidCredentials');
     }
     limiter.succeed(ctx.ip, login);
-    const s = createSession(db, user.id, config.sessionHours, String(ctx.req.headers['user-agent'] ?? ''), now());
+    const s = createSession(db, user.id, settings().sessionHours, String(ctx.req.headers['user-agent'] ?? ''), now());
     db.prepare('UPDATE users SET last_login_at = ? WHERE id = ?').run(now(), user.id);
     audit(db, 'login.ok', { actor: user.id, ip: ctx.ip }, now());
     json(ctx.res, 200, { user: publicUser(user), csrfToken: s.csrf }, { 'set-cookie': cookie(SESSION_COOKIE, s.token, { maxAge: s.maxAge, secure: config.cookieSecure }) });
   }
 
+  /** Reset links are guessable only by brute force: count wrong tokens like failed logins. */
+  function resetGuard(ctx: Ctx) {
+    const wait = resetLimiter.retryAfter(ctx.ip, 'reset', now());
+    if (wait > 0) throw new HttpError(429, 'rateLimited', { retryAfter: wait });
+  }
+
   async function route(ctx: Ctx, method: string, path: string) {
     if (path === '/api/health' && method === 'GET') return json(ctx.res, 200, { ok: true, version: 1 });
+    if (path === '/api/public' && method === 'GET') {
+      return json(ctx.res, 200, { settings: publicSettings(settings()), content: allOverrides(db), contentVersion: contentVersion(db) });
+    }
 
     if (path === '/api/auth/me' && method === 'GET') {
       return json(ctx.res, 200, ctx.user ? { user: publicUser(ctx.user), csrfToken: ctx.session!.csrf } : { user: null });
@@ -116,6 +159,27 @@ export function createApp({ db, config, limiter = new LoginLimiter(), joinLimite
       audit(db, 'logout', { actor: ctx.user!.id, ip: ctx.ip }, now());
       return json(ctx.res, 200, { ok: true }, { 'set-cookie': clearCookie });
     }
+    if (path === '/api/auth/reset' && method === 'GET') {
+      resetGuard(ctx);
+      const who = checkResetToken(db, ctx.query.get('token'), now());
+      if (!who) {
+        resetLimiter.fail(ctx.ip, 'reset', now());
+        throw new HttpError(404, 'badToken');
+      }
+      return json(ctx.res, 200, who);
+    }
+    if (path === '/api/auth/reset' && method === 'POST') {
+      resetGuard(ctx);
+      const b = await readJson<{ token?: unknown; password?: unknown }>(ctx.req, 4096);
+      try {
+        const user = await redeemResetToken(db, b.token, b.password, now());
+        audit(db, 'password.reset', { actor: user.id, ip: ctx.ip }, now());
+        return json(ctx.res, 200, { ok: true, login: user.login });
+      } catch (e) {
+        if (e instanceof HttpError && e.code === 'badToken') resetLimiter.fail(ctx.ip, 'reset', now());
+        throw e;
+      }
+    }
 
     if (path === '/api/progress') {
       const user = requireUser(ctx, 'student');
@@ -127,37 +191,32 @@ export function createApp({ db, config, limiter = new LoginLimiter(), joinLimite
       }
     }
 
-    if (path === '/api/admin/users') {
-      const admin = requireUser(ctx, 'admin');
-      if (method === 'GET') return json(ctx.res, 200, { users: listUsers(db) });
-      if (method === 'POST') {
-        checkCsrf(ctx);
-        const b = await readJson<{ login?: unknown; displayName?: unknown; role?: unknown; password?: unknown }>(ctx.req, 4096);
-        const role = b.role === 'teacher' || b.role === 'student' || b.role === 'admin' ? b.role : null;
-        if (!role) throw new HttpError(400, 'badRole');
-        const user = await createUser(db, { login: String(b.login ?? ''), displayName: String(b.displayName ?? ''), role, password: String(b.password ?? '') }, now());
-        audit(db, 'user.create', { actor: admin.id, target: user.id, ip: ctx.ip, detail: role }, now());
-        return json(ctx.res, 201, { user: publicUser(user) });
-      }
-    }
-
     if (await classroom(ctx, method, path)) return;
+    if (await adminPanel(ctx, method, path)) return;
 
     throw new HttpError(404, 'not-found');
   }
 
   return async function handle(req: IncomingMessage, res: ServerResponse) {
     try {
-      for (const h of extra) if (await h(req, res)) return;
+      const ip = clientIp(req, config.trustProxy);
+      if (isBlocked(ip)) throw new HttpError(403, 'ipBlocked');
       const url = new URL(req.url ?? '/', 'http://local');
+      // the admin can switch the LLM routes off; the browser then answers locally
+      if (url.pathname.startsWith('/api/ai/') && !settings().aiEnabled) throw new HttpError(503, 'ai-disabled');
+      for (const h of extra) if (await h(req, res)) return;
       const method = req.method ?? 'GET';
       if (!url.pathname.startsWith('/api/')) throw new HttpError(404, 'not-found');
       if (MUTATING.has(method)) checkOrigin(req);
       const session = findSession(db, parseCookies(req.headers.cookie)[SESSION_COOKIE], now());
       const found = session ? userById(db, session.user_id) : undefined;
       const user = found && !found.disabled ? found : null;
-      await route({ req, res, ip: clientIp(req), session: user ? session : null, user }, method, url.pathname);
+      await route({ req, res, ip, query: url.searchParams, session: user ? session : null, user }, method, url.pathname);
     } catch (e) {
+      if (res.headersSent) {
+        res.destroy();
+        return;
+      }
       if (e instanceof HttpError) return json(res, e.status, { error: e.code, ...e.extra });
       console.error('[server]', (e as Error).message);
       return json(res, 500, { error: 'server' });

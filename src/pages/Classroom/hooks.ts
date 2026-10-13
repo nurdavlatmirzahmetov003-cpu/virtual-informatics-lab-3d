@@ -31,7 +31,7 @@ export const useNow = () => useSyncExternalStore(subscribe, () => now);
 
 const KNOWN = new Set([
   'badName', 'badNames', 'badTitle', 'badDescription', 'badBody', 'badExercise', 'badDue', 'badPoints', 'badScore', 'badComment',
-  'badCode', 'rateLimited', 'notFound', 'forbidden', 'csrf', 'unauthenticated', 'loginTaken', 'offline',
+  'badCode', 'joinDisabled', 'registrationDisabled', 'rateLimited', 'notFound', 'forbidden', 'csrf', 'unauthenticated', 'loginTaken', 'offline',
 ]);
 
 /** A translated message for any error from the classroom API. */

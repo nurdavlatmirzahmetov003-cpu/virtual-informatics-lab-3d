@@ -13,6 +13,8 @@ const pkg = (names: string) => new RegExp(`node_modules[/\\\\](${names})[/\\\\]`
 const apiProxy: Record<string, ProxyOptions> = {
   '/api': {
     target: `http://localhost:${process.env.SERVER_PORT ?? process.env.AI_PORT ?? 8787}`,
+    // X-Forwarded-For: the server sees each visitor's IP (rate limits, IP blocks)
+    xfwd: true,
     configure: (proxy) => {
       proxy.on('error', (_error, _req, res) => {
         if ('writeHead' in res && !res.headersSent) {
