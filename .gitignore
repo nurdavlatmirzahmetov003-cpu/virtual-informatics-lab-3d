@@ -12,3 +12,6 @@ public/decoders
 Thumbs.db
 # raw downloaded 3D sources (large, re-downloadable; see ASSET_MANIFEST.md)
 assets-src/
+
+# local database (accounts, progress) — never commit
+data/

@@ -29,9 +29,12 @@ export const STORAGE_VERSIONS = {
 export function safeStorage(): Storage | undefined {
   try {
     const probe = `${STORAGE_NAMESPACE}:probe`;
-    window.localStorage.setItem(probe, '1');
-    window.localStorage.removeItem(probe);
-    return window.localStorage;
+    // globalThis: this module is also imported by the Node server (no DOM there)
+    const ls = (globalThis as { localStorage?: Storage }).localStorage;
+    if (!ls) return undefined;
+    ls.setItem(probe, '1');
+    ls.removeItem(probe);
+    return ls;
   } catch {
     return undefined;
   }

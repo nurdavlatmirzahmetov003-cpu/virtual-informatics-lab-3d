@@ -6,6 +6,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { applyTheme } from '@/lib/theme';
 import { useSceneStatus } from '@/store/sceneStatusStore';
 import { AchievementToaster } from '@/components/achievements/AchievementToaster';
+import { useAuthStore } from '@/store/authStore';
 import { TopBar } from './TopBar';
 import styles from './AppShell.module.css';
 
@@ -24,6 +25,11 @@ export function AppShell() {
   }, [language]);
 
   useEffect(() => applyTheme(theme), [theme]);
+
+  // who is signed in (or guest mode when the server is not running)
+  useEffect(() => {
+    void useAuthStore.getState().init();
+  }, []);
 
   return (
     <>

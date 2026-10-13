@@ -6133,5 +6133,72 @@
       "noBoot": "Reboot and Select proper Boot device or Insert Boot Media in selected Boot device and press a key_",
       "noSignal": "No Signal"
     }
+  },
+  "auth": {
+    "eyebrow": "Account",
+    "title": "Sign in",
+    "lead": "Enter the login and password your teacher or admin gave you. Once signed in, your results are kept on the server and follow you to any computer.",
+    "login": "Login",
+    "password": "Password",
+    "show": "Show password",
+    "hide": "Hide password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…",
+    "signOut": "Sign out",
+    "noAccount": "Accounts are created by a teacher or admin — there is no self sign-up.",
+    "guest": "Continue as a guest →",
+    "offline": "The server is not running: you cannot sign in, but every lab works in guest mode.",
+    "myPage": "My page",
+    "welcome": "Welcome, {name}!",
+    "errors": {
+      "invalidCredentials": "Wrong login or password.",
+      "missing": "Enter your login and password.",
+      "offline": "The server is not answering. Try later or continue as a guest.",
+      "rateLimited": "Too many failed attempts. Try again in {min} min.",
+      "server": "Something went wrong on the server. Try later."
+    },
+    "roles": {
+      "admin": "Admin",
+      "teacher": "Teacher",
+      "student": "Student"
+    },
+    "forbidden": {
+      "title": "This page is not for your role",
+      "text": "Each role has its own page. The button below takes you to yours.",
+      "home": "To my page"
+    },
+    "teacher": {
+      "title": "Teacher room",
+      "classes": "My classes",
+      "soon": "Creating classes, adding students, assignments and grading arrive in the next stage (V2-9).",
+      "labs": "Open the labs"
+    },
+    "admin": {
+      "title": "Admin: users",
+      "users": "Users ({n})",
+      "name": "Name",
+      "role": "Role",
+      "lastLogin": "Last sign-in",
+      "add": "Add a user",
+      "loginRule": "3–32 characters: a–z, 0–9, dot, dash, underscore",
+      "startPassword": "Starting password",
+      "passwordRule": "At least 10 characters, letters mixed with digits or symbols. Hand it to the user yourself.",
+      "create": "Create",
+      "created": "“{login}” created.",
+      "errors": {
+        "badLogin": "The login must be 3–32 characters: a–z, 0–9, dot, dash.",
+        "badName": "Enter a name.",
+        "badRole": "Choose a role.",
+        "password_tooShort": "Password too short: at least 10 characters.",
+        "password_tooSimple": "Password too simple: mix letters and digits.",
+        "password_tooLong": "Password too long.",
+        "loginTaken": "That login is taken.",
+        "csrf": "Your session is stale — reload the page.",
+        "forbidden": "You are not allowed to do that.",
+        "unauthenticated": "Please sign in again.",
+        "offline": "The server is not answering.",
+        "server": "Server error."
+      }
+    }
   }
 }

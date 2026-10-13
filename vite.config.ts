@@ -1,9 +1,28 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type ProxyOptions } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 
 /** Matches a package directory inside node_modules on any OS path separator. */
 const pkg = (names: string) => new RegExp(`node_modules[/\\\\](${names})[/\\\\]`);
+
+/**
+ * The lab server (npm run server: accounts, progress sync, AI assistant).
+ * When it is not running the proxy answers 503 quietly and the site stays
+ * in guest mode with the local engine.
+ */
+const apiProxy: Record<string, ProxyOptions> = {
+  '/api': {
+    target: `http://localhost:${process.env.SERVER_PORT ?? process.env.AI_PORT ?? 8787}`,
+    configure: (proxy) => {
+      proxy.on('error', (_error, _req, res) => {
+        if ('writeHead' in res && !res.headersSent) {
+          res.writeHead(503, { 'content-type': 'application/json' });
+          res.end('{"error":"server-offline"}');
+        }
+      });
+    },
+  },
+};
 
 export default defineConfig({
   plugins: [react()],
@@ -16,22 +35,10 @@ export default defineConfig({
     // PORT lets a second dev server (preview tooling, parallel sessions) run next to the default one
     port: Number(process.env.PORT) || 5173,
     open: false,
-    // AI assistant backend (npm run ai:server). When it is not running the
-    // proxy answers 503 quietly and the browser stays on the local engine.
-    proxy: {
-      '/api': {
-        target: `http://localhost:${process.env.AI_PORT ?? 8787}`,
-        configure: (proxy) => {
-          proxy.on('error', (_error, _req, res) => {
-            if ('writeHead' in res && !res.headersSent) {
-              res.writeHead(503, { 'content-type': 'application/json' });
-              res.end('{"error":"ai-server-offline"}');
-            }
-          });
-        },
-      },
-    },
+    proxy: apiProxy,
   },
+  // the production preview (npm run preview) talks to the same server
+  preview: { proxy: apiProxy },
   build: {
     target: 'es2022',
     chunkSizeWarningLimit: 1200,

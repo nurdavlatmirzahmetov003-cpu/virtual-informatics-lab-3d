@@ -219,6 +219,15 @@ legacy/                     ескі ES-module прототип (python http.ser
       - Дыбыс: `lib/audio/sfx` `playBeepCode` / `playAlarm`, `settingsStore.soundEnabled` бойынша.
     - Құрам режим/ақау кілтімен сақталады (`edits.key`), effect-сіз; бөлшек ауысса компьютер өшеді.
 
+45. **Сервер және аккаунттар (V2-8).**
+    - `server/main.ts` — бір процесс: env (`env.ts`) → `openDb` + `migrate` (`db.ts`, `migrations/NNN_*.sql`, `schema_migrations`) → `createApp({ db, config, limiter, extra: [handleAi] })` → `http.createServer`. Ескірген сессиялар сағат сайын тазаланады.
+    - `server/app.ts` — тәуелділіксіз маршрутизатор. Әр өзгертетін сұрау: Origin (`ALLOWED_ORIGINS`) → сессия (`vil_session` cookie → SHA-256 → `sessions`) → CSRF header → рөл. Қате — `HttpError(status, code)` → `{ error: code }`; фронт кодты `auth.*.errors.<code>` кілтіне айналдырады.
+    - Құпия сөз: `auth/password.ts` (`scrypt$N$r$p$salt$hash`, `timingSafeEqual`, белгісіз логинге `dummyHash`). Шектеу: `auth/rateLimit.ts` (жадта).
+    - Бірінші әкімші: `server/cli.ts` — тестіленетін `createAdmin()` ядросы + құпия сөзді жасырын оқитын интерактивті `main()`.
+    - Прогресс: `server/progress.ts` `attempts` + `achievements` кестелерінен `ProgressSnapshot` құрады; `saveProgress` `ON CONFLICT DO NOTHING` және жетістіктің ең ерте уақыты арқылы біріктіреді. Фронтта `services/progress/accountRepository.ts` — сол `ProgressRepository` интерфейсі: жергілікті көшірме (`progress:u:<id>`) + кешіктірілген PUT + қайталау.
+    - Фронт күйі: `store/authStore.ts` (`init` → `/api/auth/me`; `signIn` қонақ прогресін аккаунтқа қосады; `signOut` flush → logout → қонақ). Беттер `pages/Auth/*`, рөлді `RequireRole` тексереді. Сервер өшік болса (`server-offline` не желі қатесі) — `serverOnline=false`, бәрі қонақ режимінде.
+    - Кілттер мен құпиялар тек серверде (`.env`, `VITE_` префиксі жоқ); `data/` git-ке кірмейді.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |
@@ -254,7 +263,7 @@ legacy/                     ескі ES-module прототип (python http.ser
 22. **AI көмекші.** `src/services/ai/` UI-дан бөлек: `parse` (жергілікті NLU) → `AssistantRequest` → `engine.suggestSetup`
     (`lib/studio/recommend` + талап сүзгілері + үйлесімділік) → `explain`. `client.askAssistant` алдымен `/api/ai/recommend`-ке
     жүгінеді; LLM тек құрылымды сұрау мен каталог ID-ларын қайтарады, `validate.sanitizeLlmAnswer` серверде де, браузерде де
-    тексереді, соңғы жинақты бәрібір детерминистік engine құрады. Кілт тек `server/ai-server.ts` оқитын `.env`-те.
+    тексереді, соңғы жинақты бәрібір детерминистік engine құрады. Кілт тек `server/ai.ts` оқитын `.env`-те.
     Кез келген ақауда (кілт жоқ, offline, timeout, жарамсыз жауап) — жергілікті нәтиже, 60 с серверді күтпейді.
 
 23. **Оқу зертханалары.** `src/labs/*` — UI-дан тәуелсіз есептеу/тексеру. Algorithm trace immutable, logic графы truth table арқылы, network BFS/IPv4 арқылы тексеріледі. `pages/Labs/` параметрлік UI және SVG/CSS визуалдары; PC assembly лицензияланған 3D кэшін пайдаланады. Барлық мәтін — `locales/*.json`.

@@ -1,8 +1,8 @@
 /**
- * AI assistant backend (MASTER_PROMPT §18). The only place an LLM API key is
- * read — from `.env` / the environment, never from browser code.
+ * AI assistant routes (MASTER_PROMPT §18), served by the lab server
+ * (server/main.ts). The only place an LLM API key is read — from `.env` /
+ * the environment, never from browser code.
  *
- *   npm run ai:server          → http://localhost:8787
  *   POST /api/ai/recommend     { message, context } → { answer }
  *   GET  /api/ai/health        → { configured, provider }
  *
@@ -10,29 +10,17 @@
  * ids; the answer is validated here (sanitizeLlmAnswer) and again in the
  * browser, where the deterministic engine builds the final setup. Without a
  * key every call returns 503 and the browser silently stays local.
- *
- * Run with: node --experimental-strip-types --import ./scripts/test-resolve.mjs server/ai-server.ts
  */
-import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { existsSync, readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import type { IncomingMessage, ServerResponse } from 'node:http';
 import { ANSWER_SCHEMA, catalogDigest } from '@/services/ai/catalogDigest';
 import { sanitizeLlmAnswer } from '@/services/ai/validate';
+import { loadEnv } from './env';
 
 /* ── configuration ───────────────────────────────────────── */
 
-function loadEnv() {
-  const file = fileURLToPath(new URL('../.env', import.meta.url));
-  if (!existsSync(file)) return;
-  for (const line of readFileSync(file, 'utf8').split(/\r?\n/)) {
-    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
-    if (m && !line.trimStart().startsWith('#') && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
-  }
-}
 loadEnv();
 
 type Provider = 'anthropic' | 'openai';
-const PORT = Number(process.env.AI_PORT ?? 8787);
 const TIMEOUT_MS = Number(process.env.AI_TIMEOUT_MS ?? 20_000);
 const provider: Provider | null = (() => {
   const wanted = process.env.AI_PROVIDER?.toLowerCase();
@@ -135,7 +123,14 @@ function limited(ip: string) {
   return recent.length > RATE.max;
 }
 
-const server = createServer(async (req, res) => {
+/** Handles /api/ai/*; returns false for any other path. */
+export async function handleAi(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
+  if (!req.url?.startsWith('/api/ai/')) return false;
+  await aiRoute(req, res);
+  return true;
+}
+
+async function aiRoute(req: IncomingMessage, res: ServerResponse) {
   if (req.method === 'GET' && req.url === '/api/ai/health') return json(res, 200, { configured: provider !== null, provider, model: provider ? MODEL : null });
   if (req.method !== 'POST' || req.url !== '/api/ai/recommend') return json(res, 404, { error: 'not-found' });
   if (!provider) return json(res, 503, { error: 'no-key' });
@@ -163,8 +158,6 @@ const server = createServer(async (req, res) => {
   } finally {
     clearTimeout(timer);
   }
-});
+}
 
-server.listen(PORT, () => {
-  console.log(`[ai-server] http://localhost:${PORT} · provider: ${provider ?? 'none (local fallback only)'}${provider ? ` · model: ${MODEL}` : ''}`);
-});
+export const aiStatus = () => ({ provider, model: provider ? MODEL : null });

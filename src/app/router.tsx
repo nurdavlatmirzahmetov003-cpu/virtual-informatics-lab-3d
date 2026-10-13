@@ -20,6 +20,9 @@ const LogicLabPage = lazy(() => import('@/pages/Labs/LogicLab/LogicLabPage'));
 const ExperimentLabPage = lazy(() => import('@/pages/Labs/ExperimentLab/ExperimentLabPage'));
 const TasksPage = lazy(() => import('@/pages/Tasks/TasksPage'));
 const LabPage = lazy(() => import('@/pages/Lab/LabPage'));
+const LoginPage = lazy(() => import('@/pages/Auth/LoginPage'));
+const TeacherPage = lazy(() => import('@/pages/Auth/TeacherPage'));
+const AdminPage = lazy(() => import('@/pages/Auth/AdminPage'));
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +44,9 @@ export const router = createBrowserRouter([
       { path: 'studio/summary', element: <SetupSummaryPage /> },
       { path: 'progress', element: <ProgressPage /> },
       { path: 'credits', element: <CreditsPage /> },
+      { path: 'login', element: <LoginPage /> },
+      { path: 'teacher', element: <TeacherPage /> },
+      { path: 'admin', element: <AdminPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

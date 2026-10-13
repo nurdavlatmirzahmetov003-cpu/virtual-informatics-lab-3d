@@ -4,6 +4,7 @@ import { useT } from '@/hooks/useT';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { QualitySelect } from '@/components/ui/QualitySelect';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { AccountButton } from './AccountButton';
 import styles from './TopBar.module.css';
 
 const NAV: ReadonlyArray<{ to: string; label: TranslationKey; end?: boolean }> = [
@@ -43,6 +44,7 @@ export function TopBar() {
         <QualitySelect />
         <ThemeToggle />
         <LanguageSwitcher />
+        <AccountButton />
       </div>
     </header>
   );

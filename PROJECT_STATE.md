@@ -1,9 +1,48 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
 Жаңартылды: 2026-10-13
-**Ағымдағы фаза: V2-7 дайын (себеп-салдар симуляциясы + «Бұзылған компьютерді жөнде»). V2-6…V2-0, Фаза 0–9 дайын. Келесі — V2-8 (backend және дерекқор: Node 24, node:sqlite, auth, 3 рөл). Жоспар: PLAN_V2.md.**
+**Ағымдағы фаза: V2-8 дайын (сервер, дерекқор, кіру, 3 рөл, прогресс аккаунтта). V2-7…V2-0, Фаза 0–9 дайын. Келесі — V2-9 (мұғалім мен оқушы кабинеттері). Жоспар: PLAN_V2.md.**
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
+
+## V2-8 — Сервер және дерекқор (2026-10-13)
+- **Сервер:** `server/main.ts` (`npm run server`, :8787). AI (`server/ai.ts`) мен аккаунт API-і (`server/app.ts`) бір портта. Vite dev және preview `/api`-ді осында proxy етеді; сервер өшік болса → `{"error":"server-offline"}` → фронт қонақ режимінде қалады.
+- **Дерекқор:** `node:sqlite`, `data/lab.db` (`DB_FILE`), `server/migrations/*.sql`, 14 кесте.
+- **Auth:**
+  - scrypt хэш (`server/auth/password.ts`);
+  - `vil_session` httpOnly cookie, токеннің SHA-256-ы ғана сақталады (`sessions.ts`);
+  - CSRF header + Origin;
+  - `LoginLimiter` (логинге 5, IP-ге 20 / 15 мин);
+  - рөлдер: admin / teacher / student; `audit_log`.
+- **Бірінші әкімші:** `npm run server:create-admin` — құпия сөзді пайдаланушы өзі енгізеді.
+- **Прогресс:** `services/progress/accountRepository.ts` (сервер + жергілікті `progress:u:<id>` көшірме, біріктіру, кешіктірілген PUT, қайталау). `authStore` кіргенде репозиторийді ауыстырады, шыққанда қонақ прогресіне қайтарады.
+- **Фронт:** `pages/Auth` (LoginPage, RequireRole, TeacherPage, AdminPage), `components/layout/AccountButton`.
+- **Тексерілді:**
+  - `npm test` 140/140, lint, typecheck, build;
+  - браузерде уақытша дерекқормен (кездейсоқ тест логиндері, scratchpad-та):
+    - қонақ: «Кіру» батырмасы; қате құпия сөз → «Логин немесе құпия сөз қате.»;
+    - оқушы → `/progress`, прогресс 200, `/api/admin/users` → 403, шығу жұмыс істейді;
+    - мұғалім → `/teacher`, `/admin` → «рөліңізге арналмаған»;
+    - әкімші → `/admin`, 3 пайдаланушы;
+  - сервер өшік: «Кіру» жасырылады, зертханалар қонақ режимінде.
+
+  Скриншоттар — `docs/v2-8/`.
+
+### Өнімділік (V2-7 және V2-8 build-тері)
+Draw call пен үшбұрыш бірдей: басты бет 148/146, `/lab` 189. Жүктеу +4 KB (auth коды мен мәтіндер); 3D коды өзгерген жоқ.
+
+FPS, кезектесіп 3 рет өлшенді (медиана; High — 1 рет):
+
+| Сапа | Бет | V2-7 | V2-8 |
+|---|---|---|---|
+| Low | `/` | 91 | 92 |
+| Low | `/lab` | 159 | 161 |
+| Medium | `/` | 77 | 78 |
+| Medium | `/lab` | 149 | 151 |
+| High | `/` | 33 | 33 |
+| High | `/lab` | 41 | 42 |
+
+Low/Medium баяулаған жоқ (айырмашылық ±2 FPS — шу ішінде).
 
 ## V2-7 — Себеп-салдар зертханасы (2026-10-13)
 - **Бет:** `/labs/sim` (`pages/Labs/SystemSim`), `?mode=fix` — тапсырма. Зертханалар хабында «Себеп-салдар» карточкасы бар.
@@ -587,7 +626,7 @@ FPS-ті бөгде қолданбалар қатты шулатты:
 ## Фаза 6 — AI Көмекші (2026-10-04)
 - Логика `src/services/ai/` (UI-дан бөлек): `parse.ts` (kk/ru/en: бюджет, бірнеше мақсат, стиль, бренд→санат, Гц/4K/21:9, RAM/SSD көлемі, сымсыз, «толық сетап», «...сыз/без»), `engine.ts` (тек каталог ID, талап сүзгілері, үйлесімділік, бюджетке жақындық, `diffBuilds`), `explain.ts` (басымдық бойынша қазақша түсіндірме), `validate.ts`, `client.ts` (сервер → local fallback), `catalogDigest.ts`.
 - `lib/studio/recommend.ts` — `RecommendOptions` (қосымша мақсаттар, сүзгілер, include/exclude); `lib/studio/assistant.ts` — үйлесімділік қабаты.
-- Backend `server/ai-server.ts` (`npm run ai:server`, :8787): Anthropic/OpenAI, кілт тек `.env` (`.env.example`), body/rate limit, timeout, валидация; Vite `/api` proxy. Кілтсіз → 503 → браузер жергілікті.
+- Backend `server/ai.ts` (V2-8-ден бері `server/main.ts` ішінде, `npm run server`, :8787): Anthropic/OpenAI, кілт тек `.env` (`.env.example`), body/rate limit, timeout, валидация; Vite `/api` proxy. Кілтсіз → 503 → браузер жергілікті.
 - UI: «AI Көмекші» чаты (`pages/SetupStudio/SetupAssistant.tsx`, `store/assistantStore.ts`): дереккөз белгісі, «Неге осылар?», «Setup Studio-ға жүктеу»; құрастыру бетінде «AI-мен жақсарту» (ағымдағы жинақпен айырма).
 - Тесттер: `npm run test:ai` (9/9), `npm run test:assistant` (4/4), `npm test`.
 - Тексерілді: браузерде чат (800 000 ₸ ойын+бағдарламалау → 781 000 ₸, түсіндірмелер), «Setup Studio-ға жүктеу» (баға 1 195 000 → 781 000 ₸), improve режимі, сервер health/503. Кейін production `/studio/summary` батырмасы да браузерде тексерілді: «AI-мен жақсарту» → айырмалар/түсіндірмелер/1 196 000 ₸ ұсынысы. Нақты LLM кілтімен тексерілмеген.
@@ -699,12 +738,11 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: V2-8 — PLAN_V2.md-дегі «V2-8 — Backend and database» промпты (MASTER_PROMPT.md §44 оқы).
-1. `server/` ішінде Node 24 сервер (бар `server/ai-server.ts`-пен қатар не біріктіріп): REST, кейін WebSocket үшін орын.
-2. `node:sqlite`, `data/lab.db` (git-ке кірмейді), PostgreSQL-үйлесімді схема, `server/migrations/`: users (admin/teacher/student), schools, classes, class_members, assignments, submissions, attempts, grades, announcements, messages, achievements, xp_events, sessions, audit_log.
-3. Auth: scrypt хэш, httpOnly сессия cookie, CSRF, логин әрекеттерін шектеу, әр endpoint-та рөл тексеру. Бірінші админ — CLI командасы, құпия сөзді пайдаланушы өзі енгізеді (ешқашан ойдан шығарма, кодқа жазба).
-4. `src/services/progress/repository.ts` үшін сервер іске асыруы; localStorage офлайн режим ретінде қалады, кіргеннен кейін синхрондалады.
-5. Фронт: кіру беті, рөл бойынша маршрут, қонақ режимі сақталады.
-6. Тесттер (auth, рөлдер, миграциялар, API), `.env.example`; құпиялар тек серверде. Бәрі ЛОКАЛДЫ — хостинг V2-12-ден кейін.
+NEXT_ACTION: V2-9 — PLAN_V2.md-дегі «V2-9 — Teacher and student dashboards» промпты.
+1. Мұғалім: сынып құру (қосылу коды + QR); тізімнен оқушыларды тіркеу — логин/құпия сөз генерацияланып, басып шығаратын парақ; тапсырма (зертхана тапсырмасы, мерзім, ұпай); хабарландыру; әр оқушының жұмысы (әрекеттер, уақыт, қателер, кеңестер); бағалау мен пікір (автоматты ұпайды өзгерту мүмкіндігі); сынып статистикасы, CSV/JSON экспорт.
+2. Оқушы: кодпен сыныпқа қосылу; мерзімі бар тапсырмалар; хабарландырулар; бағалар мен мұғалім пікірі; «Менің нәтижелерім» серверден.
+3. Хабар алмасу — әзірге жаңарту арқылы (real-time кейін).
+Негіз дайын: кестелер `server/migrations/001_init.sql`-де (classes.join_code, class_members, assignments, submissions, grades, announcements, messages), `server/app.ts` маршруттары, рөл тексеру, CSRF, `audit()`; фронт `services/auth/api.ts`, `pages/Auth/TeacherPage.tsx`.
+Іске қосу: `npm run server` (бірінші рет `npm run server:create-admin`), содан кейін `npm run dev`.
 
-Пайдаланушы шешімі (2026-10-10): барлық V2 толық ЛОКАЛДЫ; домен/хостинг — V2-12-ден кейін. Фаза 0–9, V2-0…V2-7 дайын — нөлден бастама. D:/informatics-lab, dev :5173, preview :4173. Blender 5.1 және toktx орнатылған.
+Пайдаланушы шешімі (2026-10-10): барлық V2 толық ЛОКАЛДЫ; домен/хостинг — V2-12-ден кейін. Фаза 0–9, V2-0…V2-8 дайын — нөлден бастама. D:/informatics-lab, dev :5173, preview :4173, сервер :8787. Blender 5.1 және toktx орнатылған.

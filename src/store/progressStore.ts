@@ -97,9 +97,15 @@ export function hydrateProgress(): Promise<void> {
 
 let unwatch: (() => void) | undefined;
 
-/** Swaps the storage backend (tests, a future server repository) and reloads. */
-export function setProgressRepository(next: ProgressRepository) {
+/**
+ * Swaps the storage backend (tests, the signed-in student's account) and
+ * reloads. `keepCurrent` (default) merges what is on screen into the new
+ * backend — a guest's work moves into the account on sign-in; `false` starts
+ * from the new backend alone (sign-out: the next person sees nothing of the last).
+ */
+export function setProgressRepository(next: ProgressRepository, { keepCurrent = true }: { keepCurrent?: boolean } = {}) {
   repo = next;
+  if (!keepCurrent) useProgressStore.setState({ ...emptySnapshot(), hydrated: false });
   unwatch?.();
   // another tab changed the data: take it as is (it already contains this tab's saves)
   unwatch = repo.watch?.(() => {
