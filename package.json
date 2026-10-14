@@ -6,6 +6,7 @@
   "description": "Оқушыларға арналған виртуалды информатика зертханасы — VIRTUAL INFORMATICS LAB 3D",
   "scripts": {
     "dev": "vite",
+    "start": "node scripts/start-all.mjs",
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b",
     "lint": "eslint .",
