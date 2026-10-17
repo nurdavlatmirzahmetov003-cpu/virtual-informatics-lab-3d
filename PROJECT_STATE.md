@@ -922,7 +922,7 @@ NEXT_ACTION: V2-12 — PLAN_V2.md-дегі «V2-12 — QA, security, hosting rea
    Хостинг пен доменді пайдаланушы өзі таңдайды.
 4. README-ді толықтыру.
 
-Қатар: пайдаланушы Sketchfab-тан 3D модельдерді жүктейді (тізім чатта, 30 файл, `assets-src/sketchfab/devices/`). Жүктелгенде — Blender pipeline, ASSET_MANIFEST, /credits.
+Қатар: пайдаланушы Sketchfab-тан 36 модельді жүктейді. Тізім — `assets-src/sketchfab/download-list.html`, бума — `assets-src/sketchfab/devices/`. Оның 6-уы бөлшектеудің ішкі бөлшектері: `phone_teardown`, `laptop_fan`, `laptop_battery`, `sodimm`, `pcb_board`, `electronic_components`. Олар смартфон, планшет, ноутбук пен моноблоктың процедуралық бөлшектерін ауыстырады. Жүктелгенде — Blender pipeline, ASSET_MANIFEST, /credits.
 
 Іске қосу: `start-lab.cmd` не `npm start`. Сервер мен миграция өзгергеннен кейін `npm start`-ты қайта қосу керек.
 
