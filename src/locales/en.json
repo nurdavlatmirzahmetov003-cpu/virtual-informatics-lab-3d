@@ -6795,5 +6795,170 @@
         "server": "Server error."
       }
     }
+  },
+  "live": {
+    "eyebrow": "Live",
+    "title": "Live games",
+    "subtitle": "The teacher opens a room, students join with a code: a timed quiz and races to build a PC, plug in the cables and find the fault.",
+    "guest": "Sign in to take part in live games — results are saved on the server.",
+    "link": "Live games",
+    "studentLink": "Join a quiz or race with your teacher’s code",
+    "teacherLink": "Run a quiz or a race with your class",
+    "leave": "Leave the room",
+    "connecting": "Connecting…",
+    "reconnecting": "Connection lost — reconnecting…",
+    "kinds": {
+      "quiz": "Quiz",
+      "assembly": "PC assembly race",
+      "connect": "Port connection race",
+      "fault": "“Find the fault” race"
+    },
+    "kindHints": {
+      "quiz": "Timed questions: a fast, correct answer earns more points.",
+      "assembly": "Install 11 parts in the right places and the right order. Each mistake adds 10 seconds.",
+      "connect": "Plug 5 cables into the right ports of the PC. Each mistake adds 10 seconds.",
+      "fault": "5 broken computers: find the cause from the symptoms. Each mistake adds 10 seconds."
+    },
+    "join": {
+      "title": "Join a game",
+      "hint": "Enter the code shown on the teacher’s screen or scan the QR code with a phone.",
+      "code": "Room code",
+      "go": "Join"
+    },
+    "create": {
+      "title": "New game",
+      "kind": "Game type",
+      "name": "Title",
+      "namePlaceholder": "e.g. 8A — devices quiz",
+      "class": "Who can take part",
+      "anyClass": "Any student with the code",
+      "classHint": "Pick a class and only its students can join.",
+      "topics": "Topics",
+      "all": "All",
+      "topicN": "{n} questions",
+      "count": "Questions",
+      "seconds": "Seconds per question",
+      "minutes": "Race length, minutes",
+      "submit": "Open a room"
+    },
+    "rooms": {
+      "active": "Open rooms",
+      "none": "No open rooms — create one on the left.",
+      "open": "Open screen",
+      "close": "Close",
+      "closeConfirm": "Close the room? A game in progress will end and its results will be saved.",
+      "playersN": "{n} players",
+      "past": "Past games",
+      "pastNone": "No finished games yet.",
+      "results": "Results",
+      "hide": "Hide",
+      "correct": "{n}/{of} correct",
+      "mistakesN": "{n} mistakes"
+    },
+    "status": {
+      "lobby": "Waiting",
+      "running": "In play",
+      "finished": "Finished"
+    },
+    "lobby": {
+      "scan": "Open “Live games” on the site and enter the code — or scan the QR code",
+      "copy": "Copy link",
+      "copied": "Copied",
+      "players": "Players",
+      "waiting": "Waiting for students to join…",
+      "start": "Start",
+      "needPlayers": "At least one player is needed to start.",
+      "playerWait": "You’re in! Wait for the teacher to start.",
+      "host": "Host: {name}",
+      "offline": "offline"
+    },
+    "quiz": {
+      "progress": "Question {n}/{of}",
+      "answered": "Answered: {n}/{of}",
+      "reveal": "Show the answer",
+      "next": "Next question",
+      "toResults": "See results",
+      "end": "End the game",
+      "getReady": "Get ready! The teacher will open the first question.",
+      "locked": "Answer locked in. Waiting for the others…",
+      "right": "Correct!",
+      "wrong": "Wrong",
+      "missed": "Time’s up — no answer",
+      "points": "+{n} pts",
+      "score": "{n} pts",
+      "rank": "Place {n}",
+      "top": "Top five",
+      "waitNext": "Wait for the next question",
+      "timeLeft": "Time left"
+    },
+    "race": {
+      "startsIn": "Starts in",
+      "timeLeft": "Time left",
+      "mistakes": "Mistakes: {n} (+{s} s)",
+      "done": "Finished! Your time: {s} s",
+      "waitOthers": "Wait for the others to finish.",
+      "standings": "Race standings",
+      "end": "End the race",
+      "notFinished": "did not finish",
+      "seconds": "{s} s"
+    },
+    "assembly": {
+      "parts": "Parts",
+      "slots": "Places",
+      "pick": "Pick a part first, then tap where it goes.",
+      "selected": "Selected: {part}. Now tap its place."
+    },
+    "connect": {
+      "ends": "Cables",
+      "ports": "Back panel of the PC",
+      "pick": "Pick a cable, then tap a port.",
+      "selected": "Selected: {cable}. Now tap a port.",
+      "unplug": "Unplug",
+      "ok": "Connected!"
+    },
+    "fault": {
+      "round": "Computer {n}/{of}",
+      "look": "What the computer does",
+      "post": "At power-on",
+      "beep": "Sound",
+      "load": "Under a game load",
+      "ask": "What is the cause?",
+      "right": "Right diagnosis! Next computer.",
+      "wrong": "Not this one — look at the symptoms again (+10 s)."
+    },
+    "symptoms": {
+      "cpuFan": "BIOS warning: “CPU Fan Error”",
+      "overheat": "Overheats ({c} °C) and switches itself off",
+      "psu": "Suddenly switches off — not enough power",
+      "throttled": "Heats up and lowers its clock — the game stutters",
+      "normal": "Runs normally"
+    },
+    "final": {
+      "title": "Game over",
+      "yourRank": "Your place: {n} of {of}",
+      "saved": "Results are saved on the server.",
+      "again": "New game",
+      "podium": "Winners",
+      "all": "All results"
+    },
+    "errors": {
+      "notFound": "No room with this code. Check the code.",
+      "started": "The game has already started — new players can’t join.",
+      "studentsOnly": "Only students play. Teachers open their own room on the “Live games” page.",
+      "full": "The room is full (60 players at most).",
+      "notInClass": "This game is for another class.",
+      "closed": "The teacher closed the room.",
+      "slowDown": "Too fast — slow down a little.",
+      "notNow": "That isn’t possible right now.",
+      "noPlayers": "No players in the room yet.",
+      "badTitle": "Give it a title (up to 80 characters).",
+      "badTopics": "Pick at least one topic.",
+      "badCount": "From 3 to 30 questions.",
+      "badSeconds": "From 5 to 60 seconds.",
+      "badMinutes": "From 1 to 30 minutes.",
+      "badClass": "That class isn’t yours.",
+      "offline": "No connection to the server.",
+      "server": "Something went wrong on the server."
+    }
   }
 }

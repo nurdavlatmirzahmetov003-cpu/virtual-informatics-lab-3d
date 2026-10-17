@@ -292,6 +292,12 @@
   align-items: start;
 }
 
+.sideStack {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
 .classGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

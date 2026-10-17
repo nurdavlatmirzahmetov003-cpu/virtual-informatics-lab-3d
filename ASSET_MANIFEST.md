@@ -147,6 +147,9 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | `ssd-samsung-990-pro-2tb` | [M.2 NVMe SSD Samsung 990 PRO 1TB](https://sketchfab.com/3d-models/m2-nvme-ssd-samsung-990-pro-1tb-3d-model-41b7bfda7eab40f8b13330913fd66fc2) | lime.ball.animations | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 2 texture areas repainted (logos / print) |
 | `ssd-wd-sn850x-1tb` | [m2ssd_Painter](https://sketchfab.com/3d-models/m2ssd-painter-ccda7c201091445087c02692444641c2) | Igor.Jop | CC BY 4.0 | reoriented to the case mount, real size 22×80×2 mm, 1 texture areas repainted (logos / print) |
 
+### Тікелей ойындар (V2-11b, 2026-10-17)
+Жаңа ассет жоқ. QR — өз кодтауышымыз (`src/lib/qr`), иконалар — бар `lucide-react` (ISC). WebSocket тәуелділіксіз (`node:http`, `node:crypto`).
+
 ### Геймификация (V2-11a, 2026-10-17)
 Жаңа ассет жоқ. Деңгей шеңбері мен медальдар — SVG/CSS, белгі иконалары — бар `lucide-react` (ISC).
 

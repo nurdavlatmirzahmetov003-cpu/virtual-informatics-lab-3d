@@ -15,6 +15,8 @@ const apiProxy: Record<string, ProxyOptions> = {
     target: `http://localhost:${process.env.SERVER_PORT ?? process.env.AI_PORT ?? 8787}`,
     // X-Forwarded-For: the server sees each visitor's IP (rate limits, IP blocks)
     xfwd: true,
+    // live games (V2-11b): /api/live/ws is a WebSocket
+    ws: true,
     configure: (proxy) => {
       proxy.on('error', (_error, _req, res) => {
         if ('writeHead' in res && !res.headersSent) {

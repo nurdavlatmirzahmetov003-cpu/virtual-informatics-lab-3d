@@ -136,7 +136,7 @@ Global rules:
 | V2-8 ✅ | Backend and database | Local server, SQLite (PostgreSQL-compatible), auth, 3 roles |
 | V2-9 ✅ | Teacher and student dashboards | Classes, assignments, announcements, grading |
 | V2-10 ✅ | Admin panel | Users, content, audit log, security, backups |
-| V2-11a ✅ / V2-11b | Gamification v2 and real-time | XP, levels, leaderboards, live quizzes, assembly races |
+| V2-11a ✅ / V2-11b ✅ | Gamification v2 and real-time | XP, levels, leaderboards, live quizzes, assembly races |
 | V2-12 | QA, security, hosting readiness | Tests, audit, Docker, deployment guide |
 
 Order: V2-0 → V2-1 → … → V2-12. **Owner decision (2026-10-10): build everything fully local first (no GitHub/cloud for now); buying a domain and hosting comes only after the local version is 100% complete.** The backend (V2-8) does not depend on the 3D stages and may start any time after V2-3 if preferred.
@@ -544,7 +544,7 @@ Global rules:
 <paste section 3 of PLAN_V2.md here>
 ```
 
-### V2-11b — Real-time competitions
+### V2-11b — Real-time competitions ✅ (2026-10-17)
 
 ```
 Project: D:\informatics-lab. Follow the Global rules in PLAN_V2.md.

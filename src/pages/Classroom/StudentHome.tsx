@@ -5,7 +5,7 @@
  */
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Award, CalendarClock, LogIn, Medal, Megaphone, MessageSquare, PenLine, Trophy } from 'lucide-react';
+import { ArrowRight, Award, CalendarClock, LogIn, Medal, Megaphone, MessageSquare, MonitorPlay, PenLine, Trophy } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useT } from '@/hooks/useT';
 import { taskById } from '@/services/progress/catalog';
@@ -284,6 +284,14 @@ function StudentView() {
               </ul>
             </section>
           )}
+          <Link to="/live" className={`${auth.panel} ${styles.resultsLink}`}>
+            <MonitorPlay size={20} aria-hidden="true" />
+            <span>
+              <b>{t('live.link')}</b>
+              <small>{t('live.studentLink')}</small>
+            </span>
+            <ArrowRight size={16} aria-hidden="true" />
+          </Link>
           <Link to="/leaderboard" className={`${auth.panel} ${styles.resultsLink}`}>
             <Medal size={20} aria-hidden="true" />
             <span>

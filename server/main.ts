@@ -22,6 +22,8 @@ purgeExpired(db);
 
 const app = createApp({ db, config, extra: [handleAi], aiStatus });
 const server = createServer((req, res) => void app(req, res));
+// live games (V2-11b) speak WebSocket on /api/live/ws
+server.on('upgrade', app.upgrade);
 
 server.listen(config.port, () => {
   const ai = aiStatus();

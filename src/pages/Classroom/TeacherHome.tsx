@@ -1,7 +1,7 @@
 /** Teacher home (V2-9): the teacher's classes and creating a new one. */
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ClipboardList, Plus, School, Users } from 'lucide-react';
+import { ArrowRight, ClipboardList, MonitorPlay, Plus, School, Users } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useT } from '@/hooks/useT';
 import { teacherApi, type ClassSummary } from '@/services/classroom/api';
@@ -76,24 +76,34 @@ function Home() {
           </ul>
         </section>
 
-        <form className={auth.panel} onSubmit={create}>
-          <h2>
-            <Plus size={18} aria-hidden="true" /> {t('classroom.teacher.newClass')}
-          </h2>
-          <label className={auth.field}>
-            <span>{t('classroom.teacher.className')}</span>
-            <input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} placeholder={t('classroom.teacher.classPlaceholder')} required />
-          </label>
-          <p className={styles.hint}>{t('classroom.teacher.newClassHint')}</p>
-          {error && (
-            <p className={auth.error} role="alert">
-              {error}
-            </p>
-          )}
-          <button type="submit" className={auth.primary} disabled={!name.trim()}>
-            <Plus size={16} aria-hidden="true" /> {t('classroom.teacher.create')}
-          </button>
-        </form>
+        <div className={styles.sideStack}>
+          <form className={auth.panel} onSubmit={create}>
+            <h2>
+              <Plus size={18} aria-hidden="true" /> {t('classroom.teacher.newClass')}
+            </h2>
+            <label className={auth.field}>
+              <span>{t('classroom.teacher.className')}</span>
+              <input value={name} onChange={(e) => setName(e.target.value)} maxLength={60} placeholder={t('classroom.teacher.classPlaceholder')} required />
+            </label>
+            <p className={styles.hint}>{t('classroom.teacher.newClassHint')}</p>
+            {error && (
+              <p className={auth.error} role="alert">
+                {error}
+              </p>
+            )}
+            <button type="submit" className={auth.primary} disabled={!name.trim()}>
+              <Plus size={16} aria-hidden="true" /> {t('classroom.teacher.create')}
+            </button>
+          </form>
+          <Link to="/live" className={`${auth.panel} ${styles.resultsLink}`}>
+            <MonitorPlay size={20} aria-hidden="true" />
+            <span>
+              <b>{t('live.link')}</b>
+              <small>{t('live.teacherLink')}</small>
+            </span>
+            <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
       </div>
     </PageLayout>
   );

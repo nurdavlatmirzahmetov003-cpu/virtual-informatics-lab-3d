@@ -5,7 +5,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogIn, LogOut, Trophy, UserRound } from 'lucide-react';
+import { LogIn, LogOut, MonitorPlay, Trophy, UserRound } from 'lucide-react';
 import { useT } from '@/hooks/useT';
 import { homeOf } from '@/pages/Auth/roles';
 import { useAuthStore } from '@/store/authStore';
@@ -58,6 +58,9 @@ export function AccountButton() {
           </Link>
           <Link role="menuitem" to="/leaderboard" onClick={() => setOpen(false)}>
             <Trophy size={15} aria-hidden="true" /> {t('game.title')}
+          </Link>
+          <Link role="menuitem" to="/live" onClick={() => setOpen(false)}>
+            <MonitorPlay size={15} aria-hidden="true" /> {t('live.link')}
           </Link>
           <button
             type="button"

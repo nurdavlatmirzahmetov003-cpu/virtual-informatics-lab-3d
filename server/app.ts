@@ -32,6 +32,8 @@ import { loadProgress, saveProgress } from './progress';
 import { classroomRoutes } from './classroomRoutes';
 import { adminRoutes } from './adminRoutes';
 import { gameRoutes } from './gameRoutes';
+import { LiveHub } from './live/hub';
+import { liveRoutes, liveUpgrade } from './live/routes';
 import { checkResetToken, listIpBlocks, redeemResetToken } from './admin';
 import { getSettings, publicSettings } from './settings';
 import { allOverrides, contentVersion } from './content';
@@ -111,6 +113,8 @@ export function createApp({
   };
   const classroom = classroomRoutes({ ...deps, joinLimiter, settings });
   const game = gameRoutes({ ...deps, settings });
+  const hub = new LiveHub({ db, now, anonymous: () => settings().leaderboardAnonymous });
+  const live = liveRoutes({ ...deps, hub });
   const adminPanel = adminRoutes({ ...deps, config, limiter, settings, aiStatus, startedAt, refresh, clearCookie });
 
   async function login(ctx: Ctx) {
@@ -195,12 +199,26 @@ export function createApp({
 
     if (await classroom(ctx, method, path)) return;
     if (await game(ctx, method, path)) return;
+    if (await live(ctx, method, path)) return;
     if (await adminPanel(ctx, method, path)) return;
 
     throw new HttpError(404, 'not-found');
   }
 
-  return async function handle(req: IncomingMessage, res: ServerResponse) {
+  const userOf = (req: IncomingMessage) => {
+    const session = findSession(db, parseCookies(req.headers.cookie)[SESSION_COOKIE], now());
+    const u = session ? userById(db, session.user_id) : undefined;
+    return u && !u.disabled ? u : null;
+  };
+  /** WebSocket upgrades (live games): attach with `server.on('upgrade', app.upgrade)`. */
+  const upgrade = liveUpgrade({
+    hub,
+    userOf,
+    originOk: (req) => !req.headers.origin || config.allowedOrigins.includes(req.headers.origin),
+    blocked: (req) => isBlocked(clientIp(req, config.trustProxy)),
+  });
+
+  const handle = async function handle(req: IncomingMessage, res: ServerResponse) {
     try {
       const ip = clientIp(req, config.trustProxy);
       if (isBlocked(ip)) throw new HttpError(403, 'ipBlocked');
@@ -225,4 +243,5 @@ export function createApp({
       return json(res, 500, { error: 'server' });
     }
   };
+  return Object.assign(handle, { upgrade, hub });
 }
