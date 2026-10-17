@@ -5,7 +5,7 @@
  */
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, BarChart3, ClipboardList, Megaphone, MessagesSquare, QrCode as QrIcon, Table2, Users } from 'lucide-react';
+import { ArrowLeft, BarChart3, ClipboardList, Megaphone, MessagesSquare, QrCode as QrIcon, Swords, Table2, Users } from 'lucide-react';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import { teacherApi, type ClassDetail, type Credential } from '@/services/classroom/api';
@@ -18,6 +18,7 @@ import { AssignmentsTab } from './AssignmentsTab';
 import { AnnouncementsTab } from './AnnouncementsTab';
 import { MessagesTab } from './MessagesTab';
 import { StatsTab } from './StatsTab';
+import { ContestsTab } from './ContestsTab';
 import { Modal } from './parts';
 import { useErrorText } from './hooks';
 import styles from './Classroom.module.css';
@@ -30,6 +31,7 @@ const TABS = [
   { id: 'announcements', icon: Megaphone },
   { id: 'messages', icon: MessagesSquare },
   { id: 'stats', icon: BarChart3 },
+  { id: 'contests', icon: Swords },
 ] as const;
 export type TabId = (typeof TABS)[number]['id'];
 const isTab = (v: string | null): v is TabId => TABS.some((x) => x.id === v);
@@ -135,6 +137,7 @@ function ClassView() {
         {tab === 'announcements' && <AnnouncementsTab {...tabProps} />}
         {tab === 'messages' && <MessagesTab {...tabProps} />}
         {tab === 'stats' && <StatsTab {...tabProps} />}
+        {tab === 'contests' && <ContestsTab {...tabProps} />}
       </div>
 
       {joinOpen && (

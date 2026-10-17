@@ -3131,6 +3131,38 @@
       "graduate": {
         "name": "Lab graduate",
         "condition": "Complete all {target} tasks."
+      },
+      "streak3": {
+        "name": "Three days running",
+        "condition": "Complete at least one task {target} days in a row."
+      },
+      "streak7": {
+        "name": "Week-long streak",
+        "condition": "Complete tasks {target} days in a row."
+      },
+      "dailyFive": {
+        "name": "Daily discipline",
+        "condition": "Finish the daily challenge on {target} days."
+      },
+      "weeklyHero": {
+        "name": "Week hero",
+        "condition": "Reach every goal of one week."
+      },
+      "teardownPro": {
+        "name": "Teardown pro",
+        "condition": "Complete the task of all {target} teardowns."
+      },
+      "connector": {
+        "name": "Connector",
+        "condition": "Complete all {target} Connection Lab tasks."
+      },
+      "fixer": {
+        "name": "Fixer",
+        "condition": "Score 100% on “Fix the broken computer”."
+      },
+      "speedrun": {
+        "name": "Quick hands",
+        "condition": "Score 100% on a hands-on lab task within 2 minutes."
       }
     }
   },
@@ -6273,7 +6305,8 @@
       "assignments": "Assignments",
       "announcements": "Announcements",
       "messages": "Messages",
-      "stats": "Statistics"
+      "stats": "Statistics",
+      "contests": "Contests"
     },
     "join": {
       "title": "Joining the class",
@@ -6605,7 +6638,11 @@
       "sessionHours": "Session length, hours (1–72)",
       "sessionHint": "Applies to new sign-ins. Shorter is safer on shared school computers.",
       "save": "Save settings",
-      "saved": "Settings saved."
+      "saved": "Settings saved.",
+      "leaderboardsEnabled": "Students see leaderboards and contests",
+      "leaderboardsEnabledHint": "When off, levels and challenges stay; only comparison is hidden. Teachers still see it.",
+      "leaderboardAnonymous": "Every student is anonymous on leaderboards (“Participant N”)",
+      "leaderboardAnonymousHint": "For adult groups. Everyone sees themselves; teachers see all names."
     },
     "backups": {
       "title": "Backups ({n})",
@@ -6661,6 +6698,102 @@
       "uptimeDays": "{d} d {h} h",
       "uptimeHours": "{h} h {m} min",
       "uptimeMinutes": "{m} min"
+    }
+  },
+  "game": {
+    "eyebrow": "Achievements",
+    "title": "Leaderboard",
+    "subtitle": "Your level, today’s challenge, class and school rankings, and class-vs-class contests.",
+    "level": "Level {n}",
+    "toNext": "To the next level",
+    "toNextValue": "{into} / {span} XP to level {next}",
+    "thisWeek": "this week",
+    "streakDays": "days in a row",
+    "toBoard": "Open the leaderboard",
+    "studentLink": "Your place in class and school, contests",
+    "guest": "As a guest your level is counted in this browser. Sign in to join class leaderboards and contests.",
+    "off": "Leaderboards are switched off by the admin for now. Your level and challenges are above.",
+    "error": "Could not load the leaderboard. Try later.",
+    "ranks": {
+      "novice": "Newcomer",
+      "explorer": "Explorer",
+      "technician": "Technician",
+      "engineer": "Engineer",
+      "specialist": "Specialist",
+      "expert": "Expert",
+      "architect": "Systems architect"
+    },
+    "daily": {
+      "title": "Today’s challenge",
+      "left": "{h} h left",
+      "best": "best {p}%, need {need}%",
+      "done": "done",
+      "rule": "Do each task today with at least {need}%. All three earn another +{xp} XP.",
+      "allDone": "Today’s challenge is complete: +{xp} XP bonus. A new one comes tomorrow."
+    },
+    "weekly": {
+      "title": "Weekly goals",
+      "reward": "+{xp} XP each",
+      "goals": {
+        "complete": "Complete {n} different tasks",
+        "labs": "Work in {n} different labs",
+        "perfect": "Score 100% on {n} tasks",
+        "clean": "Complete {n} tasks without hints",
+        "daily": "Finish the daily challenge on {n} days"
+      }
+    },
+    "toast": {
+      "earned": "for the task",
+      "levelUp": "Level {n}!"
+    },
+    "board": {
+      "title": "Leaderboard",
+      "classTitle": "Class XP leaderboard",
+      "period": "Period",
+      "week": "This week",
+      "all": "All time",
+      "which": "Which leaderboard",
+      "empty": "No one yet.",
+      "anonymous": "Participant {n}",
+      "you": "you",
+      "level": "lvl {n}",
+      "weekNote": "The week starts Monday 00:00 (Kazakhstan time). XP earned this week counts.",
+      "allNote": "All-time XP: the best result of each task, achievements and challenges.",
+      "teacherNote": "Teachers always see names. Students may hide their name from each other.",
+      "noClass": "You are not in a class yet: join with your teacher’s code.",
+      "noClassStaff": "No classes.",
+      "hideMe": "Hide my name from other students",
+      "hideHint": "You show as “Participant N”. Your teacher still sees your name.",
+      "forced": "On this site every student is shown anonymously (admin setting)."
+    },
+    "contest": {
+      "title": "Class contests",
+      "none": "Your class is not in a contest yet.",
+      "noneStaff": "No contests yet. Start one with the form on the right.",
+      "status": {
+        "upcoming": "Upcoming",
+        "live": "Live",
+        "finished": "Finished"
+      },
+      "myRank": "#{n} of {of}",
+      "active": "{n}/{of} active",
+      "perStudent": "XP / student",
+      "until": "until {time}",
+      "new": "New contest",
+      "name": "Title",
+      "namePlaceholder": "e.g. Logic week",
+      "classes": "Classes taking part (at least 2)",
+      "start": "Starts",
+      "end": "Ends",
+      "rule": "The winner has the highest mean XP per student (class size does not matter). Only XP earned during the contest counts. Add your own classes and those of your school.",
+      "create": "Start contest",
+      "deleteConfirm": "Delete the contest “{title}”?",
+      "errors": {
+        "badTitle": "Enter a title (up to 80 characters).",
+        "badClasses": "Choose at least 2 classes (yours or your school’s).",
+        "badDates": "Invalid dates: the end after the start, at most 90 days.",
+        "server": "Server error."
+      }
     }
   }
 }

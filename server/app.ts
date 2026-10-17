@@ -12,8 +12,8 @@
  *   POST /api/auth/reset              { token, password }
  *   GET  /api/progress                student → snapshot
  *   PUT  /api/progress                student (csrf) { snapshot } → merged snapshot
- *   …the classroom routes in classroomRoutes.ts (V2-9) and the admin panel
- *   in adminRoutes.ts (V2-10).
+ *   …the classroom routes in classroomRoutes.ts (V2-9), the admin panel in
+ *   adminRoutes.ts (V2-10) and leaderboards / contests in gameRoutes.ts (V2-11a).
  *
  * Every state-changing request needs the session's CSRF token in
  * `x-csrf-token` and, when the browser sends one, an allowed Origin.
@@ -31,6 +31,7 @@ import { normalizeLogin, publicUser, userById, userByLogin, type Role, type User
 import { loadProgress, saveProgress } from './progress';
 import { classroomRoutes } from './classroomRoutes';
 import { adminRoutes } from './adminRoutes';
+import { gameRoutes } from './gameRoutes';
 import { checkResetToken, listIpBlocks, redeemResetToken } from './admin';
 import { getSettings, publicSettings } from './settings';
 import { allOverrides, contentVersion } from './content';
@@ -109,6 +110,7 @@ export function createApp({
     checkCsrf: (ctx: object) => checkCsrf(ctx as Ctx),
   };
   const classroom = classroomRoutes({ ...deps, joinLimiter, settings });
+  const game = gameRoutes({ ...deps, settings });
   const adminPanel = adminRoutes({ ...deps, config, limiter, settings, aiStatus, startedAt, refresh, clearCookie });
 
   async function login(ctx: Ctx) {
@@ -192,6 +194,7 @@ export function createApp({
     }
 
     if (await classroom(ctx, method, path)) return;
+    if (await game(ctx, method, path)) return;
     if (await adminPanel(ctx, method, path)) return;
 
     throw new HttpError(404, 'not-found');

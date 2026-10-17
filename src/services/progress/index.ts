@@ -6,3 +6,4 @@ export { activityByDay, recommendNext, summarize, type RecommendReason, type Lab
 export { ACHIEVEMENT_IDS, evaluateAchievements, isAchievementId, unlockAchievements, type AchievementId, type AchievementProgress } from './achievements';
 export { buildExport, exportFileName, parseImport, type ImportError, type ImportResult, type ProgressExport } from './transfer';
 export { createLocalProgressRepository, memoryStore, PROTOTYPE_KEY, type KeyValueStore, type ProgressRepository } from './repository';
+export { DAILY_PASS, DAY_MS, dailyHistory, dailyStatus, dailyTasks, dayKey, dayStart, streak, weekKey, weekStart, weeklyGoals, weeklyHistory, weeklyStatus, type DailyStatus, type WeeklyGoalId, type WeeklyStatus } from './challenges';

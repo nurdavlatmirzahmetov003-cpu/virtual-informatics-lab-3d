@@ -64,6 +64,8 @@ export interface SiteSettings {
   allowTeacherRegistration: boolean;
   sessionHours: number;
   aiEnabled: boolean;
+  leaderboardsEnabled: boolean;
+  leaderboardAnonymous: boolean;
 }
 
 export interface Override {

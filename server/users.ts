@@ -17,6 +17,8 @@ export interface UserRow {
   disabled: number;
   created_at: number;
   last_login_at: number | null;
+  /** V2-11a: 1 = hidden from other students on leaderboards (column added by migration 004). */
+  leaderboard_anon?: number;
 }
 
 export interface PublicUser {

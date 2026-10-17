@@ -255,7 +255,9 @@ test('achievements unlock from real conditions and are never taken back', () => 
   assert.equal(shrunk.snapshot.achievements.networkMaster, 500, 'kept even if the scores are gone');
 
   const graduate = evaluateAchievements(summarize(complete(emptySnapshot(), TASKS.map((t) => t.id))));
-  assert.ok(graduate.every((a) => a.id === 'perfectBuild' || a.id === 'persistent' || a.unlocked));
+  // the V2-11a history badges need days, weeks and timing, not just finished tasks
+  const HISTORY = ['perfectBuild', 'persistent', 'streak3', 'streak7', 'dailyFive', 'weeklyHero', 'speedrun'];
+  assert.ok(graduate.every((a) => HISTORY.includes(a.id) || a.unlocked), graduate.filter((a) => !a.unlocked && !HISTORY.includes(a.id)).map((a) => a.id).join());
 });
 
 test('export → import round trip; import merges without duplicates and rejects foreign files', () => {

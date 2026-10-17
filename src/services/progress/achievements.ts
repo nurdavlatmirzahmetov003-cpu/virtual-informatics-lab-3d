@@ -2,11 +2,13 @@
  * Achievements. Each is a pure check over the progress summary that returns
  * how far the student is (current / target), so locked achievements can show
  * "2 / 4" next to their condition. Names and conditions are locale keys:
- * achievements.items.<id>.name / .condition.
+ * achievements.items.<id>.name / .condition. The V2-11a badges also read
+ * the attempt history (streaks, challenges, speed).
  */
-import { tasksOf, type LabId } from './catalog';
+import { CONNECT_TASKS, TEARDOWN_TASKS, taskById, tasksOf, type LabId } from './catalog';
+import { dailyHistory, streak, weeklyHistory } from './challenges';
 import { summarize, type ProgressSummary } from './summary';
-import type { ProgressSnapshot } from './types';
+import type { AttemptRecord, ProgressSnapshot } from './types';
 
 export const ACHIEVEMENT_IDS = [
   'firstStep',
@@ -23,6 +25,15 @@ export const ACHIEVEMENT_IDS = [
   'allRounder',
   'halfway',
   'graduate',
+  // V2-11a
+  'streak3',
+  'streak7',
+  'dailyFive',
+  'weeklyHero',
+  'teardownPro',
+  'connector',
+  'fixer',
+  'speedrun',
 ] as const;
 export type AchievementId = (typeof ACHIEVEMENT_IDS)[number];
 
@@ -33,7 +44,12 @@ export interface AchievementProgress {
   unlocked: boolean;
 }
 
-type Check = (s: ProgressSummary) => { current: number; target: number };
+type Check = (s: ProgressSummary, attempts: readonly AttemptRecord[]) => { current: number; target: number };
+
+const done = (s: ProgressSummary, id: string) => s.tasks.some((t) => t.info.id === id && t.status === 'completed');
+/** Hands-on lab tasks (not quizzes) for the speed badge. */
+const HANDS_ON = new Set(['assembly', 'network', 'logic', 'connect', 'sim']);
+export const SPEEDRUN_SECONDS = 120;
 
 const completedIn = (s: ProgressSummary, lab: LabId) => ({ current: s.labs.find((l) => l.lab === lab)!.completed, target: tasksOf(lab).length });
 const count = (n: number, target: number) => ({ current: Math.min(n, target), target });
@@ -60,11 +76,20 @@ const CHECKS: Record<AchievementId, Check> = {
   allRounder: (s) => count(s.labs.filter((l) => l.completed > 0).length, s.labs.length),
   halfway: (s) => count(s.totals.completed, Math.ceil(s.totals.tasks / 2)),
   graduate: (s) => count(s.totals.completed, s.totals.tasks),
+  streak3: (_, a) => count(streak(a, 0).longest, 3),
+  streak7: (_, a) => count(streak(a, 0).longest, 7),
+  dailyFive: (_, a) => count(dailyHistory(a).filter((d) => d.complete).length, 5),
+  weeklyHero: (_, a) => count(weeklyHistory(a).some((w) => w.complete) ? 1 : 0, 1),
+  teardownPro: (s) => count(TEARDOWN_TASKS.filter((t) => done(s, `teardown:${t}`)).length, TEARDOWN_TASKS.length),
+  connector: (s) => count(CONNECT_TASKS.filter((t) => done(s, `connect:${t}`)).length, CONNECT_TASKS.length),
+  fixer: (s) => count(s.tasks.find((t) => t.info.id === 'sim:fix')?.progress?.best.percent === 100 ? 1 : 0, 1),
+  // a hands-on lab task done perfectly within two minutes
+  speedrun: (_, a) => count(a.some((x) => x.percent === 100 && x.seconds <= SPEEDRUN_SECONDS && HANDS_ON.has(taskById(x.exerciseId)?.type ?? '')) ? 1 : 0, 1),
 };
 
-export function evaluateAchievements(summary: ProgressSummary): AchievementProgress[] {
+export function evaluateAchievements(summary: ProgressSummary, attempts: readonly AttemptRecord[] = []): AchievementProgress[] {
   return ACHIEVEMENT_IDS.map((id) => {
-    const { current, target } = CHECKS[id](summary);
+    const { current, target } = CHECKS[id](summary, attempts);
     return { id, current, target, unlocked: current >= target };
   });
 }
@@ -74,7 +99,7 @@ export function evaluateAchievements(summary: ProgressSummary): AchievementProgr
  * an achievement stays even if a later import or migration changes scores.
  */
 export function unlockAchievements(s: ProgressSnapshot, now = Date.now()): { snapshot: ProgressSnapshot; unlocked: AchievementId[] } {
-  const unlocked = evaluateAchievements(summarize(s))
+  const unlocked = evaluateAchievements(summarize(s), s.attempts)
     .filter((a) => a.unlocked && s.achievements[a.id] === undefined)
     .map((a) => a.id);
   if (!unlocked.length) return { snapshot: s, unlocked };

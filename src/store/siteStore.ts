@@ -16,7 +16,7 @@ export interface Banner {
 }
 
 export interface PublicSite {
-  settings: { banner: Banner; allowJoinByCode: boolean };
+  settings: { banner: Banner; allowJoinByCode: boolean; leaderboardsEnabled: boolean };
   content: Partial<Record<Language, Record<string, string>>>;
 }
 

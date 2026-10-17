@@ -38,7 +38,7 @@ async function boot() {
 test('migrations: every table, applied once, recorded', () => {
   const db = openDb(':memory:');
   const first = migrate(db);
-  assert.deepEqual(first, ['001_init', '002_classroom', '003_admin']);
+  assert.deepEqual(first, ['001_init', '002_classroom', '003_admin', '004_game']);
   assert.deepEqual(migrate(db), [], 'a second run applies nothing');
   const tables = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all().map((r) => r.name);
   for (const t of ['users', 'schools', 'classes', 'class_members', 'assignments', 'submissions', 'attempts', 'grades', 'announcements', 'messages', 'achievements', 'xp_events', 'sessions', 'audit_log', 'schema_migrations']) {

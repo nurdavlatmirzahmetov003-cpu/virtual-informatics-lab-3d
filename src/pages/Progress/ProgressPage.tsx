@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Lock } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { ACHIEVEMENT_ICONS } from '@/components/achievements/achievementIcons';
+import { GamePanel } from '@/components/game/GamePanel';
 import { STATUS_ICON } from '@/components/progress/statusIcons';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
@@ -49,7 +50,7 @@ export default function ProgressPage() {
   const summary = useProgressSummary();
   const attempts = useProgressStore((s) => s.attempts);
   const unlockedAt = useProgressStore((s) => s.achievements);
-  const achievements = useMemo(() => evaluateAchievements(summary), [summary]);
+  const achievements = useMemo(() => evaluateAchievements(summary, attempts), [summary, attempts]);
   const titleOf = useAttemptTitle();
   const { hash } = useLocation();
   const { totals } = summary;
@@ -62,6 +63,7 @@ export default function ProgressPage() {
 
   return (
     <PageLayout eyebrow={t('progress.eyebrow')} title={t('progress.title')} subtitle={t('progress.subtitle')}>
+      <GamePanel />
       <div className={styles.stats}>
         <Stat label={t('progress.stats.labs')} value={totals.labsCompleted} unit={`/${summary.labs.length}`} hint={t('progress.stats.labsHint', { done: totals.labsCompleted, total: summary.labs.length })} />
         <Stat

@@ -11,8 +11,8 @@ import cls from '../Classroom/Classroom.module.css';
 import auth from '../Auth/Auth.module.css';
 import styles from './Admin.module.css';
 
-type Toggle = 'allowJoinByCode' | 'allowTeacherRegistration' | 'aiEnabled';
-const TOGGLES: Toggle[] = ['allowJoinByCode', 'allowTeacherRegistration', 'aiEnabled'];
+type Toggle = 'allowJoinByCode' | 'allowTeacherRegistration' | 'aiEnabled' | 'leaderboardsEnabled' | 'leaderboardAnonymous';
+const TOGGLES: Toggle[] = ['allowJoinByCode', 'allowTeacherRegistration', 'aiEnabled', 'leaderboardsEnabled', 'leaderboardAnonymous'];
 
 export function SettingsTab() {
   const t = useT();

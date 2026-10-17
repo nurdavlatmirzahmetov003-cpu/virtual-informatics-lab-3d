@@ -25,6 +25,10 @@ export interface SiteSettings {
   sessionHours: number;
   /** The LLM assistant routes; off → the browser's local assistant only. */
   aiEnabled: boolean;
+  /** Students see class and school leaderboards (V2-11a). */
+  leaderboardsEnabled: boolean;
+  /** Every student shows as "Participant N" to other students (adult groups). */
+  leaderboardAnonymous: boolean;
 }
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -33,6 +37,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   allowTeacherRegistration: true,
   sessionHours: 12,
   aiEnabled: true,
+  leaderboardsEnabled: true,
+  leaderboardAnonymous: false,
 };
 
 const bool = (v: unknown) => {
@@ -59,6 +65,8 @@ const VALIDATE: { [K in keyof SiteSettings]: (v: unknown) => SiteSettings[K] } =
     return n;
   },
   aiEnabled: bool,
+  leaderboardsEnabled: bool,
+  leaderboardAnonymous: bool,
 };
 
 const isKey = (k: string): k is keyof SiteSettings => k in VALIDATE;
@@ -90,4 +98,4 @@ export function setSettings(db: Db, patch: Record<string, unknown>, actorId: str
 }
 
 /** What every visitor may know. */
-export const publicSettings = (s: SiteSettings) => ({ banner: s.banner, allowJoinByCode: s.allowJoinByCode });
+export const publicSettings = (s: SiteSettings) => ({ banner: s.banner, allowJoinByCode: s.allowJoinByCode, leaderboardsEnabled: s.leaderboardsEnabled });

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { computeXp, levelOf } from '@/services/game/xp';
 import { create } from 'zustand';
 import type { GradeReport } from '@/services/grading';
 import {
@@ -24,6 +25,8 @@ interface ProgressState extends ProgressSnapshot {
   hydrated: boolean;
   /** Achievements unlocked in this session, waiting to be announced. */
   toasts: AchievementId[];
+  /** XP just earned by a graded attempt (V2-11a), with the new level when it went up. */
+  gains: XpGain[];
   /** Stores a graded report; returns the stored attempt. */
   record: (report: GradeReport) => AttemptRecord;
   /** Merges an imported snapshot; returns how many attempts were new. */
@@ -31,6 +34,14 @@ interface ProgressState extends ProgressSnapshot {
   /** Deletes all progress (after the user confirmed). */
   reset: () => void;
   dismissToast: (id: AchievementId) => void;
+  dismissGain: (id: string) => void;
+}
+
+export interface XpGain {
+  id: string;
+  xp: number;
+  /** Set when this attempt reached a new level. */
+  level: number | null;
 }
 
 let repo: ProgressRepository = createLocalProgressRepository();
@@ -47,11 +58,16 @@ export const useProgressStore = create<ProgressState>()((set, get) => ({
   ...emptySnapshot(),
   hydrated: false,
   toasts: [],
+  gains: [],
 
   record: (report) => {
     const attempt = fromReport(report);
+    const before = computeXp(get().attempts).total;
     const { snapshot, unlocked } = unlockAchievements(applyAttempt(snapshotOf(get()), attempt), attempt.at);
-    set({ ...snapshot, toasts: [...get().toasts, ...unlocked] });
+    const after = computeXp(snapshot.attempts).total;
+    const levelUp = levelOf(after).level > levelOf(before).level ? levelOf(after).level : null;
+    const gains = after > before ? [...get().gains, { id: attempt.id, xp: after - before, level: levelUp }] : get().gains;
+    set({ ...snapshot, toasts: [...get().toasts, ...unlocked], gains });
     persist(snapshot);
     return attempt;
   },
@@ -68,11 +84,12 @@ export const useProgressStore = create<ProgressState>()((set, get) => ({
   reset: () => {
     // keep the "prototype already imported" mark, or it would come back on reload
     const snapshot = { ...emptySnapshot(), meta: { createdAt: Date.now(), legacyImported: true } };
-    set({ ...snapshot, toasts: [] });
+    set({ ...snapshot, toasts: [], gains: [] });
     void Promise.resolve(repo.clear()).then(() => persist(snapshot));
   },
 
   dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t !== id) }),
+  dismissGain: (id) => set({ gains: get().gains.filter((g) => g.id !== id) }),
 }));
 
 /**

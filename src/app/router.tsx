@@ -27,6 +27,7 @@ const StudentHome = lazy(() => import('@/pages/Classroom/StudentHome'));
 const JoinPage = lazy(() => import('@/pages/Classroom/JoinPage'));
 const AdminPage = lazy(() => import('@/pages/Admin/AdminPage'));
 const ResetPage = lazy(() => import('@/pages/Auth/ResetPage'));
+const LeaderboardPage = lazy(() => import('@/pages/Leaderboard/LeaderboardPage'));
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +48,7 @@ export const router = createBrowserRouter([
       { path: 'studio', element: <SetupStudioPage /> },
       { path: 'studio/summary', element: <SetupSummaryPage /> },
       { path: 'progress', element: <ProgressPage /> },
+      { path: 'leaderboard', element: <LeaderboardPage /> },
       { path: 'credits', element: <CreditsPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'teacher', element: <TeacherHome /> },

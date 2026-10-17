@@ -1,33 +1,11 @@
 /** Hooks shared by the classroom pages. */
-import { useCallback, useSyncExternalStore } from 'react';
+import { useCallback } from 'react';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { ApiError } from '@/services/auth/api';
 import { taskById } from '@/services/progress/catalog';
 
-// ── a clock that ticks twice a minute (deadlines, "overdue") ──
-let now = Date.now();
-const listeners = new Set<() => void>();
-let timer: ReturnType<typeof setInterval> | null = null;
-
-function subscribe(listener: () => void) {
-  listeners.add(listener);
-  now = Date.now();
-  timer ??= setInterval(() => {
-    now = Date.now();
-    listeners.forEach((l) => l());
-  }, 30_000);
-  return () => {
-    listeners.delete(listener);
-    if (!listeners.size && timer) {
-      clearInterval(timer);
-      timer = null;
-    }
-  };
-}
-
-/** Current time, kept pure for render: it changes only on the shared tick. */
-export const useNow = () => useSyncExternalStore(subscribe, () => now);
+export { useNow } from '@/hooks/useNow';
 
 const KNOWN = new Set([
   'badName', 'badNames', 'badTitle', 'badDescription', 'badBody', 'badExercise', 'badDue', 'badPoints', 'badScore', 'badComment',

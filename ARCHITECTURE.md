@@ -243,6 +243,12 @@ legacy/                     ескі ES-module прототип (python http.ser
     - Клиент IP: `clientIp(req, TRUST_PROXY)`. `X-Forwarded-For` тек сенімді proxy-ден қабылданады (әдепкі — осы компьютер, Vite `xfwd`).
     - Баннер: `SiteBanner` өз биіктігін `--banner-h` арқылы береді, `--topbar-h = --topbar-base + --banner-h`, сондықтан барлық бет өздігінен төмен жылжиды.
 
+48. **Геймификация (V2-11a).**
+    - Ереже: XP, деңгей, сынақ, серия ешқашан сақталмайды. Бәрі `attempts`-тен таза функциялармен есептеледі (`services/game/xp`, `services/progress/challenges`). Бір код браузерде (`useGame`, `progressStore.record` → `gains`) және серверде (`server/game.ts` → `computeXp`) жұмыс істейді. Сервер индекстен емес, нақты модульдерден импорттайды (индекс браузерлік storage-ты тартады).
+    - Уақыт: `dayKey = floor((ts + 5h) / 1 күн)`, апта дүйсенбіден басталады. Сынақ тапсырмалары `mulberry32(day)` арқылы таңдалады, сондықтан әр күнгі сынақ барлығына бірдей.
+    - Рейтинг: `xpTable(userIds, window?)` — апталық XP = `xp(now) − xp(weekStart−1)`. Кэш кілті: `user|ұзындық|соңғы уақыт`. Жасырын режим `users.leaderboard_anon`-нан не `settings.leaderboardAnonymous`-тан шығады; мұғалім мен әкімші аттарды әрқашан көреді.
+    - Жарыс: `contests` + `contest_classes`. Нәтиже — сыныптағы бір оқушыға шаққандағы орташа XP, тек `[starts_at, min(now, ends_at)]` аралығында. Мұғалім өз сыныптарын және мектебіндегі сыныптарды қоса алады.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |
