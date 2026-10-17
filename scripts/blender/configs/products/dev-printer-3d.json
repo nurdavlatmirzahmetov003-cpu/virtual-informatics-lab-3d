@@ -1,0 +1,32 @@
+{
+  "name": "dev-printer-3d",
+  "description": "Lab device model (printer_3d), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/printer_3d.glb",
+  "output": "assets-src/blender/products/dev-printer-3d.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-printer-3d.jpg"
+  },
+  "realSize": [
+    0,
+    0,
+    0.5
+  ]
+}

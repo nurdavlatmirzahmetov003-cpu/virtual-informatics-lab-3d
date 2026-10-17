@@ -435,6 +435,10 @@ def split_parts(meshes, cfg, report):
     for o in list(bpy.data.objects):
         if o.type == "EMPTY":
             bpy.data.objects.remove(o, do_unlink=True)
+    # a wrapper node may have held a part's name (Blender then appended ".001"): rename again
+    for pid, obj in parts.items():
+        obj.name = pid
+        obj.data.name = pid
     log("parts: " + ", ".join(f"{k} ({tri_count(v)} △)" for k, v in parts.items()))
     return parts
 

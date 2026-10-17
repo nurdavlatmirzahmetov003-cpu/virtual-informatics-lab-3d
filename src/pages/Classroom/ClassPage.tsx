@@ -21,6 +21,8 @@ import { StatsTab } from './StatsTab';
 import { ContestsTab } from './ContestsTab';
 import { Modal } from './parts';
 import { useErrorText } from './hooks';
+import { useLiveEvents } from '@/services/live/events';
+import { LivePanel } from './LivePanel';
 import styles from './Classroom.module.css';
 import auth from '../Auth/Auth.module.css';
 
@@ -67,6 +69,14 @@ function ClassView() {
       .catch((e) => setError(errorText(e)));
   }, [id, errorText]);
   useEffect(reload, [reload]);
+  // a graded attempt of one of this class's students: refresh the journal (once per burst)
+  const version = useLiveEvents((s) => s.version);
+  const latest = useLiveEvents((s) => s.feed[0]);
+  useEffect(() => {
+    if (!version || !latest?.classIds.includes(id)) return;
+    const timer = window.setTimeout(reload, 700);
+    return () => window.clearTimeout(timer);
+  }, [version, latest, id, reload]);
 
   const go = useCallback((next: TabId, extra: Record<string, string> = {}) => setParams({ tab: next, ...extra }), [setParams]);
   const closeJoin = useCallback(() => setJoinOpen(false), []);
@@ -123,6 +133,7 @@ function ClassView() {
         </nav>
       </header>
 
+      <LivePanel classId={detail.class.id} students={detail.students.length} />
       {error && (
         <p className={auth.error} role="alert">
           {error}

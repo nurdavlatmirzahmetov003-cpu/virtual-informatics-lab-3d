@@ -1,0 +1,31 @@
+{
+  "name": "td-laptop-fan",
+  "description": "Laptop blower fan (the assembled one of the download), lying flat.",
+  "input": "assets-src/sketchfab/devices/laptop_fan.glb",
+  "output": "assets-src/blender/products/td-laptop-fan.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "groups": "\\.005$"
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/td-laptop-fan.jpg"
+  }
+}

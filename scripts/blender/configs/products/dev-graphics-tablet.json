@@ -1,0 +1,46 @@
+{
+  "name": "dev-graphics-tablet",
+  "description": "Lab device model (graphics_tablet), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/graphics_tablet.glb",
+  "output": "assets-src/blender/products/dev-graphics-tablet.glb",
+  "rotate": 90,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.695,
+            0.785,
+            0.785,
+            0.825
+          ],
+          [
+            0.815,
+            0.6,
+            0.875,
+            0.635
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-graphics-tablet.jpg"
+  },
+  "realSize": 0.23
+}

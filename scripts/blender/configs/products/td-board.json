@@ -1,0 +1,27 @@
+{
+  "name": "td-board",
+  "description": "Densely populated circuit board (chips, capacitors), base for the laptop and all-in-one boards.",
+  "input": "assets-src/sketchfab/devices/pcb_board.glb",
+  "output": "assets-src/blender/products/td-board.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/td-board.jpg"
+  }
+}

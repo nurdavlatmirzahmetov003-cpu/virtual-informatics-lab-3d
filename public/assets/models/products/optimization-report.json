@@ -400,6 +400,731 @@
     ]
   },
   {
+    "id": "dev-all-in-one",
+    "source": "assets-src/blender/products/dev-all-in-one.glb",
+    "sourceBytes": 5371364,
+    "levels": [
+      {
+        "file": "dev-all-in-one.glb",
+        "bytes": 639504,
+        "triangles": 23262,
+        "textureMB": 26.7
+      },
+      {
+        "file": "dev-all-in-one_lod1.glb",
+        "bytes": 402936,
+        "triangles": 16924,
+        "textureMB": 10.7
+      },
+      {
+        "file": "dev-all-in-one_lod2.glb",
+        "bytes": 206560,
+        "triangles": 7920,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "dev-external-drive",
+    "source": "assets-src/blender/products/dev-external-drive.glb",
+    "sourceBytes": 2270620,
+    "levels": [
+      {
+        "file": "dev-external-drive.glb",
+        "bytes": 828940,
+        "triangles": 4030,
+        "textureMB": 26.7
+      },
+      {
+        "file": "dev-external-drive_lod1.glb",
+        "bytes": 146700,
+        "triangles": 2216,
+        "textureMB": 10.7
+      },
+      {
+        "file": "dev-external-drive_lod2.glb",
+        "bytes": 35568,
+        "triangles": 1006,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "dev-gamepad",
+    "source": "assets-src/blender/products/dev-gamepad.glb",
+    "sourceBytes": 1625904,
+    "levels": [
+      {
+        "file": "dev-gamepad.glb",
+        "bytes": 280576,
+        "triangles": 43119,
+        "textureMB": 5.7
+      },
+      {
+        "file": "dev-gamepad_lod1.glb",
+        "bytes": 178576,
+        "triangles": 23715,
+        "textureMB": 5.7
+      },
+      {
+        "file": "dev-gamepad_lod2.glb",
+        "bytes": 81008,
+        "triangles": 7999,
+        "textureMB": 1.7
+      }
+    ]
+  },
+  {
+    "id": "dev-graphics-tablet",
+    "source": "assets-src/blender/products/dev-graphics-tablet.glb",
+    "sourceBytes": 2994440,
+    "levels": [
+      {
+        "file": "dev-graphics-tablet.glb",
+        "bytes": 115192,
+        "triangles": 6472,
+        "textureMB": 28
+      },
+      {
+        "file": "dev-graphics-tablet_lod1.glb",
+        "bytes": 60344,
+        "triangles": 3558,
+        "textureMB": 6.7
+      },
+      {
+        "file": "dev-graphics-tablet_lod2.glb",
+        "bytes": 32408,
+        "triangles": 1618,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "dev-hdd",
+    "source": "assets-src/blender/products/dev-hdd.glb",
+    "sourceBytes": 3221232,
+    "levels": [
+      {
+        "file": "dev-hdd.glb",
+        "bytes": 665864,
+        "triangles": 44179,
+        "textureMB": 10.7
+      },
+      {
+        "file": "dev-hdd_lod1.glb",
+        "bytes": 618856,
+        "triangles": 35469,
+        "textureMB": 10.7
+      },
+      {
+        "file": "dev-hdd_lod2.glb",
+        "bytes": 144792,
+        "triangles": 7994,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "dev-interactive-panel",
+    "source": "assets-src/blender/products/dev-interactive-panel.glb",
+    "sourceBytes": 20847668,
+    "levels": [
+      {
+        "file": "dev-interactive-panel.glb",
+        "bytes": 1814744,
+        "triangles": 81552,
+        "textureMB": 16.4
+      },
+      {
+        "file": "dev-interactive-panel_lod1.glb",
+        "bytes": 923844,
+        "triangles": 30032,
+        "textureMB": 12.3
+      },
+      {
+        "file": "dev-interactive-panel_lod2.glb",
+        "bytes": 310484,
+        "triangles": 8092,
+        "textureMB": 3
+      }
+    ]
+  },
+  {
+    "id": "dev-laptop",
+    "source": "assets-src/blender/products/dev-laptop.glb",
+    "sourceBytes": 21862912,
+    "levels": [
+      {
+        "file": "dev-laptop.glb",
+        "bytes": 1927964,
+        "triangles": 86286,
+        "textureMB": 26.7
+      },
+      {
+        "file": "dev-laptop_lod1.glb",
+        "bytes": 941996,
+        "triangles": 30020,
+        "textureMB": 14.7
+      },
+      {
+        "file": "dev-laptop_lod2.glb",
+        "bytes": 296692,
+        "triangles": 8016,
+        "textureMB": 3.7
+      }
+    ]
+  },
+  {
+    "id": "dev-microphone",
+    "source": "assets-src/blender/products/dev-microphone.glb",
+    "sourceBytes": 18262716,
+    "levels": [
+      {
+        "file": "dev-microphone.glb",
+        "bytes": 648952,
+        "triangles": 14035,
+        "textureMB": 26.7
+      },
+      {
+        "file": "dev-microphone_lod1.glb",
+        "bytes": 606376,
+        "triangles": 10583,
+        "textureMB": 14.7
+      },
+      {
+        "file": "dev-microphone_lod2.glb",
+        "bytes": 271296,
+        "triangles": 9763,
+        "textureMB": 3.7
+      }
+    ]
+  },
+  {
+    "id": "dev-modem",
+    "source": "assets-src/blender/products/dev-modem.glb",
+    "sourceBytes": 2103512,
+    "levels": [
+      {
+        "file": "dev-modem.glb",
+        "bytes": 99172,
+        "triangles": 6496,
+        "textureMB": 5.7
+      },
+      {
+        "file": "dev-modem_lod1.glb",
+        "bytes": 63884,
+        "triangles": 4280,
+        "textureMB": 1.4
+      },
+      {
+        "file": "dev-modem_lod2.glb",
+        "bytes": 52028,
+        "triangles": 3376,
+        "textureMB": 0.1
+      }
+    ]
+  },
+  {
+    "id": "dev-nas",
+    "source": "assets-src/blender/products/dev-nas.glb",
+    "sourceBytes": 7806580,
+    "levels": [
+      {
+        "file": "dev-nas.glb",
+        "bytes": 791952,
+        "triangles": 80495,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-nas_lod1.glb",
+        "bytes": 461196,
+        "triangles": 33065,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-nas_lod2.glb",
+        "bytes": 133164,
+        "triangles": 8029,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "dev-nic",
+    "source": "assets-src/blender/products/dev-nic.glb",
+    "sourceBytes": 6014328,
+    "levels": [
+      {
+        "file": "dev-nic.glb",
+        "bytes": 733756,
+        "triangles": 80093,
+        "textureMB": 0.7
+      },
+      {
+        "file": "dev-nic_lod1.glb",
+        "bytes": 389776,
+        "triangles": 30755,
+        "textureMB": 0.7
+      },
+      {
+        "file": "dev-nic_lod2.glb",
+        "bytes": 174316,
+        "triangles": 9049,
+        "textureMB": 0.7
+      }
+    ]
+  },
+  {
+    "id": "dev-optical-disc",
+    "source": "assets-src/blender/products/dev-optical-disc.glb",
+    "sourceBytes": 3814816,
+    "levels": [
+      {
+        "file": "dev-optical-disc.glb",
+        "bytes": 244692,
+        "triangles": 6144,
+        "textureMB": 18.7
+      },
+      {
+        "file": "dev-optical-disc_lod1.glb",
+        "bytes": 384852,
+        "triangles": 3378,
+        "textureMB": 13.4
+      },
+      {
+        "file": "dev-optical-disc_lod2.glb",
+        "bytes": 122084,
+        "triangles": 1536,
+        "textureMB": 3.3
+      }
+    ]
+  },
+  {
+    "id": "dev-printer-3d",
+    "source": "assets-src/blender/products/dev-printer-3d.glb",
+    "sourceBytes": 1567352,
+    "levels": [
+      {
+        "file": "dev-printer-3d.glb",
+        "bytes": 326896,
+        "triangles": 52088,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-printer-3d_lod1.glb",
+        "bytes": 235200,
+        "triangles": 30060,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-printer-3d_lod2.glb",
+        "bytes": 87676,
+        "triangles": 7989,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "dev-printer-inkjet",
+    "source": "assets-src/blender/products/dev-printer-inkjet.glb",
+    "sourceBytes": 434772,
+    "levels": [
+      {
+        "file": "dev-printer-inkjet.glb",
+        "bytes": 69932,
+        "triangles": 9323,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-printer-inkjet_lod1.glb",
+        "bytes": 57508,
+        "triangles": 6701,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-printer-inkjet_lod2.glb",
+        "bytes": 49416,
+        "triangles": 5239,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "dev-printer-laser",
+    "source": "assets-src/blender/products/dev-printer-laser.glb",
+    "sourceBytes": 4369928,
+    "levels": [
+      {
+        "file": "dev-printer-laser.glb",
+        "bytes": 383732,
+        "triangles": 41960,
+        "textureMB": 32
+      },
+      {
+        "file": "dev-printer-laser_lod1.glb",
+        "bytes": 256396,
+        "triangles": 23078,
+        "textureMB": 11
+      },
+      {
+        "file": "dev-printer-laser_lod2.glb",
+        "bytes": 117448,
+        "triangles": 8000,
+        "textureMB": 2.8
+      }
+    ]
+  },
+  {
+    "id": "dev-router",
+    "source": "assets-src/blender/products/dev-router.glb",
+    "sourceBytes": 1990736,
+    "levels": [
+      {
+        "file": "dev-router.glb",
+        "bytes": 184944,
+        "triangles": 2164,
+        "textureMB": 26.7
+      },
+      {
+        "file": "dev-router_lod1.glb",
+        "bytes": 119044,
+        "triangles": 1750,
+        "textureMB": 10.7
+      },
+      {
+        "file": "dev-router_lod2.glb",
+        "bytes": 67812,
+        "triangles": 1714,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "dev-sbc",
+    "source": "assets-src/blender/products/dev-sbc.glb",
+    "sourceBytes": 5698672,
+    "levels": [
+      {
+        "file": "dev-sbc.glb",
+        "bytes": 772156,
+        "triangles": 12972,
+        "textureMB": 21.3
+      },
+      {
+        "file": "dev-sbc_lod1.glb",
+        "bytes": 401980,
+        "triangles": 11308,
+        "textureMB": 5.3
+      },
+      {
+        "file": "dev-sbc_lod2.glb",
+        "bytes": 192948,
+        "triangles": 8005,
+        "textureMB": 1.3
+      }
+    ]
+  },
+  {
+    "id": "dev-sd-card",
+    "source": "assets-src/blender/products/dev-sd-card.glb",
+    "sourceBytes": 1899640,
+    "levels": [
+      {
+        "file": "dev-sd-card.glb",
+        "bytes": 152644,
+        "triangles": 17950,
+        "textureMB": 21.3
+      },
+      {
+        "file": "dev-sd-card_lod1.glb",
+        "bytes": 90696,
+        "triangles": 9992,
+        "textureMB": 5.3
+      },
+      {
+        "file": "dev-sd-card_lod2.glb",
+        "bytes": 54016,
+        "triangles": 4740,
+        "textureMB": 1.3
+      }
+    ]
+  },
+  {
+    "id": "dev-server-rack",
+    "source": "assets-src/blender/products/dev-server-rack.glb",
+    "sourceBytes": 14094432,
+    "levels": [
+      {
+        "file": "dev-server-rack.glb",
+        "bytes": 747276,
+        "triangles": 27853,
+        "textureMB": 32
+      },
+      {
+        "file": "dev-server-rack_lod1.glb",
+        "bytes": 502544,
+        "triangles": 15609,
+        "textureMB": 16
+      },
+      {
+        "file": "dev-server-rack_lod2.glb",
+        "bytes": 259776,
+        "triangles": 8850,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "dev-smartphone",
+    "source": "assets-src/blender/products/dev-smartphone.glb",
+    "sourceBytes": 1501712,
+    "levels": [
+      {
+        "file": "dev-smartphone.glb",
+        "bytes": 65012,
+        "triangles": 4022,
+        "textureMB": 1.3
+      },
+      {
+        "file": "dev-smartphone_lod1.glb",
+        "bytes": 50968,
+        "triangles": 3134,
+        "textureMB": 0.3
+      },
+      {
+        "file": "dev-smartphone_lod2.glb",
+        "bytes": 45964,
+        "triangles": 2732,
+        "textureMB": 0.1
+      }
+    ]
+  },
+  {
+    "id": "dev-smartwatch",
+    "source": "assets-src/blender/products/dev-smartwatch.glb",
+    "sourceBytes": 1709844,
+    "levels": [
+      {
+        "file": "dev-smartwatch.glb",
+        "bytes": 74692,
+        "triangles": 1936,
+        "textureMB": 5.8
+      },
+      {
+        "file": "dev-smartwatch_lod1.glb",
+        "bytes": 71124,
+        "triangles": 1472,
+        "textureMB": 5.8
+      },
+      {
+        "file": "dev-smartwatch_lod2.glb",
+        "bytes": 58208,
+        "triangles": 1348,
+        "textureMB": 3.6
+      }
+    ]
+  },
+  {
+    "id": "dev-switch",
+    "source": "assets-src/blender/products/dev-switch.glb",
+    "sourceBytes": 1753312,
+    "levels": [
+      {
+        "file": "dev-switch.glb",
+        "bytes": 389208,
+        "triangles": 24756,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-switch_lod1.glb",
+        "bytes": 382400,
+        "triangles": 23098,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-switch_lod2.glb",
+        "bytes": 143076,
+        "triangles": 7998,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "dev-tablet",
+    "source": "assets-src/blender/products/dev-tablet.glb",
+    "sourceBytes": 1709252,
+    "levels": [
+      {
+        "file": "dev-tablet.glb",
+        "bytes": 388360,
+        "triangles": 29815,
+        "textureMB": 2.7
+      },
+      {
+        "file": "dev-tablet_lod1.glb",
+        "bytes": 312824,
+        "triangles": 17849,
+        "textureMB": 2.7
+      },
+      {
+        "file": "dev-tablet_lod2.glb",
+        "bytes": 236152,
+        "triangles": 8176,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "dev-thermal-paste",
+    "source": "assets-src/blender/products/dev-thermal-paste.glb",
+    "sourceBytes": 109436,
+    "levels": [
+      {
+        "file": "dev-thermal-paste.glb",
+        "bytes": 27504,
+        "triangles": 3226,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-thermal-paste_lod1.glb",
+        "bytes": 19036,
+        "triangles": 1774,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-thermal-paste_lod2.glb",
+        "bytes": 13128,
+        "triangles": 970,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "dev-ups",
+    "source": "assets-src/blender/products/dev-ups.glb",
+    "sourceBytes": 2428316,
+    "levels": [
+      {
+        "file": "dev-ups.glb",
+        "bytes": 276220,
+        "triangles": 9891,
+        "textureMB": 32
+      },
+      {
+        "file": "dev-ups_lod1.glb",
+        "bytes": 222588,
+        "triangles": 6991,
+        "textureMB": 16
+      },
+      {
+        "file": "dev-ups_lod2.glb",
+        "bytes": 147420,
+        "triangles": 6893,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "dev-usb-flash",
+    "source": "assets-src/blender/products/dev-usb-flash.glb",
+    "sourceBytes": 3128604,
+    "levels": [
+      {
+        "file": "dev-usb-flash.glb",
+        "bytes": 432220,
+        "triangles": 60338,
+        "textureMB": 0.3
+      },
+      {
+        "file": "dev-usb-flash_lod1.glb",
+        "bytes": 304816,
+        "triangles": 29996,
+        "textureMB": 0.3
+      },
+      {
+        "file": "dev-usb-flash_lod2.glb",
+        "bytes": 120848,
+        "triangles": 7996,
+        "textureMB": 0.1
+      }
+    ]
+  },
+  {
+    "id": "dev-usb-hub",
+    "source": "assets-src/blender/products/dev-usb-hub.glb",
+    "sourceBytes": 7959132,
+    "levels": [
+      {
+        "file": "dev-usb-hub.glb",
+        "bytes": 122552,
+        "triangles": 1534,
+        "textureMB": 32
+      },
+      {
+        "file": "dev-usb-hub_lod1.glb",
+        "bytes": 82228,
+        "triangles": 1342,
+        "textureMB": 16
+      },
+      {
+        "file": "dev-usb-hub_lod2.glb",
+        "bytes": 44940,
+        "triangles": 1306,
+        "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "dev-webcam",
+    "source": "assets-src/blender/products/dev-webcam.glb",
+    "sourceBytes": 5954612,
+    "levels": [
+      {
+        "file": "dev-webcam.glb",
+        "bytes": 394284,
+        "triangles": 59616,
+        "textureMB": 0.3
+      },
+      {
+        "file": "dev-webcam_lod1.glb",
+        "bytes": 240936,
+        "triangles": 30892,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-webcam_lod2.glb",
+        "bytes": 104424,
+        "triangles": 9336,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "dev-wifi-adapter",
+    "source": "assets-src/blender/products/dev-wifi-adapter.glb",
+    "sourceBytes": 287152,
+    "levels": [
+      {
+        "file": "dev-wifi-adapter.glb",
+        "bytes": 57036,
+        "triangles": 3098,
+        "textureMB": 0.7
+      },
+      {
+        "file": "dev-wifi-adapter_lod1.glb",
+        "bytes": 48908,
+        "triangles": 1988,
+        "textureMB": 0.7
+      },
+      {
+        "file": "dev-wifi-adapter_lod2.glb",
+        "bytes": 47532,
+        "triangles": 1840,
+        "textureMB": 0.7
+      }
+    ]
+  },
+  {
     "id": "gpu-asus-dual-5060ti-16",
     "source": "assets-src/blender/products/gpu-asus-dual-5060ti-16.glb",
     "sourceBytes": 3094812,
@@ -1471,6 +2196,156 @@
         "bytes": 61644,
         "triangles": 194,
         "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "td-board",
+    "source": "assets-src/blender/products/td-board.glb",
+    "sourceBytes": 23519932,
+    "levels": [
+      {
+        "file": "td-board.glb",
+        "bytes": 1782940,
+        "triangles": 10602,
+        "textureMB": 26.7
+      },
+      {
+        "file": "td-board_lod1.glb",
+        "bytes": 1013620,
+        "triangles": 6450,
+        "textureMB": 14.7
+      },
+      {
+        "file": "td-board_lod2.glb",
+        "bytes": 397480,
+        "triangles": 6302,
+        "textureMB": 3.7
+      }
+    ]
+  },
+  {
+    "id": "td-components",
+    "source": "assets-src/blender/products/td-components.glb",
+    "sourceBytes": 1375052,
+    "levels": [
+      {
+        "file": "td-components.glb",
+        "bytes": 326244,
+        "triangles": 27925,
+        "textureMB": 26.7
+      },
+      {
+        "file": "td-components_lod1.glb",
+        "bytes": 297688,
+        "triangles": 24841,
+        "textureMB": 10.7
+      },
+      {
+        "file": "td-components_lod2.glb",
+        "bytes": 153648,
+        "triangles": 8225,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "td-laptop-battery",
+    "source": "assets-src/blender/products/td-laptop-battery.glb",
+    "sourceBytes": 1441324,
+    "levels": [
+      {
+        "file": "td-laptop-battery.glb",
+        "bytes": 275928,
+        "triangles": 28743,
+        "textureMB": 26.7
+      },
+      {
+        "file": "td-laptop-battery_lod1.glb",
+        "bytes": 198396,
+        "triangles": 15807,
+        "textureMB": 10.7
+      },
+      {
+        "file": "td-laptop-battery_lod2.glb",
+        "bytes": 107136,
+        "triangles": 7207,
+        "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "td-laptop-fan",
+    "source": "assets-src/blender/products/td-laptop-fan.glb",
+    "sourceBytes": 18408908,
+    "levels": [
+      {
+        "file": "td-laptop-fan.glb",
+        "bytes": 1430008,
+        "triangles": 63540,
+        "textureMB": 29.3
+      },
+      {
+        "file": "td-laptop-fan_lod1.glb",
+        "bytes": 748580,
+        "triangles": 30238,
+        "textureMB": 13.3
+      },
+      {
+        "file": "td-laptop-fan_lod2.glb",
+        "bytes": 239032,
+        "triangles": 7997,
+        "textureMB": 3
+      }
+    ]
+  },
+  {
+    "id": "td-phone",
+    "source": "assets-src/blender/products/td-phone.glb",
+    "sourceBytes": 31366160,
+    "levels": [
+      {
+        "file": "td-phone.glb",
+        "bytes": 3571672,
+        "triangles": 208114,
+        "textureMB": 31.4
+      },
+      {
+        "file": "td-phone_lod1.glb",
+        "bytes": 1776648,
+        "triangles": 74981,
+        "textureMB": 15.4
+      },
+      {
+        "file": "td-phone_lod2.glb",
+        "bytes": 628284,
+        "triangles": 24167,
+        "textureMB": 3.4
+      }
+    ]
+  },
+  {
+    "id": "td-sodimm",
+    "source": "assets-src/blender/products/td-sodimm.glb",
+    "sourceBytes": 6917060,
+    "levels": [
+      {
+        "file": "td-sodimm.glb",
+        "bytes": 1645712,
+        "triangles": 2533,
+        "textureMB": 21.3
+      },
+      {
+        "file": "td-sodimm_lod1.glb",
+        "bytes": 737032,
+        "triangles": 1607,
+        "textureMB": 9.3
+      },
+      {
+        "file": "td-sodimm_lod2.glb",
+        "bytes": 193764,
+        "triangles": 1527,
+        "textureMB": 2.3
       }
     ]
   }

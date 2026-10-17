@@ -1,0 +1,36 @@
+{
+  "name": "td-laptop-battery",
+  "description": "Flat laptop battery pack, lying label up.",
+  "input": "assets-src/sketchfab/devices/laptop_battery.glb",
+  "output": "assets-src/blender/products/td-laptop-battery.glb",
+  "rotate": [
+    104.93,
+    149.74,
+    5.18
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/td-laptop-battery.jpg"
+  },
+  "realSize": [
+    0.23,
+    0,
+    0
+  ]
+}

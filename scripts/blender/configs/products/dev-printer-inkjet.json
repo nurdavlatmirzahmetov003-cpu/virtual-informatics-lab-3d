@@ -1,0 +1,31 @@
+{
+  "name": "dev-printer-inkjet",
+  "description": "Lab device model (printer_inkjet), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/printer_inkjet.glb",
+  "output": "assets-src/blender/products/dev-printer-inkjet.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "groups": "^CANON-Logo"
+      }
+    ],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-printer-inkjet.jpg"
+  }
+}

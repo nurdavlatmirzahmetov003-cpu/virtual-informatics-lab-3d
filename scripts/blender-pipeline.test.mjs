@@ -70,11 +70,18 @@ test('every committed pipeline config is valid (and its output, when built, matc
   }
 });
 
-test('every catalog product with its own model has a pipeline config (and vice versa)', () => {
+/** Every source file under src/ (for the lab device and teardown model ids it names). */
+function sourceFiles(dir) {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? sourceFiles(path.join(dir, e.name)) : /\.(ts|tsx)$/.test(e.name) ? [path.join(dir, e.name)] : []));
+}
+
+test('every product model the site uses has a pipeline config (and vice versa)', () => {
   const dir = path.join(import.meta.dirname, 'blender', 'configs', 'products');
   const configs = new Set(readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)));
   const catalog = readFileSync(path.join(import.meta.dirname, '..', 'src', 'data', 'hardware', 'catalog.ts'), 'utf8');
   const own = new Set([...catalog.matchAll(/P\('([a-z0-9-]+)'\)/g)].map((m) => m[1]));
+  // lab devices (`dev-*`) and teardown parts (`td-*`), 2026-10
+  for (const f of sourceFiles(path.join(import.meta.dirname, '..', 'src'))) for (const m of readFileSync(f, 'utf8').matchAll(/['"]((?:dev|td)-[a-z0-9-]+)['"]/g)) own.add(m[1]);
   assert.deepEqual([...own].sort(), [...configs].sort());
 });
 

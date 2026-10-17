@@ -143,6 +143,8 @@ export function drawWallpaper(c: HTMLCanvasElement) {
   const ctx = c.getContext('2d');
   if (!ctx) return;
   const { width: w, height: h } = c;
+  // size unit: the height on landscape screens, the width on portrait ones (phones, tablets)
+  const u = Math.min(h, w * 0.56);
   const bg = ctx.createLinearGradient(0, 0, w, h);
   bg.addColorStop(0, '#05070d');
   bg.addColorStop(0.55, '#0a1424');
@@ -170,7 +172,7 @@ export function drawWallpaper(c: HTMLCanvasElement) {
   ctx.restore();
 
   // logo mark
-  const s = h * 0.09;
+  const s = u * 0.09;
   ctx.save();
   ctx.translate(w / 2, h * 0.42);
   ctx.strokeStyle = '#38d6f5';
@@ -189,25 +191,25 @@ export function drawWallpaper(c: HTMLCanvasElement) {
 
   ctx.fillStyle = 'rgba(238,241,246,0.92)';
   ctx.textAlign = 'center';
-  ctx.font = `600 ${Math.round(h * 0.045)}px "Unbounded Variable", "Segoe UI", sans-serif`;
+  ctx.font = `600 ${Math.round(u * 0.045)}px "Unbounded Variable", "Segoe UI", sans-serif`;
   ctx.fillText('VIRTUAL INFORMATICS LAB', w / 2, h * 0.6);
   ctx.fillStyle = 'rgba(163,171,187,0.85)';
-  ctx.font = `500 ${Math.round(h * 0.028)}px "Manrope Variable", "Segoe UI", sans-serif`;
+  ctx.font = `500 ${Math.round(u * 0.028)}px "Manrope Variable", "Segoe UI", sans-serif`;
   ctx.fillText('Виртуалды информатика зертханасы', w / 2, h * 0.655);
 
   // taskbar
   ctx.fillStyle = 'rgba(12,15,22,0.85)';
-  ctx.fillRect(0, h - h * 0.055, w, h * 0.055);
+  ctx.fillRect(0, h - u * 0.055, w, u * 0.055);
   for (let i = 0; i < 6; i++) {
     ctx.fillStyle = i === 0 ? 'rgba(56,214,245,0.9)' : 'rgba(200,210,225,0.35)';
     ctx.beginPath();
-    ctx.roundRect(w / 2 - h * 0.12 + i * h * 0.045, h - h * 0.042, h * 0.03, h * 0.03, h * 0.006);
+    ctx.roundRect(w / 2 - u * 0.12 + i * u * 0.045, h - u * 0.042, u * 0.03, u * 0.03, u * 0.006);
     ctx.fill();
   }
   ctx.fillStyle = 'rgba(220,226,235,0.7)';
   ctx.textAlign = 'right';
-  ctx.font = `600 ${Math.round(h * 0.022)}px "Manrope Variable", sans-serif`;
-  ctx.fillText('09:41', w - h * 0.03, h - h * 0.02);
+  ctx.font = `600 ${Math.round(u * 0.022)}px "Manrope Variable", sans-serif`;
+  ctx.fillText('09:41', w - u * 0.03, h - u * 0.02);
 }
 
 /** PCB: solder mask with faint copper traces and silkscreen outlines (sRGB colour map). */

@@ -1,0 +1,289 @@
+{
+  "name": "td-phone",
+  "description": "6.1-inch phone teardown (iPhone 12 model, logos removed), lying face up (+Z screen, +Y top edge): named internal parts.",
+  "input": "assets-src/sketchfab/devices/phone_teardown.glb",
+  "output": "assets-src/blender/products/td-phone.glb",
+  "rotate": [
+    [
+      "Z",
+      -90
+    ],
+    [
+      "X",
+      -90
+    ]
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 0,
+    "remove": [
+      {
+        "materials": "^mat_metal$",
+        "center": {
+          "min": [
+            -0.004,
+            0.064,
+            -0.0045
+          ],
+          "max": [
+            0.004,
+            0.087,
+            -0.0035
+          ]
+        }
+      }
+    ],
+    "paint": [
+      {
+        "image": "Image_5",
+        "rects": [
+          [
+            0.87,
+            0.205,
+            0.91,
+            0.275
+          ]
+        ]
+      },
+      {
+        "image": "Image_5",
+        "rects": [
+          [
+            0.615,
+            0.475,
+            0.695,
+            0.565
+          ]
+        ]
+      },
+      {
+        "image": "Image_10",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#0b1220"
+      }
+    ],
+    "separateLoose": true
+  },
+  "materials": {
+    "rename": {
+      "^mat_screen$": "Screen"
+    },
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "display",
+      "rules": [
+        {
+          "center": {
+            "min": [
+              -1,
+              -1,
+              0.0024
+            ],
+            "max": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sim_tray",
+      "rules": [
+        {
+          "center": {
+            "min": [
+              -1,
+              0.026,
+              -1
+            ],
+            "max": [
+              -0.0333,
+              0.044,
+              1
+            ]
+          },
+          "size": {
+            "max": [
+              1,
+              0.02,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "cameras",
+      "rules": [
+        {
+          "center": {
+            "min": [
+              0.014,
+              0.106,
+              -0.0062
+            ],
+            "max": [
+              0.034,
+              0.146,
+              0.0024
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "battery",
+      "rules": [
+        {
+          "center": {
+            "min": [
+              -0.0135,
+              0.021,
+              -0.0031
+            ],
+            "max": [
+              0.032,
+              0.107,
+              0.0024
+            ]
+          },
+          "size": {
+            "max": [
+              0.046,
+              0.088,
+              0.01
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vibration",
+      "rules": [
+        {
+          "center": {
+            "min": [
+              -0.031,
+              0.009,
+              -0.0031
+            ],
+            "max": [
+              -0.007,
+              0.022,
+              0.0024
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "speaker",
+      "rules": [
+        {
+          "center": {
+            "min": [
+              0.009,
+              0.005,
+              -0.0031
+            ],
+            "max": [
+              0.03,
+              0.022,
+              0.0024
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "usb_port",
+      "rules": [
+        {
+          "center": {
+            "min": [
+              -0.006,
+              0.0,
+              -0.0031
+            ],
+            "max": [
+              0.006,
+              0.009,
+              0.0024
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mainboard",
+      "rules": [
+        {
+          "center": {
+            "min": [
+              -0.032,
+              0.1,
+              -0.0031
+            ],
+            "max": [
+              0.015,
+              0.146,
+              0.0024
+            ]
+          },
+          "size": {
+            "max": [
+              0.05,
+              0.05,
+              0.01
+            ]
+          }
+        },
+        {
+          "center": {
+            "min": [
+              -0.032,
+              0.046,
+              -0.0031
+            ],
+            "max": [
+              -0.013,
+              0.1,
+              0.0024
+            ]
+          },
+          "size": {
+            "max": [
+              0.05,
+              0.06,
+              0.01
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "frame",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/td-phone.jpg"
+  },
+  "realSize": [
+    0.0716,
+    0.1467,
+    0
+  ]
+}

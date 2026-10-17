@@ -20,6 +20,7 @@
  * Requests from a blocked IP get 403 before anything else.
  */
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import type { Duplex } from 'node:stream';
 import type { Db } from './db';
 import type { ServerConfig } from './env';
 import { HttpError, clientIp, cookie, json, parseCookies, readJson } from './http';
@@ -28,12 +29,14 @@ import { dummyHash, verifyPassword } from './auth/password';
 import { LoginLimiter } from './auth/rateLimit';
 import { SESSION_COOKIE, createSession, destroySession, findSession, type SessionRow } from './auth/sessions';
 import { normalizeLogin, publicUser, userById, userByLogin, type Role, type UserRow } from './users';
-import { loadProgress, saveProgress } from './progress';
+import { loadProgress, saveProgress, storedAttemptIds } from './progress';
 import { classroomRoutes } from './classroomRoutes';
 import { adminRoutes } from './adminRoutes';
 import { gameRoutes } from './gameRoutes';
 import { LiveHub } from './live/hub';
 import { liveRoutes, liveUpgrade } from './live/routes';
+import { EventHub } from './live/events';
+import { acceptUpgrade } from './live/ws';
 import { checkResetToken, listIpBlocks, redeemResetToken } from './admin';
 import { getSettings, publicSettings } from './settings';
 import { allOverrides, contentVersion } from './content';
@@ -115,6 +118,8 @@ export function createApp({
   const game = gameRoutes({ ...deps, settings });
   const hub = new LiveHub({ db, now, anonymous: () => settings().leaderboardAnonymous });
   const live = liveRoutes({ ...deps, hub });
+  // V2-12: teachers see their students' attempts and presence as they happen
+  const events = new EventHub({ db });
   const adminPanel = adminRoutes({ ...deps, config, limiter, settings, aiStatus, startedAt, refresh, clearCookie });
 
   async function login(ctx: Ctx) {
@@ -193,7 +198,16 @@ export function createApp({
       if (method === 'PUT') {
         checkCsrf(ctx);
         const body = await readJson<{ snapshot?: unknown }>(ctx.req, 1024 * 1024);
-        return json(ctx.res, 200, { snapshot: saveProgress(db, user.id, user.created_at, body.snapshot) });
+        const before = storedAttemptIds(db, user.id);
+        const snapshot = saveProgress(db, user.id, user.created_at, body.snapshot);
+        // newly stored attempts go to the student's teachers at once (the newest few)
+        const added = snapshot.attempts.filter((a) => !before.has(a.id)).slice(-10);
+        if (added.length) {
+          const classIds = events.classesOf(user.id);
+          for (const a of added)
+            events.publish({ t: 'attempt', classIds, studentId: user.id, name: user.display_name, exerciseId: a.exerciseId, percent: a.percent, completed: a.status === 'completed', at: a.at });
+        }
+        return json(ctx.res, 200, { snapshot });
       }
     }
 
@@ -210,13 +224,22 @@ export function createApp({
     const u = session ? userById(db, session.user_id) : undefined;
     return u && !u.disabled ? u : null;
   };
-  /** WebSocket upgrades (live games): attach with `server.on('upgrade', app.upgrade)`. */
-  const upgrade = liveUpgrade({
-    hub,
-    userOf,
-    originOk: (req) => !req.headers.origin || config.allowedOrigins.includes(req.headers.origin),
-    blocked: (req) => isBlocked(clientIp(req, config.trustProxy)),
-  });
+  const originOk = (req: IncomingMessage) => !req.headers.origin || config.allowedOrigins.includes(req.headers.origin);
+  const blocked = (req: IncomingMessage) => isBlocked(clientIp(req, config.trustProxy));
+  const liveGames = liveUpgrade({ hub, userOf, originOk, blocked });
+  /**
+   * WebSocket upgrades — live games (/api/live/ws) and class events
+   * (/api/events/ws): attach with `server.on('upgrade', app.upgrade)`.
+   */
+  const upgrade = (req: IncomingMessage, socket: Duplex) => {
+    if (new URL(req.url ?? '/', 'http://local').pathname !== '/api/events/ws') return liveGames(req, socket);
+    const refuse = (status: string) => socket.end(`HTTP/1.1 ${status}\r\nConnection: close\r\n\r\n`);
+    if (blocked(req) || !originOk(req)) return refuse('403 Forbidden');
+    const user = userOf(req);
+    if (!user) return refuse('401 Unauthorized');
+    const conn = acceptUpgrade(req, socket);
+    if (conn) events.connect(user, conn);
+  };
 
   const handle = async function handle(req: IncomingMessage, res: ServerResponse) {
     try {
@@ -243,5 +266,5 @@ export function createApp({
       return json(res, 500, { error: 'server' });
     }
   };
-  return Object.assign(handle, { upgrade, hub });
+  return Object.assign(handle, { upgrade, hub, events });
 }

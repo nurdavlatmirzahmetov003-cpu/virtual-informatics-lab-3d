@@ -1,10 +1,8 @@
 /**
- * Small procedural building blocks shared by the teardown models
- * ([PLACEHOLDER] until licensed models are split in Blender): circuit cards
- * with chips, camera modules, glossy screens. Real size, base on y = 0.
+ * Small procedural building blocks the teardowns still use next to their
+ * model parts: circuit cards with chips (Wi-Fi card, power board PCB) and a
+ * tiny front-camera module. Real size, base on y = 0.
  */
-import { RoundedBox } from '@react-three/drei';
-import type { Texture } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
 import { pcbTexture } from '@/lib/three/proceduralTextures';
 import type { Vec3 } from '@/lib/teardown/timeline';
@@ -28,16 +26,6 @@ export function Card({ size, chips, color = '#14532d', seed }: { size: Vec3; chi
   );
 }
 
-/** A metal shield can over chips (phones, tablets). */
-export function Shield({ size, at }: { size: Vec3; at: Vec3 }) {
-  return (
-    <mesh position={[...at]}>
-      <boxGeometry args={[...size]} />
-      <meshStandardMaterial color="#c3c8cf" metalness={0.9} roughness={0.28} />
-    </mesh>
-  );
-}
-
 /** A camera module: housing with a glass lens on top. */
 export function CameraModule({ r = 0.006, h = 0.005 }: { r?: number; h?: number }) {
   return (
@@ -58,36 +46,3 @@ export function CameraModule({ r = 0.006, h = 0.005 }: { r?: number; h?: number 
   );
 }
 
-/** A flat glossy screen lying face up: dark glass slab with the wallpaper on top. */
-export function FlatScreen({ w, d, h, texture, bezel = 0.003 }: { w: number; d: number; h: number; texture: Texture; bezel?: number }) {
-  return (
-    <group>
-      <RoundedBox args={[w, h, d]} radius={Math.min(0.004, h / 2.2)} smoothness={3} position-y={h / 2} castShadow>
-        <meshStandardMaterial color="#0d0f13" metalness={0.4} roughness={0.25} />
-      </RoundedBox>
-      <mesh position-y={h + 0.0002} rotation-x={-Math.PI / 2}>
-        <planeGeometry args={[w - bezel * 2, d - bezel * 2]} />
-        <meshStandardMaterial color="#000" emissive="#ffffff" emissiveMap={texture} emissiveIntensity={0.9} roughness={0.12} />
-      </mesh>
-    </group>
-  );
-}
-
-/** Lithium battery pouch with a printed label and its connector flex. */
-export function BatteryPack({ w, d, h }: { w: number; d: number; h: number }) {
-  return (
-    <group>
-      <RoundedBox args={[w, h, d]} radius={Math.min(0.002, h / 2.2)} smoothness={2} position-y={h / 2} castShadow>
-        <meshStandardMaterial color="#2b2f37" roughness={0.6} />
-      </RoundedBox>
-      <mesh position-y={h + 0.0001} rotation-x={-Math.PI / 2}>
-        <planeGeometry args={[w * 0.82, d * 0.7]} />
-        <meshStandardMaterial color="#3a404c" roughness={0.45} metalness={0.2} />
-      </mesh>
-      <mesh position={[w * 0.3, h + 0.0003, -d / 2 + 0.004]}>
-        <boxGeometry args={[Math.min(0.012, w * 0.2), 0.0006, 0.008]} />
-        <meshStandardMaterial color="#d4a017" metalness={0.6} roughness={0.35} />
-      </mesh>
-    </group>
-  );
-}

@@ -1,0 +1,46 @@
+{
+  "name": "dev-gamepad",
+  "description": "Lab device model (gamepad), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/gamepad.glb",
+  "output": "assets-src/blender/products/dev-gamepad.glb",
+  "rotate": [
+    [
+      "X",
+      -90
+    ]
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.615,
+            0.915,
+            0.715,
+            1.0
+          ]
+        ],
+        "color": "#2b2b2b"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-gamepad.jpg"
+  },
+  "realSize": 0.153
+}

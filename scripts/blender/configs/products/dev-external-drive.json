@@ -1,0 +1,46 @@
+{
+  "name": "dev-external-drive",
+  "description": "Lab device model (external_drive), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/external_drive.glb",
+  "output": "assets-src/blender/products/dev-external-drive.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.495,
+            0.06,
+            0.585,
+            0.145
+          ],
+          [
+            0.515,
+            0.305,
+            0.575,
+            0.515
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-external-drive.jpg"
+  },
+  "realSize": 0.125
+}

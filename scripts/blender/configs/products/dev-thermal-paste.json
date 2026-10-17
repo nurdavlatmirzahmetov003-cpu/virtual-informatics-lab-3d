@@ -1,0 +1,37 @@
+{
+  "name": "dev-thermal-paste",
+  "description": "Lab device model (thermal_paste), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/thermal_paste.glb",
+  "output": "assets-src/blender/products/dev-thermal-paste.glb",
+  "rotate": [
+    [
+      "Y",
+      90
+    ]
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-thermal-paste.jpg"
+  },
+  "realSize": [
+    0.075,
+    0,
+    0
+  ]
+}

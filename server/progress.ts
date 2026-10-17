@@ -42,6 +42,9 @@ export function loadProgress(db: Db, userId: string, createdAt: number): Progres
   return snapshot;
 }
 
+/** Ids of the attempts already stored for a student (to tell which ones a sync adds). */
+export const storedAttemptIds = (db: Db, userId: string) => new Set((db.prepare('SELECT id FROM attempts WHERE user_id = ?').all(userId) as Array<{ id: string }>).map((r) => r.id));
+
 /** Stores what the browser sent (validated, at most 1000 attempts) and returns the merged snapshot. */
 export function saveProgress(db: Db, userId: string, createdAt: number, incoming: unknown): ProgressSnapshot {
   const s = incoming as Partial<ProgressSnapshot> | null;

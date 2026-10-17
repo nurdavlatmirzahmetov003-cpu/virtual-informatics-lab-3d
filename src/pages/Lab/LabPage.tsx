@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Keyboard, LayoutGrid, List, Minus, Plus, RotateC
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
 import { ButtonLink } from '@/components/ui/Button';
 import { zoneById, type LabZoneId } from '@/data/lab/zones';
+import { POSTERS } from '@/data/lab/classroom';
 import { keyAction, zoneNumber } from '@/lib/lab/navigation';
 import type { TranslationKey } from '@/lib/i18n';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -12,6 +13,8 @@ import { useT } from '@/hooks/useT';
 import { useLabStore } from '@/store/labStore';
 import { LabMinimap } from './LabMinimap';
 import { DevicePanel } from './DevicePanel';
+import { PosterPanel } from './PosterPanel';
+import { TeacherPanel } from './TeacherPanel';
 import { DeviceCatalog } from './DeviceCatalog';
 import { deviceById } from '@/data/devices/devices';
 import { isTeardownId } from '@/data/teardown/teardowns';
@@ -148,7 +151,7 @@ function Status() {
   );
 }
 
-/** `/lab?device=<id>` (links from the task list) opens that device; `&teardown=<id>` its teardown. */
+/** `/lab?device=<id>` (links from the task list) opens that device; `&teardown=<id>` its teardown; `poster` / `teacher` the classroom panels. */
 function useDeviceParam() {
   const [params] = useSearchParams();
   const requested = params.get('device');
@@ -159,6 +162,16 @@ function useDeviceParam() {
   useEffect(() => {
     if (isTeardownId(teardown)) useLabStore.getState().openTeardown(teardown);
   }, [teardown]);
+  // `&poster=<id>` opens a classroom poster, `&teacher=1` the robot teacher
+  const poster = params.get('poster');
+  const teacher = params.get('teacher');
+  useEffect(() => {
+    const p = POSTERS.find((x) => x.id === poster);
+    if (p) useLabStore.getState().openPoster(p.id);
+  }, [poster]);
+  useEffect(() => {
+    if (teacher) useLabStore.getState().openTeacher();
+  }, [teacher]);
 }
 
 export default function LabPage() {
@@ -168,14 +181,16 @@ export default function LabPage() {
   useDeviceParam();
   const device = useLabStore((s) => s.device);
   const teardown = useLabStore((s) => s.teardown);
+  const teacher = useLabStore((s) => s.teacher);
+  const poster = useLabStore((s) => s.poster);
   const closeTeardown = useLabStore((s) => s.closeTeardown);
   const [catalog, setCatalog] = useState(false);
   const phone = useMediaQuery('(max-width: 760px)');
   // leaving the page resets the tour. Done here, not inside the canvas: the
   // canvas root unmounts late and would close a device opened by ?device=.
   useEffect(() => () => useLabStore.getState().focusZone(null), []);
-  // a device panel replaces the catalog; closing the device returns to it
-  const side = device ? <DevicePanel /> : catalog ? <DeviceCatalog onClose={() => setCatalog(false)} /> : null;
+  // a device, the robot teacher or a poster replaces the catalog; closing it returns to it
+  const side = device ? <DevicePanel /> : teacher ? <TeacherPanel /> : poster ? <PosterPanel /> : catalog ? <DeviceCatalog onClose={() => setCatalog(false)} /> : null;
   return (
     <div className={styles.stage}>
       {/* the scene sleeps while a full-screen panel covers it (phones, teardown view) */}

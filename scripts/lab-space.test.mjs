@@ -97,3 +97,48 @@ test('no zone camera stands on another zone (the showcase shot once landed insid
     }
   }
 });
+
+test('classroom: posters on the walls, clear of each other and of the windows; robot in the open floor', async () => {
+  const { POSTERS, POSTER_IDS, WINDOWS, ROBOT, posterShot, robotShot } = await import('../src/data/lab/classroom.ts');
+  assert.deepEqual(POSTERS.map((p) => p.id).sort(), [...POSTER_IDS].sort());
+  const along = (p) => (p.wall === 'back' ? p.center[0] : p.center[2]);
+  for (const p of POSTERS) {
+    const onWall = p.wall === 'back' ? Math.abs(p.center[2] - LAB_HALL.minZ) < 0.05 : Math.abs(Math.abs(p.center[0]) - LAB_HALL.maxX) < 0.05;
+    assert.ok(onWall, `${p.id} hangs on its wall`);
+    assert.ok(p.center[1] - p.size[1] / 2 > 1.0 && p.center[1] + p.size[1] / 2 < 3.2, `${p.id} between the tables and the light band`);
+    for (const q of POSTERS) if (q !== p && q.wall === p.wall) assert.ok(Math.abs(along(p) - along(q)) > (p.size[0] + q.size[0]) / 2, `${p.id} / ${q.id} overlap`);
+    for (const w of WINDOWS) if (w.wall === p.wall) assert.ok(Math.abs(along(p) - w.z) > (p.size[0] + w.w) / 2, `${p.id} covers a window`);
+    // the close-up stands in the hall, in front of the poster
+    const s = posterShot(p);
+    assert.ok(inside([s.position[0], s.position[2]], 0.5), `${p.id} shot inside the hall`);
+  }
+  // the robot stands clear of every zone platform
+  for (const z of LAB_ZONES) {
+    const d = Math.hypot(ROBOT.position[0] - z.center[0], ROBOT.position[2] - z.center[1]);
+    assert.ok(d > Math.max(...z.size) / 2 + 0.3, `robot clear of ${z.id}`);
+  }
+  assert.ok(inside([robotShot().position[0], robotShot().position[2]], 0.5));
+});
+
+test('robot teacher check: start, a zone to-do list, next task, all done', async () => {
+  const { teacherCheck, deviceExerciseId } = await import('../src/lib/lab/teacher.ts');
+  const { DEVICES } = await import('../src/data/devices/devices.ts');
+  const { TASKS } = await import('../src/services/progress/catalog.ts');
+  const fresh = teacherCheck({}, 'network');
+  assert.equal(fresh.mood, 'start');
+  assert.equal(fresh.completed, 0);
+  assert.ok(fresh.next, 'something to start with');
+  assert.ok(fresh.zoneTodo.length > 0 && fresh.zoneTodo.every((id) => DEVICES.find((d) => d.id === id).zone === 'network'));
+  assert.equal(fresh.teardownsTodo.length, 6);
+  const done = (id) => ({ attempts: 1, best: { percent: 100, score: 1, maxScore: 1, at: 1 }, lastAt: 1, completedAt: 1 });
+  // the network zone's device tests passed: its to-do list empties
+  const zone = Object.fromEntries(DEVICES.filter((d) => d.zone === 'network').map(deviceExerciseId).filter(Boolean).map((id) => [id, done(id)]));
+  assert.deepEqual(teacherCheck(zone, 'network').zoneTodo, []);
+  assert.equal(teacherCheck(zone, null).zoneTodo.length, 0, 'no zone in view, no zone list');
+  const all = Object.fromEntries(TASKS.map((t) => [t.id, done(t.id)]));
+  const finished = teacherCheck(all, 'mobile');
+  assert.equal(finished.mood, 'done');
+  assert.equal(finished.next, null);
+  assert.equal(finished.percent, 100);
+  assert.deepEqual(finished.teardownsTodo, []);
+});

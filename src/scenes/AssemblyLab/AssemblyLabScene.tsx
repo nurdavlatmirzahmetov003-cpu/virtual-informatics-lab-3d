@@ -17,7 +17,7 @@ import { HardwarePart } from '@/scenes/DeskScene/pc/HardwareParts';
 import { PCCase } from '@/scenes/DeskScene/pc/PCCase';
 import type { PartId } from '@/scenes/DeskScene/pc/parts';
 import { pcRig } from '@/scenes/DeskScene/pc/pcRig';
-import { Hdd } from '@/scenes/HardwareExplorer/placeholders';
+import { Product } from '@/scenes/LabSpace/zones/common';
 import { STUDIO_HDRI } from '@/scenes/SetupStudio/setupShared';
 import { Draggable } from './Draggable';
 import { SETTLE_MS, dragState } from './dragState';
@@ -164,7 +164,7 @@ export default function AssemblyLabScene() {
     psu: <HardwarePart id="psu" fallback={null} product={build.psu} />,
     gpu: <HardwarePart id="gpu" fallback={null} product={build.gpu} />,
     fans: <HardwarePart id="fans" fallback={null} />,
-    storage: <Hdd />,
+    storage: <Product product="dev-hdd" />,
     cables: <CableBundle />,
   };
 
@@ -222,7 +222,7 @@ function InstalledDrive() {
   });
   return (
     <group ref={g} position={CASE.clone().add(DRIVE_BAY)} visible={false}>
-      <Hdd />
+      <Product product="dev-hdd" />
     </group>
   );
 }

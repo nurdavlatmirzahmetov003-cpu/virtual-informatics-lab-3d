@@ -14,6 +14,7 @@ import type { TabProps } from './ClassPage';
 import { fmtDateTime, fmtSeconds } from './format';
 import { Modal, StatusChip } from './parts';
 import { useErrorText, useExerciseTitle, useNow } from './hooks';
+import { OnlineDot } from './LivePanel';
 import styles from './Classroom.module.css';
 import auth from '../Auth/Auth.module.css';
 
@@ -185,7 +186,10 @@ export function JournalTab({ detail, reload, go }: TabProps) {
               return (
                 <tr key={s.id}>
                   <th scope="row" className={styles.stickyCol}>
-                    {s.displayName}
+                    <span className={styles.nameRow}>
+                      {s.displayName}
+                      <OnlineDot classId={detail.class.id} studentId={s.id} />
+                    </span>
                     <small>{s.login}</small>
                   </th>
                   {detail.assignments.map((a) => {

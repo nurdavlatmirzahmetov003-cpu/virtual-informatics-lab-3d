@@ -1,0 +1,83 @@
+{
+  "name": "dev-all-in-one",
+  "description": "24-inch all-in-one with keyboard and mouse (logos removed): parts for the exhibit and the teardown.",
+  "input": "assets-src/sketchfab/devices/all_in_one.glb",
+  "output": "assets-src/blender/products/dev-all-in-one.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.1,
+            0.1,
+            0.76,
+            0.39
+          ],
+          [
+            0.37,
+            0.63,
+            0.63,
+            0.7
+          ]
+        ],
+        "color": "#ffffff"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "stand",
+      "rules": [
+        {
+          "groups": "^Stand"
+        }
+      ]
+    },
+    {
+      "id": "keyboard",
+      "rules": [
+        {
+          "groups": "^Keyboard"
+        }
+      ]
+    },
+    {
+      "id": "mouse",
+      "rules": [
+        {
+          "groups": "^Mouse"
+        }
+      ]
+    },
+    {
+      "id": "back_cover",
+      "rules": [
+        {
+          "objects": "^Body_PCBody"
+        }
+      ]
+    },
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-all-in-one.jpg"
+  },
+  "realSize": [
+    0.547,
+    0,
+    0
+  ]
+}

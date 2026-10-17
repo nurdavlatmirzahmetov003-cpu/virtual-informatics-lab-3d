@@ -1,0 +1,63 @@
+{
+  "name": "dev-wifi-adapter",
+  "description": "Lab device model (wifi_adapter), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/wifi_adapter.glb",
+  "output": "assets-src/blender/products/dev-wifi-adapter.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_1",
+        "rects": [
+          [
+            0.63,
+            0.495,
+            0.87,
+            0.61
+          ]
+        ],
+        "color": "#ffffff"
+      },
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.0,
+            0.0,
+            0.64,
+            0.36
+          ]
+        ],
+        "color": "#f4f4f4"
+      },
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.03,
+            0.83,
+            0.36,
+            0.98
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-wifi-adapter.jpg"
+  }
+}

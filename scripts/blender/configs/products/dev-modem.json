@@ -1,0 +1,39 @@
+{
+  "name": "dev-modem",
+  "description": "Lab device model (modem), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/modem.glb",
+  "output": "assets-src/blender/products/dev-modem.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_3",
+        "rects": [
+          [
+            0.765,
+            0.2,
+            0.805,
+            0.33
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-modem.jpg"
+  }
+}

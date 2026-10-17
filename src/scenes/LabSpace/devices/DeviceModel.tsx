@@ -2,21 +2,17 @@
  * One 3D model per lab device (V2-4a), shared by the exhibit tables and the
  * 360° viewer. `display` adds the exhibit pose: small parts are enlarged and
  * flat ones lean back on a clear stand so they read from the aisle. Product
- * models come from the catalog (real size, V2-2a/b); devices without a
- * licensed model are procedural [PLACEHOLDER]s.
+ * models are licensed downloads at real size (V2-2a/b catalog, 2026-10 lab
+ * devices: scripts/blender/make-device-configs.py); the few devices without
+ * a suitable licensed model stay procedural [PLACEHOLDER]s.
  */
 import type { ReactNode } from 'react';
-import type { Texture } from 'three';
-import { Hdd, Microphone, NetworkCard, Printer, Webcam } from '@/scenes/HardwareExplorer/placeholders';
 import { HardwareFans } from '@/scenes/DeskScene/pc/HardwareParts';
-import { Product, ScreenPanel } from '../zones/common';
-import { useWallpaper } from '../zones/useWallpaper';
-import {
-  CableSet, CmosBattery, ExternalDrive, Gamepad, GraphicsTablet, Hdd25, LaserPrinter, LiquidCoolerDisplay,
-  OpticalDisc, OpticalDrive, Printer3d, Projector, Scanner, SdCards, ThermalPaste, UsbFlash,
-} from './procedural';
+import { useMonitorWallpaper } from '@/scenes/DeskScene/models/useMonitorWallpaper';
+import { Product } from '../zones/common';
+import { CableSet, CmosBattery, Hdd25, LiquidCoolerDisplay, OpticalDrive, Projector, Scanner } from './procedural';
 import { PRODUCT } from './deviceAssets';
-import { AccessPoint, AllInOne, CableCoil, CardReader, DockingStation, Laptop, Modem, Nas, NetworkSwitch, Rack, Router, SingleBoard, Slate, Smartwatch, Ups, UsbHub, WifiAdapter } from './v24bDevices';
+import { AccessPoint, CableCoil, CardReader, DockingStation } from './v24bDevices';
 
 interface Pose {
   /** Magnification on the exhibit table. */
@@ -91,7 +87,29 @@ function SpeakerPair() {
   );
 }
 
-function InteractivePanel({ wallpaper }: { wallpaper: Texture }) {
+/** A product with a screen: the site wallpaper goes on its "Screen" material (screen proportions in px). */
+function ScreenProduct({ product, light, w, h }: { product: string; light: boolean; w: number; h: number }) {
+  const onLoaded = useMonitorWallpaper(w, h);
+  return <Product product={product} lightOnly={light} onLoaded={onLoaded} />;
+}
+
+/** Phones and tablets lean back on a small desk stand. */
+function OnStand({ children, lean = 0.28 }: { children: ReactNode; lean?: number }) {
+  return (
+    <group>
+      <mesh position={[0, 0.005, 0.005]} castShadow>
+        <boxGeometry args={[0.09, 0.01, 0.07]} />
+        <meshStandardMaterial color="#3a3f4b" metalness={0.6} roughness={0.35} />
+      </mesh>
+      <group position={[0, 0.01, 0.02]} rotation-x={-lean}>
+        {children}
+      </group>
+    </group>
+  );
+}
+
+/** The interactive panel on its mobile stand (pole and wheeled base). */
+function InteractivePanel({ light }: { light: boolean }) {
   return (
     <group>
       <mesh position-y={0.55} castShadow>
@@ -102,17 +120,11 @@ function InteractivePanel({ wallpaper }: { wallpaper: Texture }) {
         <boxGeometry args={[0.7, 0.04, 0.5]} />
         <meshStandardMaterial color="#3a3f4b" metalness={0.7} roughness={0.35} />
       </mesh>
-      <group position-y={1.3}>
-        <ScreenPanel width={1.24} height={0.72} depth={0.06} bezel={0.025} texture={wallpaper} />
+      <group position={[0, 0.86, 0.04]}>
+        <ScreenProduct product={PRODUCT.interactive_panel} light={light} w={1600} h={900} />
       </group>
     </group>
   );
-}
-
-/** Devices that need the screen wallpaper texture (one per model instance). */
-function WithWallpaper({ render }: { render: (t: Texture) => ReactNode }) {
-  const wallpaper = useWallpaper(512, 320);
-  return <>{render(wallpaper)}</>;
 }
 
 function Model({ id, light }: { id: string; light: boolean }): ReactNode {
@@ -130,69 +142,24 @@ function Model({ id, light }: { id: string; light: boolean }): ReactNode {
           <HardwareFans ys={[0]} fallback={null} />
         </group>
       );
-    case 'thermal_paste':
-      return <ThermalPaste />;
     case 'internal_cables':
       return <CableSet />;
     case 'cmos_battery':
       return <CmosBattery />;
-    case 'hdd_35':
-      return <Hdd />;
     case 'hdd_25':
       return <Hdd25 />;
-    case 'usb_flash':
-      return <UsbFlash />;
-    case 'sd_card':
-      return <SdCards />;
-    case 'external_drive':
-      return <ExternalDrive />;
-    case 'optical_disc':
-      return <OpticalDisc />;
     case 'optical_drive':
       return <OpticalDrive />;
-    case 'graphics_tablet':
-      return <GraphicsTablet />;
-    case 'gamepad':
-      return <Gamepad />;
-    case 'microphone':
-      return <Microphone />;
-    case 'webcam':
-      return <Webcam />;
-    case 'printer_laser':
-      return <LaserPrinter />;
-    case 'printer_inkjet':
-      return <Printer />;
     case 'scanner':
       return <Scanner />;
     case 'projector':
       return <Projector />;
-    case 'printer_3d':
-      return <Printer3d />;
     case 'interactive_panel':
-      return <WithWallpaper render={(t) => <InteractivePanel wallpaper={t} />} />;
-    // network, power and mobile devices (V2-4b; procedural until licensed models arrive)
-    case 'router':
-      return <Router />;
-    case 'switch':
-      return <NetworkSwitch />;
-    case 'nic':
-      return <NetworkCard />;
-    case 'modem':
-      return <Modem />;
-    case 'wifi_adapter':
-      return <WifiAdapter />;
+      return <InteractivePanel light={light} />;
     case 'access_point':
       return <AccessPoint />;
-    case 'nas':
-      return <Nas />;
-    case 'server_rack':
-      return <Rack />;
-    case 'ups':
-      return <Ups />;
     case 'docking_station':
       return <DockingStation />;
-    case 'usb_hub':
-      return <UsbHub />;
     case 'card_reader':
       return <CardReader />;
     case 'hdmi_cable':
@@ -213,17 +180,23 @@ function Model({ id, light }: { id: string; light: boolean }): ReactNode {
         </group>
       );
     case 'laptop':
-      return <WithWallpaper render={(t) => <Laptop wallpaper={t} />} />;
-    case 'smartphone':
-      return <WithWallpaper render={(t) => <Slate width={0.072} height={0.155} wallpaper={t} />} />;
-    case 'tablet':
-      return <WithWallpaper render={(t) => <Slate width={0.25} height={0.17} wallpaper={t} />} />;
+      return <ScreenProduct product={product} light={light} w={1536} h={864} />;
     case 'all_in_one':
-      return <WithWallpaper render={(t) => <AllInOne wallpaper={t} />} />;
+      return <ScreenProduct product={product} light={light} w={1600} h={900} />;
     case 'smartwatch':
-      return <WithWallpaper render={(t) => <Smartwatch wallpaper={t} />} />;
-    case 'sbc':
-      return <SingleBoard />;
+      return <ScreenProduct product={product} light={light} w={400} h={480} />;
+    case 'smartphone':
+      return (
+        <OnStand>
+          <ScreenProduct product={product} light={light} w={720} h={1560} />
+        </OnStand>
+      );
+    case 'tablet':
+      return (
+        <OnStand lean={0.32}>
+          <ScreenProduct product={product} light={light} w={1080} h={1560} />
+        </OnStand>
+      );
     default:
       return product ? <Product product={product} lightOnly={light} /> : null;
   }

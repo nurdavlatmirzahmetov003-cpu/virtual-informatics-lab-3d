@@ -1,80 +1,60 @@
 /**
- * Tablet teardown (V2-5b) — [PLACEHOLDER] procedural 11″ tablet: two battery
- * cells either side of a long narrow board, a speaker in every corner, the
- * USB-C port on its own small board. It lies face up (landscape); the
- * display lifts off and is laid behind it, the insides are set out in front.
+ * Tablet teardown (V2-5b; real models 2026-10): a licensed tablet model
+ * (dev-tablet: housing and display) with internals from the phone teardown
+ * model (td-phone: battery cells, board, cameras, speakers, port), sized to
+ * a tablet's layout — two battery cells either side of a long narrow board,
+ * a speaker in every corner, the port on its own small board. It lies face
+ * up (landscape); the display lifts off and is laid behind it, the insides
+ * are set out in front.
  *
  * Frame: origin at the centre of the back, +Z towards the camera,
- * tablet 250 × 175 × 6.3 mm.
+ * tablet 250 × 175 mm.
  */
-import { useMemo, type ReactNode } from 'react';
-import { RoundedBox } from '@react-three/drei';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { rel, route, type Vec3 } from '@/lib/teardown/timeline';
 import { TEARDOWNS } from '@/data/teardown/teardowns';
-import { useWallpaper } from '@/scenes/LabSpace/zones/useWallpaper';
-import { BatteryPack, CameraModule, Card, FlatScreen, Shield } from './pieces';
+import { useMonitorWallpaper } from '@/scenes/DeskScene/models/useMonitorWallpaper';
+import { CameraModule } from './pieces';
+import { fitScale, groundOffset, placePoint, useModelParts, type ModelPart } from './modelParts';
+import { PartModel } from './PartModel';
 import { TeardownPart, type PartMotion } from './TeardownPart';
 
 const ORDER = TEARDOWNS.tablet.parts;
 const W = 0.25;
-const L = 0.175;
-const T = 0.0063;
 const LIFT: Vec3 = [0, 0.05, 0];
 const REST = 0.0004;
 const BASE = 0.0012;
 
 const up = (at: Vec3, rest: Vec3, label: Vec3, clear = 0.015): PartMotion => ({ at, path: route(LIFT, rel(at, rest), clear), label });
 
-const MOTION: Record<string, PartMotion> = {
-  display: up([0, T - 0.0014, 0], [0, REST, -0.215], [0, 0.006, -0.06], 0.03),
+/** The upright portrait model laid face up, landscape: screen up, its top edge towards −X. */
+const LAY: Vec3 = [-Math.PI / 2, Math.PI / 2, 0];
+
+const motions = (displayAt: Vec3): Record<string, PartMotion> => ({
+  display: up(displayAt, [0, REST, -0.215], [0, 0.006, -0.06], 0.03),
   battery: up([0, BASE, 0.01], [-0.08, REST, 0.205], [0, 0.008, 0]),
   cameras: up([-0.05, BASE, -0.075], [0.21, REST, 0.15], [0, 0.01, 0]),
   mainboard: up([0, BASE + 0.0006, 0.005], [0.115, REST, 0.205], [0, 0.008, -0.04]),
   speakers: up([0, BASE, 0], [0.02, REST, 0.33], [-0.114, 0.01, 0.074]),
   usb_port: up([W / 2 - 0.009, BASE, 0], [0.21, REST, 0.25], [0, 0.008, 0]),
-};
+});
 
-function Frame() {
-  return (
-    <group>
-      <RoundedBox args={[W, 0.0012, L]} radius={0.0005} smoothness={2} position-y={0.0006} castShadow>
-        <meshStandardMaterial color="#9aa0aa" metalness={0.85} roughness={0.3} />
-      </RoundedBox>
-      <mesh position-y={0.00125} rotation-x={-Math.PI / 2}>
-        <planeGeometry args={[W - 0.006, L - 0.006]} />
-        <meshStandardMaterial color="#2a2e36" metalness={0.6} roughness={0.4} />
-      </mesh>
-      {[-1, 1].map((s) => (
-        <mesh key={`z${s}`} position={[0, T / 2, s * (L / 2 - 0.0015)]}>
-          <boxGeometry args={[W, T - 0.0014, 0.003]} />
-          <meshStandardMaterial color="#b9bdc4" metalness={0.9} roughness={0.25} />
-        </mesh>
-      ))}
-      {[-1, 1].map((s) => (
-        <mesh key={`x${s}`} position={[s * (W / 2 - 0.0015), T / 2, 0]}>
-          <boxGeometry args={[0.003, T - 0.0014, L]} />
-          <meshStandardMaterial color="#b9bdc4" metalness={0.9} roughness={0.25} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
+const CORNERS: readonly Vec3[] = [
+  [-0.114, 0, -0.074],
+  [0.114, 0, -0.074],
+  [-0.114, 0, 0.074],
+  [0.114, 0, 0.074],
+];
 
-function Display() {
-  const wallpaper = useWallpaper(512, 360);
-  return <FlatScreen w={W - 0.002} d={L - 0.002} h={0.0014} texture={wallpaper} bezel={0.006} />;
-}
-
-/** Two cells either side of the board, joined by a flex. */
-function Battery() {
+/** Two phone-type cells either side of the board, joined by a flex. */
+function Battery({ cell }: { cell: ModelPart }) {
+  const scale = fitScale(cell.size, [0, 0, 0], [0.085, 0.135]);
   return (
     <group>
       {[-1, 1].map((s) => (
-        <group key={s} position-x={s * 0.062}>
-          <BatteryPack w={0.085} d={0.135} h={0.0036} />
-        </group>
+        <PartModel key={s} part={cell} scale={scale} at={[s * 0.062, (cell.size[1] * scale) / 2, 0]} copy={s > 0} />
       ))}
       <mesh position={[0, 0.0012, -0.055]}>
         <boxGeometry args={[0.04, 0.0003, 0.006]} />
@@ -84,55 +64,13 @@ function Battery() {
   );
 }
 
-function Mainboard() {
-  return (
-    <group>
-      <Card size={[0.03, 0.0012, 0.14]} color="#0f3d2a" seed={33} chips={[[0, -0.05, 0.012], [0, 0.03, 0.01], [0, 0.055, 0.008]]} />
-      <Shield size={[0.022, 0.0014, 0.03]} at={[0, 0.0013, -0.012]} />
-    </group>
-  );
-}
-
-function Cameras() {
-  return (
-    <group>
-      <group position-x={-0.035}>
-        <CameraModule r={0.005} h={0.0028} />
-      </group>
-      <group position={[0.05, 0, -0.006]}>
-        <CameraModule r={0.002} h={0.0024} />
-      </group>
-    </group>
-  );
-}
-
-const CORNERS: readonly Vec3[] = [
-  [-0.114, 0, -0.074],
-  [0.114, 0, -0.074],
-  [-0.114, 0, 0.074],
-  [0.114, 0, 0.074],
-];
-
-function Speakers() {
+function Speakers({ speaker }: { speaker: ModelPart }) {
+  const scale = fitScale(speaker.size, [0, 0, 0], [0.032, 0.022]);
   return (
     <group>
       {CORNERS.map((c, i) => (
-        <RoundedBox key={i} args={[0.018, 0.0035, 0.016]} radius={0.001} smoothness={2} position={[c[0], 0.00175, c[2]]} castShadow>
-          <meshStandardMaterial color="#1a1d23" roughness={0.55} />
-        </RoundedBox>
+        <PartModel key={i} part={speaker} scale={scale} at={[c[0], (speaker.size[1] * scale) / 2, c[2]]} copy={i > 0} />
       ))}
-    </group>
-  );
-}
-
-function UsbPort() {
-  return (
-    <group>
-      <Card size={[0.012, 0.001, 0.028]} color="#0f3d2a" seed={41} chips={[[0, 0.007, 0.004]]} />
-      <mesh position={[0.004, 0.0016, -0.004]}>
-        <boxGeometry args={[0.006, 0.0032, 0.009]} />
-        <meshStandardMaterial color="#c7ccd4" metalness={0.9} roughness={0.25} />
-      </mesh>
     </group>
   );
 }
@@ -140,22 +78,37 @@ function UsbPort() {
 export default function TabletTeardown() {
   const t = useT();
   const name = (id: string) => t(`teardown.tablet.parts.${id}.name` as TranslationKey);
+  const tablet = useModelParts('dev-tablet');
+  const phone = useModelParts('td-phone');
+  const wallpaper = useMonitorWallpaper(1080, 1560);
+  useEffect(() => wallpaper(tablet.display.object), [tablet, wallpaper]);
+  // landscape footprint W × L; the model is portrait
+  const scale = W / Math.max(tablet.housing.size[1], tablet.display.size[1]);
+  const offset = useMemo(() => groundOffset([tablet.housing, tablet.display], LAY, scale, 'YXZ'), [tablet, scale]);
+  const motion = useMemo(() => motions(placePoint(tablet.display.at, LAY, scale, offset, 'YXZ')), [tablet, scale, offset]);
   const content = useMemo<Record<string, ReactNode>>(
     () => ({
-      display: <Display />,
-      battery: <Battery />,
-      cameras: <Cameras />,
-      mainboard: <Mainboard />,
-      speakers: <Speakers />,
-      usb_port: <UsbPort />,
+      display: <PartModel part={tablet.display} rot={LAY} order="YXZ" scale={scale} />,
+      battery: <Battery cell={phone.battery} />,
+      cameras: (
+        <group>
+          <PartModel part={phone.cameras} scale={fitScale(phone.cameras.size, [0, 0, 0], [0.036, 0.04])} at={[-0.035, 0.002, 0]} />
+          <group position={[0.05, 0, -0.006]}>
+            <CameraModule r={0.002} h={0.0024} />
+          </group>
+        </group>
+      ),
+      mainboard: <PartModel part={phone.mainboard} scale={fitScale(phone.mainboard.size, [0, 0, 0], [0.06, 0.16])} at={[0, 0.001, 0]} />,
+      speakers: <Speakers speaker={phone.speaker} />,
+      usb_port: <PartModel part={phone.usb_port} rot={[0, Math.PI / 2, 0]} scale={fitScale(phone.usb_port.size, [0, Math.PI / 2, 0], [0.014, 0.03])} />,
     }),
-    [],
+    [tablet, phone, scale],
   );
   return (
     <group>
-      <Frame />
+      <PartModel part={tablet.housing} rot={LAY} order="YXZ" scale={scale} at={placePoint(tablet.housing.at, LAY, scale, offset, 'YXZ')} />
       {ORDER.map((id, i) => (
-        <TeardownPart key={id} id={id} index={i} name={name(id)} motion={MOTION[id]}>
+        <TeardownPart key={id} id={id} index={i} name={name(id)} motion={motion[id]}>
           {content[id]}
         </TeardownPart>
       ))}

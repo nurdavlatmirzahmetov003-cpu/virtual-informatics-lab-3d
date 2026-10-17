@@ -1,0 +1,46 @@
+{
+  "name": "dev-usb-flash",
+  "description": "Lab device model (usb_flash), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/usb_flash.glb",
+  "output": "assets-src/blender/products/dev-usb-flash.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.055,
+            0.095,
+            0.205,
+            0.155
+          ],
+          [
+            0.055,
+            0.725,
+            0.205,
+            0.8
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-usb-flash.jpg"
+  },
+  "realSize": 0.06
+}

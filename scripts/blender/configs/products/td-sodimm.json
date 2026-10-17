@@ -1,0 +1,60 @@
+{
+  "name": "td-sodimm",
+  "description": "SO-DIMM DDR4 memory module, component side up.",
+  "input": "assets-src/sketchfab/devices/sodimm.glb",
+  "output": "assets-src/blender/products/td-sodimm.glb",
+  "rotate": [
+    [
+      "Y",
+      -90
+    ]
+  ],
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.095,
+            0.375,
+            0.245,
+            0.435
+          ]
+        ]
+      },
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.835,
+            0.035,
+            0.955,
+            0.085
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/td-sodimm.jpg"
+  },
+  "realSize": [
+    0.03,
+    0.0696,
+    0
+  ]
+}

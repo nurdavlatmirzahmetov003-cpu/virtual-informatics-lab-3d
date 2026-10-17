@@ -1,0 +1,65 @@
+{
+  "name": "dev-sd-card",
+  "description": "Lab device model (sd_card), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/sd_card.glb",
+  "output": "assets-src/blender/products/dev-sd-card.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.09,
+            0.035,
+            0.67,
+            0.185
+          ]
+        ],
+        "color": "#e8352a"
+      },
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.06,
+            0.805,
+            0.71,
+            0.925
+          ],
+          [
+            0.06,
+            0.92,
+            0.4,
+            0.99
+          ],
+          [
+            0.46,
+            0.615,
+            0.71,
+            0.755
+          ]
+        ],
+        "color": "#0b0b10"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-sd-card.jpg"
+  },
+  "realSize": 0.032
+}

@@ -1,0 +1,70 @@
+{
+  "name": "dev-tablet",
+  "description": "Tablet (iPad-style, logos removed): `display` (front glass and panel) and `housing`, for the exhibit and the teardown.",
+  "input": "assets-src/sketchfab/devices/tablet.glb",
+  "output": "assets-src/blender/products/dev-tablet.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "materials": "^(lIbmhnHcRxCyKTH|WiLZDKmGOAGYwwJ)$"
+      }
+    ],
+    "paint": [
+      {
+        "image": "Image_11",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#0b1220"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {
+      "^eTUqMdUiJziCRoV$": "Screen"
+    },
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "display",
+      "rules": [
+        {
+          "center": {
+            "min": [
+              -1,
+              -1,
+              -1
+            ],
+            "max": [
+              1,
+              -0.0005,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "housing",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-tablet.jpg"
+  },
+  "realSize": [
+    0.1741,
+    0,
+    0.2506
+  ]
+}

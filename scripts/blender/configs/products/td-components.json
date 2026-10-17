@@ -1,0 +1,107 @@
+{
+  "name": "td-components",
+  "description": "Through-hole electronic components (inductor, capacitors, regulators…) as separate nodes, to populate boards.",
+  "input": "assets-src/sketchfab/devices/electronic_components.glb",
+  "output": "assets-src/blender/products/td-components.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "inductor",
+      "rules": [
+        {
+          "groups": "^Inductor"
+        }
+      ]
+    },
+    {
+      "id": "cap_cyl",
+      "rules": [
+        {
+          "groups": "^Capacitor-Cylindrical"
+        }
+      ]
+    },
+    {
+      "id": "cap_film",
+      "rules": [
+        {
+          "groups": "^Capacitor-Film"
+        }
+      ]
+    },
+    {
+      "id": "cap_ceramic",
+      "rules": [
+        {
+          "groups": "^Capacitor-Ceramic"
+        }
+      ]
+    },
+    {
+      "id": "to220",
+      "rules": [
+        {
+          "groups": "^TO-220"
+        }
+      ]
+    },
+    {
+      "id": "to92",
+      "rules": [
+        {
+          "groups": "^TO-92"
+        }
+      ]
+    },
+    {
+      "id": "resistor",
+      "rules": [
+        {
+          "groups": "^Resistor"
+        }
+      ]
+    },
+    {
+      "id": "diode",
+      "rules": [
+        {
+          "groups": "^Diode-Switching"
+        }
+      ]
+    },
+    {
+      "id": "led",
+      "rules": [
+        {
+          "groups": "^Diode-Light"
+        }
+      ]
+    },
+    {
+      "id": "button",
+      "rules": [
+        {
+          "groups": "^Button"
+        }
+      ]
+    },
+    {
+      "id": "breadboard",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/td-components.jpg"
+  }
+}

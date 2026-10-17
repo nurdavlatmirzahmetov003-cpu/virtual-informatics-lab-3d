@@ -1,0 +1,44 @@
+{
+  "name": "dev-router",
+  "description": "Lab device model (router), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/router.glb",
+  "output": "assets-src/blender/products/dev-router.glb",
+  "rotate": 90,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0.425,
+            0.21,
+            0.495,
+            0.5
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-router.jpg"
+  },
+  "realSize": [
+    0.3,
+    0,
+    0
+  ]
+}

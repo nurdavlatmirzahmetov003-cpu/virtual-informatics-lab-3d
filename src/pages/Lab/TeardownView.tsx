@@ -22,8 +22,8 @@ const TeardownStage = lazy(() => import('@/scenes/Teardown/TeardownStage'));
 const key = (k: string) => k as TranslationKey;
 /** Seconds one part takes to come out. */
 const PART_SECONDS = 1.1;
-/** Teardowns built from licensed catalog models (the others are procedural placeholders). */
-const LICENSED: readonly TeardownId[] = ['system_unit'];
+/** Teardowns built from licensed models (the 3D printer is still a procedural placeholder). */
+const LICENSED: readonly TeardownId[] = ['system_unit', 'laptop', 'smartphone', 'tablet', 'all_in_one'];
 
 type Tab = 'parts' | 'task';
 

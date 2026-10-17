@@ -1,0 +1,112 @@
+{
+  "name": "dev-hdd",
+  "description": "Lab device model (storage_set), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/storage_set.glb",
+  "output": "assets-src/blender/products/dev-hdd.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [
+      {
+        "groups": "^(Cube_3|Cube\\.001_4|Samsung Evo 860)"
+      }
+    ],
+    "paint": [
+      {
+        "image": "Image_5",
+        "rects": [
+          [
+            0.33,
+            0.315,
+            0.63,
+            0.375
+          ],
+          [
+            0.255,
+            0.385,
+            0.75,
+            0.455
+          ],
+          [
+            0.32,
+            0.465,
+            0.68,
+            0.73
+          ]
+        ]
+      },
+      {
+        "image": "Image_5",
+        "rects": [
+          [
+            0.33,
+            0.855,
+            0.67,
+            0.945
+          ]
+        ]
+      },
+      {
+        "image": "Image_6",
+        "rects": [
+          [
+            0.255,
+            0.095,
+            0.665,
+            0.335
+          ],
+          [
+            0.26,
+            0.395,
+            0.535,
+            0.475
+          ],
+          [
+            0.535,
+            0.395,
+            0.67,
+            0.56
+          ]
+        ],
+        "color": "#f6f6f6"
+      },
+      {
+        "image": "Image_6",
+        "rects": [
+          [
+            0.375,
+            0.555,
+            0.625,
+            0.715
+          ],
+          [
+            0.3,
+            0.72,
+            0.625,
+            0.795
+          ]
+        ]
+      }
+    ]
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-hdd.jpg"
+  },
+  "realSize": [
+    0.1016,
+    0.147,
+    0.026
+  ]
+}

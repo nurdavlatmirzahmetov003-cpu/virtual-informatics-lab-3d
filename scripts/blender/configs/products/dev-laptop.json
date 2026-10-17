@@ -1,0 +1,72 @@
+{
+  "name": "dev-laptop",
+  "description": "15.6-inch laptop (logos removed): `lid` (display) and `base`, for the exhibit and the teardown.",
+  "input": "assets-src/sketchfab/devices/laptop.glb",
+  "output": "assets-src/blender/products/dev-laptop.glb",
+  "rotate": -90,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": [
+      {
+        "image": "Image_4",
+        "rects": [
+          [
+            0.015,
+            0.815,
+            0.085,
+            0.905
+          ],
+          [
+            0.095,
+            0.145,
+            0.135,
+            0.185
+          ]
+        ]
+      },
+      {
+        "image": "Image_0",
+        "rects": [
+          [
+            0,
+            0,
+            1,
+            1
+          ]
+        ],
+        "color": "#0b1220"
+      }
+    ]
+  },
+  "materials": {
+    "rename": {
+      "^Material\\.004$": "Screen"
+    },
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "lid",
+      "rules": [
+        {
+          "groups": "^Cube\\.001"
+        }
+      ]
+    },
+    {
+      "id": "base",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-laptop.jpg"
+  },
+  "realSize": [
+    0.36,
+    0,
+    0
+  ]
+}

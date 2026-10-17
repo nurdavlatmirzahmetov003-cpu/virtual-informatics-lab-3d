@@ -47,16 +47,19 @@ function fitted(wallpaper: Texture, geometry: BufferGeometry) {
   return t;
 }
 
-/** onLoaded callback that puts the project wallpaper on the monitor GLB's "Screen" material. */
-export function useMonitorWallpaper() {
+/**
+ * onLoaded callback that puts the project wallpaper on a GLB's "Screen" material
+ * (monitors; laptops, phones and tablets pass their own screen proportions).
+ */
+export function useMonitorWallpaper(width = 1536, height = 672) {
   const wallpaper = useDisposable(() => {
     const canvas = document.createElement('canvas');
-    canvas.width = 1536; canvas.height = 672;
+    canvas.width = width; canvas.height = height;
     drawWallpaper(canvas);
     const texture = new CanvasTexture(canvas);
     texture.colorSpace = SRGBColorSpace;
     return texture;
-  }, []);
+  }, [width, height]);
   return useCallback((root: Object3D) => {
     root.traverse(obj => {
       const mesh = obj as Mesh;

@@ -1,0 +1,34 @@
+{
+  "name": "dev-interactive-panel",
+  "description": "Lab device model (interactive_panel), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/interactive_panel.glb",
+  "output": "assets-src/blender/products/dev-interactive-panel.glb",
+  "rotate": -90,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {
+      "^black_glossy$": "Screen"
+    },
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-interactive-panel.jpg"
+  },
+  "realSize": [
+    1.49,
+    0,
+    0
+  ]
+}

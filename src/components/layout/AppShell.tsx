@@ -7,6 +7,7 @@ import { applyTheme } from '@/lib/theme';
 import { useSceneStatus } from '@/store/sceneStatusStore';
 import { AchievementToaster } from '@/components/achievements/AchievementToaster';
 import { useAuthStore } from '@/store/authStore';
+import { setLiveEvents } from '@/services/live/events';
 import { useSiteStore } from '@/store/siteStore';
 import { SiteBanner } from './SiteBanner';
 import { TopBar } from './TopBar';
@@ -34,6 +35,10 @@ export function AppShell() {
     void useAuthStore.getState().init();
     void useSiteStore.getState().load();
   }, []);
+
+  // V2-12: signed-in browsers keep the class events socket (presence; live feed for teachers)
+  const signedIn = useAuthStore((s) => s.status === 'signedIn');
+  useEffect(() => setLiveEvents(signedIn), [signedIn]);
 
   return (
     <>

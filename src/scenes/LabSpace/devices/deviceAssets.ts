@@ -1,4 +1,4 @@
-/** Catalog product model of each lab device that has one (V2-2a/b files). */
+/** Product model of each lab device that has one (V2-2a/b catalog files and the 2026-10 lab devices). */
 export const PRODUCT: Record<string, string> = {
   cpu: 'cpu-amd-am5',
   cooler_air: 'cool-deepcool-ak400',
@@ -13,6 +13,36 @@ export const PRODUCT: Record<string, string> = {
   keyboard: 'kb-keychron-k8-pro',
   mouse: 'mouse-logitech-g502x-plus',
   headset: 'hs-hyperx-cloud-iii',
+  // lab devices (2026-10, scripts/blender/make-device-configs.py)
+  thermal_paste: 'dev-thermal-paste',
+  hdd_35: 'dev-hdd',
+  usb_flash: 'dev-usb-flash',
+  sd_card: 'dev-sd-card',
+  external_drive: 'dev-external-drive',
+  optical_disc: 'dev-optical-disc',
+  graphics_tablet: 'dev-graphics-tablet',
+  gamepad: 'dev-gamepad',
+  microphone: 'dev-microphone',
+  webcam: 'dev-webcam',
+  printer_laser: 'dev-printer-laser',
+  printer_inkjet: 'dev-printer-inkjet',
+  printer_3d: 'dev-printer-3d',
+  interactive_panel: 'dev-interactive-panel',
+  router: 'dev-router',
+  switch: 'dev-switch',
+  modem: 'dev-modem',
+  wifi_adapter: 'dev-wifi-adapter',
+  nic: 'dev-nic',
+  nas: 'dev-nas',
+  server_rack: 'dev-server-rack',
+  ups: 'dev-ups',
+  usb_hub: 'dev-usb-hub',
+  laptop: 'dev-laptop',
+  all_in_one: 'dev-all-in-one',
+  smartphone: 'dev-smartphone',
+  tablet: 'dev-tablet',
+  smartwatch: 'dev-smartwatch',
+  sbc: 'dev-sbc',
 };
 
 /** Product files a set of devices uses, for prefetching. */

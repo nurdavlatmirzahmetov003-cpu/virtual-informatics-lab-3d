@@ -39,6 +39,7 @@ export function LabCamera() {
   const reduced = useReducedMotion();
   const focus = useLabStore((s) => s.focus);
   const token = useLabStore((s) => s.flightToken);
+  const spot = useLabStore((s) => s.spot);
   const flight = useRef<Flight>({ active: false, t: 0, duration: 1, fromPos: new Vector3(), fromTarget: new Vector3(), toPos: new Vector3(), toTarget: new Vector3() });
   const nudged = useRef({ zoom: 0, orbit: 0 });
   const tmp = useRef({ s: new Spherical(), v: new Vector3() });
@@ -48,11 +49,12 @@ export function LabCamera() {
   useEffect(() => {
     const c = controls.current;
     if (!c) return;
-    const shot = shotFor(focus);
+    // a close-up (poster, robot teacher) wins over the zone shot
+    const shot = spot ?? shotFor(focus);
     const f = flight.current;
     const target = new Vector3(...shot.target);
     // pull back on narrow screens so the subject fits
-    const pos = new Vector3(...shot.position).sub(target).multiplyScalar(focus ? framingScale(aspect) : Math.max(1, framingScale(aspect) * 0.92)).add(target);
+    const pos = new Vector3(...shot.position).sub(target).multiplyScalar(focus || spot ? framingScale(aspect) : Math.max(1, framingScale(aspect) * 0.92)).add(target);
     f.fromPos.copy(camera.position);
     f.fromTarget.copy(c.target);
     f.toPos.copy(pos);
@@ -62,7 +64,7 @@ export function LabCamera() {
     f.t = 0;
     f.active = true;
     invalidate();
-  }, [focus, token, camera, aspect, invalidate]);
+  }, [focus, spot, token, camera, aspect, invalidate]);
 
   // a drag or wheel cancels the flight (the user takes over)
   useEffect(() => {
@@ -117,16 +119,19 @@ export function LabCamera() {
       const { s, v } = tmp.current;
       v.copy(camera.position).sub(c.target);
       s.setFromVector3(v);
-      const limits = useLabStore.getState().focus ? LAB_ORBIT.zone : LAB_ORBIT.overview;
+      const st = useLabStore.getState();
+      const limits = st.focus || st.spot ? LAB_ORBIT.zone : LAB_ORBIT.overview;
       s.radius = Math.min(limits.max, Math.max(limits.min, s.radius * Math.pow(0.85, dz)));
       s.theta += dorbit * 0.35;
       camera.position.copy(c.target).add(v.setFromSpherical(s));
     }
 
     // distance limits apply once the camera has arrived (a flight crosses them)
-    const lim = useLabStore.getState().focus ? LAB_ORBIT.zone : LAB_ORBIT.overview;
+    const st = useLabStore.getState();
+    const close = st.focus !== null || st.spot !== null;
+    const lim = close ? LAB_ORBIT.zone : LAB_ORBIT.overview;
     c.minDistance = f.active ? 0.3 : lim.min;
-    c.maxDistance = f.active ? 100 : lim.max * (useLabStore.getState().focus ? 1 : Math.max(1, framingScale(aspect)));
+    c.maxDistance = f.active ? 100 : lim.max * (close ? 1 : Math.max(1, framingScale(aspect)));
 
     // never orbit around a point outside the hall
     const t = clampToHall([c.target.x, c.target.y, c.target.z]);
@@ -149,7 +154,7 @@ export function LabCamera() {
       enablePan={false}
       minPolarAngle={0.15}
       // stay above the floor
-      maxPolarAngle={focus ? Math.PI * 0.48 : Math.PI * 0.42}
+      maxPolarAngle={spot ? Math.PI * 0.5 : focus ? Math.PI * 0.48 : Math.PI * 0.42}
       target={[...LAB_OVERVIEW.target]}
     />
   );

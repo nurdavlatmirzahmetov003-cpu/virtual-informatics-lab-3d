@@ -1,0 +1,27 @@
+{
+  "name": "dev-microphone",
+  "description": "Lab device model (microphone), canonical pose, real size, logos removed.",
+  "input": "assets-src/sketchfab/devices/microphone.glb",
+  "output": "assets-src/blender/products/dev-microphone.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-microphone.jpg"
+  }
+}
