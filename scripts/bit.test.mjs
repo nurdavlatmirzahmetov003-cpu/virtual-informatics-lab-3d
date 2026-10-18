@@ -9,7 +9,7 @@ import { LESSON_IDS, LESSON_STEPS, TOUR_STOPS } from '../src/services/bit/lesson
 import { normalize, splitSentences, stripWakeWord } from '../src/services/bit/text.ts';
 import { extractAction, visiblePart, askBit } from '../src/services/bit/client.ts';
 import { chooseVoice, speakable } from '../src/services/bit/speech.ts';
-import { bitSystemPrompt, createBit, parseGeminiEvent, toContents } from '../server/bit.ts';
+import { bitSystemPrompt, createBit, geminiThinking, parseGeminiEvent, toContents } from '../server/bit.ts';
 import kk from '../src/services/bit/content/kk.ts';
 import ru from '../src/services/bit/content/ru.ts';
 import en from '../src/services/bit/content/en.ts';
@@ -138,6 +138,17 @@ test('Gemini prompt: the answer language is the site language, ids are the site 
   assert.match(bitSystemPrompt('ru', null), /ONLY in Russian/);
   assert.match(bitSystemPrompt('en', 'nonsense'), /ONLY in English/);
   assert.doesNotMatch(bitSystemPrompt('en', 'nonsense'), /nonsense/);
+});
+
+test('Gemini thinking: as little as each model allows, overridable', () => {
+  assert.deepEqual(geminiThinking('gemini-3.5-flash', ''), { thinkingLevel: 'minimal' });
+  assert.deepEqual(geminiThinking('gemini-3.8-flash', ''), { thinkingLevel: 'low' }, '3.8 refuses minimal');
+  assert.deepEqual(geminiThinking('gemini-3.1-pro-preview', ''), { thinkingLevel: 'low' });
+  assert.deepEqual(geminiThinking('gemini-2.5-flash', ''), { thinkingBudget: 0 });
+  assert.equal(geminiThinking('gemma-4-31b-it', ''), null);
+  assert.deepEqual(geminiThinking('gemini-3.5-flash', 'high'), { thinkingLevel: 'high' });
+  assert.deepEqual(geminiThinking('gemini-2.5-flash', '128'), { thinkingBudget: 128 });
+  assert.equal(geminiThinking('gemini-3.5-flash', 'default'), null);
 });
 
 test('Gemini contents alternate user/model and end with the question', () => {

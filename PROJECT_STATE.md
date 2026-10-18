@@ -10,7 +10,7 @@
 
 1. **Дизайн.** Onest (мәтін) + Montserrat (тақырып): бұрынғы Manrope-та ә ғ қ ң ұ, Unbounded-те қазақ әріптерінің бірі де болмаған — `test:fonts` woff2 cmap-ын тексереді. Canvas жазулары `lib/fonts.ts` (`canvasFontsReady` қазақ unicode-range-ін жүктейді). Әдепкі тема — жарық «күндізгі зертхана», қараңғысы ашық индиго; баптаулар v3. 3D кабинетке жиһаз (`data/lab/decor.ts`, `classroom/Decor.tsx`, +3 draw call).
 2. **BitLab** — `src/config/brand.ts` (атауы бір жерде, `{brand}` барлық мәтінде), логотип `BrandMark`, `public/brand/*`, favicon, монитор тұсқағазы.
-3. **Бит** — `services/bit/` (ниет, 30 дайын жауап, саяхат, 9 сабақ — kk/ru/en), `server/bit.ts` (Gemini ағыны, кілт тек серверде), `components/bit/` (батырма `Alt+B`, панель, Web Speech). Жауап тілі = сайт тілі.
+3. **Бит** — `services/bit/` (ниет, 60 дайын жауап, саяхат, 9 сабақ — kk/ru/en), `server/bit.ts` (Gemini ағыны, кілт тек серверде), `components/bit/` (батырма `Alt+B`, панель, Web Speech). Жауап тілі = сайт тілі.
 4. **Ойындар алаңы** `/games` — 5 ойын (`labs/Arcade`), сервер-төреші (`server/arcade.ts`, `006_arcade.sql`), сынып/мектеп рейтингі, «Досыңды шақыр» (seed), тікелей бөлменің жаңа түрі «Бұл қандай құрылғы?».
 5. **Пікір және сертификат** — `/feedback` (баға, байланыс → әкімші жәшігі не сынып чаты), `/certificate` (сертификат / мақтау қағазы, код + QR, A4 PDF, мөр мен қолтаңба — ауыстырылатын үлгі), `/certificate/check/:code`, әкімшінің «Пікірлер» қойындысы, `server/feedback.ts`, `007_feedback.sql`, жаңа «Үздік түлек» белгісі.
 

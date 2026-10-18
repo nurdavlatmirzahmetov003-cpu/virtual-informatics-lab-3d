@@ -25,8 +25,8 @@ export interface BitTurn {
 export interface BitOptions {
   apiKey?: string;
   model?: string;
-  /** Gemini 2.5 Flash thinks before answering unless told not to; 0 = fastest first word. */
-  thinkingBudget?: number | null;
+  /** How much the model "thinks" before answering (see geminiThinking); null = the model's default. */
+  thinking?: Record<string, unknown> | null;
   fetchImpl?: typeof fetch;
   timeoutMs?: number;
   /** Requests per IP per minute. */
@@ -129,12 +129,26 @@ function readBody(req: IncomingMessage): Promise<string> {
   });
 }
 
+/** The default model: the fastest first word with clean Kazakh in our tests (2026-10; gemini-2.5-flash is retired for new keys). */
+export const DEFAULT_GEMINI_MODEL = 'gemini-3.5-flash';
+
+/**
+ * Thinking makes the first spoken word late, so Bit thinks as little as the
+ * model allows: Gemini 3 takes a level (3.8 Flash and Pro refuse "minimal"),
+ * Gemini 2.x a token budget. GEMINI_THINKING overrides: a level or a number.
+ */
+export function geminiThinking(model: string, override = process.env.GEMINI_THINKING?.trim() ?? ''): Record<string, unknown> | null {
+  if (override === 'default') return null;
+  if (override) return /^\d+$/.test(override) ? { thinkingBudget: Number(override) } : { thinkingLevel: override };
+  if (/^gemini-2\.\d+-flash/.test(model)) return { thinkingBudget: 0 };
+  if (/^gemini-[3-9]/.test(model)) return { thinkingLevel: /pro|3\.[89]|[4-9]\./.test(model) ? 'low' : 'minimal' };
+  return null;
+}
+
 export function createBit(options: BitOptions = {}) {
   const apiKey = options.apiKey ?? process.env.GEMINI_API_KEY?.trim() ?? '';
-  const model = options.model ?? (process.env.GEMINI_MODEL?.trim() || 'gemini-2.5-flash');
-  const envBudget = process.env.GEMINI_THINKING_BUDGET;
-  const thinkingBudget =
-    options.thinkingBudget !== undefined ? options.thinkingBudget : envBudget !== undefined && envBudget !== '' ? Number(envBudget) : /2\.5-flash/.test(model) ? 0 : null;
+  const model = options.model ?? (process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL);
+  const thinking = options.thinking !== undefined ? options.thinking : geminiThinking(model);
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
   const timeoutMs = options.timeoutMs ?? Number(process.env.AI_TIMEOUT_MS ?? 20_000);
   const rate = options.ratePerMinute ?? 30;
@@ -174,7 +188,7 @@ export function createBit(options: BitOptions = {}) {
     // the student closed the panel or asked something else: stop paying for this answer
     res.on('close', () => controller.abort());
     const generationConfig: Record<string, unknown> = { temperature: 0.5, topP: 0.9, maxOutputTokens: 512 };
-    if (thinkingBudget !== null && Number.isFinite(thinkingBudget)) generationConfig.thinkingConfig = { thinkingBudget };
+    if (thinking) generationConfig.thinkingConfig = thinking;
     let started = false;
     try {
       const upstream = await fetchImpl(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`, {

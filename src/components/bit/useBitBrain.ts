@@ -286,7 +286,10 @@ export function useBitBrain() {
       const trimmed = text.trim();
       if (!c || !trimmed) return;
       const store = useBitStore.getState();
-      const history: Turn[] = store.messages.filter((m) => !m.pending && !m.error && m.text).map((m) => ({ role: m.role, text: m.text }));
+      // a question whose answer failed is not sent again: the model would answer it too
+      const history: Turn[] = store.messages
+        .filter((m, i, all) => !m.pending && !m.error && m.text && !(m.role === 'user' && all[i + 1]?.error))
+        .map((m) => ({ role: m.role, text: m.text }));
       store.push({ role: 'user', text: trimmed });
       speaker.current?.stop();
       act(c, understand(trimmed, { modelAvailable: model === 'online' }), history);

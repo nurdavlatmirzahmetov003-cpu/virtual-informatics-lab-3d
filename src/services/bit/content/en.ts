@@ -122,6 +122,126 @@ const en: BitContent = {
       q: 'Where can I see my results?',
       a: 'Your results are on the “My results” page: finished tasks, points, XP, your level and achievements. When you sign in, your results are saved on the server and your teacher can see them too.',
     },
+    keyboard: {
+      q: 'How does a keyboard work?',
+      a: 'A keyboard lets you type text and commands. When you press a key, a contact under it closes and the computer receives that key’s code. Ctrl, Alt and Shift together with other keys give shortcuts: Ctrl and C, for example, copy text.',
+    },
+    mouse: {
+      q: 'How does a computer mouse work?',
+      a: 'A tiny camera under the mouse photographs the desk thousands of times a second and works out how it moves. The computer moves the pointer on the screen to match. The left button selects, the right button opens a menu, and the wheel scrolls.',
+    },
+    printer: {
+      q: 'How does a printer print?',
+      a: 'An inkjet printer sprays tiny drops of ink onto the paper. A laser printer draws the image with light on a drum, picks up toner powder there and fuses it onto the paper with heat. Laser printers print text quickly and cheaply, while inkjets are good for colour photos.',
+    },
+    usb: {
+      q: 'What is USB?',
+      a: 'USB is a universal port for plugging in devices: flash drives, mice, keyboards and phones. It carries both data and power. The modern USB-C plug fits either way round and can even charge a laptop.',
+    },
+    bluetooth: {
+      q: 'How does Bluetooth work?',
+      a: 'Bluetooth is a short-range radio link for nearby devices, usually up to about 10 metres. Headphones, mice, speakers and phones connect through it. The first time, you pair the devices; after that they find each other on their own.',
+    },
+    laptop: {
+      q: 'How is a laptop different from a desktop PC?',
+      a: 'A laptop packs the screen, keyboard, battery and every part into one compact case, so you can carry it anywhere. A desktop tower is bigger, but its parts are easy to replace and it stays cooler. That is why gamers and heavy work usually go for a desktop.',
+    },
+    smartphone: {
+      q: 'Is a smartphone a computer too?',
+      a: 'Yes, a smartphone is a small computer. It has a processor, memory, storage and an operating system too, all packed onto one small board. It uses very little power, so the battery lasts a long time.',
+    },
+    server: {
+      q: 'What is a server?',
+      a: 'A server is a powerful computer that serves other computers: it stores websites, email, games and files and answers requests. It runs day and night without switching off. When thousands of servers share one building, it is called a data centre.',
+    },
+    encryption: {
+      q: 'What is encryption?',
+      a: 'Encryption turns information into a secret code that only someone with the key can read. If a website address starts with https and shows a padlock, your data travels encrypted. So only type your password on sites with the padlock.',
+    },
+    backup: {
+      q: 'Why do I need a backup?',
+      a: 'A backup is a copy of your important files kept somewhere else: on a flash drive, an external disk or in the cloud. If a disk breaks, a virus strikes or you delete something by mistake, you restore it from the copy. Back up your important work regularly.',
+    },
+    update: {
+      q: 'Why should I install updates?',
+      a: 'Updates fix mistakes in programs and close the holes hackers could use. Sometimes they add new features too. Keep your operating system and browser up to date, but only get updates from official sources.',
+    },
+    browser: {
+      q: 'What is a web browser?',
+      a: 'A browser is the program that opens websites: Chrome, Edge, Firefox or Safari. It downloads a page’s code from a server and shows it as text, pictures and buttons. Our {brand} lab runs in the browser too.',
+    },
+    searchEngine: {
+      q: 'How does a search engine work?',
+      a: 'A search engine’s programs visit billions of pages in advance and record what is on them in a huge index. When you type a query, it looks up the most useful pages in that index and puts them at the top. Use precise keywords to find things faster.',
+    },
+    email: {
+      q: 'How does email work?',
+      a: 'Email sends your message to a mail server, which delivers it to the recipient’s server. Every address has an @ sign: the user’s name comes before it and the mail service’s domain after it. Never open links or files in emails from strangers.',
+    },
+    cyberbullying: {
+      q: 'What is cyberbullying?',
+      a: 'Cyberbullying is insulting, threatening or mocking someone online. Do not answer back: save a screenshot, block the person and always tell a parent or teacher. And never hurt anyone online yourself — there is a real person on the other side of the screen.',
+    },
+    digitalFootprint: {
+      q: 'What is a digital footprint?',
+      a: 'Your digital footprint is everything about you that stays online: posts, photos, comments and searches. Once something is published it is very hard to remove, and teachers or employers may see it later. So think before you post.',
+    },
+    copyright: {
+      q: 'What is copyright?',
+      a: 'Copyright is the right of the person who made a book, song, film or program to decide how it is used. Copying and sharing it without permission is illegal; that is called piracy. There are also openly licensed works you may use for free and legally.',
+    },
+    spreadsheet: {
+      q: 'What is a spreadsheet for?',
+      a: 'A spreadsheet such as Excel holds numbers and text in cells and calculates with formulas. Change one number and every result that depends on it updates by itself. It is great for adding up marks or expenses and for making charts.',
+    },
+    database: {
+      q: 'What is a database?',
+      a: 'A database stores a lot of information in order: for example every student in a school and their marks. The data sits in tables, and a query language such as SQL finds what you need in seconds. Our site keeps students’ results in a database too.',
+    },
+    variable: {
+      q: 'What is a variable?',
+      a: 'A variable is a named box where a program keeps a value. A variable called score, for example, starts at 0 and gets 10 added after every right answer. Its value can change while the program runs.',
+    },
+    loop: {
+      q: 'What is a loop?',
+      a: 'A loop is the part of a program that repeats an action several times. A loop like “repeat 10 times: step forward” walks a robot ten steps. Without a loop you would have to write the same command ten times.',
+    },
+    condition: {
+      q: 'What is an if statement?',
+      a: 'An if statement lets a program make a decision: if a condition is true, it does one thing, otherwise another. For example, if the score is over 50, print “Well done!”, else print “Try again”. In Python it is written with the words if and else.',
+    },
+    bug: {
+      q: 'What is a bug in a program?',
+      a: 'A bug is a mistake in a program that makes it work wrongly. To find it, a programmer runs the program step by step and checks the values of the variables — that is called debugging. Finding bugs is one of a programmer’s most important skills.',
+    },
+    website: {
+      q: 'How is a website made?',
+      a: 'A website is written in three languages: HTML for the content, CSS for the look and JavaScript for buttons and animation. The finished files are put on a server and published on the internet. Start by making a simple HTML page and opening it in your browser.',
+    },
+    domain: {
+      q: 'What are a domain and a URL?',
+      a: 'A domain is a website’s human-friendly name, such as example.kz. A URL is the full address of one page, with the protocol, the domain and the page’s path. The browser looks up the domain’s IP address in a service called DNS.',
+    },
+    logicGates: {
+      q: 'What are logic gates?',
+      a: 'A logic gate is a tiny circuit that works with signals of 0 and 1. AND gives 1 only when both inputs are 1, OR needs just one input to be 1, and NOT turns the signal into its opposite. A processor is made of billions of gates — build them yourself in the logic lab.',
+    },
+    hexadecimal: {
+      q: 'What is hexadecimal?',
+      a: 'Hexadecimal has 16 digits: the numbers 0 to 9 and the letters A to F. One hexadecimal digit equals four binary bits, so long binary numbers can be written briefly. On websites, red is written as FF0000.',
+    },
+    encoding: {
+      q: 'What is text encoding?',
+      a: 'A computer stores letters as numbers: every character has its own number. The old ASCII table had only English letters, while Unicode covers every alphabet in the world, including the Kazakh letters ә, ғ, қ, ң, ө, ұ, ү, һ and і. Websites and documents are usually saved in UTF-8.',
+    },
+    pixel: {
+      q: 'What is a pixel?',
+      a: 'A pixel is the smallest coloured dot on a screen or in an image. Each pixel’s colour is a mix of red, green and blue. The more pixels, the sharper the picture: a Full HD screen has more than two million of them.',
+    },
+    compression: {
+      q: 'What is file compression?',
+      a: 'Compression makes a file smaller by writing repeated parts in a shorter way. A ZIP archive compresses without losing anything, while JPEG photos and MP3 songs drop details your eyes or ears hardly notice. A compressed file is sent faster and takes less space.',
+    },
   },
   tourIntro: 'Great, let’s walk through the site together! I will stop in every section and tell you what you can do there. To move on, press “Next” or say “next”.',
   tour: {

@@ -15,6 +15,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { ANSWER_SCHEMA, catalogDigest } from '@/services/ai/catalogDigest';
 import { sanitizeLlmAnswer } from '@/services/ai/validate';
 import { loadEnv } from './env';
+import { DEFAULT_GEMINI_MODEL, geminiThinking } from './bit';
 
 /* ── configuration ───────────────────────────────────────── */
 
@@ -35,7 +36,7 @@ const provider: Provider | null = (() => {
 })();
 const MODEL =
   provider === 'gemini'
-    ? (process.env.GEMINI_MODEL?.trim() || 'gemini-2.5-flash')
+    ? (process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL)
     : provider === 'anthropic'
       ? (process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-5-5')
       : (process.env.OPENAI_MODEL ?? 'gpt-4o-mini');
@@ -58,6 +59,26 @@ const SYSTEM = [
 
 async function callModel(message: string, context: unknown, signal: AbortSignal): Promise<string> {
   const user = `Current request state: ${JSON.stringify(context ?? {})}\nUser message: ${message}`;
+  if (provider === 'gemini') {
+    const thinking = geminiThinking(MODEL);
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`, {
+      method: 'POST',
+      signal,
+      // the key in a header, never in the URL
+      headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY! },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM }] },
+        contents: [{ role: 'user', parts: [{ text: user }] }],
+        generationConfig: { responseMimeType: 'application/json', temperature: 0.3, maxOutputTokens: 1024, ...(thinking ? { thinkingConfig: thinking } : {}) },
+      }),
+    });
+    if (!res.ok) throw new Error(`gemini ${res.status}`);
+    const data = (await res.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string; thought?: boolean }> } }> };
+    return (data.candidates?.[0]?.content?.parts ?? [])
+      .filter((p) => !p.thought)
+      .map((p) => p.text ?? '')
+      .join('');
+  }
   if (provider === 'anthropic') {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
