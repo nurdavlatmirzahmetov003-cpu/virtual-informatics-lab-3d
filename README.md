@@ -1,6 +1,6 @@
-# Virtual Informatics Lab 3D
+# BitLab — Virtual Informatics Lab 3D
 
-**Оқушыларға арналған виртуалды информатика зертханасы** — шынайы 3D компьютер, Setup Studio және
+**BitLab — оқушыларға арналған виртуалды информатика зертханасы** — шынайы 3D компьютер, Setup Studio және
 интерактивті информатика зертханалары бар веб-платформа.
 
 **Онлайн демо:** https://nurdavlatmirzahmetov003-cpu.github.io/virtual-informatics-lab-3d/ — тек сайт (GitHub Pages, `.github/workflows/pages.yml`): 3D кабинет пен зертханалар қонақ режимінде жұмыс істейді; аккаунттар, сыныптар, тікелей ойындар нақты серверді қажет етеді (`DEPLOY.md`).
@@ -71,6 +71,12 @@ Windows: `start.bat` (қажет болса `npm install` жасайды да, d
 ![3D сетап](docs/screenshots/assembly-final.jpg)
 ![Желі зертханасы](docs/screenshots/network-lab.jpg)
 ![Нәтижелер](docs/screenshots/progress.jpg)
+
+## Курс атауы мен логотип
+
+Курстың атауы (қазір **BitLab**) бір жерде: `src/config/brand.ts`. Оны өзгертсеңіз, жоғарғы панель, браузер қойындысы, басты бет, сертификаттар және Биттің сәлемдесуі бірге өзгереді: сөздіктердегі `{brand}` орнына `translate()` атауды өзі қояды.
+
+Логотип: `src/components/brand/BrandMark.tsx` (сайт ішінде, темаға сай), `public/brand/logo.svg`, `public/brand/logo-full.svg`, `public/favicon.svg`. Өз логотипіңізді қою үшін осы SVG файлдарын ауыстырыңыз. `test:visual` компонент пен файлдардың бір суретті салатынын тексереді: суретті өзгертсеңіз, тесттегі пішіндерді де жаңартыңыз.
 
 ## Құрылым
 Толығырақ: `ARCHITECTURE.md`.

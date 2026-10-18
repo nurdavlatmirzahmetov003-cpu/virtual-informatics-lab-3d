@@ -6,6 +6,7 @@
 import { CanvasTexture, ClampToEdgeWrapping, RepeatWrapping, SRGBColorSpace, type Texture } from 'three';
 import { mouseSurface, type MouseShape } from './geometry';
 import { FONT_DISPLAY, FONT_SANS } from '@/lib/fonts';
+import { BRAND } from '@/config/brand';
 
 function canvas(w: number, h: number) {
   const c = document.createElement('canvas');
@@ -139,7 +140,7 @@ export function mouseShellTextures(shape: MouseShape) {
   return { color: colorTex, emissive: emissiveTex };
 }
 
-/** Wallpaper for the monitor: branded virtual-lab desktop. Redrawn after fonts load. */
+/** Wallpaper for the monitor: the BitLab desktop. Redrawn after fonts load. */
 export function drawWallpaper(c: HTMLCanvasElement) {
   const ctx = c.getContext('2d');
   if (!ctx) return;
@@ -172,31 +173,48 @@ export function drawWallpaper(c: HTMLCanvasElement) {
   ctx.fillRect(0, 0, w, h);
   ctx.restore();
 
-  // logo mark
-  const s = u * 0.09;
+  // the BitLab mark (components/brand/BrandMark.tsx), on a 64-unit grid
+  const s = (u * 0.15) / 64;
   ctx.save();
-  ctx.translate(w / 2, h * 0.42);
-  ctx.strokeStyle = '#38d6f5';
-  ctx.lineWidth = s * 0.16;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.shadowColor = 'rgba(56,214,245,0.8)';
-  ctx.shadowBlur = s * 0.4;
+  ctx.translate(w / 2 - 32 * s, h * 0.42 - 32 * s);
+  ctx.scale(s, s);
+  ctx.shadowColor = 'rgba(95,123,255,0.65)';
+  ctx.shadowBlur = 18;
+  const tile = ctx.createLinearGradient(6, 4, 60, 62);
+  tile.addColorStop(0, '#2fc8f2');
+  tile.addColorStop(0.55, '#5f7bff');
+  tile.addColorStop(1, '#a95cf5');
+  ctx.fillStyle = tile;
   ctx.beginPath();
-  ctx.moveTo(-s * 0.45, -s * 0.38);
-  ctx.lineTo(s * 0.45, -s * 0.38);
-  ctx.lineTo(-s * 0.45, s * 0.38);
-  ctx.lineTo(s * 0.45, s * 0.38);
+  ctx.roundRect(2, 2, 60, 60, 17);
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 7;
+  ctx.beginPath();
+  ctx.moveTo(22, 13);
+  ctx.lineTo(22, 48);
   ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(33.5, 37.5, 10.5, 0, Math.PI * 2);
+  ctx.stroke();
+  const dot = ctx.createLinearGradient(40, 10, 52, 24);
+  dot.addColorStop(0, '#ffc15c');
+  dot.addColorStop(1, '#ff7a6b');
+  ctx.fillStyle = dot;
+  ctx.beginPath();
+  ctx.arc(45.5, 17.5, 5.5, 0, Math.PI * 2);
+  ctx.fill();
   ctx.restore();
 
-  ctx.fillStyle = 'rgba(238,241,246,0.92)';
   ctx.textAlign = 'center';
-  ctx.font = `600 ${Math.round(u * 0.045)}px ${FONT_DISPLAY}`;
-  ctx.fillText('VIRTUAL INFORMATICS LAB', w / 2, h * 0.6);
-  ctx.fillStyle = 'rgba(163,171,187,0.85)';
+  ctx.font = `700 ${Math.round(u * 0.06)}px ${FONT_DISPLAY}`;
+  ctx.fillStyle = 'rgba(244,246,252,0.95)';
+  ctx.fillText(BRAND.name, w / 2, h * 0.62);
+  ctx.fillStyle = 'rgba(176,186,210,0.9)';
   ctx.font = `500 ${Math.round(u * 0.028)}px ${FONT_SANS}`;
-  ctx.fillText('Виртуалды информатика зертханасы', w / 2, h * 0.655);
+  ctx.fillText('Виртуалды информатика зертханасы', w / 2, h * 0.675);
 
   // taskbar
   ctx.fillStyle = 'rgba(12,15,22,0.85)';

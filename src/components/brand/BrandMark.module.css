@@ -1,0 +1,25 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  line-height: 1;
+}
+
+.word {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.bold {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.light {
+  font-weight: 500;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

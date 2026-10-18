@@ -4,6 +4,8 @@ import { useT } from '@/hooks/useT';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { QualitySelect } from '@/components/ui/QualitySelect';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { BrandMark } from '@/components/brand/BrandMark';
+import { BRAND } from '@/config/brand';
 import { AccountButton } from './AccountButton';
 import styles from './TopBar.module.css';
 
@@ -21,10 +23,11 @@ export function TopBar() {
   return (
     <header className={styles.root}>
       <NavLink to="/" className={styles.brand} aria-label={t('app.title')}>
-        <svg className={styles.mark} viewBox="0 0 64 64" aria-hidden="true">
-          <path d="M18 20h28L18 44h28" />
-        </svg>
-        <span className={styles.brandText}>{t('app.short')}</span>
+        <BrandMark size={32} className={styles.mark} />
+        <span className={styles.brandText}>
+          <b>{BRAND.wordmark[0]}</b>
+          <span className={styles.brandLight}>{BRAND.wordmark[1]}</span>
+        </span>
       </NavLink>
 
       <nav className={styles.nav} aria-label={t('nav.primary')}>

@@ -89,3 +89,23 @@ test('per-product models: one file per quality level, the next lighter one far a
   assert.deepEqual(modelLevels('hardware/speakers.glb', 2), { near: 'hardware/speakers_lod1.glb', far: null });
   assert.deepEqual(modelLevels('hardware/psu.glb', 2), { near: 'hardware/psu.glb', far: null });
 });
+
+test('brand: one name everywhere, the logo files draw the same mark as the component', async () => {
+  const { BRAND } = await import('../src/config/brand.ts');
+  const { translate, loadLanguage } = await import('../src/lib/i18n/index.ts');
+  for (const lang of ['kk', 'ru', 'en']) {
+    await loadLanguage(lang);
+    const title = translate(lang, 'app.title');
+    assert.ok(title.startsWith(BRAND.name), `${lang}: ${title}`);
+    assert.ok(!title.includes('{'), `${lang}: placeholder left in ${title}`);
+  }
+  // an explicit variable still wins over the global one
+  assert.equal(translate('kk', 'app.short', { brand: 'X' }), 'X');
+  const component = readFileSync(path.join(root, 'src/components/brand/BrandMark.tsx'), 'utf8');
+  for (const file of ['public/favicon.svg', 'public/brand/logo.svg', 'public/brand/logo-full.svg']) {
+    const svg = readFileSync(path.join(root, file), 'utf8');
+    for (const shape of ['M22 13v35', 'cx="33.5" cy="37.5" r="10.5"', 'cx="45.5" cy="17.5" r="5.5"']) {
+      assert.ok(svg.includes(shape) && component.includes(shape), `${file}: ${shape}`);
+    }
+  }
+});

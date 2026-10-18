@@ -28,17 +28,25 @@
 }
 
 .mark {
-  width: 28px;
-  height: 28px;
-  padding: 5px;
-  border-radius: 8px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-strong);
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  flex: none;
+  filter: drop-shadow(0 4px 10px var(--accent-glow));
+}
+
+.brandText {
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.brandText b {
+  font-weight: 800;
+}
+
+.brandLight {
+  font-weight: 500;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .nav {
@@ -88,14 +96,14 @@
   gap: var(--space-2);
 }
 
-@media (max-width: 1320px) {
+@media (max-width: 1100px) {
   .brandText {
     display: none;
   }
 }
 
-/* a signed-in name is wider than "Sign in": drop the brand text a little earlier so the links never collide with it */
-@media (max-width: 1520px) {
+/* a signed-in name is wider than "Sign in": drop the wordmark a little earlier so the links never collide with it */
+@media (max-width: 1320px) {
   .root:has(.accountWrap) .brandText {
     display: none;
   }

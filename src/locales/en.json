@@ -1,8 +1,9 @@
 {
   "app": {
-    "title": "Virtual Informatics Lab",
-    "short": "Informatics Lab",
-    "skipToContent": "Skip to main content"
+    "title": "{brand} — Virtual Informatics Lab",
+    "short": "{brand}",
+    "skipToContent": "Skip to main content",
+    "tagline": "See the computer, build it with your own hands, understand it"
   },
   "nav": {
     "home": "Home",
@@ -40,7 +41,7 @@
     "other": "Resources"
   },
   "home": {
-    "eyebrow": "Interactive 3D platform",
+    "eyebrow": "{brand} · interactive 3D platform",
     "title": "Virtual Informatics Lab",
     "subtitle": "Explore the computer. Build. Program. Experiment.",
     "cta": "Start the lab",

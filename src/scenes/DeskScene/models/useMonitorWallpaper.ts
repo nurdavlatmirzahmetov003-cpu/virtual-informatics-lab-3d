@@ -1,6 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { CanvasTexture, SRGBColorSpace, type BufferGeometry, type Mesh, type MeshStandardMaterial, type Object3D, type Texture } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
+import { useCanvasFonts } from '@/hooks/useCanvasFonts';
 import { drawWallpaper } from '@/lib/three/proceduralTextures';
 
 /**
@@ -60,6 +61,13 @@ export function useMonitorWallpaper(width = 1536, height = 672) {
     texture.colorSpace = SRGBColorSpace;
     return texture;
   }, [width, height]);
+  // redraw in place once the web fonts are in; clones share the image source, so they follow
+  const fonts = useCanvasFonts();
+  useEffect(() => {
+    if (!fonts) return;
+    drawWallpaper(wallpaper.image as HTMLCanvasElement);
+    wallpaper.needsUpdate = true;
+  }, [fonts, wallpaper]);
   return useCallback((root: Object3D) => {
     root.traverse(obj => {
       const mesh = obj as Mesh;

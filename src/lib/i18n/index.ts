@@ -1,4 +1,5 @@
 import kk from '@/locales/kk.json';
+import { BRAND } from '@/config/brand';
 
 export const LANGUAGES = ['kk', 'ru', 'en'] as const;
 export type Language = (typeof LANGUAGES)[number];
@@ -59,9 +60,13 @@ function lookup(dict: unknown, key: string): string | undefined {
   return typeof node === 'string' ? node : undefined;
 }
 
+/** Filled into every text without being passed: `{brand}` is the course name from config/brand.ts. */
+const GLOBAL_VARS: TranslationVars = { brand: BRAND.name };
+
 function interpolate(text: string, vars?: TranslationVars): string {
-  if (!vars) return text;
-  return text.replace(/\{(\w+)\}/g, (match, name: string) => (name in vars ? String(vars[name]) : match));
+  if (!text.includes('{')) return text;
+  const all = vars ? { ...GLOBAL_VARS, ...vars } : GLOBAL_VARS;
+  return text.replace(/\{(\w+)\}/g, (match, name: string) => (name in all ? String(all[name]) : match));
 }
 
 /**
