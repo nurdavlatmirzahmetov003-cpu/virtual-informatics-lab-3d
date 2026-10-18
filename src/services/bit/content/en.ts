@@ -1,0 +1,220 @@
+import type { BitContent } from './types';
+
+const en: BitContent = {
+  faq: {
+    computer: {
+      q: 'What is a computer?',
+      a: 'A computer is a device that takes in information, processes it, stores it and shows the result. Its main parts are the processor, the memory, the storage drive, the motherboard and the power supply. Programs tell it what to do.',
+    },
+    cpu: {
+      q: 'What is a processor?',
+      a: 'The processor is the brain of the computer. It carries out program instructions billions of times per second. Its speed depends on the number of cores and on the clock speed, measured in gigahertz. A six-core processor, for example, handles several tasks at once with ease.',
+    },
+    ram: {
+      q: 'What is RAM for?',
+      a: 'RAM, the main memory, holds the data the processor is working on right now. It is very fast, but everything in it is lost when the computer turns off. The more memory you have, the more programs you can keep open: 8 gigabytes is enough for school work, 16 for games.',
+    },
+    storage: {
+      q: 'What is the difference between an SSD and an HDD?',
+      a: 'Files are kept for the long term on a hard disk drive, an HDD, or on an SSD. An HDD has spinning magnetic platters inside: it is cheap and large, but slow. An SSD is made of memory chips with no moving parts, so it is many times faster. With the system on an SSD, a computer starts in a few seconds.',
+    },
+    gpu: {
+      q: 'What does a graphics card do?',
+      a: 'The graphics card draws the picture you see on the screen. It has its own processor and memory and runs thousands of simple calculations in parallel. That is why games, 3D modelling and video editing need a powerful graphics card.',
+    },
+    motherboard: {
+      q: 'What is a motherboard?',
+      a: 'The motherboard is the main board that connects every part of the computer. The processor, memory, graphics card and drives plug into it, and they talk to each other through it. When you choose parts, the processor socket and the memory type must match the board.',
+    },
+    psu: {
+      q: 'What is a power supply for?',
+      a: 'The power supply turns the 230-volt alternating current from the socket into the steady 12, 5 and 3.3 volts a computer needs. Its rating should be about 20 to 30 percent above what all the parts use together.',
+    },
+    cooling: {
+      q: 'Why does a computer need cooling?',
+      a: 'The processor and the graphics card heat up while they work. The cooling system — a heatsink, fans or liquid cooling — carries that heat away. If the temperature gets too high, the processor slows down, and if it keeps rising, the computer shuts itself off.',
+    },
+    os: {
+      q: 'What is an operating system?',
+      a: 'The operating system is the main program that runs the computer’s hardware and other programs. It shares out memory, stores files and lets us work with windows and icons. Windows, macOS, Linux and Android on your phone are all operating systems.',
+    },
+    binary: {
+      q: 'What is the binary number system?',
+      a: 'A computer stores all data in binary, using only 0 and 1. Each digit is a power of two: 1, 2, 4, 8 and so on. For example, 1011 is 8 plus 2 plus 1, which is 11 in decimal.',
+    },
+    bitByte: {
+      q: 'What are bits and bytes?',
+      a: 'A bit is the smallest unit of information: it is either 0 or 1. Eight bits make one byte, enough to store one letter. 1024 bytes make a kilobyte, and 1024 kilobytes make a megabyte.',
+    },
+    algorithm: {
+      q: 'What is an algorithm?',
+      a: 'An algorithm is an exact sequence of steps that reaches a goal. Making tea is an algorithm too: boil the water, put tea in the pot, pour, wait. A programmer turns an algorithm into a language the computer understands, and that is a program.',
+    },
+    programming: {
+      q: 'How do I start programming?',
+      a: 'A programming language is a way to tell a computer what to do. Python is a good place to start: it is simple and reads almost like English. Websites are written in JavaScript, and large systems often in Java or C++.',
+    },
+    network: {
+      q: 'What is a computer network?',
+      a: 'A computer network is a group of devices joined by cables or radio so they can exchange data. The computers in one classroom form a local network, and the internet is the biggest network of all, joining millions of networks around the world. Every device on a network has its own IP address.',
+    },
+    internet: {
+      q: 'How does the internet work?',
+      a: 'The internet is a global network that joins millions of networks around the world. Data is split into small packets that travel through routers along the best available path. Everything follows one shared set of rules, the TCP/IP protocols.',
+    },
+    ip: {
+      q: 'What is an IP address?',
+      a: 'An IP address is a unique number for each device on a network, like a postal address. An IPv4 address is four numbers separated by dots, for example 192.168.1.10. Devices on the same network share the network part of the address, and the subnet mask says which part that is.',
+    },
+    router: {
+      q: 'What does a router do?',
+      a: 'A router connects different networks, for example your home network to the internet. It looks at the address on every packet and decides where to send it next. A home router usually hands out IP addresses to your devices as well.',
+    },
+    switch: {
+      q: 'What is a switch for?',
+      a: 'A switch connects the computers of one network by cable. It remembers the MAC address of every device and sends data only to the port that needs it. Connecting different networks together is the router’s job.',
+    },
+    wifi: {
+      q: 'How does Wi-Fi work?',
+      a: 'Wi-Fi sends data without wires, over radio waves. The router broadcasts a network and phones and laptops join it with a password. Always protect your network with WPA2 or WPA3 encryption and a strong password.',
+    },
+    password: {
+      q: 'What makes a strong password?',
+      a: 'A strong password has at least 12 characters, mixing capital and small letters, numbers and symbols. Never use your birthday, your name or easy ones like 123456. Use a different password for every site and never share it.',
+    },
+    safety: {
+      q: 'How do I stay safe online?',
+      a: 'Be careful online: never give strangers your address, your phone number or your passwords. Do not open suspicious links and do not trust offers that look too good to be true — that may be phishing. If something feels wrong, tell a parent or your teacher.',
+    },
+    virus: {
+      q: 'What is a computer virus?',
+      a: 'A computer virus is a harmful program that copies itself, damages files or steals data. To stay protected, install an antivirus and system updates and download programs only from official websites. Keep backups of your important files.',
+    },
+    cloud: {
+      q: 'What is the cloud?',
+      a: 'The cloud means your files and programs live on distant servers on the internet instead of on your own computer. A document saved in the cloud opens from any device. You do need an internet connection to reach it.',
+    },
+    inputOutput: {
+      q: 'What are input and output devices?',
+      a: 'Input devices give information to the computer: the keyboard, mouse, microphone, webcam and scanner. Output devices show the result: the monitor, printer, speakers and headphones. A touch screen does both.',
+    },
+    monitor: {
+      q: 'How do I choose a monitor?',
+      a: 'Three numbers describe a monitor. Resolution is the number of dots on the screen, for example 1920 by 1080. The refresh rate is measured in hertz: a 144-hertz monitor redraws the picture 144 times a second. The third is the panel type: IPS panels show colours accurately.',
+    },
+    ai: {
+      q: 'What is artificial intelligence?',
+      a: 'Artificial intelligence means programs that learn from examples to understand text, recognise images or suggest decisions. I use that kind of technology to answer your questions. AI can make mistakes, though, so always check important facts.',
+    },
+    file: {
+      q: 'What are files and folders?',
+      a: 'A file is a named piece of data on a disk: a text, a picture, a song or a program. The extension after the name shows its type: .docx is a document, .png is an image. We keep files tidy by putting them into folders.',
+    },
+    who: {
+      q: 'Who are you?',
+      a: 'I am Bit, the robot assistant of the {brand} lab. I can explain informatics topics, open any part of the site and take you through a lesson step by step. I can even build a computer for your budget. Try saying: “Bit, show me the site”.',
+    },
+    help: {
+      q: 'What can you do?',
+      a: 'Say it or type it, for example: “Bit, what is a processor?”, “Bit, open the networks lab”, “Bit, start the logic lesson”, “Bit, build a PC for 500,000 tenge” or “Bit, show me the site”. I always answer in the language of the site.',
+    },
+    progress: {
+      q: 'Where can I see my results?',
+      a: 'Your results are on the “My results” page: finished tasks, points, XP, your level and achievements. When you sign in, your results are saved on the server and your teacher can see them too.',
+    },
+  },
+  tourIntro: 'Great, let’s walk through the site together! I will stop in every section and tell you what you can do there. To move on, press “Next” or say “next”.',
+  tour: {
+    home: 'This is the home page with a 3D desk. Scroll down and the computer comes apart, telling you about each of its parts.',
+    lab: 'This is the 3D lab, our big classroom. It has nine zones: PC building, networks, peripherals and more. Click a zone and the camera flies there; click a device to turn it around and see it from every side.',
+    explorer: 'In Anatomy every device is shown close up: its name, what it is for and its key specs. Each one ends with a short three-question test.',
+    labs: 'This is the list of labs: PC assembly, networks, algorithms, logic, experiments, cable connections and cause and effect. Every task is graded automatically.',
+    studio: 'In Setup Studio you pick a purpose and a budget and build your own computer. The studio checks that the parts fit together. Tell me “build a PC for 500,000 tenge” and I will help.',
+    tasks: 'The Tasks page collects the tasks of every lab in one place. Use the filter to find the ones you have not done and start right away.',
+    progress: 'My results shows your points, your level, your achievements and the next task I recommend.',
+    live: 'In Live games the whole class plays quizzes and races: who builds a PC fastest, who finds the fault first. That is the end of the tour! Ask me anything, any time — type or just talk.',
+  },
+  lessons: {
+    network: [
+      'Let’s start the networks lesson! Today we will put two computers on a network and check that they can see each other. First pick a task at the top or open Free build mode.',
+      'Drag two PCs and one switch from the Devices list onto the workspace. Then click a computer’s port and pull the cable to a port on the switch.',
+      'Now click each computer and type its IP address. Devices on one network have similar addresses: for example 192.168.1.10 and 192.168.1.11, with the mask 255.255.255.0.',
+      'The last step is PING. Send a ping from one computer to the other and watch the packet travel. If it arrives, your network works. If not, check the cables and the IP addresses.',
+    ],
+    logic: [
+      'Welcome to the logic lesson! Logic gates work with 0 and 1: AND, OR and NOT. First choose a task or open Free build.',
+      'Drag the gate you need from the Gates list onto the workspace. To draw a wire, press a gate’s output on the right and drag it to another gate’s input on the left.',
+      'Now click the inputs A, B and C to switch them between 0 and 1. Wires carrying a 1 glow, and the truth table fills itself in.',
+      'When the circuit is ready, press Check. The site tries every combination of inputs and gives you a score. If something is wrong, compare your truth table with the one in the task.',
+    ],
+    algorithms: [
+      'Let’s start the algorithms lesson! Here you see every step of searching and sorting algorithms. First pick an algorithm from the list, for example bubble sort.',
+      'Press play and watch the bars swap places. You can change the speed, pause and step back.',
+      'Under every step it says what is happening and why. The current line of pseudocode is highlighted — read it carefully.',
+      'At the end there is a short quiz: guess how many comparisons the algorithm makes or what happens next. Correct answers add to your score.',
+    ],
+    assembly: [
+      'Welcome to the PC assembly lesson! In eleven steps you build a computer with your own hands. Pick a part up with the mouse, carry it to its place and let go when the see-through ghost appears.',
+      'First put the motherboard on the mat, then fit the processor, the cooler and the memory. The order matters: the processor goes in before the cooler.',
+      'Once the board is in the case, add the graphics card, the SSD and the power supply. If you get stuck, the Hint button shows the next step, but it costs one point.',
+      'When everything is in place, switch the computer on! Your time, mistakes and hints are counted. Build it faster and without mistakes to beat your record.',
+    ],
+    connect: [
+      'Let’s start the cable lesson. Here you plug the monitor, keyboard, mouse and power cables into the right sockets.',
+      'Grab the end of a cable with the mouse and bring it to a matching port. A plug will not go into a socket of another shape, so learn the port types: HDMI, DisplayPort, USB and Ethernet.',
+      'If the computer has a graphics card, plug the monitor into the graphics card, not into the motherboard. This is the most common mistake.',
+      'In the next tasks you connect a laptop to the network, first with a cable and then over Wi-Fi. Choose a secure network: one with WPA2 or WPA3 encryption.',
+    ],
+    sim: [
+      'Welcome to the cause and effect lab! Here you take one part out of a computer and see what happens.',
+      'Choose the parts and switch the computer on. Without memory it beeps, and with no graphics card and no built-in graphics the screen stays dark.',
+      'Run the stress test and watch the temperature and the power. With a weak cooler the processor slows down when it reaches 95 degrees.',
+      'In the repair task the computer has a fault: read the symptoms, find the cause and swap the right part. Check your guess under “What happened?”.',
+    ],
+    experiments: [
+      'Let’s start the experiments lesson! In every experiment you change one value and see the result at once.',
+      'Pick an experiment from the list. First read “What are we exploring?” — it tells you the goal.',
+      'Change the values with the sliders and buttons and watch the chart change. This is a teaching simulation; its numbers are close to real devices.',
+      'At the end read “What did we see, and why?” and answer the mini quiz. If every answer is right, the task counts as done.',
+    ],
+    explorer: [
+      'Let’s start the computer anatomy lesson. Choose a category at the top: external devices or internal components.',
+      'Click a device: the camera moves in and the panel shows its name, its purpose and its key specs.',
+      'Turn the device with the mouse and look at it from every side. If a spec is unclear, ask me.',
+      'Every device has a mini test of three questions. Pass it and move on to the next device.',
+    ],
+    studio: [
+      'Welcome to the Setup Studio lesson! Today you build your own computer. First choose what it is for: study, gaming, programming or video editing.',
+      'In the next step set the budget. It is shared out by purpose: gaming puts more into the graphics card, programming into the processor and memory.',
+      'Pick a style, then try swapping each part in the Products step. The studio checks compatibility for you: the socket, the memory type and the power supply rating.',
+      'When you are done, the summary page shows the price and specs of your build. Tell me “build a PC for 400,000 tenge” and I will suggest my own version.',
+    ],
+  },
+  say: {
+    greet: 'Hi! I am Bit, the {brand} assistant. Ask me about informatics, ask me to open a section, or let’s start a lesson together.',
+    unknown: 'Sorry, I have no ready answer for that, and the AI is not connected right now. Pick one of the topics below or ask in a different way.',
+    error: 'Sorry, I could not get an answer just now. Please try again in a moment.',
+    navigate: 'Opening {name}.',
+    lessonDone: 'Well done, the lesson is over! Now try the task on your own. Ask me if you have questions.',
+    tourDone: 'That’s the tour. Good luck!',
+    stopped: 'OK, I have stopped.',
+    nothingToContinue: 'There is no lesson or tour to continue right now. Try “show me the site” or “start the logic lesson”.',
+    buildWorking: 'Let me build a computer for {budget} tenge.',
+    buildDone: 'Done! I built a {purpose} computer for {budget} tenge: a {cpu} processor and a {gpu} graphics card. The total is {total} tenge. I opened the build in Setup Studio, so you can swap any part.',
+    buildNoGpu: 'Done! I built a {purpose} computer for {budget} tenge with a {cpu} processor; its built-in graphics drive the screen. The total is {total} tenge. I opened the build in Setup Studio.',
+    buildGpuHint: 'A version with a graphics card costs about {total} tenge.',
+    buildOver: 'A full build does not fit into that budget: the cheapest one costs {total} tenge. I opened it in Setup Studio, where you can change the budget.',
+    buildFail: 'Sorry, I could not put a build together for that budget. Tell me the amount again, for example “build a PC for 400,000 tenge”.',
+    purposes: {
+      gaming: 'gaming',
+      study: 'study',
+      programming: 'programming',
+      design3d: '3D design',
+      streaming: 'streaming',
+      universal: 'all-round',
+    },
+  },
+  starters: ['help', 'cpu', 'binary', 'ip', 'password'],
+};
+
+export default en;

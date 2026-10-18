@@ -9,6 +9,7 @@
  */
 import { createServer } from 'node:http';
 import { handleAi, aiStatus } from './ai';
+import { createBit } from './bit';
 import { createApp } from './app';
 import { openDb, migrate } from './db';
 import { loadEnv, serverConfig } from './env';
@@ -26,7 +27,9 @@ purgeExpired(db);
 
 const security = { secure: config.cookieSecure, origins: config.allowedOrigins };
 const site = config.staticDir ? staticSite(config.staticDir, security) : null;
-const app = createApp({ db, config, extra: site ? [handleAi, site] : [handleAi], aiStatus, headers: securityHeaders(security) });
+// Bit, the voice assistant: Gemini behind this server (the key never reaches the browser)
+const bit = createBit({ allowedOrigins: config.allowedOrigins });
+const app = createApp({ db, config, extra: site ? [bit, handleAi, site] : [bit, handleAi], aiStatus, headers: securityHeaders(security) });
 const server = createServer((req, res) => void app(req, res));
 // live games (V2-11b, /api/live/ws) and class events (V2-12, /api/events/ws) speak WebSocket
 server.on('upgrade', app.upgrade);
@@ -36,6 +39,7 @@ server.listen(config.port, config.host, () => {
   console.log(`[server] http://${config.host}:${config.port}${site ? ` (site: ${config.staticDir})` : ''}`);
   console.log(`[server] database: ${config.dbFile}${applied.length ? ` (migrated: ${applied.join(', ')})` : ''}`);
   console.log(`[server] AI provider: ${ai.provider ?? 'none (local fallback only)'}`);
+  console.log(`[server] Bit assistant: ${bit.configured ? `Gemini ${bit.model}` : 'built-in answers only (set GEMINI_API_KEY in .env)'}`);
   if (countAdmins(db) === 0) console.log('[server] no admin yet — run: npm run server:create-admin');
 });
 

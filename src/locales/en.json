@@ -7117,5 +7117,46 @@
       "offline": "No connection to the server.",
       "server": "Something went wrong on the server."
     }
+  },
+  "bit": {
+    "name": "Bit",
+    "role": "Your assistant",
+    "open": "Talk to Bit",
+    "close": "Close",
+    "ask": "Ask Bit",
+    "online": "Gemini is on — ask me anything",
+    "offline": "Built-in answers — works offline too",
+    "checking": "Checking…",
+    "placeholder": "Type a question or press the mic…",
+    "send": "Send",
+    "listen": "Ask by voice",
+    "listening": "Listening…",
+    "stopListening": "Stop listening",
+    "voiceOn": "Spoken answers: on",
+    "voiceOff": "Spoken answers: off",
+    "conversationOn": "Conversation mode: I listen again after each answer",
+    "conversationOff": "Conversation mode: off",
+    "stopSpeaking": "Stop speaking",
+    "clear": "Clear the chat",
+    "thinking": "Thinking…",
+    "sourceFaq": "Built-in answer",
+    "sourceAi": "Gemini",
+    "noMic": "This browser cannot recognise speech. Try Chrome or Edge — or just type.",
+    "micDenied": "Microphone access is blocked. Allow it from the icon in the address bar.",
+    "heardNothing": "I didn't hear anything. Please try again.",
+    "voiceApprox": "This device has no Kazakh voice, so a Russian voice reads the answer. Microsoft Edge has proper Kazakh voices.",
+    "noVoice": "This device has no voice for this language, so answers are shown as text only.",
+    "tour": "Site tour",
+    "lesson": "Lesson: {name}",
+    "step": "{n}/{total}",
+    "next": "Next",
+    "stopGuide": "Stop",
+    "try": "Try saying:",
+    "actions": {
+      "tour": "Show me the site",
+      "lesson": "Start the logic lesson",
+      "build": "Build a PC for 400,000 tenge",
+      "open": "Open the networks lab"
+    }
   }
 }

@@ -58,7 +58,7 @@
    - `DOMAIN=lab.example.kz`;
    - `COOKIE_SECURE=true`;
    - `ALLOWED_ORIGINS=https://lab.example.kz`;
-   - қаласаңыз, AI кілті. Ол тек осы файлда тұрады, ешқашан commit-ке түспейді.
+   - қаласаңыз, AI кілті (`GEMINI_API_KEY` — Бит пен Setup Studio көмекшісі үшін). Ол тек осы файлда тұрады, ешқашан commit-ке түспейді.
 4. **Іске қосу:**
    ```bash
    sudo docker compose up -d --build

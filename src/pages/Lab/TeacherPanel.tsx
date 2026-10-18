@@ -6,13 +6,14 @@
  */
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bot, ClipboardCheck, Lightbulb, Wrench, X } from 'lucide-react';
+import { ArrowRight, Bot, ClipboardCheck, Lightbulb, MessageCircle, Wrench, X } from 'lucide-react';
 import { deviceById, deviceKey } from '@/data/devices/devices';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { teacherCheck } from '@/lib/lab/teacher';
 import { useAuthStore } from '@/store/authStore';
 import { useLabStore } from '@/store/labStore';
+import { openBit } from '@/store/bitStore';
 import { useProgressStore } from '@/store/progressStore';
 import styles from './TeacherPanel.module.css';
 
@@ -45,6 +46,9 @@ export function TeacherPanel() {
       </header>
 
       <p className={styles.speech}>{t(k(`lab.teacher.mood.${check.mood}`), { name, percent: check.percent })}</p>
+      <button type="button" className={styles.cta} onClick={() => openBit()}>
+        <MessageCircle size={16} aria-hidden="true" /> {t('bit.ask')}
+      </button>
 
       <section className={styles.card} aria-labelledby="teacher-check">
         <h3 id="teacher-check">

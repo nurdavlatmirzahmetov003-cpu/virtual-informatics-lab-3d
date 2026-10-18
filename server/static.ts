@@ -87,7 +87,8 @@ export function securityHeaders({ secure, origins }: SecurityOptions): Record<st
     'x-content-type-options': 'nosniff',
     'x-frame-options': 'DENY',
     'referrer-policy': 'strict-origin-when-cross-origin',
-    'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
+    // the microphone is for Bit's voice input, on this site only
+    'permissions-policy': 'camera=(), microphone=(self), geolocation=(), payment=(), usb=(), interest-cohort=()',
     'cross-origin-opener-policy': 'same-origin',
     ...(secure ? { 'strict-transport-security': 'max-age=31536000; includeSubDomains' } : {}),
   };

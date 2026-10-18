@@ -20,17 +20,25 @@ import { loadEnv } from './env';
 
 loadEnv();
 
-type Provider = 'anthropic' | 'openai';
+type Provider = 'gemini' | 'anthropic' | 'openai';
 const TIMEOUT_MS = Number(process.env.AI_TIMEOUT_MS ?? 20_000);
 const provider: Provider | null = (() => {
   const wanted = process.env.AI_PROVIDER?.toLowerCase();
+  if (wanted === 'gemini' && process.env.GEMINI_API_KEY) return 'gemini';
   if (wanted === 'openai' && process.env.OPENAI_API_KEY) return 'openai';
   if (wanted === 'anthropic' && process.env.ANTHROPIC_API_KEY) return 'anthropic';
+  // Gemini first: one key then serves both Bit and the setup assistant
+  if (process.env.GEMINI_API_KEY) return 'gemini';
   if (process.env.ANTHROPIC_API_KEY) return 'anthropic';
   if (process.env.OPENAI_API_KEY) return 'openai';
   return null;
 })();
-const MODEL = provider === 'anthropic' ? (process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-5-5') : (process.env.OPENAI_MODEL ?? 'gpt-4o-mini');
+const MODEL =
+  provider === 'gemini'
+    ? (process.env.GEMINI_MODEL?.trim() || 'gemini-2.5-flash')
+    : provider === 'anthropic'
+      ? (process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-5-5')
+      : (process.env.OPENAI_MODEL ?? 'gpt-4o-mini');
 
 const SYSTEM = [
   'You are the setup assistant of an educational computer lab for school students in Kazakhstan.',

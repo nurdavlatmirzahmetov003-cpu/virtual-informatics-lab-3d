@@ -15,14 +15,17 @@ export const STORAGE_KEYS = {
   setup: `${STORAGE_NAMESPACE}:setup`,
   /** Student progress (services/progress — repository, migrations). */
   progress: `${STORAGE_NAMESPACE}:progress`,
+  /** Bit the assistant: voice on/off, conversation mode (store/bitStore.ts). */
+  bit: `${STORAGE_NAMESPACE}:bit`,
 } as const;
 
 export const STORAGE_VERSIONS = {
-  /** v2: colour theme. */
+  /** v2: colour theme; v3: light is the default (0.36). */
   settings: 3,
   setup: 1,
   /** v3: attempts + per-exercise summary + achievements (services/progress/migrate.ts). */
   progress: 3,
+  bit: 1,
 } as const;
 
 /** localStorage can throw (private mode, blocked storage, quota). */

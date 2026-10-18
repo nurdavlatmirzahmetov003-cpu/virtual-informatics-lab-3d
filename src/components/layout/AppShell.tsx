@@ -6,6 +6,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { applyTheme } from '@/lib/theme';
 import { useSceneStatus } from '@/store/sceneStatusStore';
 import { AchievementToaster } from '@/components/achievements/AchievementToaster';
+import { BitLauncher } from '@/components/bit/BitLauncher';
 import { useAuthStore } from '@/store/authStore';
 import { setLiveEvents } from '@/services/live/events';
 import { useSiteStore } from '@/store/siteStore';
@@ -54,6 +55,7 @@ export function AppShell() {
       </main>
       {sceneExpected && <Suspense fallback={null}><LoaderOverlay /></Suspense>}
       <AchievementToaster />
+      <BitLauncher />
     </>
   );
 }
