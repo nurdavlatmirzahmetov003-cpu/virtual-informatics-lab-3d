@@ -31,6 +31,8 @@ export interface BitOptions {
   timeoutMs?: number;
   /** Requests per IP per minute. */
   ratePerMinute?: number;
+  /** Server voice (bitVoice.ts) is on: the health check tells the browser to use it. */
+  voice?: { tts: boolean; stt: boolean };
   /** Browsers on other sites may not spend the lab's quota (empty: no check, as in tests). */
   allowedOrigins?: readonly string[];
   now?: () => number;
@@ -244,7 +246,7 @@ export function createBit(options: BitOptions = {}) {
   async function handle(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
     const path = new URL(req.url ?? '/', 'http://local').pathname;
     if (!path.startsWith('/api/ai/bit/')) return false;
-    if (path === '/api/ai/bit/health' && req.method === 'GET') sendJson(res, 200, { configured, model: configured ? model : null });
+    if (path === '/api/ai/bit/health' && req.method === 'GET') sendJson(res, 200, { configured, model: configured ? model : null, tts: !!options.voice?.tts, stt: !!options.voice?.stt });
     else if (path === '/api/ai/bit/ask' && req.method === 'POST') await ask(req, res);
     else sendJson(res, 404, { error: 'not-found' });
     return true;

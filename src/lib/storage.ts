@@ -25,7 +25,8 @@ export const STORAGE_VERSIONS = {
   setup: 1,
   /** v3: attempts + per-exercise summary + achievements (services/progress/migrate.ts). */
   progress: 3,
-  bit: 1,
+  /** v2: where the button lives (dock). */
+  bit: 2,
 } as const;
 
 /** localStorage can throw (private mode, blocked storage, quota). */

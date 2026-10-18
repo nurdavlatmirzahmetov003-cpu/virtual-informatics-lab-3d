@@ -95,3 +95,18 @@ svg {
 .skip-link:focus {
   top: var(--space-4);
 }
+
+/* Bit's panel docked on desktop (0.37): the page makes room for it */
+:root {
+  --bit-panel-w: 380px;
+}
+
+@media (min-width: 900px) {
+  :root[data-bit-dock='right'] #main {
+    padding-right: calc(var(--bit-panel-w) + 16px);
+  }
+
+  :root[data-bit-dock='left'] #main {
+    padding-left: calc(var(--bit-panel-w) + 16px);
+  }
+}

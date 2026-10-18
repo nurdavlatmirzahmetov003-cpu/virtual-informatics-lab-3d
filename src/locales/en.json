@@ -7183,8 +7183,19 @@
       "tour": "Show me the site",
       "lesson": "Start the logic lesson",
       "build": "Build a PC for 400,000 tenge",
-      "open": "Open the networks lab"
-    }
+      "open": "Open the networks lab",
+      "next": "next"
+    },
+    "dragHint": "You can drag Bit to any edge of the screen",
+    "expand": "Open the panel",
+    "minimize": "Minimise (Bit keeps talking)",
+    "busy": "Bit has had too many questions just now. Try again in a few seconds.",
+    "sttFailed": "I couldn't recognise your voice. Please say it again or type your question.",
+    "understanding": "Working out what you said…",
+    "geminiVoice": "Clear voice · Gemini",
+    "listenPanel": "Read it with Bit",
+    "stopPanel": "Stop",
+    "says": "Bit explains"
   },
   "arcade": {
     "eyebrow": "Games arena",

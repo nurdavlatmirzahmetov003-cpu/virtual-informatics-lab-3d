@@ -10,6 +10,7 @@ import { matchFaq, isShortQuestion, type FaqId } from './faq';
 import { SECTIONS, type SectionId } from './sections';
 import { LESSON_IDS, type LessonId } from './lessons';
 import { countStems, hasStem, normalize, stripWakeWord } from './text';
+import { wordsToDigits } from './numbers';
 
 export type Intent =
   | { kind: 'empty' }
@@ -48,7 +49,8 @@ export function findSection(normalized: string): SectionId | null {
 const lessonFor = (section: SectionId | null): LessonId | null => (section && (LESSON_IDS as readonly string[]).includes(section) ? (section as LessonId) : null);
 
 export function understand(raw: string, options: { modelAvailable?: boolean } = {}): Intent {
-  const text = stripWakeWord(raw);
+  // amounts said in words («бес жүз мың») become digits for the budget
+  const text = wordsToDigits(stripWakeWord(raw));
   const n = normalize(text);
   // just "Бит!": the student is calling, answer with a greeting
   if (!n) return normalize(raw) ? { kind: 'greet' } : { kind: 'empty' };

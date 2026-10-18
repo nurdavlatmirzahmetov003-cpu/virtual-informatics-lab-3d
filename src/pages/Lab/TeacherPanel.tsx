@@ -15,6 +15,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useLabStore } from '@/store/labStore';
 import { openBit } from '@/store/bitStore';
 import { useProgressStore } from '@/store/progressStore';
+import { BitSays } from '@/components/bit/BitSays';
 import styles from './TeacherPanel.module.css';
 
 const k = (s: string) => s as TranslationKey;
@@ -45,7 +46,7 @@ export function TeacherPanel() {
         </button>
       </header>
 
-      <p className={styles.speech}>{t(k(`lab.teacher.mood.${check.mood}`), { name, percent: check.percent })}</p>
+      <BitSays text={t(k(`lab.teacher.mood.${check.mood}`), { name, percent: check.percent })} more={[t(k(`lab.teacher.tips.${focus ?? 'overview'}`))]} />
       <button type="button" className={styles.cta} onClick={() => openBit()}>
         <MessageCircle size={16} aria-hidden="true" /> {t('bit.ask')}
       </button>

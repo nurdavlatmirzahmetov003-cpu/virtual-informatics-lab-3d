@@ -20,6 +20,7 @@ import { deviceById } from '@/data/devices/devices';
 import { isTeardownId } from '@/data/teardown/teardowns';
 import { TeardownView } from './TeardownView';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { BitSays } from '@/components/bit/BitSays';
 import styles from './LabPage.module.css';
 
 const LabScene = lazy(() => import('@/scenes/LabSpace/LabScene'));
@@ -74,7 +75,7 @@ function ZonePanel() {
       <h1 id="lab-zone-title" className={styles.title}>
         {zone ? t(key(`lab.zones.${zone.id}.name`)) : t('lab.title')}
       </h1>
-      <p className={styles.lead}>{zone ? t(key(`lab.zones.${zone.id}.description`)) : t('lab.lead')}</p>
+      <BitSays className={styles.lead} text={zone ? t(key(`lab.zones.${zone.id}.description`)) : t('lab.lead')} />
       {zone && zone.devices.length > 0 && <p className={styles.clickHint}>{t('deviceUi.clickHint')}</p>}
       <div className={styles.actions}>
         <button type="button" className={styles.iconBtn} onClick={() => step(-1)} aria-label={t('lab.prev')} title={t('lab.prev')}>

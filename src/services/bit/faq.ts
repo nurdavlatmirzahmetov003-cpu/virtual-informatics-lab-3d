@@ -79,7 +79,7 @@ interface FaqKeys {
 export const FAQ_KEYS: Record<FaqId, FaqKeys> = {
   computer: { strong: ['компьютер деген', 'что такое компьютер$', 'what is a computer$', 'компьютер дегеніміз'] },
   cpu: { strong: ['процессор', 'процессорд', 'cpu', 'processor', 'орталық процессор'] },
-  ram: { strong: ['жедел жад', 'оперативн', 'ram', 'озу', 'memory'], weak: ['жад'] },
+  ram: { strong: ['жедел жад', 'жедел жат', 'оперативн', 'ram', 'озу', 'memory'], weak: ['жад'] },
   storage: { strong: ['ssd', 'hdd', 'қатқыл диск', 'жесткий диск', 'hard drive', 'hard disk', 'накопител', 'жинақтауыш', 'storage'] },
   gpu: { strong: ['видеокарта', 'видеокарт', 'gpu', 'graphics card', 'video card'] },
   motherboard: { strong: ['аналық плата', 'материнск', 'motherboard', 'аналық тақта'] },

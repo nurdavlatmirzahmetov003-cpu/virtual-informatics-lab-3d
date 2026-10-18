@@ -32,19 +32,32 @@ export function visiblePart(text: string): string {
   return open >= 0 ? cleaned.slice(0, open) : cleaned;
 }
 
-let health: Promise<boolean> | null = null;
+export interface BitCapabilities {
+  /** Gemini answers open questions. */
+  model: boolean;
+  /** The server speaks with Gemini's voice. */
+  tts: boolean;
+  /** The server recognises speech. */
+  stt: boolean;
+}
+
+const NONE: BitCapabilities = { model: false, tts: false, stt: false };
+let health: Promise<BitCapabilities> | null = null;
 let healthAt = 0;
 
-/** Is the model reachable (server up, key set, not switched off by the admin)? Cached for a minute. */
-export function bitHealth(fetchImpl: typeof fetch = globalThis.fetch): Promise<boolean> {
+/** What the lab server offers Bit (nothing on the static demo or without a key). Cached for a minute. */
+export function bitCapabilities(fetchImpl: typeof fetch = globalThis.fetch): Promise<BitCapabilities> {
   if (health && Date.now() - healthAt < 60_000) return health;
   healthAt = Date.now();
   health = fetchImpl('/api/ai/bit/health', { headers: { accept: 'application/json' } })
-    .then((r) => (r.ok ? r.json() : { configured: false }))
-    .then((b: { configured?: boolean }) => b.configured === true)
-    .catch(() => false);
+    .then((r) => (r.ok ? r.json() : {}))
+    .then((b: { configured?: boolean; tts?: boolean; stt?: boolean }) => ({ model: b.configured === true, tts: b.tts === true, stt: b.stt === true }))
+    .catch(() => NONE);
   return health;
 }
+
+/** Is the model reachable (server up, key set, not switched off by the admin)? */
+export const bitHealth = (fetchImpl: typeof fetch = globalThis.fetch) => bitCapabilities(fetchImpl).then((c) => c.model);
 
 /** Forget the cached health (after a failed answer, the next one checks again). */
 export const resetBitHealth = () => {

@@ -10,6 +10,7 @@ import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
 import { useLabStore } from '@/store/labStore';
 import { useProgressStore } from '@/store/progressStore';
+import { BitSays } from '@/components/bit/BitSays';
 import styles from './DevicePanel.module.css';
 
 const DeviceViewer3D = lazy(() => import('./DeviceViewer3D'));
@@ -23,7 +24,7 @@ function Info({ device, level }: { device: Device; level: Level }) {
   const base = deviceKey(device, 'specs');
   return (
     <div className={styles.info}>
-      <p className={styles.explain}>{t(key(deviceKey(device, level === 'student' ? 'student' : 'adult')))}</p>
+      <BitSays text={t(key(deviceKey(device, level === 'student' ? 'student' : 'adult')))} more={[t(key(deviceKey(device, 'purpose'))), t(key(`devices.${device.id}.use`))]} />
       <section>
         <h3>{t('deviceUi.sections.purpose')}</h3>
         <p>{t(key(deviceKey(device, 'purpose')))}</p>

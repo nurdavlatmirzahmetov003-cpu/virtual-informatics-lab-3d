@@ -23,8 +23,17 @@ export interface BitMessage {
 
 export type BitGuide = { kind: 'tour'; index: number } | { kind: 'lesson'; lesson: LessonId; index: number };
 
+/** Where Bit's button and panel live: a screen side and the height (0 = top, 1 = bottom). */
+export interface BitDock {
+  side: 'left' | 'right';
+  y: number;
+}
+
 interface BitState {
   open: boolean;
+  /** Folded away to the talking avatar: the conversation, the voice and the tour go on. */
+  mini: boolean;
+  dock: BitDock;
   messages: BitMessage[];
   guide: BitGuide | null;
   /** A request to run as soon as the panel is ready (openBit('…') from a page or the robot). */
@@ -35,6 +44,10 @@ interface BitState {
   conversation: boolean;
   openBit: (prompt?: string) => void;
   close: () => void;
+  minimize: () => void;
+  /** Runs a request without opening the panel (the mini avatar's "Next"). */
+  send: (prompt: string) => void;
+  setDock: (dock: BitDock) => void;
   takeQueued: () => string | null;
   push: (m: Omit<BitMessage, 'id'>) => number;
   update: (id: number, patch: Partial<BitMessage>) => void;
@@ -48,7 +61,7 @@ let seq = 0;
 const MAX_MESSAGES = 60;
 
 const memory = new Map<string, string>();
-const storage = createJSONStorage<Pick<BitState, 'voice' | 'conversation'>>(
+const storage = createJSONStorage<Pick<BitState, 'voice' | 'conversation' | 'dock'>>(
   () =>
     safeStorage() ?? {
       getItem: (k) => memory.get(k) ?? null,
@@ -61,13 +74,18 @@ export const useBitStore = create<BitState>()(
   persist(
     (set, get) => ({
       open: false,
+      mini: false,
+      dock: { side: 'left', y: 1 },
       messages: [],
       guide: null,
       queued: null,
       voice: true,
       conversation: false,
-      openBit: (prompt) => set({ open: true, queued: prompt?.trim() || get().queued }),
-      close: () => set({ open: false }),
+      openBit: (prompt) => set({ open: true, mini: false, queued: prompt?.trim() || get().queued }),
+      close: () => set({ open: false, mini: false }),
+      minimize: () => set({ open: false, mini: true }),
+      send: (prompt) => set({ queued: prompt.trim() || null }),
+      setDock: (dock) => set({ dock: { side: dock.side, y: Math.min(1, Math.max(0, dock.y)) } }),
       takeQueued: () => {
         const q = get().queued;
         if (q) set({ queued: null });
@@ -88,10 +106,11 @@ export const useBitStore = create<BitState>()(
       name: STORAGE_KEYS.bit,
       version: STORAGE_VERSIONS.bit,
       storage,
-      partialize: ({ voice, conversation }) => ({ voice, conversation }),
+      partialize: ({ voice, conversation, dock }) => ({ voice, conversation, dock }),
       migrate: (persisted) => {
-        const raw = (persisted ?? {}) as Partial<Pick<BitState, 'voice' | 'conversation'>>;
-        return { voice: raw.voice !== false, conversation: raw.conversation === true };
+        const raw = (persisted ?? {}) as Partial<Pick<BitState, 'voice' | 'conversation' | 'dock'>>;
+        const dock: BitDock = raw.dock && (raw.dock.side === 'left' || raw.dock.side === 'right') && typeof raw.dock.y === 'number' ? { side: raw.dock.side, y: Math.min(1, Math.max(0, raw.dock.y)) } : { side: 'left', y: 1 };
+        return { voice: raw.voice !== false, conversation: raw.conversation === true, dock };
       },
     },
   ),

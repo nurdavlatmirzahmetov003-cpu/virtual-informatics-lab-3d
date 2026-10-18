@@ -9,6 +9,7 @@ import { POSTERS } from '@/data/lab/classroom';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { useLabStore } from '@/store/labStore';
+import { BitSays } from '@/components/bit/BitSays';
 import styles from './TeacherPanel.module.css';
 
 const k = (s: string) => s as TranslationKey;
@@ -31,7 +32,7 @@ export function PosterPanel() {
           <X size={18} aria-hidden="true" />
         </button>
       </header>
-      <p className={styles.speech}>{t(key('explain'))}</p>
+      <BitSays text={t(key('explain'))} more={['f1', 'f2', 'f3', 'f4'].map((f) => t(key(f)))} />
       <section className={styles.card} aria-labelledby="poster-facts">
         <h3 id="poster-facts">{t('lab.classroom.facts')}</h3>
         <ol className={styles.facts}>
