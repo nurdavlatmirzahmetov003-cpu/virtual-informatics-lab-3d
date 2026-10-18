@@ -11,6 +11,7 @@ import type { LabZone, LabZoneId } from '@/data/lab/zones';
 import type { TranslationKey } from '@/lib/i18n';
 import { zoneNumber } from '@/lib/lab/navigation';
 import { useDisposable } from '@/hooks/useDisposable';
+import { useCanvasFonts } from '@/hooks/useCanvasFonts';
 import { useT } from '@/hooks/useT';
 import { useTheme } from '@/hooks/useTheme';
 import { roundedSlab } from '@/lib/three/geometry';
@@ -41,6 +42,7 @@ const key = (k: string) => k as TranslationKey;
 function ZoneSign({ zone, width }: { zone: LabZone; width: number }) {
   const t = useT();
   const light = useTheme() === 'light';
+  const fonts = useCanvasFonts();
   const tex = useDisposable(
     () =>
       signTexture(zoneNumber(zone.id), t(key(`lab.zones.${zone.id}.name`)), t(key(`lab.zones.${zone.id}.caption`)), zone.accent, {
@@ -48,7 +50,7 @@ function ZoneSign({ zone, width }: { zone: LabZone; width: number }) {
         text: light ? '#0f172a' : '#f1f5fb',
         muted: light ? '#475569' : '#9fb0c8',
       }),
-    [zone, t, light],
+    [zone, t, light, fonts],
   );
   return (
     <mesh>

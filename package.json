@@ -39,14 +39,15 @@
     "test:teardown": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/teardown.test.mjs",
     "test:lab": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/lab-space.test.mjs",
     "test:ai": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/ai.test.mjs",
-    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab && npm run test:progress && npm run test:network && npm run test:grading && npm run test:algorithms && npm run test:logic && npm run test:experiments && npm run test:lab && npm run test:devices && npm run test:teardown && npm run test:connect && npm run test:sim && npm run test:server && npm run test:classroom && npm run test:admin && npm run test:game && npm run test:live && npm run test:blender && npm run test:visual",
+    "test": "npm run test:ai && npm run test:assistant && npm run test:assembly && npm run test:pc-lab && npm run test:progress && npm run test:network && npm run test:grading && npm run test:algorithms && npm run test:logic && npm run test:experiments && npm run test:lab && npm run test:devices && npm run test:teardown && npm run test:connect && npm run test:sim && npm run test:server && npm run test:classroom && npm run test:admin && npm run test:game && npm run test:live && npm run test:blender && npm run test:visual && npm run test:fonts",
     "test:blender": "node --test scripts/blender-pipeline.test.mjs",
     "blender:pipeline": "node scripts/blender/run.mjs",
-    "test:visual": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/visual.test.mjs"
+    "test:visual": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/visual.test.mjs",
+    "test:fonts": "node --test scripts/fonts.test.mjs"
   },
   "dependencies": {
-    "@fontsource-variable/manrope": "^5.3.0",
-    "@fontsource-variable/unbounded": "^5.3.0",
+    "@fontsource-variable/montserrat": "^5.3.0",
+    "@fontsource-variable/onest": "^5.3.1",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",
     "@react-three/postprocessing": "^3.1.3",

@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
-import '@fontsource-variable/manrope';
-import '@fontsource-variable/unbounded';
+import '@fontsource-variable/onest';
+import '@fontsource-variable/montserrat';
 import '@/styles/global.css';
 import { router } from '@/app/router';
 import { loadLanguage } from '@/lib/i18n';

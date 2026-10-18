@@ -4,6 +4,8 @@ import { readFileSync } from 'node:fs';
 import { LAB_HALL, LAB_OVERVIEW, LAB_ZONE_IDS, LAB_ZONES, zoneById } from '../src/data/lab/zones.ts';
 import { BoxGeometry, Color } from 'three';
 import { mergePieces } from '../src/scenes/LabSpace/classroom/mergeParts.ts';
+import { DECOR } from '../src/data/lab/decor.ts';
+import { POSTERS, ROBOT, robotShot } from '../src/data/lab/classroom.ts';
 import { inOverview } from '../src/scenes/LabSpace/devices/deviceAssets.ts';
 import { clampToHall, keyAction, loadPlan, stepZone, toMinimap, zoneNumber, zoneShot, zonesNear } from '../src/lib/lab/navigation.ts';
 
@@ -171,4 +173,39 @@ test('merged pieces: one geometry, parent transforms applied, a vertex colour pe
   assert.equal(inOverview('ups', 'high'), true);
   assert.equal(inOverview('monitor', 'low'), true);
   assert.equal(inOverview('scanner', 'medium'), true, 'no model of its own');
+});
+
+/** Distance from point p to the segment a–b on the floor plane. */
+const toSegment = ([px, pz], [ax, az], [bx, bz]) => {
+  const dx = bx - ax;
+  const dz = bz - az;
+  const t = Math.max(0, Math.min(1, ((px - ax) * dx + (pz - az) * dz) / (dx * dx + dz * dz)));
+  return Math.hypot(px - (ax + t * dx), pz - (az + t * dz));
+};
+
+test('decor stays in the hall, off the platforms and out of every camera path', () => {
+  assert.ok(DECOR.length >= 8);
+  const shots = [...LAB_ZONES.map((z) => zoneShot(z)), robotShot()];
+  for (const d of DECOR) {
+    assert.ok(inside(d.at, 0.2), `${d.kind} at ${d.at} inside the hall`);
+    for (const z of LAB_ZONES) {
+      const gap = Math.hypot(d.at[0] - z.center[0], d.at[1] - z.center[1]) - Math.max(...z.size) / 2 - d.radius;
+      assert.ok(gap > 0.2, `${d.kind} at ${d.at} touches the ${z.id} platform`);
+    }
+    for (const s of shots) {
+      const cam = [s.position[0], s.position[2]];
+      const target = [s.target[0], s.target[2]];
+      assert.ok(toSegment(d.at, cam, target) > d.radius + 0.15, `${d.kind} at ${d.at} blocks a camera`);
+    }
+    const robot = [ROBOT.position[0], ROBOT.position[2]];
+    assert.ok(Math.hypot(d.at[0] - robot[0], d.at[1] - robot[1]) > d.radius + 0.8, `${d.kind} crowds the robot`);
+    for (const p of POSTERS) {
+      // nothing tall in front of a poster: posters start 1.2 m up, only plants reach that high
+      const px = p.center[0];
+      const pz = p.center[2];
+      const along = p.wall === 'back' ? Math.abs(d.at[0] - px) : Math.abs(d.at[1] - pz);
+      const off = p.wall === 'back' ? d.at[1] - pz : Math.abs(d.at[0] - px);
+      if (d.kind === 'plant_tall' && off < 1.5) assert.ok(along > p.size[0] / 2 + d.radius, `${d.kind} in front of poster ${p.id}`);
+    }
+  }
 });

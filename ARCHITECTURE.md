@@ -18,7 +18,7 @@ Virtual Informatics Lab 3D — Vite + React 19 + TypeScript + Three.js (React Th
 | Анимация | GSAP 3 (+ ScrollTrigger) | Фаза 2-де scroll story engine |
 | Иконкалар | lucide-react | Эмодзи қолданылмайды |
 | Стиль | CSS Modules + `src/styles/tokens.css` | Tailwind жоқ |
-| Шрифт | Manrope Variable, Unbounded Variable (@fontsource, офлайн) | Кириллица + қазақ әріптері |
+| Шрифт | Onest Variable (мәтін), Montserrat Variable (тақырып) — @fontsource, офлайн | Қазақ әліпбиінің бәрі бар (`test:fonts`); canvas үшін `lib/fonts.ts` |
 | Lint | ESLint 10 flat config + typescript-eslint + react-hooks 7 | `npm run lint` |
 
 ## Папкалар

@@ -5,6 +5,7 @@
  */
 import { CanvasTexture, ClampToEdgeWrapping, RepeatWrapping, SRGBColorSpace, type Texture } from 'three';
 import { mouseSurface, type MouseShape } from './geometry';
+import { FONT_DISPLAY, FONT_SANS } from '@/lib/fonts';
 
 function canvas(w: number, h: number) {
   const c = document.createElement('canvas');
@@ -191,10 +192,10 @@ export function drawWallpaper(c: HTMLCanvasElement) {
 
   ctx.fillStyle = 'rgba(238,241,246,0.92)';
   ctx.textAlign = 'center';
-  ctx.font = `600 ${Math.round(u * 0.045)}px "Unbounded Variable", "Segoe UI", sans-serif`;
+  ctx.font = `600 ${Math.round(u * 0.045)}px ${FONT_DISPLAY}`;
   ctx.fillText('VIRTUAL INFORMATICS LAB', w / 2, h * 0.6);
   ctx.fillStyle = 'rgba(163,171,187,0.85)';
-  ctx.font = `500 ${Math.round(u * 0.028)}px "Manrope Variable", "Segoe UI", sans-serif`;
+  ctx.font = `500 ${Math.round(u * 0.028)}px ${FONT_SANS}`;
   ctx.fillText('Виртуалды информатика зертханасы', w / 2, h * 0.655);
 
   // taskbar
@@ -208,7 +209,7 @@ export function drawWallpaper(c: HTMLCanvasElement) {
   }
   ctx.fillStyle = 'rgba(220,226,235,0.7)';
   ctx.textAlign = 'right';
-  ctx.font = `600 ${Math.round(u * 0.022)}px "Manrope Variable", sans-serif`;
+  ctx.font = `600 ${Math.round(u * 0.022)}px ${FONT_SANS}`;
   ctx.fillText('09:41', w - u * 0.03, h - u * 0.02);
 }
 
@@ -285,7 +286,7 @@ export function labelTexture(lines: string[], { w = 512, h = 160, bg = '#0d0f13'
   ctx.textBaseline = 'middle';
   lines.forEach((line, i) => {
     ctx.fillStyle = i === 0 ? 'rgba(238,241,246,0.95)' : 'rgba(170,178,192,0.85)';
-    ctx.font = `${i === 0 ? 700 : 500} ${Math.round(h * (i === 0 ? 0.22 : 0.13))}px "Manrope Variable", "Segoe UI", sans-serif`;
+    ctx.font = `${i === 0 ? 700 : 500} ${Math.round(h * (i === 0 ? 0.22 : 0.13))}px ${FONT_SANS}`;
     ctx.fillText(line, w * 0.06, h * (0.3 + i * 0.24));
   });
   return finish(c, { srgb: true });

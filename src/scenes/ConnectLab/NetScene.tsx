@@ -10,6 +10,7 @@ import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
 import { CanvasTexture, SRGBColorSpace, Vector3, type Group, type Mesh, type MeshStandardMaterial } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
+import { useCanvasFonts } from '@/hooks/useCanvasFonts';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { useT } from '@/hooks/useT';
 import { ETHERNET_SCENARIO, dhcpLease, portById } from '@/labs/ConnectLab';
@@ -18,6 +19,7 @@ import { Desk } from '@/scenes/DeskScene/models/Desk';
 import { DESK_TOP } from '@/scenes/DeskScene/layout';
 import { clearAnchors, setAnchor } from './anchors';
 import { Cable, DragController, PortHotspots } from './ConnectKit';
+import { FONT_SANS } from '@/lib/fonts';
 
 const LAPTOP: [number, number, number] = [-0.2, DESK_TOP, 0.06];
 /** Turned so its left side (the sockets) faces the camera. */
@@ -75,12 +77,12 @@ function screenTexture(lines: string[], ok: boolean) {
     ctx.arc(256, 110, 34, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = '#0b1220';
-    ctx.font = '700 40px "Manrope Variable", sans-serif';
+    ctx.font = `700 40px ${FONT_SANS}`;
     ctx.textAlign = 'center';
     ctx.fillText(ok ? '✓' : '…', 256, 124);
     ctx.fillStyle = '#eef2f8';
     lines.forEach((l, i) => {
-      ctx.font = `${i === 0 ? 700 : 500} ${i === 0 ? 30 : 24}px "Manrope Variable", sans-serif`;
+      ctx.font = `${i === 0 ? 700 : 500} ${i === 0 ? 30 : 24}px ${FONT_SANS}`;
       ctx.fillText(l, 256, 196 + i * 38);
     });
   }
@@ -100,7 +102,8 @@ function LaptopScreen({ wifiTask }: { wifiTask: boolean }) {
   const lease = dhcpLease(wifiTask ? 'laptop-wifi' : 'laptop-eth');
   const title = wifiTask ? (joined ? `Wi-Fi: ${joined}` : 'Wi-Fi') : 'Ethernet';
   const lines = ok ? [title, `IP ${lease.ip}`, `${t('connect.dhcp.gateway')} ${lease.gateway}`] : [title, t('connect.dhcp.waiting')];
-  const tex = useDisposable(() => screenTexture(lines, ok), [lines.join('|'), ok]);
+  const fonts = useCanvasFonts();
+  const tex = useDisposable(() => screenTexture(lines, ok), [lines.join('|'), ok, fonts]);
   return (
     <mesh position-z={0.0032}>
       <planeGeometry args={[0.3, 0.19]} />

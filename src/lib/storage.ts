@@ -19,7 +19,7 @@ export const STORAGE_KEYS = {
 
 export const STORAGE_VERSIONS = {
   /** v2: colour theme. */
-  settings: 2,
+  settings: 3,
   setup: 1,
   /** v3: attempts + per-exercise summary + achievements (services/progress/migrate.ts). */
   progress: 3,

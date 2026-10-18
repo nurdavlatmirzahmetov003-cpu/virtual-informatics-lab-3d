@@ -55,7 +55,7 @@ function shellGeometry() {
   return { walls: mergePieces(walls), trim: mergePieces(trim), band: mergePieces(band) };
 }
 
-/** Cyan → violet → magenta, the site's accent gradient, as a light strip texture. */
+/** Sky → periwinkle → orchid → coral, the site's accent gradient, as a light strip texture. */
 function bandTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
@@ -63,9 +63,10 @@ function bandTexture() {
   const ctx = canvas.getContext('2d');
   if (ctx) {
     const g = ctx.createLinearGradient(0, 0, 512, 0);
-    g.addColorStop(0, '#38d6f5');
-    g.addColorStop(0.5, '#8b5cf6');
-    g.addColorStop(1, '#e879f9');
+    g.addColorStop(0, '#3fd2f6');
+    g.addColorStop(0.35, '#6f8cff');
+    g.addColorStop(0.7, '#b77cff');
+    g.addColorStop(1, '#ff8a7a');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, 512, 2);
   }
@@ -123,9 +124,9 @@ export function LabRoom() {
   }, [barMatrices]);
 
   // the lab hall is brighter than the home studio: a gallery-like interior in both themes
-  const wallColor = light ? '#e8ecf3' : '#2a3350';
-  const floorTint = light ? '#aab3c1' : '#7a8294';
-  const trim = light ? '#c6cedc' : '#161c2e';
+  const wallColor = light ? '#e4ebf8' : '#333d66';
+  const floorTint = light ? '#a9b4ca' : '#848ca3';
+  const trim = light ? '#cdd5e4' : '#1f2747';
 
   return (
     <group>

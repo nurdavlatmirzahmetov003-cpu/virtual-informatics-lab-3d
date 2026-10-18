@@ -4,9 +4,9 @@ import { useTheme } from '@/hooks/useTheme';
 export function useFurnitureColors() {
   const light = useTheme() === 'light';
   return {
-    top: light ? '#eef1f6' : '#20242e',
-    frame: light ? '#9aa3b2' : '#3a3f4b',
-    body: light ? '#f7f8fb' : '#171a22',
-    shelf: light ? '#dfe4ec' : '#262b36',
+    top: light ? '#eef1f6' : '#2c3354',
+    frame: light ? '#9aa3b2' : '#4a5272',
+    body: light ? '#f7f8fb' : '#252c4a',
+    shelf: light ? '#dfe4ec' : '#323a5e',
   };
 }

@@ -6,6 +6,7 @@
 import { useMemo } from 'react';
 import { CanvasTexture, SRGBColorSpace } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
+import { useCanvasFonts } from '@/hooks/useCanvasFonts';
 import { useT } from '@/hooks/useT';
 import { useTheme } from '@/hooks/useTheme';
 import { DeviceSpot, ExhibitTable } from '../devices/Exhibit';
@@ -13,6 +14,7 @@ import { DeviceModel } from '../devices/DeviceModel';
 import { Pedestal } from '../furniture';
 import { useWallpaper } from './useWallpaper';
 import { speedRows, type SpeedRow, type ZoneContentProps } from './zoneData';
+import { FONT_DISPLAY, FONT_SANS } from '@/lib/fonts';
 
 function chartTexture(title: string, unit: string, rows: SpeedRow[], light: boolean, accent: string) {
   const W = 1024;
@@ -27,7 +29,7 @@ function chartTexture(title: string, unit: string, rows: SpeedRow[], light: bool
     ctx.fillStyle = light ? 'rgba(255,255,255,0.92)' : 'rgba(12,16,28,0.88)';
     ctx.fill();
     ctx.fillStyle = light ? '#111827' : '#eef2f8';
-    ctx.font = '700 44px "Unbounded Variable", "Manrope Variable", sans-serif';
+    ctx.font = `700 44px ${FONT_DISPLAY}`;
     ctx.fillText(title, 48, 84);
     const max = Math.max(...rows.map((r) => r.mbps));
     const top = 128;
@@ -35,7 +37,7 @@ function chartTexture(title: string, unit: string, rows: SpeedRow[], light: bool
     rows.forEach((r, i) => {
       const y = top + i * rowH;
       ctx.fillStyle = light ? '#4b5563' : '#aab4c4';
-      ctx.font = '600 30px "Manrope Variable", sans-serif';
+      ctx.font = `600 30px ${FONT_SANS}`;
       ctx.fillText(r.label, 48, y + 30);
       const barW = Math.max(14, ((W - 300) * r.mbps) / max);
       const g = ctx.createLinearGradient(48, 0, 48 + barW, 0);
@@ -46,7 +48,7 @@ function chartTexture(title: string, unit: string, rows: SpeedRow[], light: bool
       ctx.roundRect(48, y + 44, barW, 22, 11);
       ctx.fill();
       ctx.fillStyle = light ? '#111827' : '#eef2f8';
-      ctx.font = '700 28px "Manrope Variable", sans-serif';
+      ctx.font = `700 28px ${FONT_SANS}`;
       ctx.fillText(`${r.mbps.toLocaleString('ru-RU')} ${unit}`, 60 + barW, y + 64);
     });
   }
@@ -59,8 +61,9 @@ function chartTexture(title: string, unit: string, rows: SpeedRow[], light: bool
 function SpeedChart({ accent }: { accent: string }) {
   const t = useT();
   const light = useTheme() === 'light';
+  const fonts = useCanvasFonts();
   const rows = useMemo(() => speedRows(t('lab.storage.hdd')), [t]);
-  const tex = useDisposable(() => chartTexture(t('lab.storage.chartTitle'), t('lab.storage.unit'), rows, light, accent), [t, rows, light, accent]);
+  const tex = useDisposable(() => chartTexture(t('lab.storage.chartTitle'), t('lab.storage.unit'), rows, light, accent), [t, rows, light, accent, fonts]);
   return (
     <mesh>
       <planeGeometry args={[1.6, 0.875]} />

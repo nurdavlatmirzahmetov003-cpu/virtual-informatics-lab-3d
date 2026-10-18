@@ -6,6 +6,7 @@
  */
 import { CanvasTexture, SRGBColorSpace } from 'three';
 import type { PosterId } from '@/data/lab/classroom';
+import { FONT_DISPLAY, FONT_SANS } from '@/lib/fonts';
 
 export const POSTER_W = 1024;
 export const POSTER_H = 1276;
@@ -22,8 +23,8 @@ interface Palette {
   line: string;
 }
 
-const DISPLAY = '"Unbounded Variable", "Manrope Variable", sans-serif';
-const SANS = '"Manrope Variable", "Segoe UI", sans-serif';
+const DISPLAY = FONT_DISPLAY;
+const SANS = FONT_SANS;
 const MONO = '"JetBrains Mono", Consolas, monospace';
 
 function setFont(ctx: Ctx, text: string, max: number, size: number, weight: number, family: string, min = 18) {

@@ -5,6 +5,7 @@
  * on local time. Canvas textures only — nothing to download — redrawn when
  * the language or the theme changes, and after the web fonts arrive.
  */
+import { canvasFontsReady } from '@/lib/fonts';
 import { useEffect, useRef, useState } from 'react';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { BoxGeometry, CanvasTexture, CircleGeometry, PlaneGeometry, SRGBColorSpace, type Group, type MeshBasicMaterial } from 'three';
@@ -35,9 +36,7 @@ function useFontsReady() {
   const [ready, setReady] = useState(0);
   useEffect(() => {
     let alive = true;
-    void Promise.all([document.fonts.load('800 40px "Unbounded Variable"'), document.fonts.load('600 30px "Manrope Variable"')])
-      .catch(() => undefined)
-      .then(() => alive && setReady(1));
+    void canvasFontsReady().then(() => alive && setReady(1));
     return () => {
       alive = false;
     };

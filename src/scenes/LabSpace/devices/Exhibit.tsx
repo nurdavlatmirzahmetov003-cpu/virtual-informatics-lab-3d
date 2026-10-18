@@ -10,6 +10,7 @@ import { CanvasTexture, SRGBColorSpace, type MeshStandardMaterial } from 'three'
 import { deviceById, deviceKey } from '@/data/devices/devices';
 import type { TranslationKey } from '@/lib/i18n';
 import { useDisposable } from '@/hooks/useDisposable';
+import { useCanvasFonts } from '@/hooks/useCanvasFonts';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useT } from '@/hooks/useT';
 import { useTheme } from '@/hooks/useTheme';
@@ -18,6 +19,7 @@ import { Table } from '../furniture';
 import { useFurnitureColors } from '../furnitureColors';
 import { inOverview } from './deviceAssets';
 import { DeviceModel } from './DeviceModel';
+import { FONT_SANS } from '@/lib/fonts';
 
 function plateTexture(text: string, light: boolean, accent: string) {
   const W = 512;
@@ -34,10 +36,10 @@ function plateTexture(text: string, light: boolean, accent: string) {
     ctx.fillStyle = accent;
     ctx.fillRect(24, H - 14, 64, 5);
     let size = 44;
-    ctx.font = `700 ${size}px "Manrope Variable", sans-serif`;
+    ctx.font = `700 ${size}px ${FONT_SANS}`;
     while (ctx.measureText(text).width > W - 48 && size > 22) {
       size -= 2;
-      ctx.font = `700 ${size}px "Manrope Variable", sans-serif`;
+      ctx.font = `700 ${size}px ${FONT_SANS}`;
     }
     ctx.fillStyle = light ? '#0f172a' : '#f1f5fb';
     ctx.textBaseline = 'middle';
@@ -55,7 +57,8 @@ function Plate({ id, accent, width }: { id: string; accent: string; width: numbe
   const light = useTheme() === 'light';
   const device = deviceById(id);
   const name = device ? t(deviceKey(device, 'name') as TranslationKey) : id;
-  const tex = useDisposable(() => plateTexture(name, light, accent), [name, light, accent]);
+  const fonts = useCanvasFonts();
+  const tex = useDisposable(() => plateTexture(name, light, accent), [name, light, accent, fonts]);
   const w = Math.min(width, 0.3);
   return (
     <mesh rotation-x={-Math.PI / 2 + 0.55} position-y={0.012}>

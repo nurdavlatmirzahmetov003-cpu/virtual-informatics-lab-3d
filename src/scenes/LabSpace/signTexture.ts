@@ -1,4 +1,5 @@
 import { CanvasTexture, SRGBColorSpace } from 'three';
+import { FONT_DISPLAY, FONT_SANS } from '@/lib/fonts';
 
 export interface SignStyle {
   /** Panel fill (with alpha) and text colour, from the theme. */
@@ -38,7 +39,7 @@ export function signTexture(number: number, name: string, caption: string, accen
     ctx.fillStyle = accent;
     ctx.fill();
     ctx.fillStyle = '#05070d';
-    ctx.font = `700 84px "Unbounded Variable", "Manrope Variable", sans-serif`;
+    ctx.font = `700 84px ${FONT_DISPLAY}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(String(number), 128, H / 2 + 4);
@@ -46,14 +47,14 @@ export function signTexture(number: number, name: string, caption: string, accen
     ctx.textAlign = 'left';
     ctx.fillStyle = style.text;
     let size = 64;
-    ctx.font = `700 ${size}px "Unbounded Variable", "Manrope Variable", sans-serif`;
+    ctx.font = `700 ${size}px ${FONT_DISPLAY}`;
     while (ctx.measureText(name).width > W - 290 && size > 34) {
       size -= 2;
-      ctx.font = `700 ${size}px "Unbounded Variable", "Manrope Variable", sans-serif`;
+      ctx.font = `700 ${size}px ${FONT_DISPLAY}`;
     }
     ctx.fillText(name, 236, H / 2 - 22);
     ctx.fillStyle = style.muted;
-    ctx.font = `500 34px "Manrope Variable", sans-serif`;
+    ctx.font = `500 34px ${FONT_SANS}`;
     let text = caption;
     while (ctx.measureText(text).width > W - 290 && text.length > 4) text = `${text.slice(0, -2).trimEnd()}…`;
     ctx.fillText(text, 238, H / 2 + 48);

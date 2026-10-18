@@ -30,8 +30,8 @@ const DEFAULTS: PersistedSettings = {
   qualityMode: 'auto',
   soundEnabled: false,
   soundVolume: 0.25,
-  // the premium night lab stays the default; light and system are opt-in
-  theme: 'dark',
+  // the bright day lab is the default since 0.35; dark and system are opt-in
+  theme: 'light',
 };
 
 const memoryStorage = new Map<string, string>();
@@ -79,8 +79,10 @@ export const useSettingsStore = create<SettingsState>()(
       }),
       // Validate whatever is on disk instead of trusting it; future schema
       // bumps add their transforms here keyed on `version`.
-      migrate: (persisted) => {
+      migrate: (persisted, version) => {
         const raw = (persisted ?? {}) as Partial<PersistedSettings>;
+        // before v3 dark was the default nobody had to pick: move everyone to the new bright theme once
+        if (version < 3 && raw.theme === 'dark') raw.theme = 'light';
         return {
           language: isLanguage(raw.language) ? raw.language : DEFAULTS.language,
           qualityMode: isQualityMode(raw.qualityMode) ? raw.qualityMode : DEFAULTS.qualityMode,

@@ -4,7 +4,7 @@
   z-index: var(--z-loader);
   display: grid;
   place-items: center;
-  background: radial-gradient(70% 60% at 50% 45%, #0c1018 0%, var(--bg) 70%);
+  background: radial-gradient(70% 60% at 50% 45%, var(--bg-elevated) 0%, var(--bg) 70%), var(--bg);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;

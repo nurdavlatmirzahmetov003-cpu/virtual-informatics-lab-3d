@@ -3,6 +3,7 @@
  * height-adjustable stand, emissive screen with the lab wallpaper, bias light
  * and screen light spill. Replace with an optimised GLB.
  */
+import { canvasFontsReady } from '@/lib/fonts';
 import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
@@ -52,12 +53,7 @@ export function Monitor() {
   // Fonts load asynchronously; repaint the wallpaper once they are ready.
   useEffect(() => {
     let cancelled = false;
-    Promise.all([
-      document.fonts.load('600 32px "Unbounded Variable"'),
-      document.fonts.load('500 20px "Manrope Variable"'),
-    ])
-      .catch(() => undefined)
-      .then(() => {
+    canvasFontsReady().then(() => {
         if (cancelled) return;
         drawWallpaper(res.wallpaper.image as HTMLCanvasElement);
         res.wallpaper.needsUpdate = true;

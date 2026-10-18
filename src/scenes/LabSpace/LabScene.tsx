@@ -15,6 +15,7 @@ import { LabCamera } from './LabCamera';
 import { LabLighting } from './LabLighting';
 import { LabRoom } from './LabRoom';
 import { Classroom } from './classroom/Classroom';
+import { Decor } from './classroom/Decor';
 import { RobotTeacher } from './classroom/RobotTeacher';
 import { ZoneStage } from './ZoneStage';
 import { productUrl, zoneProducts } from './zones/zoneData';
@@ -58,6 +59,7 @@ export default function LabScene() {
       <LabCamera />
       <LabRoom />
       <Classroom />
+      <Decor />
       <RobotTeacher />
       {LAB_ZONES.map((z) => (
         <ZoneStage key={z.id} zone={z} focused={focus === z.id} />

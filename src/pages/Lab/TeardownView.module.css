@@ -1,5 +1,5 @@
 /* Teardown view: stage + controls on the left, a reading panel on the right.
-   Type: Unbounded for titles and numbers, Manrope for reading (1rem / 1.6). */
+   Type: Montserrat for titles and numbers, Onest for reading (1rem / 1.6). */
 .overlay {
   --td-accent: var(--accent);
   --td-accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
