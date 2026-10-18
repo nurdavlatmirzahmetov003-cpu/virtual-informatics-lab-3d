@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import '@fontsource-variable/onest';
 import '@fontsource-variable/montserrat';
+import '@fontsource-variable/tektur';
 import '@/styles/global.css';
 import { router } from '@/app/router';
 import { loadLanguage } from '@/lib/i18n';

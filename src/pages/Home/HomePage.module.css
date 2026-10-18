@@ -33,7 +33,26 @@
 }
 
 .outro h2 {
+  font-family: var(--font-hero);
   font-size: var(--fs-2xl);
+}
+
+/* scroll reveal where the browser can tie animations to scrolling (0.37) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .outro > * {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
 }
 
 .outro p {

@@ -8,7 +8,7 @@ import { useDisposable } from '@/hooks/useDisposable';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useSceneTextures } from '@/lib/three/modelAssets';
 import { roundedSlab, roundedRectShape, extrudeFlat } from '@/lib/three/geometry';
-import { DESK, DESK_TOP } from '../layout';
+import { BACKDROP_ORDER, DESK, DESK_TOP } from '../layout';
 
 /** Top finishes for Setup Studio; wood keeps the albedo map, solid finishes keep only grain relief. */
 export type DeskSurface = 'darkWood' | 'lightWood' | 'black' | 'white';
@@ -64,7 +64,7 @@ export function Desk({ surface = 'lightWood' }: { surface?: DeskSurface }) {
 
   return (
     <group>
-      <mesh geometry={geo.top} position-y={DESK_TOP - DESK.thickness} castShadow receiveShadow>
+      <mesh geometry={geo.top} position-y={DESK_TOP - DESK.thickness} castShadow receiveShadow renderOrder={BACKDROP_ORDER}>
         <meshStandardMaterial
           key={finish.useMap ? 'wood' : 'solid'}
           map={finish.useMap ? map : null}

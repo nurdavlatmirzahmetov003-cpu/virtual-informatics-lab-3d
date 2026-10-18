@@ -10,7 +10,7 @@ import { Matrix4, Object3D, RepeatWrapping, SRGBColorSpace, type InstancedMesh, 
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useScenePalette } from '@/hooks/useTheme';
 import { useSceneTextures } from '@/lib/three/modelAssets';
-import { DESK, DESK_TOP, MONITOR } from '../layout';
+import { BACKDROP_ORDER, DESK, DESK_TOP, MONITOR } from '../layout';
 
 const TEX = `${import.meta.env.BASE_URL}assets/textures/`;
 const FLOOR = [`${TEX}floor_diff.jpg`, `${TEX}floor_rough.webp`];
@@ -59,21 +59,22 @@ export function Room({ orbit = false }: { orbit?: boolean }) {
 
   return (
     <group>
-      <mesh rotation-x={-Math.PI / 2} receiveShadow>
+      {/* BACKDROP_ORDER: big surfaces draw after everything in front of them (see layout.ts) */}
+      <mesh rotation-x={-Math.PI / 2} receiveShadow renderOrder={BACKDROP_ORDER}>
         <planeGeometry args={[24, 24]} />
         <meshStandardMaterial map={map} roughnessMap={roughnessMap} color={palette.floorTint} envMapIntensity={0.3} />
       </mesh>
       <group ref={wall}>
-      <mesh position={[0, 1.6, WALL_Z]} receiveShadow>
+      <mesh position={[0, 1.6, WALL_Z]} receiveShadow renderOrder={BACKDROP_ORDER}>
         <planeGeometry args={[10, 3.2]} />
         <meshStandardMaterial color={palette.wall} roughness={0.92} />
       </mesh>
       {/* felt backing + oak slats */}
-      <mesh position={[0, SLATS.bottom + SLATS.height / 2, WALL_Z + 0.006]} receiveShadow>
+      <mesh position={[0, SLATS.bottom + SLATS.height / 2, WALL_Z + 0.006]} receiveShadow renderOrder={BACKDROP_ORDER}>
         <boxGeometry args={[panelWidth, SLATS.height + 0.02, 0.012]} />
         <meshStandardMaterial color={palette.wallPanel} roughness={1} />
       </mesh>
-      <instancedMesh ref={slats} args={[undefined, undefined, SLATS.count]} castShadow receiveShadow>
+      <instancedMesh ref={slats} args={[undefined, undefined, SLATS.count]} castShadow receiveShadow renderOrder={BACKDROP_ORDER}>
         <boxGeometry args={[SLATS.width, SLATS.height, SLATS.depth]} />
         <meshStandardMaterial color={palette.slats} roughness={0.7} envMapIntensity={0.4} />
       </instancedMesh>

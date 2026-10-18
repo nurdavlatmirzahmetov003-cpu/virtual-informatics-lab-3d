@@ -51,7 +51,13 @@
     "outroBody": "You have met the devices. Now head to the labs and build your own setup.",
     "outroLabs": "Go to labs",
     "outroStudio": "Setup Studio",
-    "enterLab": "Enter the lab"
+    "enterLab": "Enter the lab",
+    "decor": {
+      "posterBrand": "Open the computer in 3D",
+      "posterBrandSub": "Build parts, wire networks, write code — all in one lab.",
+      "posterBits": "It's all bits and bytes",
+      "posterBitsSub": "Every picture, song and game is a chain of zeros and ones."
+    }
   },
   "labs": {
     "title": "Labs",

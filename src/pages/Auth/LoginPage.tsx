@@ -11,6 +11,7 @@ import type { TranslationKey } from '@/lib/i18n';
 import { useAuthStore } from '@/store/authStore';
 import { homeOf } from './roles';
 import styles from './Auth.module.css';
+import { AuthLogo, AuthShell } from './AuthShell';
 
 export default function LoginPage() {
   const t = useT();
@@ -46,8 +47,9 @@ export default function LoginPage() {
     : null;
 
   return (
-    <div className={styles.page}>
+    <AuthShell>
       <form className={styles.card} onSubmit={submit} noValidate>
+        <AuthLogo />
         <span className={styles.eyebrow}>{t('auth.eyebrow')}</span>
         <h1>{t('auth.title')}</h1>
         <p className={styles.lead}>{t('auth.lead')}</p>
@@ -96,6 +98,6 @@ export default function LoginPage() {
           {t('auth.guest')}
         </Link>
       </form>
-    </div>
+    </AuthShell>
   );
 }

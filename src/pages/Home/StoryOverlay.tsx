@@ -1,4 +1,4 @@
-import type { Ref } from 'react';
+import type { CSSProperties, Ref } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, DoorOpen, Hand, MousePointer2, Rotate3d } from 'lucide-react';
 import type { TranslationKey } from '@/lib/i18n';
@@ -34,7 +34,14 @@ export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
       {/* Chapter 1 — full setup */}
       <section className={styles.hero} data-active={chapter === 0} aria-hidden={chapter !== 0}>
         <span className={styles.eyebrow}>{t('home.eyebrow')}</span>
-        <h1 className={styles.title}>{t('home.title')}</h1>
+        <h1 className={styles.title}>
+          {/* each word rises out of a mask, then a light sweeps across */}
+          {t('home.title').split(/\s+/).map((word, i) => (
+            <span key={i} className={styles.word} style={{ '--i': i } as CSSProperties}>
+              <span>{word}</span>{' '}
+            </span>
+          ))}
+        </h1>
         <p className={styles.subtitle}>{t('home.subtitle')}</p>
         <div className={styles.actions}>
           <button type="button" className={styles.primary} onClick={() => onNavigate(1)} tabIndex={chapter === 0 ? 0 : -1}>

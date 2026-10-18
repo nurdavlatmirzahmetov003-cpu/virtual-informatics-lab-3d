@@ -10,7 +10,7 @@ import { brotliDecompressSync } from 'node:zlib';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
-const FONTS = ['onest', 'montserrat'];
+const FONTS = ['onest', 'montserrat', 'tektur'];
 const KAZAKH = 'ӘәҒғҚқҢңӨөҰұҮүҺһІі';
 
 function base128(buf, at) {
@@ -106,6 +106,7 @@ test('the site fonts are bundled and imported', () => {
   const tokens = readFileSync(path.join(root, 'src/styles/tokens.css'), 'utf8');
   assert.match(tokens, /--font-sans: 'Onest Variable'/);
   assert.match(tokens, /--font-display: 'Montserrat Variable'/);
+  assert.match(tokens, /--font-hero: 'Tektur Variable'/);
 });
 
 for (const name of FONTS) {
