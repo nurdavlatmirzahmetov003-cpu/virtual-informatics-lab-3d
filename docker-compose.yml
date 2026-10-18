@@ -13,6 +13,8 @@ services:
     env_file: .env
     environment:
       HOST: 0.0.0.0
+      # Caddy proxies to lab:8787, so .env must not move the port
+      SERVER_PORT: '8787'
       STATIC_DIR: dist
       DB_FILE: /data/lab.db
       BACKUP_DIR: /data/backups

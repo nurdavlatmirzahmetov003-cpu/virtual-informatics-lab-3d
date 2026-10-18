@@ -947,7 +947,7 @@ NEXT_ACTION: GitHub-қа жариялау және хостинг — иесім
    - лицензия;
    - хостинг пен домен (DEPLOY.md §1: оқушылардың дербес деректері ҚР-да сақталуы керек).
 2. Иесі GitHub-та репо ашады (2FA, email-ді жасыру — SECURITY.md). Содан кейін ғана `git remote add` және `git push` жасалады; push-ты иесі растайды.
-3. Серверде: DEPLOY.md §3 (`docker compose up -d --build`, `server:create-admin` — құпия сөзді иесі өзі тереді). Бірінші Docker build сол жерде тексеріледі (KNOWN_ISSUES №61).
+3. Серверде: DEPLOY.md §3 (`docker compose up -d --build`, `server:create-admin` — құпия сөзді иесі өзі тереді). Docker build бұлтта тексерілді (KNOWN_ISSUES №61); серверде тек домен мен HTTPS қалды.
 4. Кейінгі жұмыстар — TODO.md «V2-12»:
    - Safari / iPhone-да тексеру;
    - хабарлар мен рейтингті тікелей арна арқылы жаңарту;

@@ -28,5 +28,5 @@ RUN mkdir -p /data && chown node:node /data
 USER node
 VOLUME /data
 EXPOSE 8787
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget -qO- http://127.0.0.1:8787/api/health >/dev/null || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget -qO- http://127.0.0.1:${SERVER_PORT}/api/health >/dev/null || exit 1
 CMD ["node", "--experimental-strip-types", "--import", "./scripts/test-resolve.mjs", "server/main.ts"]
