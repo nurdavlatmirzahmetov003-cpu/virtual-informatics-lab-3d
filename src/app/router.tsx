@@ -28,6 +28,8 @@ const JoinPage = lazy(() => import('@/pages/Classroom/JoinPage'));
 const AdminPage = lazy(() => import('@/pages/Admin/AdminPage'));
 const ResetPage = lazy(() => import('@/pages/Auth/ResetPage'));
 const LeaderboardPage = lazy(() => import('@/pages/Leaderboard/LeaderboardPage'));
+const GamesPage = lazy(() => import('@/pages/Games/GamesPage'));
+const GamePlayPage = lazy(() => import('@/pages/Games/GamePlayPage'));
 const LivePage = lazy(() => import('@/pages/Live/LivePage'));
 
 export const router = createBrowserRouter([
@@ -51,6 +53,8 @@ export const router = createBrowserRouter([
       { path: 'progress', element: <ProgressPage /> },
       { path: 'leaderboard', element: <LeaderboardPage /> },
       { path: 'live', element: <LivePage /> },
+      { path: 'games', element: <GamesPage /> },
+      { path: 'games/:game', element: <GamePlayPage /> },
       { path: 'credits', element: <CreditsPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'teacher', element: <TeacherHome /> },

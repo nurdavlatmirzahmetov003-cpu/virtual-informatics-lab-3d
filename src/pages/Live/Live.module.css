@@ -716,6 +716,14 @@
   font-size: 1.7rem;
 }
 
+.model {
+  height: clamp(200px, 32vh, 320px);
+  border-radius: 16px;
+  background: radial-gradient(circle at 50% 40%, rgb(var(--ink-rgb) / 0.08), transparent 70%), rgb(var(--ink-rgb) / 0.04);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
 .device {
   margin: 0;
   color: var(--accent);

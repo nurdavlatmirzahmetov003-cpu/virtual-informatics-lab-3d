@@ -38,7 +38,7 @@ export interface LiveRoom {
     phase: 'idle' | 'question' | 'reveal';
     deadline: number;
     limitMs: number;
-    question: { base: string; device: string; order: Array<'a' | 'b' | 'c'> } | null;
+    question: { base: string; device: string; order: Array<'a' | 'b' | 'c'>; pick: string[] | null } | null;
     answered: number;
     myAnswer: number | null;
     reveal: { correct: number; counts: number[]; myPoints: number } | null;

@@ -24,6 +24,7 @@ export const SECTION_IDS = [
   'progress',
   'leaderboard',
   'live',
+  'games',
 ] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
 
@@ -52,6 +53,7 @@ export const SECTIONS: readonly Section[] = [
   { id: 'progress', route: '/progress', nameKey: 'nav.progress', words: ['нәтиже', 'прогресс', 'жетістік', 'результат', 'достижен', 'progress', 'results', 'achievement'] },
   { id: 'leaderboard', route: '/leaderboard', nameKey: 'game.title', words: ['рейтинг', 'көшбасшы', 'лидер', 'leaderboard', 'ranking'] },
   { id: 'live', route: '/live', nameKey: 'live.title', words: ['тікелей ойын', 'викторина', 'живые игры', 'викторин', 'live game', 'quiz'] },
+  { id: 'games', route: '/games', nameKey: 'arcade.eyebrow', words: ['ойындар', 'ойын алаң', 'арена', 'игры', 'игров', 'arena', 'games', 'екілік жарыс', 'желі шебері'] },
 ];
 
 export const sectionById = (id: string): Section | undefined => SECTIONS.find((s) => s.id === id);

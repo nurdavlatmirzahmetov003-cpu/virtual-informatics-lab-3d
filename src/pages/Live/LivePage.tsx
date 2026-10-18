@@ -6,7 +6,7 @@
  */
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Cable, ChevronDown, CircleHelp, Cpu, History, LogIn, MonitorPlay, Plus, Stethoscope, Trash2, type LucideIcon } from 'lucide-react';
+import { Cable, ChevronDown, CircleHelp, Cpu, History, LogIn, MonitorPlay, Plus, ScanSearch, Stethoscope, Trash2, type LucideIcon } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useT } from '@/hooks/useT';
 import { QUIZ_TOPICS, type QuizTopic } from '@/labs/LiveGames/quiz';
@@ -21,7 +21,7 @@ import { LiveRoomView } from './LiveRoom';
 import { k } from './text';
 import styles from './Live.module.css';
 
-const KIND_ICON: Record<GameKind, LucideIcon> = { quiz: CircleHelp, assembly: Cpu, connect: Cable, fault: Stethoscope };
+const KIND_ICON: Record<GameKind, LucideIcon> = { quiz: CircleHelp, device: ScanSearch, assembly: Cpu, connect: Cable, fault: Stethoscope };
 const collator = new Intl.Collator(['kk', 'ru', 'en']);
 
 type Rooms = Awaited<ReturnType<typeof liveApi.rooms>>;
@@ -92,7 +92,12 @@ function CreateForm() {
     setBusy(true);
     setError(null);
     try {
-      const input = kind === 'quiz' ? { kind, title, classId: classId || null, topics, count, seconds } : { kind, title, classId: classId || null, minutes };
+      const input =
+        kind === 'quiz'
+          ? { kind, title, classId: classId || null, topics, count, seconds }
+          : kind === 'device'
+            ? { kind, title, classId: classId || null, count, seconds }
+            : { kind, title, classId: classId || null, minutes };
       const r = await liveApi.create(input, csrf);
       navigate(`/live?code=${r.code}`);
     } catch (err) {
@@ -136,8 +141,9 @@ function CreateForm() {
         </select>
         <small>{t('live.create.classHint')}</small>
       </label>
-      {kind === 'quiz' ? (
+      {kind === 'quiz' || kind === 'device' ? (
         <>
+          {kind === 'quiz' && (
           <fieldset className={styles.topics}>
             <legend>
               {t('live.create.topics')}
@@ -153,6 +159,7 @@ function CreateForm() {
               </label>
             ))}
           </fieldset>
+          )}
           <div className={styles.numbers}>
             <label className={auth.field}>
               <span>{t('live.create.count')}</span>

@@ -4,12 +4,13 @@
  * student's screen is made for a phone: three answer tiles or a race board.
  * Everything shown comes from the server's state; the clock is the server's.
  */
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, CircleCheck, CircleX, Copy, Crown, Flag, LogOut, Play, SkipForward, Square, Timer, TriangleAlert, Users, WifiOff, X } from 'lucide-react';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import { useLive, type Feedback, type LivePlayer, type LiveRoom } from '@/services/live/client';
+import { deviceById, deviceKey } from '@/data/devices/devices';
 import { QrCode } from '../Classroom/parts';
 import auth from '../Auth/Auth.module.css';
 import { AssemblyBoard, ConnectBoard, FaultBoard } from './RaceBoards';
@@ -18,7 +19,9 @@ import styles from './Live.module.css';
 
 type Send = (m: Record<string, unknown>) => void;
 const MEDAL = ['#f4c97a', '#c9d3e3', '#e0a47c'];
-const LETTERS = ['A', 'B', 'C'];
+const LETTERS = ['A', 'B', 'C', 'D'];
+/** «What device is this?»: the device turns in its own small 3D canvas (loaded with the first question). */
+const DeviceViewer3D = lazy(() => import('@/pages/Lab/DeviceViewer3D'));
 
 /** Server time, ticking while something on screen counts down. */
 function useServerNow(offset: number, active: boolean) {
@@ -222,10 +225,18 @@ function QuizView({ room, now, send }: { room: LiveRoom; now: number; send: Send
           <span className={styles.badge}>{t('live.quiz.score', { n: (q.myScore ?? 0).toLocaleString('ru-RU') })}</span>
         )}
       </header>
-      <p className={styles.device}>{t(k(question.device))}</p>
+      {question.pick ? (
+        <div className={styles.model}>
+          <Suspense fallback={null}>
+            <DeviceViewer3D key={question.device} id={question.device} autoRotate label={t('arcade.device.question')} />
+          </Suspense>
+        </div>
+      ) : (
+        <p className={styles.device}>{t(k(question.device))}</p>
+      )}
       <h2 className={styles.question}>{t(k(`${base}.question`))}</h2>
       <div className={styles.options}>
-        {question.order.map((o, slot) => {
+        {(question.pick ?? question.order).map((o, slot) => {
           const chosen = q.myAnswer === slot;
           const state = reveal ? (slot === reveal.correct ? 'right' : chosen ? 'wrong' : 'dim') : chosen ? 'chosen' : q.myAnswer !== null ? 'dim' : 'idle';
           const share = reveal ? reveal.counts[slot] / totalAnswers : 0;
@@ -241,7 +252,7 @@ function QuizView({ room, now, send }: { room: LiveRoom; now: number; send: Send
               style={{ '--share': `${share * 100}%` } as CSSProperties}
             >
               <span className={styles.letter}>{LETTERS[slot]}</span>
-              <span className={styles.optionText}>{t(k(`${base}.${o}`))}</span>
+              <span className={styles.optionText}>{question.pick ? t(k(deviceKey(deviceById(o)!, 'name'))) : t(k(`${base}.${o}`))}</span>
               {reveal && <span className={styles.votes}>{reveal.counts[slot]}</span>}
               {reveal && slot === reveal.correct && <CircleCheck size={20} aria-hidden="true" className={styles.mark} />}
               {reveal && chosen && slot !== reveal.correct && <CircleX size={20} aria-hidden="true" className={styles.mark} />}
@@ -258,7 +269,7 @@ function QuizView({ room, now, send }: { room: LiveRoom; now: number; send: Send
           {me && <span>{t('live.quiz.rank', { n: me.rank })}</span>}
         </p>
       )}
-      {reveal && <p className={styles.explain}>{t(k(`${base}.explain`))}</p>}
+      {reveal && <p className={styles.explain}>{question.pick ? t('arcade.device.itWas', { name: t(k(deviceKey(deviceById(question.device)!, 'name'))) }) : t(k(`${base}.explain`))}</p>}
 
       {room.isHost && (
         <div className={styles.hostBar}>

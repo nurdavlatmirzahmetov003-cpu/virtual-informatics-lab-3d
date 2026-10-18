@@ -12,7 +12,8 @@
     "progress": "My results",
     "primary": "Primary navigation",
     "explorer": "Anatomy",
-    "lab": "3D lab"
+    "lab": "3D lab",
+    "games": "Games"
   },
   "settings": {
     "language": "Language",
@@ -6968,13 +6969,15 @@
       "quiz": "Quiz",
       "assembly": "PC assembly race",
       "connect": "Port connection race",
-      "fault": "“Find the fault” race"
+      "fault": "“Find the fault” race",
+      "device": "What device is this?"
     },
     "kindHints": {
       "quiz": "Timed questions: a fast, correct answer earns more points.",
       "assembly": "Install 11 parts in the right places and the right order. Each mistake adds 10 seconds.",
       "connect": "Plug 5 cables into the right ports of the PC. Each mistake adds 10 seconds.",
-      "fault": "5 broken computers: find the cause from the symptoms. Each mistake adds 10 seconds."
+      "fault": "5 broken computers: find the cause from the symptoms. Each mistake adds 10 seconds.",
+      "device": "Name the device from its 3D model: four options, faster answers score more"
     },
     "join": {
       "title": "Join a game",
@@ -7157,6 +7160,127 @@
       "lesson": "Start the logic lesson",
       "build": "Build a PC for 400,000 tenge",
       "open": "Open the networks lab"
+    }
+  },
+  "arcade": {
+    "eyebrow": "Games arena",
+    "title": "Who's fastest? Who knows most?",
+    "subtitle": "Five quick games: name the device, cable and socket, build the PC, binary numbers and networks. The server checks every score; leaderboards run per class and per school.",
+    "play": "Play",
+    "again": "Play again",
+    "back": "All games",
+    "best": "My best: {n}",
+    "noBest": "Not played yet",
+    "points": "{n} pts",
+    "rounds": "{n} rounds",
+    "seconds": "{n} seconds",
+    "ready": "Ready?",
+    "start": "Start",
+    "timeLeft": "Time left",
+    "score": "Score",
+    "streak": "{n} in a row",
+    "correct": "Correct: {n}/{total}",
+    "mistakes": "Mistakes: {n}",
+    "newBest": "New record!",
+    "result": "Result",
+    "skip": "Skip",
+    "challenge": "Challenge a friend",
+    "challengeHint": "Send the link to a friend: they get exactly the same questions.",
+    "copied": "Link copied",
+    "challenged": "A challenge game: everyone gets the same questions.",
+    "guest": "Guest mode: your record stays in this browser only. Sign in to join the leaderboard.",
+    "signIn": "Sign in",
+    "offline": "The server is unavailable, so the result is kept in this browser only.",
+    "board": {
+      "title": "Leaderboard",
+      "class": "Class",
+      "school": "School",
+      "week": "This week",
+      "all": "All time",
+      "empty": "Nobody has played yet — be the first!",
+      "hidden": "Player",
+      "you": "you",
+      "off": "Leaderboards are switched off by the administrator.",
+      "none": "Leaderboards are shown to students who belong to a class or a school."
+    },
+    "errors": {
+      "tooFast": "The answers came too fast, so the result does not count.",
+      "expired": "Time ran out, so the result does not count.",
+      "badAnswers": "The answers could not be read.",
+      "noRun": "Game not found. Please start again.",
+      "generic": "The result could not be saved."
+    },
+    "live": {
+      "title": "Play live with your class",
+      "text": "Your teacher opens a room and you join with a code: a quiz, “What device is this?”, and races to build a PC, plug in cables and find a fault.",
+      "open": "Go to live games"
+    },
+    "games": {
+      "device": {
+        "title": "What device is this?",
+        "desc": "Name the device from its 3D model. 10 rounds, a bonus for speed."
+      },
+      "ports": {
+        "title": "Cable and socket",
+        "desc": "Pick the right port for each job: HDMI, USB-C or RJ-45? 10 rounds."
+      },
+      "order": {
+        "title": "Build the PC",
+        "desc": "Install the parts in an order that works. Mistakes cost points, and so does time."
+      },
+      "binary": {
+        "title": "Binary rush",
+        "desc": "60 seconds to turn decimal numbers into binary and back. A streak of right answers earns a bonus."
+      },
+      "subnet": {
+        "title": "Network master",
+        "desc": "Are two IP addresses on the same network? 60 seconds; wrong guesses cost points."
+      }
+    },
+    "device": {
+      "question": "What device is this?",
+      "itWas": "It was: {name}."
+    },
+    "ports": {
+      "question": "Which port do you need?",
+      "right": "Right!",
+      "wrong": "The answer: {name}",
+      "jobs": {
+        "internet": "Connect a PC to the router with a cable",
+        "phoneCharge": "Charge a modern smartphone",
+        "headphones": "Plug wired headphones into a laptop",
+        "pcPower": "Plug the PC into the wall socket",
+        "printer": "Connect an office printer to a PC over USB",
+        "nvme": "Fit a fast NVMe SSD on the motherboard",
+        "gpuSlot": "Fit a graphics card into the motherboard",
+        "gpuPower": "Give the graphics card extra power from the power supply",
+        "cpuPower": "Connect the processor power cable to the motherboard",
+        "boardPower": "Connect the motherboard's main power",
+        "ram": "Fit a memory module",
+        "sataDisk": "Connect the data cable of a 2.5-inch SSD",
+        "tv": "Show a laptop's picture on a TV",
+        "dsl": "Connect a DSL modem to the phone line",
+        "cameraCard": "Read a camera's memory card",
+        "caseFan": "Connect a case fan to the motherboard"
+      }
+    },
+    "order": {
+      "question": "Which step comes next?",
+      "installed": "Installed: {n}/{total}",
+      "wrong": "Too early: another part has to go in first."
+    },
+    "binary": {
+      "toBin": "Convert to binary",
+      "toDec": "Convert to decimal",
+      "placeholder": "Answer",
+      "submit": "Send"
+    },
+    "subnet": {
+      "question": "Are these two addresses on the same network?",
+      "mask": "Subnet mask: /{prefix} ({mask})",
+      "yes": "Yes, same network",
+      "no": "No, different networks",
+      "keys": "Keyboard: ← yes, → no"
     }
   }
 }

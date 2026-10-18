@@ -66,9 +66,12 @@ export function shuffle<T>(list: readonly T[], r: () => number): T[] {
 
 export interface LiveQuestion {
   base: string;
+  /** Locale key of the device's name; for «What device is this?» the device id whose model is shown. */
   device: string;
   /** Options in the order shown to everyone. */
   order: QuizOption[];
+  /** «What device is this?»: device ids shown as the options (order is empty then). */
+  pick?: string[];
   /** Index into `order` of the right answer (server only until the reveal). */
   correct: number;
 }

@@ -63,7 +63,7 @@ export function xpTable(db: Db, userIds: string[], window?: { from: number; to: 
 export type Scope = 'class' | 'school';
 export type Period = 'week' | 'all';
 
-interface Member {
+export interface Member {
   id: string;
   display_name: string;
   leaderboard_anon: number;
@@ -102,24 +102,29 @@ export interface BoardRow {
   me: boolean;
 }
 
-export function leaderboard(db: Db, viewer: UserRow, input: { scope: string | null; id: string | null; period: string | null }, opts: { anonymous: boolean; now: number }) {
+/** Who is on a class or school board, and its title; throws 404 when the viewer may not see it. */
+export function boardMembers(db: Db, viewer: UserRow, input: { scope: string | null; id: string | null }): { scope: Scope; title: string; members: Member[] } {
   const scope: Scope = input.scope === 'school' ? 'school' : 'class';
-  const period: Period = input.period === 'all' ? 'all' : 'week';
-  let title: string;
-  let members: Member[];
   if (scope === 'class') {
     const cls = classAccess(db, viewer, input.id ?? '');
-    title = cls.name;
-    members = db
+    const members = db
       .prepare("SELECT u.id, u.display_name, u.leaderboard_anon FROM class_members m JOIN users u ON u.id = m.user_id WHERE m.class_id = ? AND u.role = 'student' AND u.disabled = 0")
       .all(cls.id) as unknown as Member[];
-  } else {
-    if (!viewer.school_id) throw new HttpError(404, 'noSchool');
-    const school = db.prepare('SELECT name FROM schools WHERE id = ?').get(viewer.school_id) as { name: string } | undefined;
-    if (!school) throw new HttpError(404, 'noSchool');
-    title = school.name;
-    members = db.prepare("SELECT id, display_name, leaderboard_anon FROM users WHERE school_id = ? AND role = 'student' AND disabled = 0").all(viewer.school_id) as unknown as Member[];
+    return { scope, title: cls.name, members };
   }
+  if (!viewer.school_id) throw new HttpError(404, 'noSchool');
+  const school = db.prepare('SELECT name FROM schools WHERE id = ?').get(viewer.school_id) as { name: string } | undefined;
+  if (!school) throw new HttpError(404, 'noSchool');
+  const members = db.prepare("SELECT id, display_name, leaderboard_anon FROM users WHERE school_id = ? AND role = 'student' AND disabled = 0").all(viewer.school_id) as unknown as Member[];
+  return { scope, title: school.name, members };
+}
+
+/** A classmate's name, or null when the board must hide it (anonymous mode or their own choice); staff always see names. */
+export const visibleName = (viewer: UserRow, m: Member, anonymous: boolean) => (viewer.role !== 'student' || m.id === viewer.id || !(anonymous || !!m.leaderboard_anon) ? m.display_name : null);
+
+export function leaderboard(db: Db, viewer: UserRow, input: { scope: string | null; id: string | null; period: string | null }, opts: { anonymous: boolean; now: number }) {
+  const period: Period = input.period === 'all' ? 'all' : 'week';
+  const { scope, title, members } = boardMembers(db, viewer, input);
   const week = weekKey(opts.now);
   const window = period === 'week' ? { from: weekStart(week), to: opts.now } : undefined;
   const xp = xpTable(db, members.map((m) => m.id), window);

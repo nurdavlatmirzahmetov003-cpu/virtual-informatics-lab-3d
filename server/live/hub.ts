@@ -15,10 +15,13 @@ import type { UserRow } from '../users';
 import { joinCode, normalizeJoinCode } from '../names';
 import type { WsConn } from './ws';
 import { QUIZ_TOPICS, buildQuiz, quizPoints, type LiveQuestion, type QuizTopic } from '@/labs/LiveGames/quiz';
+import { deviceQuiz } from '@/labs/Arcade';
 import { GAME_KINDS, applyMove, faultOrder, newRacer, raceSeconds, rankRacers, symptomsOf, type GameKind, type Move, type RaceKind, type RacerState } from '@/labs/LiveGames/races';
 import type { FaultId } from '@/labs/SystemSim/faults';
 
 export const MAX_PLAYERS = 60;
+/** Answer slots of a question: four device names, or a, b, c. */
+const optionCount = (q: LiveQuestion | undefined) => q?.pick?.length ?? q?.order.length ?? 0;
 const COUNTDOWN_MS = 3000;
 const KEEP_FINISHED_MS = 30 * 60_000;
 const LOBBY_TTL_MS = 3 * 3_600_000;
@@ -116,7 +119,13 @@ export class LiveHub {
     const seed = Math.floor(Math.random() * 2 ** 31);
     let quiz: QuizState | null = null;
     let race: RaceState | null = null;
-    if (kind === 'quiz') {
+    if (kind === 'device') {
+      const count = Number(input.count ?? 10);
+      const seconds = Number(input.seconds ?? 20);
+      if (!Number.isInteger(count) || count < 3 || count > 30) throw new HttpError(400, 'badCount');
+      if (!Number.isInteger(seconds) || seconds < 5 || seconds > 60) throw new HttpError(400, 'badSeconds');
+      quiz = { questions: deviceQuiz(count, seed), limitMs: seconds * 1000, index: -1, phase: 'idle', startedAt: 0, deadline: 0 };
+    } else if (kind === 'quiz') {
       const topics = Array.isArray(input.topics) ? input.topics.filter((t): t is QuizTopic => (QUIZ_TOPICS as readonly unknown[]).includes(t)) : [];
       const count = Number(input.count ?? 10);
       const seconds = Number(input.seconds ?? 20);
@@ -306,7 +315,8 @@ export class LiveHub {
   private answer(room: Room, p: Player, slot: number, conn: WsConn) {
     const q = room.quiz;
     const now = this.now();
-    if (!q || q.phase !== 'question' || now > q.deadline || p.answers.has(q.index) || !Number.isInteger(slot) || slot < 0 || slot > 2) return conn.send({ t: 'error', code: 'notNow' });
+    const options = q ? optionCount(q.questions[q.index]) : 0;
+    if (!q || q.phase !== 'question' || now > q.deadline || p.answers.has(q.index) || !Number.isInteger(slot) || slot < 0 || slot >= options) return conn.send({ t: 'error', code: 'notNow' });
     const right = slot === q.questions[q.index].correct;
     const points = quizPoints(right, q.deadline - now, q.limitMs);
     p.answers.set(q.index, { slot, at: now, points });
@@ -370,7 +380,8 @@ export class LiveHub {
     if (!room.players.size) return;
     const id = randomUUID();
     room.sessionId = id;
-    this.db.prepare('INSERT INTO live_sessions (id, kind, title, host_id, class_id, started_at, finished_at, players) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(id, room.kind, room.title, room.hostId, room.classId, room.startedAt, room.finishedAt, room.players.size);
+    // «What device is this?» is stored as a quiz (the table's CHECK predates it; its results read the same)
+    this.db.prepare('INSERT INTO live_sessions (id, kind, title, host_id, class_id, started_at, finished_at, players) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(id, room.kind === 'device' ? 'quiz' : room.kind, room.title, room.hostId, room.classId, room.startedAt, room.finishedAt, room.players.size);
     const put = this.db.prepare('INSERT INTO live_results (session_id, user_id, rank, score, detail) VALUES (?, ?, ?, ?, ?)');
     for (const s of this.standings(room)) {
       const detail = room.quiz ? { correct: s.p.correct, of: room.quiz.questions.length } : { mistakes: s.p.racer?.mistakes ?? 0, progress: s.p.racer?.progress ?? 0 };
@@ -405,7 +416,7 @@ export class LiveHub {
     }));
     const question = q && q.index >= 0 && q.index < q.questions.length ? q.questions[q.index] : null;
     const revealed = q?.phase === 'reveal' || room.status === 'finished';
-    const counts = question ? [0, 1, 2].map((slot) => [...room.players.values()].filter((p) => p.answers.get(q!.index)?.slot === slot).length) : null;
+    const counts = question ? Array.from({ length: optionCount(question) }, (_, slot) => slot).map((slot) => [...room.players.values()].filter((p) => p.answers.get(q!.index)?.slot === slot).length) : null;
     const mine = viewer && q ? viewer.answers.get(q.index) : undefined;
     const race = room.race;
     const r = viewer?.racer;
@@ -427,7 +438,7 @@ export class LiveHub {
           phase: q.phase,
           deadline: q.deadline,
           limitMs: q.limitMs,
-          question: question && { base: question.base, device: question.device, order: question.order },
+          question: question && { base: question.base, device: question.device, order: question.order, pick: question.pick ?? null },
           answered: [...room.players.values()].filter((p) => p.answers.has(q.index)).length,
           myAnswer: mine?.slot ?? null,
           reveal: revealed && question ? { correct: question.correct, counts, myPoints: mine?.points ?? 0 } : null,

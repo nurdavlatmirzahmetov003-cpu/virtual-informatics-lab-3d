@@ -15,7 +15,9 @@ import { rng, shuffle } from './quiz';
 
 export const RACE_KINDS = ['assembly', 'connect', 'fault'] as const;
 export type RaceKind = (typeof RACE_KINDS)[number];
-export const GAME_KINDS = ['quiz', ...RACE_KINDS] as const;
+/** Question games: the classic quiz and «What device is this?» (0.36, a 3D model and four names). */
+export const QUIZ_KINDS = ['quiz', 'device'] as const;
+export const GAME_KINDS = [...QUIZ_KINDS, ...RACE_KINDS] as const;
 export type GameKind = (typeof GAME_KINDS)[number];
 
 /** Seconds added to a racer's time for each mistake. */

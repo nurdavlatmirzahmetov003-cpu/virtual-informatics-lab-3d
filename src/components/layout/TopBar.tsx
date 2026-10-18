@@ -15,6 +15,7 @@ const NAV: ReadonlyArray<{ to: string; label: TranslationKey; end?: boolean }> =
   { to: '/explorer', label: 'nav.explorer' },
   { to: '/labs', label: 'nav.labs' },
   { to: '/studio', label: 'nav.studio' },
+  { to: '/games', label: 'nav.games' },
   { to: '/progress', label: 'nav.progress' },
 ];
 
