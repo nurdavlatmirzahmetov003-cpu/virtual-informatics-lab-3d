@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { LAB_HALL, LAB_OVERVIEW, LAB_ZONE_IDS, LAB_ZONES, zoneById } from '../src/data/lab/zones.ts';
+import { BoxGeometry, Color } from 'three';
+import { mergePieces } from '../src/scenes/LabSpace/classroom/mergeParts.ts';
+import { inOverview } from '../src/scenes/LabSpace/devices/deviceAssets.ts';
 import { clampToHall, keyAction, loadPlan, stepZone, toMinimap, zoneNumber, zoneShot, zonesNear } from '../src/lib/lab/navigation.ts';
 
 const inside = ([x, z], m = 0) => x >= LAB_HALL.minX + m && x <= LAB_HALL.maxX - m && z >= LAB_HALL.minZ + m && z <= LAB_HALL.maxZ - m;
@@ -141,4 +144,31 @@ test('robot teacher check: start, a zone to-do list, next task, all done', async
   assert.equal(finished.next, null);
   assert.equal(finished.percent, 100);
   assert.deepEqual(finished.teardownsTodo, []);
+});
+
+test('merged pieces: one geometry, parent transforms applied, a vertex colour per piece; overview model rule', () => {
+  const g = mergePieces(
+    [
+      { geo: new BoxGeometry(1, 1, 1), at: [1, 0, 0], color: '#ff0000' },
+      // inside a group moved to x = 10 and turned 90° about Y: the 2 m long box ends up along Z
+      { geo: new BoxGeometry(2, 1, 1), parents: [{ at: [10, 0, 0], rot: [0, Math.PI / 2, 0] }], color: '#0000ff' },
+    ],
+    true,
+  );
+  assert.equal(g.index, null);
+  assert.deepEqual(Object.keys(g.attributes).sort(), ['color', 'normal', 'position', 'uv']);
+  assert.equal(g.attributes.position.count, 72, 'two boxes, 36 vertices each');
+  g.computeBoundingBox();
+  const { min, max } = g.boundingBox;
+  assert.deepEqual([min.x, max.x].map((v) => +v.toFixed(3)), [0.5, 10.5]);
+  assert.deepEqual([min.z, max.z].map((v) => +v.toFixed(3)), [-1, 1]);
+  const red = new Color('#ff0000');
+  assert.deepEqual([...g.attributes.color.array.slice(0, 3)], [red.r, red.g, red.b]);
+  assert.equal(g.attributes.color.array[72 * 3 - 1], new Color('#0000ff').b);
+
+  // lab device models stay out of the Low / Medium overview; catalog models do not
+  assert.equal(inOverview('ups', 'low'), false);
+  assert.equal(inOverview('ups', 'high'), true);
+  assert.equal(inOverview('monitor', 'low'), true);
+  assert.equal(inOverview('scanner', 'medium'), true, 'no model of its own');
 });

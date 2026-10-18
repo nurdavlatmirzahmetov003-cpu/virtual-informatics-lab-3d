@@ -7,12 +7,13 @@
  */
 import { useLayoutEffect, useMemo, useRef } from 'react';
 import { useTexture } from '@react-three/drei';
-import { CanvasTexture, Matrix4, RepeatWrapping, SRGBColorSpace, type InstancedMesh } from 'three';
+import { BoxGeometry, CanvasTexture, Matrix4, PlaneGeometry, RepeatWrapping, SRGBColorSpace, type InstancedMesh } from 'three';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useScenePalette, useTheme } from '@/hooks/useTheme';
 import { useDisposable } from '@/hooks/useDisposable';
 import { useSceneTextures } from '@/lib/three/modelAssets';
 import { LAB_HALL, LAB_ZONES } from '@/data/lab/zones';
+import { mergePieces, type Piece } from './classroom/mergeParts';
 
 const TEX = `${import.meta.env.BASE_URL}assets/textures/`;
 /** Only the roughness map: the floor colour is flat (no download of the diffuse map). */
@@ -24,6 +25,35 @@ const WIDTH = maxX - minX;
 const DEPTH = maxZ - minZ;
 const BAND_Y = 3.25;
 const SLATS = { count: 60, width: 0.034, pitch: 0.058, height: 2.6, depth: 0.022 };
+const MID_Z = (minZ + maxZ) / 2;
+const LEFT = [0, Math.PI / 2, 0] as const;
+const RIGHT = [0, -Math.PI / 2, 0] as const;
+
+/**
+ * The three walls, their skirting and top trim, and the light band — each
+ * set merged into one mesh (3 draw calls instead of 12; V2-12 perf).
+ */
+function shellGeometry() {
+  const walls: Piece[] = [
+    { geo: new PlaneGeometry(WIDTH, H), at: [0, H / 2, minZ] },
+    { geo: new PlaneGeometry(DEPTH, H), at: [minX, H / 2, MID_Z], rot: LEFT },
+    { geo: new PlaneGeometry(DEPTH, H), at: [maxX, H / 2, MID_Z], rot: RIGHT },
+  ];
+  const trim: Piece[] = [0.06, H - 0.05].flatMap((y) => {
+    const t = y < 1 ? 0.12 : 0.1;
+    return [
+      { geo: new BoxGeometry(WIDTH, t, 0.02), at: [0, y, minZ + 0.01] as const },
+      { geo: new BoxGeometry(0.02, t, DEPTH), at: [minX + 0.01, y, MID_Z] as const },
+      { geo: new BoxGeometry(0.02, t, DEPTH), at: [maxX - 0.01, y, MID_Z] as const },
+    ];
+  });
+  const band: Piece[] = [
+    { geo: new PlaneGeometry(WIDTH, 0.06), at: [0, BAND_Y, minZ + 0.02] },
+    { geo: new PlaneGeometry(DEPTH, 0.06), at: [minX + 0.02, BAND_Y, MID_Z], rot: LEFT },
+    { geo: new PlaneGeometry(DEPTH, 0.06), at: [maxX - 0.02, BAND_Y, MID_Z], rot: RIGHT },
+  ];
+  return { walls: mergePieces(walls), trim: mergePieces(trim), band: mergePieces(band) };
+}
 
 /** Cyan → violet → magenta, the site's accent gradient, as a light strip texture. */
 function bandTexture() {
@@ -58,6 +88,7 @@ export function LabRoom() {
   });
   useSceneTextures(floor, [roughnessMap], preset.maxTextureSize, preset.anisotropy);
   const band = useDisposable(() => bandTexture(), []);
+  const shell = useDisposable(shellGeometry, []);
 
   const slats = useRef<InstancedMesh>(null);
   useLayoutEffect(() => {
@@ -105,49 +136,14 @@ export function LabRoom() {
         <meshStandardMaterial roughnessMap={roughnessMap} roughness={0.85} color={floorTint} metalness={0.05} envMapIntensity={0.55} />
       </mesh>
 
-      {/* walls */}
-      <mesh position={[0, H / 2, minZ]} receiveShadow>
-        <planeGeometry args={[WIDTH, H]} />
+      {/* walls, skirting and top trim, the gradient light band round the walls */}
+      <mesh geometry={shell.walls} receiveShadow>
         <meshStandardMaterial color={wallColor} roughness={0.92} />
       </mesh>
-      <mesh position={[minX, H / 2, (minZ + maxZ) / 2]} rotation-y={Math.PI / 2} receiveShadow>
-        <planeGeometry args={[DEPTH, H]} />
-        <meshStandardMaterial color={wallColor} roughness={0.92} />
+      <mesh geometry={shell.trim}>
+        <meshStandardMaterial color={trim} roughness={0.6} />
       </mesh>
-      <mesh position={[maxX, H / 2, (minZ + maxZ) / 2]} rotation-y={-Math.PI / 2} receiveShadow>
-        <planeGeometry args={[DEPTH, H]} />
-        <meshStandardMaterial color={wallColor} roughness={0.92} />
-      </mesh>
-
-      {/* skirting and top trim */}
-      {[0.06, H - 0.05].map((y) => (
-        <group key={y}>
-          <mesh position={[0, y, minZ + 0.01]}>
-            <boxGeometry args={[WIDTH, y < 1 ? 0.12 : 0.1, 0.02]} />
-            <meshStandardMaterial color={trim} roughness={0.6} />
-          </mesh>
-          <mesh position={[minX + 0.01, y, (minZ + maxZ) / 2]}>
-            <boxGeometry args={[0.02, y < 1 ? 0.12 : 0.1, DEPTH]} />
-            <meshStandardMaterial color={trim} roughness={0.6} />
-          </mesh>
-          <mesh position={[maxX - 0.01, y, (minZ + maxZ) / 2]}>
-            <boxGeometry args={[0.02, y < 1 ? 0.12 : 0.1, DEPTH]} />
-            <meshStandardMaterial color={trim} roughness={0.6} />
-          </mesh>
-        </group>
-      ))}
-
-      {/* gradient light band round the walls */}
-      <mesh position={[0, BAND_Y, minZ + 0.02]}>
-        <planeGeometry args={[WIDTH, 0.06]} />
-        <meshBasicMaterial map={band} toneMapped={false} />
-      </mesh>
-      <mesh position={[minX + 0.02, BAND_Y, (minZ + maxZ) / 2]} rotation-y={Math.PI / 2}>
-        <planeGeometry args={[DEPTH, 0.06]} />
-        <meshBasicMaterial map={band} toneMapped={false} />
-      </mesh>
-      <mesh position={[maxX - 0.02, BAND_Y, (minZ + maxZ) / 2]} rotation-y={-Math.PI / 2}>
-        <planeGeometry args={[DEPTH, 0.06]} />
+      <mesh geometry={shell.band}>
         <meshBasicMaterial map={band} toneMapped={false} />
       </mesh>
 

@@ -124,9 +124,9 @@ async function boot() {
     return { id: u.id, cookie: res.headers.get('set-cookie').split(';')[0], csrf: body.csrfToken };
   };
   /** A WebSocket client that keeps every message and can wait for one. */
-  const ws = (as, code, origin = ORIGIN) =>
+  const wsAt = (path, as, origin = ORIGIN) =>
     new Promise((resolve) => {
-      const sock = new WebSocket(`ws://127.0.0.1:${port}/api/live/ws?code=${code}`, { headers: { ...(as ? { cookie: as.cookie } : {}), origin } });
+      const sock = new WebSocket(`ws://127.0.0.1:${port}${path}`, { headers: { ...(as ? { cookie: as.cookie } : {}), origin } });
       const msgs = [];
       const waiters = [];
       const client = {
@@ -155,7 +155,8 @@ async function boot() {
       sock.addEventListener('open', () => resolve(client));
       sock.addEventListener('error', () => resolve({ ...client, failed: true }));
     });
-  return { db, call, account, ws, tick: (ms) => (clock += ms), close: () => new Promise((r) => server.close(r)) };
+  const ws = (as, code, origin) => wsAt(`/api/live/ws?code=${code}`, as, origin);
+  return { db, call, account, ws, wsAt, tick: (ms) => (clock += ms), close: () => new Promise((r) => server.close(r)) };
 }
 
 test('live quiz: join by code, the answer stays secret, server-timed points, reveal, reconnect, results saved', async () => {
@@ -275,6 +276,63 @@ test('live race: countdown, every move refereed on the server, finish by time + 
     const row = s.db.prepare('SELECT r.score, r.detail FROM live_results r JOIN users u ON u.id = r.user_id WHERE u.login = ?').get('bek');
     assert.equal(row.score, null, 'did not finish');
     assert.equal(JSON.parse(row.detail).progress, 4 / STEP_IDS.length);
+  } finally {
+    for (const k of sockets) k.close?.();
+    await s.close();
+  }
+});
+
+test('class events: the owning teacher sees presence and graded attempts live; other teachers and students see nothing', async () => {
+  const s = await boot();
+  const sockets = [];
+  try {
+    const t = await s.account('t.own', 'teacher');
+    const other = await s.account('t.other', 'teacher');
+    const admin = await s.account('root.admin', 'admin');
+    const a = await s.account('aru.e', 'student', 'Ару');
+    const b = await s.account('bek.e', 'student', 'Бек');
+    const cls = (await s.call('/api/teacher/classes', { method: 'POST', body: { name: '9A' }, as: t })).body.class;
+    s.db.prepare('INSERT INTO class_members (class_id, user_id, joined_at) VALUES (?, ?, ?)').run(cls.id, a.id, 0);
+
+    const path = '/api/events/ws';
+    assert.ok((await s.wsAt(path, null)).failed, 'no session, no socket');
+    assert.ok((await s.wsAt(path, t, 'https://evil.example')).failed, 'foreign origin refused');
+
+    const teacher = await s.wsAt(path, t);
+    const stranger = await s.wsAt(path, other);
+    const root = await s.wsAt(path, admin);
+    sockets.push(teacher, stranger, root);
+    assert.deepEqual((await teacher.next((m) => m.t === 'hello')).online, {});
+
+    // Aru comes online: her teacher and the admin see it, the other teacher does not
+    const sa = await s.wsAt(path, a);
+    const sb = await s.wsAt(path, b);
+    sockets.push(sa, sb);
+    assert.equal((await sa.next((m) => m.t === 'hello')).role, 'student');
+    const seen = await teacher.next((m) => m.t === 'presence');
+    assert.deepEqual([seen.classIds, seen.studentId, seen.online], [[cls.id], a.id, true]);
+    assert.equal((await root.next((m) => m.t === 'presence')).studentId, a.id);
+
+    // a graded attempt arrives with the sync: name, task and score — nothing else
+    const at = Date.now();
+    const att = { id: 'ev-1', exerciseId: 'logic:and', score: 9, maxScore: 10, percent: 90, seconds: 40, errors: 0, hints: 0, status: 'completed', at };
+    const snapshot = { attempts: [att], exercises: {}, achievements: {}, meta: { createdAt: 0 } };
+    assert.equal((await s.call('/api/progress', { method: 'PUT', body: { snapshot }, as: a })).status, 200);
+    const ev = await teacher.next((m) => m.t === 'attempt');
+    assert.deepEqual([ev.name, ev.exerciseId, ev.percent, ev.completed, ev.classIds], ['Ару', 'logic:and', 90, true, [cls.id]]);
+    assert.ok(!JSON.stringify(ev).includes('aru.e'), 'no login in events');
+    // the same attempt synced again is not news
+    await s.call('/api/progress', { method: 'PUT', body: { snapshot }, as: a });
+    // Bek is in no class: his work reaches nobody
+    await s.call('/api/progress', { method: 'PUT', body: { snapshot: { ...snapshot, attempts: [{ ...att, id: 'ev-2' }] } }, as: b });
+
+    sa.close();
+    const off = await teacher.next((m) => m.t === 'presence');
+    assert.equal(off.online, false);
+    await new Promise((r) => setTimeout(r, 150));
+    assert.equal(teacher.msgs.filter((m) => m.t === 'attempt').length, 1);
+    assert.deepEqual(stranger.msgs.map((m) => m.t), ['hello'], 'another teacher sees nothing of this class');
+    assert.deepEqual(sb.msgs.map((m) => m.t), ['hello'], 'students get no events');
   } finally {
     for (const k of sockets) k.close?.();
     await s.close();

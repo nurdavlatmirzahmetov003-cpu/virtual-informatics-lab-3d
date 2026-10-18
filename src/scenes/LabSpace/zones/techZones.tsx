@@ -6,6 +6,8 @@
 import { DeviceSpot, ExhibitTable } from '../devices/Exhibit';
 import { DeviceModel } from '../devices/DeviceModel';
 import { CableCoil, RackShell } from '../devices/v24bDevices';
+import { useQualityPreset } from '@/hooks/useQualityPreset';
+import { inOverview } from '../devices/deviceAssets';
 import type { ZoneContentProps } from './zoneData';
 
 export function NetworkZone({ detail, accent }: ZoneContentProps) {
@@ -39,6 +41,8 @@ const WALL_CABLES = ['hdmi_cable', 'displayport_cable', 'usb_c_cable', 'usb_a_ca
 
 export function PowerZone({ detail, accent }: ZoneContentProps) {
   const full = detail === 'full';
+  const level = useQualityPreset().level;
+  const ups = full || inOverview('ups', level);
   return (
     <>
       {/* pegboard: every cable on its own hook, name plate under it */}
@@ -60,7 +64,7 @@ export function PowerZone({ detail, accent }: ZoneContentProps) {
       </group>
       <group position={[-1.12, 0, -0.45]}>
         <DeviceSpot id="ups" accent={accent} padSize={[0.3, 0.5]} plate={full} plateZ={0.32}>
-          <DeviceModel id="ups" />
+          {ups ? <DeviceModel id="ups" /> : null}
         </DeviceSpot>
       </group>
       <group position={[0.4, 0, -0.3]}>

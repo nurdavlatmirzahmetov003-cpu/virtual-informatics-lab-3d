@@ -1,0 +1,14 @@
+# never into the image: secrets, the database, local sources and tooling
+.env
+.env.*
+!.env.example
+data/
+node_modules/
+dist/
+assets-src/
+docs/defense/
+.git/
+.claude/
+.vscode/
+*.log
+public/decoders/

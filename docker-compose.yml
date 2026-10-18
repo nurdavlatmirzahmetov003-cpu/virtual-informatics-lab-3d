@@ -1,0 +1,46 @@
+# Production on one VPS (DEPLOY.md): Caddy takes HTTPS (Let's Encrypt
+# certificates by itself) and passes everything to the lab container, which
+# is not reachable from outside. Secrets come from .env on the server only.
+#
+#   cp .env.example .env   # fill DOMAIN, ALLOWED_ORIGINS, optional AI key
+#   docker compose up -d --build
+#   docker compose exec lab npm run server:create-admin   # you type the password
+
+services:
+  lab:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0
+      STATIC_DIR: dist
+      DB_FILE: /data/lab.db
+      BACKUP_DIR: /data/backups
+      COOKIE_SECURE: 'true'
+      # only Caddy can reach this container, and it sets X-Forwarded-For itself
+      TRUST_PROXY: all
+    volumes:
+      - lab-data:/data
+    expose:
+      - '8787'
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - lab
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  lab-data:
+  caddy-data:
+  caddy-config:

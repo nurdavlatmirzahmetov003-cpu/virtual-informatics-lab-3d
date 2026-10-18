@@ -52,6 +52,8 @@ export interface AppOptions {
   /** Other route handlers (the AI assistant); return true when they answered. */
   extra?: Array<(req: IncomingMessage, res: ServerResponse) => Promise<boolean>>;
   aiStatus?: () => { provider: string | null; model: string | null };
+  /** Sent with every response (security headers, V2-12). */
+  headers?: Record<string, string>;
   now?: () => number;
 }
 
@@ -74,6 +76,7 @@ export function createApp({
   resetLimiter = new LoginLimiter(10, 30),
   extra = [],
   aiStatus = () => ({ provider: null, model: null }),
+  headers = {},
   now = Date.now,
 }: AppOptions) {
   const clearCookie = cookie(SESSION_COOKIE, '', { maxAge: 0, secure: config.cookieSecure });
@@ -242,6 +245,7 @@ export function createApp({
   };
 
   const handle = async function handle(req: IncomingMessage, res: ServerResponse) {
+    for (const [k, v] of Object.entries(headers)) res.setHeader(k, v);
     try {
       const ip = clientIp(req, config.trustProxy);
       if (isBlocked(ip)) throw new HttpError(403, 'ipBlocked');

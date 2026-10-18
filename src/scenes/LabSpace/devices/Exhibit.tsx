@@ -10,11 +10,13 @@ import { CanvasTexture, SRGBColorSpace, type MeshStandardMaterial } from 'three'
 import { deviceById, deviceKey } from '@/data/devices/devices';
 import type { TranslationKey } from '@/lib/i18n';
 import { useDisposable } from '@/hooks/useDisposable';
+import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useT } from '@/hooks/useT';
 import { useTheme } from '@/hooks/useTheme';
 import { useLabStore } from '@/store/labStore';
 import { Table } from '../furniture';
 import { useFurnitureColors } from '../furnitureColors';
+import { inOverview } from './deviceAssets';
 import { DeviceModel } from './DeviceModel';
 
 function plateTexture(text: string, light: boolean, accent: string) {
@@ -119,7 +121,8 @@ export function DeviceSpot({ id, accent, padSize, children, plate = true, plateZ
           </RoundedBox>
         </>
       )}
-      <group position-y={0.01}>{children ?? <DeviceModel id={id} display light={light} />}</group>
+      {/* no children: the device itself; an explicit null (the overview) shows nothing */}
+      <group position-y={0.01}>{children === undefined ? <DeviceModel id={id} display light={light} /> : children}</group>
       {plate && (
         <group position={[0, 0, plateZ ?? pd / 2 + 0.055]}>
           <Plate id={id} accent={accent} width={pw} />
@@ -159,6 +162,7 @@ export function ExhibitTable({ width, depth, rows, accent, detail, hero = [] }: 
 }) {
   const c = useFurnitureColors();
   const full = detail === 'full';
+  const level = useQualityPreset().level;
   return (
     <Table width={width} depth={depth}>
       {rows.map((row, ri) => {
@@ -177,7 +181,7 @@ export function ExhibitTable({ width, depth, rows, accent, detail, hero = [] }: 
               const slot = (usable * (it.w ?? 1)) / total;
               const cx = x + slot / 2;
               x += slot;
-              const show = full || hero.includes(it.id);
+              const show = full || (hero.includes(it.id) && inOverview(it.id, level));
               if (!show) return null;
               return (
                 <group key={it.id} position={[cx, row.riser ?? 0, 0]}>

@@ -48,3 +48,11 @@ export const PRODUCT: Record<string, string> = {
 /** Product files a set of devices uses, for prefetching. */
 export const deviceProducts = (ids: readonly string[]) => ids.map((id) => PRODUCT[id]).filter(Boolean);
 
+
+/**
+ * Whether the hall overview may show a device's own model. The 2026-10 lab
+ * device models (`dev-*`) stay out of the overview on Low / Medium (their
+ * pads stay; the model loads when the zone opens), so the overview costs no
+ * more there than before them (V2-12 perf rule).
+ */
+export const inOverview = (id: string, level: string) => level === 'high' || level === 'ultra' || !PRODUCT[id]?.startsWith('dev-');

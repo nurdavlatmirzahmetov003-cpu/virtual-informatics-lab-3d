@@ -1,0 +1,16 @@
+# HTTPS in front of the lab (DEPLOY.md). Caddy gets and renews the
+# certificate for {$DOMAIN} by itself; plain HTTP redirects to HTTPS.
+{$DOMAIN} {
+	encode zstd gzip
+	# WebSockets (/api/live/ws, /api/events/ws) pass through as well
+	reverse_proxy lab:8787
+	# the largest request is a backup restore (server limit: 200 MB)
+	request_body {
+		max_size 210MB
+	}
+	header -Server
+	log {
+		output stdout
+		format console
+	}
+}

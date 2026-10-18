@@ -6629,7 +6629,14 @@
       "security": "Security",
       "settings": "Settings",
       "backups": "Backups",
-      "health": "System health"
+      "health": "System health",
+      "live": "Live"
+    },
+    "live": {
+      "online": "Students online: {n}",
+      "class": "Class",
+      "teacher": "Teacher",
+      "feed": "Latest results (all classes)"
     },
     "errors": {
       "self": "You cannot change your own role or block yourself.",

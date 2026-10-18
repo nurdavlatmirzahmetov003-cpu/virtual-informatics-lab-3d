@@ -14,4 +14,8 @@ Thumbs.db
 assets-src/
 
 # local database (accounts, progress) — never commit
-data/
+# (anchored: src/data/ is source code and must stay tracked)
+/data/
+
+# the owner's private documents — never commit
+docs/defense/

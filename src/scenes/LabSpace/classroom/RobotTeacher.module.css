@@ -1,4 +1,8 @@
-/* Speech bubble above the robot teacher (drei Html): a pill that invites a click. */
+/*
+ * Speech bubble above the robot teacher (drei Html): a pill that invites a click.
+ * Opaque and still (no backdrop blur, no endless animation): anything that
+ * repaints over the WebGL canvas every frame costs Low / Medium real FPS.
+ */
 
 .anchor {
   pointer-events: none;
@@ -14,8 +18,7 @@
   padding: 10px 14px 11px;
   border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
   border-radius: 16px;
-  background: rgb(var(--panel-rgb) / 0.92);
-  backdrop-filter: blur(8px);
+  background: rgb(var(--panel-rgb));
   box-shadow:
     0 10px 30px -12px rgb(0 0 0 / 0.6),
     0 0 24px -10px var(--accent-glow);
@@ -28,7 +31,6 @@
   transition:
     transform 0.2s,
     border-color 0.2s;
-  animation: float 3.2s ease-in-out infinite;
 }
 
 .bubble::after {
@@ -40,7 +42,7 @@
   height: 14px;
   border-right: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
-  background: rgb(var(--panel-rgb) / 0.92);
+  background: rgb(var(--panel-rgb));
   transform: translateX(-50%) rotate(45deg);
 }
 
@@ -62,15 +64,8 @@
   outline-offset: 3px;
 }
 
-@keyframes float {
-  50% {
-    translate: 0 -4px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .bubble {
-    animation: none;
     transition: none;
   }
 }

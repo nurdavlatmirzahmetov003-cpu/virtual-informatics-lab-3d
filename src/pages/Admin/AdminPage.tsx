@@ -1,12 +1,12 @@
 /**
- * Admin panel (V2-10): users, schools and classes, learning content texts,
+ * Admin panel (V2-10): users, live activity (V2-12), schools and classes, learning content texts,
  * security (audit log, login attempts, IP blocks), site settings, backups
  * and system health — as tabs (`?tab=`). The server checks the admin role
  * on every request; every change lands in the audit log.
  */
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Activity, DatabaseBackup, Languages, School, ShieldAlert, SlidersHorizontal, Users } from 'lucide-react';
+import { Activity, DatabaseBackup, Languages, Radio, School, ShieldAlert, SlidersHorizontal, Users } from 'lucide-react';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import { RequireRole } from '../Auth/RequireRole';
@@ -17,11 +17,13 @@ import { SecurityTab } from './SecurityTab';
 import { SettingsTab } from './SettingsTab';
 import { BackupsTab } from './BackupsTab';
 import { HealthTab } from './HealthTab';
+import { LiveTab } from './LiveTab';
 import cls from '../Classroom/Classroom.module.css';
 import auth from '../Auth/Auth.module.css';
 
 const TABS = [
   { id: 'users', icon: Users },
+  { id: 'live', icon: Radio },
   { id: 'schools', icon: School },
   { id: 'content', icon: Languages },
   { id: 'security', icon: ShieldAlert },
@@ -60,6 +62,7 @@ function Panel() {
       </header>
       <div role="tabpanel" className={cls.tabPanel}>
         {tab === 'users' && <UsersTab />}
+        {tab === 'live' && <LiveTab />}
         {tab === 'schools' && <SchoolsTab />}
         {tab === 'content' && <ContentTab />}
         {tab === 'security' && <SecurityTab />}

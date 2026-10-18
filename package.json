@@ -25,6 +25,7 @@
     "test:experiments": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/experiments.test.mjs",
     "test:progress": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/progress.test.mjs",
     "server": "node --experimental-strip-types --import ./scripts/test-resolve.mjs server/main.ts",
+    "serve:prod": "node --experimental-strip-types --import ./scripts/test-resolve.mjs server/main.ts --site",
     "server:create-admin": "node --experimental-strip-types --import ./scripts/test-resolve.mjs server/cli.ts create-admin",
     "ai:server": "npm run server",
     "test:server": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/server.test.mjs",

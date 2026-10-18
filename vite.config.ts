@@ -12,7 +12,8 @@ const pkg = (names: string) => new RegExp(`node_modules[/\\\\](${names})[/\\\\]`
  */
 const apiProxy: Record<string, ProxyOptions> = {
   '/api': {
-    target: `http://localhost:${process.env.SERVER_PORT ?? process.env.AI_PORT ?? 8787}`,
+    // 127.0.0.1, not localhost: the server listens on IPv4 loopback only by default
+    target: `http://127.0.0.1:${process.env.SERVER_PORT ?? process.env.AI_PORT ?? 8787}`,
     // X-Forwarded-For: the server sees each visitor's IP (rate limits, IP blocks)
     xfwd: true,
     // live games (V2-11b): /api/live/ws is a WebSocket

@@ -1,9 +1,47 @@
 # PROJECT STATE — Virtual Informatics Lab 3D
 
-Жаңартылды: 2026-10-17
-**Ағымдағы фаза: V2-11b дайын (WebSocket арқылы тікелей викторина, жинау / жалғау / ақаулық жарыстары). V2-11a…V2-0, Фаза 0–9 дайын. Келесі — V2-12 (QA, қауіпсіздік, хостингке дайындық). Жоспар: PLAN_V2.md.**
+Жаңартылды: 2026-10-18
+**Ағымдағы фаза: V2-12 дайын — GitHub-қа дайын.** 3D кабинет (35 нақты модель, плакаттар, робот-мұғалім), мұғалімге тікелей нәтижелер, production сервері, Docker + Caddy, DEPLOY.md, SECURITY.md, CI. V2-0…V2-12, Фаза 0–9 дайын. Келесі қадам — иесімен бірге GitHub-қа жариялау және хостинг (NEXT_ACTION).
 
 > Жаңа сессия басталғанда: алдымен осы файлды, `ROADMAP.md`, `TODO.md`, `ARCHITECTURE.md` оқы, содан кейін төмендегі `NEXT_ACTION`-нан жалғастыр. Жобаны нөлден бастама.
+
+## V2-12 — Тікелей сынып және интернетке дайындық (2026-10-18)
+**Бұған дейін (сол күні):** 3D кабинет, 35 нақты құрылғы моделі, бөлшектеудің нақты ішкі бөлшектері, 6 оқу плакаты, робот-мұғалім «Бит» (commit 375cdbc, CHANGELOG 0.34.0).
+
+**Тікелей оқиғалар:**
+- `server/live/events.ts` (`EventHub`), `/api/events/ws`;
+- progress PUT жаңа әрекеттерді жариялайды (`storedAttemptIds`);
+- клиентте: `services/live/events.ts` (`useLiveEvents`, `setLiveEvents`); сынып бетінде `LivePanel` / `OnlineDot`; админде `LiveTab` (`/admin?tab=live`).
+
+**Production:**
+- `server/static.ts` — `dist/` беру, қауіпсіздік header-лері, `STATIC_DIR`, `HOST` (әдепкіде 127.0.0.1), `npm run serve:prod`;
+- `Dockerfile`, `.dockerignore`, `docker-compose.yml`, `deploy/Caddyfile`;
+- `DEPLOY.md`, `SECURITY.md`, `.github/workflows/ci.yml`.
+
+**Өнімділік (`/lab`):**
+- `mergePieces` (`classroom/mergeParts.ts`): кабинет, робот және залдың қабырғалары біріктірілді;
+- Low/Medium-да Lambert мен unlit материалдар;
+- жаңа `dev-*` модельдер Low/Medium шолуында жоқ (`inOverview`);
+- `DeviceSpot` null-children қатесі түзетілді.
+
+**Тексерілді:**
+- `npm test` 171/171, lint, typecheck, build, `npm audit` — 0 осалдық;
+- `serve:prod` (уақытша дерекқор, :8790): header-лер, SPA, traversal, `/.env` → 404, LAN-нан қолжетімсіз;
+- Chrome: 11 бетте CSP немесе JS қатесі жоқ;
+- Firefox 158 headless (BiDi): 3D беттер дайын, қате жоқ;
+- git тарихында құпия кілттер мен жеке деректер жоқ.
+
+Өнімділік (кезектесіп 4 раунд, ретін әр раундта ауыстырдым; медиана; бұрынғы build — af43e3d):
+
+| Сапа | Бет | Бұрын | Кейін | Draw call |
+|---|---|---|---|---|
+| Low | `/` | 88 | 88 | 148 |
+| Low | `/lab` | 151 | 149,5 | 189 → 181 |
+| Medium | `/` | 74,5 | 75 | 146 |
+| Medium | `/lab` | 142 | 142 | 189 → 181 |
+| High | `/lab` | 39 | 39 | 189 → 206 |
+
+Low `/lab`-тағы −1,5 — шу шегінде (екі жақта да бір раунд 141–142-ге түсті).
 
 ## V2-11b — Тікелей ойындар (2026-10-17)
 - **Таза ережелер** (сервер мен браузерге ортақ):
@@ -903,27 +941,18 @@ Dev консольде: `__vil3d.bench()` — draw calls / үшбұрыш / мс
 7. GLB тек `ModelLoader` арқылы: `fit` модельді нақты өлшемге келтіреді, анкер/анимация React орамында қалады; әр GLB-нің процедуралық fallback-і бар. Шикі ассеттер `assets-src/` (git-ке кірмейді), оңтайландыру скрипті қайталанатын.
 8. Фаза 0–2.2 шешімдері күшінде (ARCHITECTURE.md).
 
-NEXT_ACTION: V2-12 — PLAN_V2.md-дегі «V2-12 — QA, security, hosting readiness» промпты.
-1. Тестілеу:
-   - Chrome, Edge, Firefox, Safari;
-   - нақты телефон, планшет, әлсіз ноутбук;
-   - әр бетте perf-measure;
-   - қолжетімділік: пернетақта, контраст, экран оқу бағдарламасы.
-2. Қауіпсіздік аудиті:
-   - OWASP Top 10: auth, сессиялар, CSRF, XSS, SQL injection, шектеулер, рұқсаттар;
-   - WebSocket (Origin, флуд);
-   - npm audit, .env.
-3. Хостингке дайындық:
-   - Dockerfile;
-   - SQLite → PostgreSQL жолы;
-   - HTTPS, домен, 3D ассеттерге CDN, көшірмелер;
-   - DEPLOY.md: VPS / Render / Railway / Supabase бағаларымен.
-
-   Хостинг пен доменді пайдаланушы өзі таңдайды.
-4. README-ді толықтыру.
-
-Қатар: пайдаланушы Sketchfab-тан 36 модельді жүктейді. Тізім — `assets-src/sketchfab/download-list.html`, бума — `assets-src/sketchfab/devices/`. Оның 6-уы бөлшектеудің ішкі бөлшектері: `phone_teardown`, `laptop_fan`, `laptop_battery`, `sodimm`, `pcb_board`, `electronic_components`. Олар смартфон, планшет, ноутбук пен моноблоктың процедуралық бөлшектерін ауыстырады. Жүктелгенде — Blender pipeline, ASSET_MANIFEST, /credits.
+NEXT_ACTION: GitHub-қа жариялау және хостинг — иесімен бірге, тек оның рұқсатымен.
+1. Иесінің шешімдері:
+   - репо түрі (ұсыныс: алдымен private);
+   - лицензия;
+   - хостинг пен домен (DEPLOY.md §1: оқушылардың дербес деректері ҚР-да сақталуы керек).
+2. Иесі GitHub-та репо ашады (2FA, email-ді жасыру — SECURITY.md). Содан кейін ғана `git remote add` және `git push` жасалады; push-ты иесі растайды.
+3. Серверде: DEPLOY.md §3 (`docker compose up -d --build`, `server:create-admin` — құпия сөзді иесі өзі тереді). Бірінші Docker build сол жерде тексеріледі (KNOWN_ISSUES №61).
+4. Кейінгі жұмыстар — TODO.md «V2-12»:
+   - Safari / iPhone-да тексеру;
+   - хабарлар мен рейтингті тікелей арна арқылы жаңарту;
+   - принтер бөлшектеуін нақты модельдермен.
 
 Іске қосу: `start-lab.cmd` не `npm start`. Сервер мен миграция өзгергеннен кейін `npm start`-ты қайта қосу керек.
 
-Пайдаланушы шешімі (2026-10-10): барлық V2 толық ЛОКАЛДЫ; домен/хостинг — V2-12-ден кейін. Фаза 0–9, V2-0…V2-11b дайын — нөлден бастама. D:/informatics-lab, dev :5173, preview :4173, сервер :8787. Blender 5.1 және toktx орнатылған.
+Пайдаланушы шешімі (2026-10-10): барлық V2 толық ЛОКАЛДЫ; домен/хостинг — V2-12-ден кейін. Фаза 0–9, V2-0…V2-12 дайын — нөлден бастама. D:/informatics-lab, dev :5173, preview :4173, сервер :8787. Blender 5.1 және toktx орнатылған.

@@ -2,24 +2,104 @@
  * Bit, the robot teacher (2026-10): a friendly hovering robot near the
  * entrance. It turns its head to the visitor, blinks, waves now and then,
  * and a click opens its check of the student's progress (TeacherPanel).
- * Procedural (about twenty meshes, no download); still for reduced motion.
+ * Procedural (seven merged meshes, no download); still for reduced motion.
  */
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState, type Ref } from 'react';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
-import { Html, RoundedBox } from '@react-three/drei';
-import { Vector3, type Group, type Mesh, type MeshStandardMaterial } from 'three';
+import { Html } from '@react-three/drei';
+import { CapsuleGeometry, CircleGeometry, Color, CylinderGeometry, MeshStandardMaterial, SphereGeometry, TorusGeometry, Vector3, type Group, type Material, type Mesh, type MeshBasicMaterial } from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { ROBOT } from '@/data/lab/classroom';
+import { useDisposable } from '@/hooks/useDisposable';
+import { extrudeFront, roundedRectShape } from '@/lib/three/geometry';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
+import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useT } from '@/hooks/useT';
 import { useTheme } from '@/hooks/useTheme';
 import { useLabStore } from '@/store/labStore';
+import { mergePieces, type Piece, type Place } from './mergeParts';
 import styles from './RobotTeacher.module.css';
 
-const SHELL = { color: '#f4f6fa', metalness: 0.15, roughness: 0.22 } as const;
-const JOINT = { color: '#2a3142', metalness: 0.7, roughness: 0.3 } as const;
+const SHELL = '#f4f6fa';
+const JOINT = '#2a3142';
+const SCREEN = '#070c18';
 const GLOW = '#38d6f5';
 
+/** Rounded screen panel (w × h × d), centred on its origin. */
+function panel(w: number, h: number, r: number, d: number) {
+  const g = extrudeFront(roundedRectShape(w, h, r), d, { bevel: 0 });
+  g.translate(0, 0, -d / 2);
+  return g;
+}
+
+/** An arm hanging from its shoulder: joint, forearm, joint (local to the shoulder). */
+const armPieces = (parents: readonly Place[] = []): Piece[] => [
+  { geo: new SphereGeometry(0.055, 12, 8), color: JOINT, parents },
+  { geo: new CapsuleGeometry(0.042, 0.2, 3, 10), at: [0, -0.16, 0], color: SHELL, parents },
+  { geo: new SphereGeometry(0.05, 12, 8), at: [0, -0.32, 0], color: JOINT, parents },
+];
+
+/**
+ * The robot's static parts merged per moving group and per material (seven
+ * draw calls instead of two dozen): body, its glow, the waving arm, the head,
+ * the head's glow, and the blinking eyes.
+ */
+function robotGeometry() {
+  const LEFT_ARM: Place = { at: [-0.24, 0.66, 0], rot: [0, 0, -0.18] };
+  const ear = (s: number): Place => ({ at: [s * 0.23, 0, 0], rot: [0, 0, (s * Math.PI) / 2] });
+  return {
+    body: mergePieces(
+      [
+        { geo: new CylinderGeometry(0.2, 0.24, 0.1, 28), at: [0, 0.14, 0], color: JOINT },
+        { geo: new CapsuleGeometry(0.2, 0.3, 5, 20), at: [0, 0.52, 0], scale: [1, 1, 0.82], color: SHELL },
+        { geo: panel(0.24, 0.17, 0.03, 0.02), at: [0, 0.56, 0.158], color: SCREEN },
+        { geo: new CylinderGeometry(0.05, 0.06, 0.06, 12), at: [0, 0.83, 0], color: JOINT },
+        ...armPieces([LEFT_ARM]),
+      ],
+      true,
+    ),
+    bodyGlow: mergePieces([
+      { geo: new TorusGeometry(0.2, 0.012, 6, 32), at: [0, 0.085, 0], rot: [Math.PI / 2, 0, 0] },
+      { geo: new TorusGeometry(0.045, 0.009, 6, 20), at: [0, 0.56, 0.17] },
+    ]),
+    arm: mergePieces(armPieces(), true),
+    head: mergePieces(
+      [
+        { geo: new RoundedBoxGeometry(0.44, 0.32, 0.34, 3, 0.1), color: SHELL },
+        { geo: panel(0.36, 0.22, 0.06, 0.02), at: [0, 0, 0.165], color: SCREEN },
+        { geo: new CylinderGeometry(0.06, 0.06, 0.04, 16), color: JOINT, parents: [ear(-1)] },
+        { geo: new CylinderGeometry(0.06, 0.06, 0.04, 16), color: JOINT, parents: [ear(1)] },
+        { geo: new CylinderGeometry(0.008, 0.008, 0.12, 8), at: [0, 0.22, 0], color: JOINT },
+      ],
+      true,
+    ),
+    headGlow: mergePieces([
+      // smile, ear rings and the antenna tip
+      { geo: new TorusGeometry(0.05, 0.007, 5, 14, Math.PI), at: [0, -0.035, 0.178], rot: [0, 0, Math.PI] },
+      { geo: new TorusGeometry(0.04, 0.007, 5, 18), at: [0, 0.022, 0], parents: [ear(-1)] },
+      { geo: new TorusGeometry(0.04, 0.007, 5, 18), at: [0, -0.022, 0], parents: [ear(1)] },
+      { geo: new SphereGeometry(0.028, 10, 8), at: [0, 0.29, 0] },
+    ]),
+    eyes: mergePieces([-0.075, 0.075].map((x) => ({ geo: new CircleGeometry(0.03, 16), at: [x, 0, 0] as const, scale: [1, 1.35, 1] as const }))),
+  };
+}
+
 const tmp = new Vector3();
+const GLOW_COLOR = new Color(GLOW);
+
+/** The robot's shell: PBR on High / Ultra, Lambert (no environment lighting) on Low / Medium (V2-12 perf). */
+function Solid({ cheap, roughness = 0.25 }: { cheap: boolean; roughness?: number }) {
+  return cheap ? <meshLambertMaterial vertexColors /> : <meshStandardMaterial vertexColors metalness={0.25} roughness={roughness} />;
+}
+
+/** Glowing parts: emissive PBR (it feeds the bloom) or, without post-processing, an unlit colour as bright. */
+function Glow({ cheap, power, ref }: { cheap: boolean; power: number; ref?: Ref<Material> }) {
+  return cheap ? (
+    <meshBasicMaterial ref={ref} color={GLOW_COLOR.clone().multiplyScalar(power)} toneMapped={false} />
+  ) : (
+    <meshStandardMaterial ref={ref} color={GLOW} emissive={GLOW} emissiveIntensity={power} toneMapped={false} />
+  );
+}
 
 export function RobotTeacher() {
   const t = useT();
@@ -33,9 +113,11 @@ export function RobotTeacher() {
   const body = useRef<Group>(null);
   const head = useRef<Group>(null);
   const arm = useRef<Group>(null);
-  const eyes = useRef<Group>(null);
-  const tip = useRef<MeshStandardMaterial>(null);
-  const ring = useRef<Mesh>(null);
+  const eyes = useRef<Mesh>(null);
+  const tip = useRef<Material>(null);
+  const level = useQualityPreset().level;
+  const cheap = level === 'low' || level === 'medium';
+  const geo = useDisposable(robotGeometry, []);
   const waveUntil = useRef(0);
 
   useFrame(({ clock, camera }) => {
@@ -58,8 +140,12 @@ export function RobotTeacher() {
       const goal = waving ? 2.4 + 0.35 * Math.sin(time * 9) : 0.18;
       a.rotation.z += (goal - a.rotation.z) * 0.15;
     }
-    if (tip.current) tip.current.emissiveIntensity = 1.6 + (reduced ? 0 : Math.sin(time * 3) * 0.8);
-    if (ring.current) ring.current.rotation.z = reduced ? 0 : time * 0.6;
+    const m = tip.current;
+    if (m) {
+      const k = 1.8 + (reduced ? 0 : Math.sin(time * 3) * 0.5);
+      if (m instanceof MeshStandardMaterial) m.emissiveIntensity = k;
+      else (m as MeshBasicMaterial).color.copy(GLOW_COLOR).multiplyScalar(k);
+    }
   });
 
   const click = (e: ThreeEvent<MouseEvent>) => {
@@ -88,104 +174,27 @@ export function RobotTeacher() {
           document.body.style.cursor = '';
         }}
       >
-        {/* hover base */}
-        <mesh position-y={0.14} castShadow>
-          <cylinderGeometry args={[0.2, 0.24, 0.1, 40]} />
-          <meshStandardMaterial {...JOINT} />
+        <mesh geometry={geo.body} castShadow>
+          <Solid cheap={cheap} />
         </mesh>
-        <mesh ref={ring} position-y={0.085} rotation-x={Math.PI / 2}>
-          <torusGeometry args={[0.2, 0.012, 10, 48]} />
-          <meshStandardMaterial color={GLOW} emissive={GLOW} emissiveIntensity={2} toneMapped={false} />
+        <mesh geometry={geo.bodyGlow}>
+          <Glow cheap={cheap} power={2.2} />
         </mesh>
-        {/* torso */}
-        <mesh position-y={0.52} scale={[1, 1, 0.82]} castShadow>
-          <capsuleGeometry args={[0.2, 0.3, 8, 24]} />
-          <meshStandardMaterial {...SHELL} />
-        </mesh>
-        {/* chest screen with a glowing ring */}
-        <RoundedBox args={[0.24, 0.17, 0.02]} radius={0.03} smoothness={3} position={[0, 0.56, 0.158]}>
-          <meshStandardMaterial color="#0b1222" metalness={0.3} roughness={0.15} />
-        </RoundedBox>
-        <mesh position={[0, 0.56, 0.17]}>
-          <torusGeometry args={[0.045, 0.009, 10, 36]} />
-          <meshStandardMaterial color={GLOW} emissive={GLOW} emissiveIntensity={2.2} toneMapped={false} />
-        </mesh>
-        {/* arms: left resting, right waving */}
-        <group position={[-0.24, 0.66, 0]} rotation-z={-0.18}>
-          <mesh>
-            <sphereGeometry args={[0.055, 20, 16]} />
-            <meshStandardMaterial {...JOINT} />
-          </mesh>
-          <mesh position-y={-0.16} castShadow>
-            <capsuleGeometry args={[0.042, 0.2, 6, 16]} />
-            <meshStandardMaterial {...SHELL} />
-          </mesh>
-          <mesh position-y={-0.32}>
-            <sphereGeometry args={[0.05, 20, 16]} />
-            <meshStandardMaterial {...JOINT} />
-          </mesh>
-        </group>
+        {/* right arm: waves */}
         <group ref={arm} position={[0.24, 0.66, 0]} rotation-z={0.18}>
-          <mesh>
-            <sphereGeometry args={[0.055, 20, 16]} />
-            <meshStandardMaterial {...JOINT} />
-          </mesh>
-          <mesh position-y={-0.16} castShadow>
-            <capsuleGeometry args={[0.042, 0.2, 6, 16]} />
-            <meshStandardMaterial {...SHELL} />
-          </mesh>
-          <mesh position-y={-0.32}>
-            <sphereGeometry args={[0.05, 20, 16]} />
-            <meshStandardMaterial {...JOINT} />
+          <mesh geometry={geo.arm} castShadow>
+            <Solid cheap={cheap} />
           </mesh>
         </group>
-        {/* neck and head */}
-        <mesh position-y={0.83}>
-          <cylinderGeometry args={[0.05, 0.06, 0.06, 20]} />
-          <meshStandardMaterial {...JOINT} />
-        </mesh>
         <group ref={head} position-y={1.0}>
-          <RoundedBox args={[0.44, 0.32, 0.34]} radius={0.1} smoothness={4} castShadow>
-            <meshStandardMaterial {...SHELL} />
-          </RoundedBox>
-          {/* face screen */}
-          <RoundedBox args={[0.36, 0.22, 0.02]} radius={0.06} smoothness={4} position-z={0.165}>
-            <meshStandardMaterial color="#070c18" metalness={0.4} roughness={0.08} />
-          </RoundedBox>
-          <group ref={eyes} position={[0, 0.02, 0.178]}>
-            {[-0.075, 0.075].map((x) => (
-              <mesh key={x} position-x={x} scale={[1, 1.35, 1]}>
-                <circleGeometry args={[0.03, 24]} />
-                <meshStandardMaterial color={GLOW} emissive={GLOW} emissiveIntensity={2.4} toneMapped={false} />
-              </mesh>
-            ))}
-          </group>
-          {/* smile */}
-          <mesh position={[0, -0.035, 0.178]} rotation-z={Math.PI}>
-            <torusGeometry args={[0.05, 0.007, 8, 24, Math.PI]} />
-            <meshStandardMaterial color={GLOW} emissive={GLOW} emissiveIntensity={2} toneMapped={false} />
+          <mesh geometry={geo.head} castShadow>
+            <Solid cheap={cheap} roughness={0.2} />
           </mesh>
-          {/* ears */}
-          {[-1, 1].map((s) => (
-            <group key={s} position-x={s * 0.23} rotation-z={(s * Math.PI) / 2}>
-              <mesh>
-                <cylinderGeometry args={[0.06, 0.06, 0.04, 24]} />
-                <meshStandardMaterial {...JOINT} />
-              </mesh>
-              <mesh position-y={s * -0.022}>
-                <torusGeometry args={[0.04, 0.007, 8, 24]} />
-                <meshStandardMaterial color={GLOW} emissive={GLOW} emissiveIntensity={1.8} toneMapped={false} />
-              </mesh>
-            </group>
-          ))}
-          {/* antenna */}
-          <mesh position-y={0.22}>
-            <cylinderGeometry args={[0.008, 0.008, 0.12, 8]} />
-            <meshStandardMaterial {...JOINT} />
+          <mesh geometry={geo.headGlow}>
+            <Glow cheap={cheap} power={1.8} ref={tip} />
           </mesh>
-          <mesh position-y={0.29}>
-            <sphereGeometry args={[0.028, 16, 12]} />
-            <meshStandardMaterial ref={tip} color={GLOW} emissive={GLOW} emissiveIntensity={1.6} toneMapped={false} />
+          <mesh ref={eyes} geometry={geo.eyes} position={[0, 0.02, 0.178]}>
+            <Glow cheap={cheap} power={2.4} />
           </mesh>
         </group>
       </group>

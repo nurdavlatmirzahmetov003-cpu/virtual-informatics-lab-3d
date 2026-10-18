@@ -113,6 +113,7 @@ listeners.push((m) => {
 const errors = [];
 listeners.push((m) => {
   if (m.method === 'Runtime.exceptionThrown') errors.push((m.params.exceptionDetails.exception?.description ?? m.params.exceptionDetails.text).split(String.fromCharCode(10)).slice(0, 4).join(' | '));
+  if (m.method === 'Log.entryAdded' && m.params.entry.level === 'error' && /Content.Security.Policy|Refused/i.test(m.params.entry.text)) errors.push(`[log] ${m.params.entry.text.slice(0, 300)}`);
   if (m.method === 'Runtime.consoleAPICalled' && (m.params.type === 'error' || (m.params.type === 'warning' && /SceneCanvas|ModelLoader/.test(m.params.args[0]?.value ?? '')))) errors.push(m.params.args.map((a) => a.value ?? a.description ?? '').join(' ').slice(0, 300));
 });
 await send('Network.enable');
@@ -126,6 +127,8 @@ await send('Network.setCacheDisabled', { cacheDisabled: true });
 if (throttle) await send('Network.emulateNetworkConditions', { offline: false, latency: 40, downloadThroughput: (throttle * 1e6) / 8, uploadThroughput: (5 * 1e6) / 8 });
 await send('Page.enable');
 await send('Runtime.enable');
+// browser-side errors too: CSP violations, failed loads (V2-12)
+await send('Log.enable');
 if (mobile) {
   await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 3, mobile: true });
   await send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });

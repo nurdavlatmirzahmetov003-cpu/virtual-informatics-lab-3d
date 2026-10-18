@@ -8,6 +8,11 @@ import { hashPassword, passwordProblem, verifyPassword } from '../server/auth/pa
 import { LoginLimiter } from '../server/auth/rateLimit.ts';
 import { createAdmin } from '../server/cli.ts';
 import { createUser } from '../server/users.ts';
+import { securityHeaders, staticSite } from '../server/static.ts';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { request } from 'node:http';
 
 // test-only credentials, generated per run — not real accounts
 const pw = (tag) => `T3st-${tag}-${Math.random().toString(36).slice(2, 10)}`;
@@ -220,5 +225,78 @@ test('auth texts exist in kk, ru and en; .env.example holds no secrets', async (
   for (const line of example.split(/\r?\n/)) {
     const m = line.match(/^([A-Z_]*(KEY|SECRET|PASSWORD|TOKEN)[A-Z_]*)=(.*)$/);
     if (m) assert.equal(m[3].trim(), '', `${m[1]} must be empty in .env.example`);
+  }
+});
+
+test('production site: dist served safely (no traversal, no dotfiles), SPA routes, cache rules, security headers', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'lab-site-'));
+  const site = join(root, 'dist');
+  mkdirSync(join(site, 'assets', 'models'), { recursive: true });
+  writeFileSync(join(site, 'index.html'), '<!doctype html><div id="root"></div>');
+  writeFileSync(join(site, 'assets', 'index-AbCd1234.js'), 'console.log(1)');
+  writeFileSync(join(site, 'assets', 'models', 'pc.glb'), 'glb');
+  writeFileSync(join(site, '.env'), 'SECRET=1');
+  writeFileSync(join(root, 'secret.txt'), 'outside the site');
+  const db = openDb(':memory:');
+  migrate(db);
+  const security = { secure: true, origins: ['https://lab.example.kz'] };
+  const app = createApp({ db, config: { ...serverConfig({}), dbFile: ':memory:' }, extra: [staticSite(site, security)], headers: securityHeaders(security) });
+  const server = createServer((req, res) => void app(req, res));
+  await new Promise((r) => server.listen(0, r));
+  const port = server.address().port;
+  // raw paths: fetch() would normalise the dot segments away
+  const get = (path, { method = 'GET', headers = {} } = {}) =>
+    new Promise((resolve, reject) => {
+      const req = request({ host: '127.0.0.1', port, path, method, headers }, (res) => {
+        let body = '';
+        res.on('data', (c) => (body += c));
+        res.on('end', () => resolve({ status: res.statusCode, headers: res.headers, body }));
+      });
+      req.on('error', reject);
+      req.end();
+    });
+  try {
+    const home = await get('/');
+    assert.equal(home.status, 200);
+    assert.match(home.body, /id="root"/);
+    assert.equal(home.headers['cache-control'], 'no-cache');
+    assert.match(home.headers['content-security-policy'], /frame-ancestors 'none'/);
+    assert.match(home.headers['content-security-policy'], /script-src 'self' 'wasm-unsafe-eval'/);
+    assert.match(home.headers['content-security-policy'], /wss:\/\/lab\.example\.kz/);
+    assert.match(home.headers['strict-transport-security'], /max-age=31536000/);
+    assert.equal(home.headers['x-frame-options'], 'DENY');
+
+    // SPA routes get the app; a missing file is a 404
+    assert.match((await get('/lab/teardown?x=1')).body, /id="root"/);
+    assert.equal((await get('/assets/missing.js')).status, 404);
+
+    const js = await get('/assets/index-AbCd1234.js');
+    assert.equal(js.headers['cache-control'], 'public, max-age=31536000, immutable');
+    assert.match(js.headers['content-type'], /javascript/);
+    const glb = await get('/assets/models/pc.glb');
+    assert.equal(glb.headers['content-type'], 'model/gltf-binary');
+    assert.match(glb.headers['cache-control'], /must-revalidate/);
+    assert.equal((await get('/assets/models/pc.glb', { headers: { 'if-none-match': glb.headers.etag } })).status, 304);
+    const head = await get('/assets/models/pc.glb', { method: 'HEAD' });
+    assert.deepEqual([head.status, head.body, head.headers['content-length']], [200, '', '3']);
+    assert.equal((await get('/', { method: 'POST' })).status, 405);
+
+    // nothing outside the folder, nothing hidden (not even the app page for a hidden name)
+    assert.equal((await get('/.env')).status, 404);
+    assert.equal((await get('/.git/config')).status, 404);
+    for (const path of ['/../secret.txt', '/%2e%2e/secret.txt', '/..%2fsecret.txt', '/assets/..%5c..%5csecret.txt', '/.env', '/%2eenv', '/a%00.js']) {
+      const r = await get(path);
+      assert.ok(!r.body.includes('outside the site') && !r.body.includes('SECRET'), `${path} leaked`);
+      assert.ok(r.status === 404 || /id="root"/.test(r.body), `${path}: ${r.status}`);
+    }
+    // the API is untouched and carries the same headers
+    const api = await get('/api/health');
+    assert.equal(api.status, 200);
+    assert.match(api.headers['content-type'], /json/);
+    assert.ok(api.headers['content-security-policy']);
+    assert.equal((await get('/api/nope')).status, 404);
+  } finally {
+    await new Promise((r) => server.close(r));
+    rmSync(root, { recursive: true, force: true });
   }
 });

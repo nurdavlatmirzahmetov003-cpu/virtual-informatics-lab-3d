@@ -3,7 +3,7 @@
  * here, on the server — never in VITE_ variables (those reach the browser).
  */
 import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export function loadEnv(file = fileURLToPath(new URL('../.env', import.meta.url))) {
@@ -16,6 +16,10 @@ export function loadEnv(file = fileURLToPath(new URL('../.env', import.meta.url)
 
 export interface ServerConfig {
   port: number;
+  /** Interface to listen on: 127.0.0.1 (default — this machine only), 0.0.0.0 in a container behind its proxy. */
+  host: string;
+  /** Built site to serve (`dist/`, V2-12); null: the API only (Vite serves the site in development). */
+  staticDir: string | null;
   /** SQLite file (created on first start). */
   dbFile: string;
   sessionHours: number;
@@ -38,6 +42,8 @@ export function serverConfig(env: NodeJS.ProcessEnv = process.env): ServerConfig
   const trust = env.TRUST_PROXY;
   return {
     port: Number(env.SERVER_PORT ?? env.AI_PORT ?? 8787),
+    host: env.HOST?.trim() || '127.0.0.1',
+    staticDir: env.STATIC_DIR?.trim() ? resolve(fileURLToPath(new URL('..', import.meta.url)), env.STATIC_DIR.trim()) : null,
     dbFile,
     backupDir: env.BACKUP_DIR ?? (dbFile === ':memory:' ? fileURLToPath(new URL('../data/backups', import.meta.url)) : join(dirname(dbFile), 'backups')),
     trustProxy: trust === 'none' || trust === 'all' ? trust : 'loopback',

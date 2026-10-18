@@ -100,7 +100,8 @@ function centred(ctx: Ctx, text: string, cx: number, cy: number, max: number, si
     const a = words.slice(0, half).join(' ');
     const b = words.slice(half).join(' ');
     setFont(ctx, a.length >= b.length ? a : b, max, size, weight, SANS);
-    const lh = parseInt(ctx.font, 10) * 1.12;
+    // the font is "700 28px …": take the pixel size, not the weight
+    const lh = Number(/([\d.]+)px/.exec(ctx.font)?.[1] ?? size) * 1.12;
     ctx.fillText(a, cx, cy - lh / 2 + 2);
     ctx.fillText(b, cx, cy + lh / 2 + 2);
   }
