@@ -25,6 +25,8 @@ export const SECTION_IDS = [
   'leaderboard',
   'live',
   'games',
+  'feedback',
+  'certificate',
 ] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
 
@@ -53,6 +55,8 @@ export const SECTIONS: readonly Section[] = [
   { id: 'progress', route: '/progress', nameKey: 'nav.progress', words: ['нәтиже', 'прогресс', 'жетістік', 'результат', 'достижен', 'progress', 'results', 'achievement'] },
   { id: 'leaderboard', route: '/leaderboard', nameKey: 'game.title', words: ['рейтинг', 'көшбасшы', 'лидер', 'leaderboard', 'ranking'] },
   { id: 'live', route: '/live', nameKey: 'live.title', words: ['тікелей ойын', 'викторина', 'живые игры', 'викторин', 'live game', 'quiz'] },
+  { id: 'feedback', route: '/feedback', nameKey: 'feedback.title', words: ['пікір', 'баға бер', 'бағала', 'байланыс', 'әкімшіге жаз', 'отзыв', 'оцен', 'связ', 'написать администратор', 'feedback', 'rate the site', 'contact'] },
+  { id: 'certificate', route: '/certificate', nameKey: 'certificate.title', words: ['сертификат', 'мақтау қағаз', 'грамот', 'certificate', 'commendation'] },
   { id: 'games', route: '/games', nameKey: 'arcade.eyebrow', words: ['ойындар', 'ойын алаң', 'арена', 'игры', 'игров', 'arena', 'games', 'екілік жарыс', 'желі шебері'] },
 ];
 

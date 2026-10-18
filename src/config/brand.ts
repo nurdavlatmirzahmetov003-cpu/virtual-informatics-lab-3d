@@ -17,4 +17,16 @@ export const BRAND = {
   /** Public logo files (served from public/). */
   logo: 'brand/logo.svg',
   logoFull: 'brand/logo-full.svg',
+  /**
+   * Certificates and commendations (pages/Certificate). The seal and the
+   * signature are SAMPLE placeholders: replace public/certificate/seal.svg and
+   * signature.svg with your organisation's images (PNG works too — change the
+   * file names here), and put the signer's real name and position below.
+   */
+  certificate: {
+    seal: 'certificate/seal.svg',
+    signature: 'certificate/signature.svg',
+    signer: 'А. Ә. Тегі',
+    signerRole: { kk: 'Директор', ru: 'Директор', en: 'Director' },
+  },
 } as const;

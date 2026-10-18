@@ -3165,6 +3165,10 @@
       "speedrun": {
         "name": "Quick hands",
         "condition": "Score 100% on a hands-on lab task within 2 minutes."
+      },
+      "honors": {
+        "name": "Top graduate",
+        "condition": "Complete every task with an average above 90%."
       }
     }
   },
@@ -6632,7 +6636,8 @@
       "settings": "Settings",
       "backups": "Backups",
       "health": "System health",
-      "live": "Live"
+      "live": "Live",
+      "feedback": "Feedback"
     },
     "live": {
       "online": "Students online: {n}",
@@ -6856,6 +6861,25 @@
       "uptimeDays": "{d} d {h} h",
       "uptimeHours": "{h} h {m} min",
       "uptimeMinutes": "{m} min"
+    },
+    "feedback": {
+      "summary": "Site rating",
+      "empty": "No feedback yet.",
+      "inbox": "Messages to the administrator",
+      "noMessages": "No messages.",
+      "status": {
+        "new": "New",
+        "read": "Read",
+        "done": "Done"
+      },
+      "guest": "guest",
+      "delete": "Delete",
+      "markRead": "Read",
+      "markDone": "Done",
+      "reopen": "Reopen",
+      "liked": "Liked",
+      "improve": "To improve",
+      "contact": "Contact"
     }
   },
   "game": {
@@ -7281,6 +7305,112 @@
       "yes": "Yes, same network",
       "no": "No, different networks",
       "keys": "Keyboard: ← yes, → no"
+    }
+  },
+  "footer": {
+    "feedback": "Leave feedback",
+    "contact": "Contact",
+    "certificate": "Certificate",
+    "games": "Games",
+    "credits": "Credits and licences",
+    "rating": "Site rating: {avg} / 5"
+  },
+  "feedback": {
+    "eyebrow": "Feedback",
+    "title": "Rate the site",
+    "subtitle": "Your feedback helps make {brand} better. Questions? Write to the administrator or to your teacher.",
+    "rating": "Did you like the site?",
+    "stars": {
+      "1": "Not at all",
+      "2": "Not really",
+      "3": "It's OK",
+      "4": "I liked it",
+      "5": "I loved it!"
+    },
+    "liked": "What did you like?",
+    "improve": "What should we improve?",
+    "name": "Your name (optional)",
+    "send": "Rate",
+    "thanks": "Thank you! Your feedback has been received.",
+    "average": "Average rating: {avg} / 5",
+    "votes": "{n} ratings in total",
+    "noVotes": "No ratings yet — be the first!",
+    "errors": {
+      "badRating": "Choose a number of stars.",
+      "rateLimited": "Too many messages. Please try again later.",
+      "offline": "The server is unavailable; nothing was sent.",
+      "generic": "Could not send."
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "lead": "Send a question, an idea or a bug report.",
+    "to": "To",
+    "toAdmin": "The site administrator",
+    "toTeacher": "My teacher: {class}",
+    "name": "Your name",
+    "contact": "How to reach you (email or phone, optional)",
+    "topic": "Topic",
+    "topics": {
+      "question": "Question",
+      "bug": "I found a bug",
+      "idea": "Idea",
+      "account": "Account",
+      "other": "Other"
+    },
+    "body": "Message",
+    "send": "Send",
+    "sent": "Message sent. Thank you!",
+    "sentTeacher": "Your teacher has the message; the reply will appear on the “My class” page.",
+    "privacy": "Never write passwords or personal data.",
+    "errors": {
+      "noName": "Please write your name.",
+      "badTopic": "Choose a topic.",
+      "tooShort": "The message is too short."
+    }
+  },
+  "certificate": {
+    "eyebrow": "Course completion",
+    "title": "Certificate",
+    "subtitle": "Complete every task of the {brand} course to earn a certificate. With an average above 90% you earn a commendation.",
+    "progress": "Completed: {done} / {total} tasks",
+    "average": "Average result: {n}%",
+    "left": "{n} more tasks to your certificate.",
+    "toTasks": "Go to the tasks",
+    "ready": "Congratulations! Your certificate is ready.",
+    "readyHonors": "Excellent! Your results earn you a commendation.",
+    "get": "Get the certificate",
+    "print": "Print / PDF",
+    "printHint": "Choose “Save as PDF” in the print window to get a PDF file.",
+    "guestName": "Name on the certificate",
+    "guestNote": "Guest mode: this certificate has no verification code. Sign in to get a verified certificate.",
+    "kinds": {
+      "certificate": "CERTIFICATE",
+      "commendation": "COMMENDATION"
+    },
+    "awarded": "is awarded to",
+    "awardedHonors": "is presented to",
+    "body": "for successfully completing all {total} tasks of the {brand} virtual informatics course with an average result of {average}%.",
+    "bodyHonors": "for completing all {total} tasks of the {brand} virtual informatics course with an excellent result of {average}% and a true love of learning.",
+    "bonus": "Bonus: the “Lab graduate” badge and +100 XP",
+    "bonusHonors": "Bonus: the “Top graduate” and “Lab graduate” badges, +200 XP",
+    "date": "Date of issue",
+    "code": "Verification code",
+    "verifyAt": "Verify at {url}",
+    "notVerified": "Not verified (guest mode)",
+    "check": {
+      "title": "Check a certificate",
+      "valid": "The certificate is valid",
+      "notFound": "No certificate with this code was found.",
+      "issuedTo": "Issued to",
+      "kind": "Type",
+      "code": "Code",
+      "enter": "Certificate code",
+      "go": "Check"
+    },
+    "errors": {
+      "notYet": "Complete every task first to get the certificate.",
+      "generic": "Could not get the certificate."
     }
   }
 }

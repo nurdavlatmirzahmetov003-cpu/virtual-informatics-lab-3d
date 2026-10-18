@@ -1,0 +1,304 @@
+/*
+ * A4 landscape (297 × 210 mm). Everything inside .sheet is sized in cqw of
+ * its container, so the preview and the printed page match. Paper colours
+ * are fixed (not theme tokens): a certificate is white in both themes.
+ */
+
+.preview {
+  container-type: inline-size;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 24px 60px rgb(var(--shadow-rgb) / 0.25);
+  overflow: hidden;
+}
+
+.sheet {
+  --gold: #c9962b;
+  --ink: #141a33;
+  --blue: #2f5ef0;
+  position: relative;
+  aspect-ratio: 297 / 210;
+  width: 100cqw;
+  padding: 3.2cqw;
+  background:
+    radial-gradient(60cqw 40cqw at 0% 0%, rgba(47, 200, 242, 0.12), transparent 70%),
+    radial-gradient(60cqw 40cqw at 100% 100%, rgba(169, 92, 245, 0.12), transparent 70%),
+    #fffdf8;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.sheet[data-kind='commendation'] {
+  background:
+    radial-gradient(60cqw 40cqw at 0% 0%, rgba(255, 193, 92, 0.2), transparent 70%),
+    radial-gradient(60cqw 40cqw at 100% 100%, rgba(255, 122, 107, 0.14), transparent 70%),
+    #fffaf0;
+}
+
+.frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 2.6cqw 6cqw 2cqw;
+  border: 0.35cqw solid transparent;
+  border-radius: 1.2cqw;
+  background:
+    linear-gradient(#fffdf8, #fffdf8) padding-box,
+    linear-gradient(135deg, #2fc8f2, #5f7bff 50%, #a95cf5) border-box;
+  text-align: center;
+}
+
+.sheet[data-kind='commendation'] .frame {
+  background:
+    linear-gradient(#fffaf0, #fffaf0) padding-box,
+    linear-gradient(135deg, #e7b347, #c9962b 45%, #ff8a7a) border-box;
+}
+
+.cTL,
+.cTR,
+.cBL,
+.cBR {
+  position: absolute;
+  width: 7cqw;
+  height: 7cqw;
+  color: var(--blue);
+  opacity: 0.55;
+}
+
+.sheet[data-kind='commendation'] :is(.cTL, .cTR, .cBL, .cBR) {
+  color: var(--gold);
+  opacity: 0.8;
+}
+
+.cTL {
+  top: 0.8cqw;
+  left: 0.8cqw;
+}
+
+.cTR {
+  top: 0.8cqw;
+  right: 0.8cqw;
+  transform: scaleX(-1);
+}
+
+.cBL {
+  bottom: 0.8cqw;
+  left: 0.8cqw;
+  transform: scaleY(-1);
+}
+
+.cBR {
+  bottom: 0.8cqw;
+  right: 0.8cqw;
+  transform: scale(-1, -1);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  text-align: left;
+}
+
+.brand .mark {
+  width: 4.4cqw;
+  height: 4.4cqw;
+}
+
+.brand b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.1cqw;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.brand span {
+  font-size: 1.15cqw;
+  color: #4a5478;
+}
+
+.kind {
+  /* with the footer's auto margin: the text block sits in the middle of the sheet */
+  margin-top: auto;
+  padding-top: 1.4cqw;
+  font-family: var(--font-display);
+  font-size: 5cqw;
+  font-weight: 800;
+  letter-spacing: 0.35cqw;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #12aee6, #5470ff 55%, #a55cf5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sheet[data-kind='commendation'] .kind {
+  background: linear-gradient(135deg, #b88218, #e7b347 50%, #c26a1e);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.awarded {
+  margin: 1cqw 0 0;
+  font-size: 1.5cqw;
+  color: #4a5478;
+}
+
+.name {
+  margin: 1.6cqw 0 0;
+  padding: 0 4cqw 0.6cqw;
+  border-bottom: 0.15cqw solid rgba(20, 26, 51, 0.25);
+  font-family: var(--font-display);
+  font-size: 3.6cqw;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.body {
+  max-width: 72cqw;
+  margin: 1.8cqw 0 0;
+  font-size: 1.65cqw;
+  line-height: 1.5;
+}
+
+.bonus {
+  margin: 1.4cqw 0 0;
+  padding: 0.5cqw 1.6cqw;
+  border-radius: 99cqw;
+  background: rgba(47, 94, 240, 0.08);
+  color: #2f3f8f;
+  font-size: 1.2cqw;
+  font-weight: 700;
+}
+
+.sheet[data-kind='commendation'] .bonus {
+  background: rgba(201, 150, 43, 0.14);
+  color: #7a5310;
+}
+
+.foot {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 2cqw;
+  width: 100%;
+  margin-top: auto;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2cqw;
+  font-size: 1.05cqw;
+  color: #4a5478;
+  text-align: left;
+}
+
+.meta b {
+  margin-bottom: 0.6cqw;
+  color: var(--ink);
+  font-size: 1.3cqw;
+}
+
+.code {
+  font-family: var(--font-mono);
+  letter-spacing: 0.1cqw;
+}
+
+.unverified {
+  color: #c22a48 !important;
+}
+
+.qr svg,
+.qr canvas {
+  width: 9cqw !important;
+  height: 9cqw !important;
+}
+
+.qr :is(p, span, small) {
+  display: none;
+}
+
+.sign {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: end;
+  min-width: 22cqw;
+  font-size: 1.05cqw;
+  color: #4a5478;
+}
+
+.sign b {
+  color: var(--ink);
+  font-size: 1.3cqw;
+}
+
+.seal {
+  position: absolute;
+  left: -11.5cqw;
+  bottom: 0.4cqw;
+  width: 12cqw;
+  height: 12cqw;
+  opacity: 0.85;
+  transform: rotate(-12deg);
+}
+
+.signature {
+  position: relative;
+  width: 18cqw;
+  height: 6.6cqw;
+  object-fit: contain;
+}
+
+.line {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.4cqw;
+  border-top: 0.12cqw solid rgba(20, 26, 51, 0.4);
+}
+
+/* ── paper ─────────────────────────────────────────────── */
+
+.printCert {
+  display: none;
+}
+
+@page cert {
+  size: A4 landscape;
+  margin: 0;
+}
+
+@media print {
+  /* only the certificate (a direct child of <body>) goes to paper */
+  :global(body) > :not(.printCert) {
+    display: none !important;
+  }
+
+  :global(html),
+  :global(body) {
+    background: #fff !important;
+  }
+
+  .printCert {
+    display: block;
+    container-type: inline-size;
+    width: 297mm;
+    height: 210mm;
+    page: cert;
+    overflow: hidden;
+  }
+
+  .printCert .sheet {
+    height: 210mm;
+  }
+}

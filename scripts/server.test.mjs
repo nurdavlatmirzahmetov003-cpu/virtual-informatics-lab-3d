@@ -43,10 +43,10 @@ async function boot() {
 test('migrations: every table, applied once, recorded', () => {
   const db = openDb(':memory:');
   const first = migrate(db);
-  assert.deepEqual(first, ['001_init', '002_classroom', '003_admin', '004_game', '005_live', '006_arcade']);
+  assert.deepEqual(first, ['001_init', '002_classroom', '003_admin', '004_game', '005_live', '006_arcade', '007_feedback']);
   assert.deepEqual(migrate(db), [], 'a second run applies nothing');
   const tables = db.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all().map((r) => r.name);
-  for (const t of ['users', 'schools', 'classes', 'class_members', 'assignments', 'submissions', 'attempts', 'grades', 'announcements', 'messages', 'achievements', 'xp_events', 'sessions', 'audit_log', 'arcade_runs', 'schema_migrations']) {
+  for (const t of ['users', 'schools', 'classes', 'class_members', 'assignments', 'submissions', 'attempts', 'grades', 'announcements', 'messages', 'achievements', 'xp_events', 'sessions', 'audit_log', 'arcade_runs', 'feedback', 'contact_messages', 'certificates', 'schema_migrations']) {
     assert.ok(tables.includes(t), `table ${t}`);
   }
   assert.throws(() => db.prepare("INSERT INTO users (id, login, display_name, role, password_hash, created_at) VALUES ('x', 'a', 'A', 'hacker', 'h', 1)").run(), /CHECK/, 'roles are checked');

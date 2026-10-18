@@ -282,7 +282,7 @@ test('backups: snapshot, download, restore (sessions end), upload check, safe na
     assert.equal((await s.call('/api/admin/backups', { as: again })).body.backups.length, 2);
 
     const h = (await s.call('/api/admin/health', { as: again })).body;
-    assert.deepEqual(h.database.migrations, ['001_init', '002_classroom', '003_admin', '004_game', '005_live', '006_arcade']);
+    assert.deepEqual(h.database.migrations, ['001_init', '002_classroom', '003_admin', '004_game', '005_live', '006_arcade', '007_feedback']);
     assert.equal(h.backups.count, 2);
     assert.ok(h.database.size > 0 && h.server.node.startsWith('v'));
     assert.ok(h.warnings.includes('cookieNotSecure') && !h.warnings.includes('noRecentBackup'));

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 110" width="600" height="220">
+  <title>Signature placeholder (sample) — replace with the real signature</title>
+  <path d="M18 78c18-34 34-58 44-52s-14 52-6 54 24-46 34-42-4 36 4 36 18-26 26-24-2 22 6 22 30-30 42-28-6 26 4 26 34-22 50-20 30 10 52 2" fill="none" stroke="#1e2a6b" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M40 92c60-8 140-10 230-6" fill="none" stroke="#1e2a6b" stroke-width="1.6" stroke-linecap="round" opacity="0.6" />
+  <text x="250" y="30" text-anchor="end" font-family="Montserrat, Arial, sans-serif" font-size="12" font-weight="800" fill="#e0466a" fill-opacity="0.85" letter-spacing="2">ҮЛГІ · SAMPLE</text>
+</svg>

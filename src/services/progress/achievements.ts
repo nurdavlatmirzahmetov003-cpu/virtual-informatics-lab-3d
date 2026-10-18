@@ -25,6 +25,8 @@ export const ACHIEVEMENT_IDS = [
   'allRounder',
   'halfway',
   'graduate',
+  // 0.36: every task done with an average of 90 % or more — the commendation's badge
+  'honors',
   // V2-11a
   'streak3',
   'streak7',
@@ -76,6 +78,7 @@ const CHECKS: Record<AchievementId, Check> = {
   allRounder: (s) => count(s.labs.filter((l) => l.completed > 0).length, s.labs.length),
   halfway: (s) => count(s.totals.completed, Math.ceil(s.totals.tasks / 2)),
   graduate: (s) => count(s.totals.completed, s.totals.tasks),
+  honors: (s) => count(s.totals.completed >= s.totals.tasks && (s.totals.average ?? 0) >= 90 ? 1 : 0, 1),
   streak3: (_, a) => count(streak(a, 0).longest, 3),
   streak7: (_, a) => count(streak(a, 0).longest, 7),
   dailyFive: (_, a) => count(dailyHistory(a).filter((d) => d.complete).length, 5),

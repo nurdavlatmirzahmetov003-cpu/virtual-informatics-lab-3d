@@ -311,6 +311,13 @@ legacy/                     ескі ES-module прототип (python http.ser
     - **Браузер** `services/arcade/api.ts` (кірген болса — сервер ойыны, әйтпесе жергілікті төреші және `vil3d:arcade` рекорды), `pages/Games/` (`GamesPage`, `GamePlayPage` — кіріспе → 3-2-1 → ойын → нәтиже, `ArcadeBoard`). 3D модель — бар `DeviceViewer3D` (lazy).
     - **Тікелей бөлме** «Бұл қандай құрылғы?»: `QUIZ_KINDS = ['quiz', 'device']`, `LiveQuestion.pick` (құрылғы id-лары), жауап слоты `pick.length`-ке дейін; дерекқорда `quiz` ретінде.
 
+54. **Пікір, байланыс, сертификат (0.36).**
+    - Сервер `server/feedback.ts` + `007_feedback.sql` (`feedback`, `contact_messages`, `certificates`). Қонақ та жаза алатын маршруттарда сессия болса CSRF, әрдайым Origin (app.ts), IP бойынша шектеу, жасырын `website` өрісі.
+    - Мұғалімге хабар жаңа кесте емес: V2-9 сынып чаты (`studentApi.send`).
+    - Сертификат: `eligibility()` серверде `loadProgress` → `summarize` арқылы; түрі `certificate | commendation` (`COMMENDATION_AVERAGE = 90`), `UNIQUE (user_id, kind)`, аты беру сәтіндегідей сақталады. Код алфавитінде 0/O, 1/I жоқ.
+    - Парақ `pages/Certificate/CertificateSheet.tsx`: барлық өлшем container query бірлігінде (`cqw`), сондықтан экрандағы алдын ала көрініс пен қағаз бірдей; басып шығару үшін көшірме `body`-ге portal, `@page cert { size: A4 landscape }` атаулы бет (басқа беттерді басып шығаруға әсер етпейді). Мөр, қолтаңба, қол қоюшы — `config/brand.ts`.
+    - Жаңа жетістік `honors` (XP V2-11a ережесімен әрекеттерден есептеледі, бөлек сақталмайды).
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |
