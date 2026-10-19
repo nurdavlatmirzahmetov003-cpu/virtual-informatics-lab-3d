@@ -80,6 +80,9 @@ test('every product model the site uses has a pipeline config (and vice versa)',
   const configs = new Set(readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => f.slice(0, -5)));
   const catalog = readFileSync(path.join(import.meta.dirname, '..', 'src', 'data', 'hardware', 'catalog.ts'), 'utf8');
   const own = new Set([...catalog.matchAll(/P\('([a-z0-9-]+)'\)/g)].map((m) => m[1]));
+  // BitLab's own models (data/hardware/house.ts, 0.37)
+  const house = readFileSync(path.join(import.meta.dirname, '..', 'src', 'data', 'hardware', 'house.ts'), 'utf8');
+  for (const m of house.matchAll(/products\/([a-z0-9-]+)\.glb/g)) own.add(m[1]);
   // lab devices (`dev-*`) and teardown parts (`td-*`), 2026-10
   for (const f of sourceFiles(path.join(import.meta.dirname, '..', 'src'))) for (const m of readFileSync(f, 'utf8').matchAll(/['"]((?:dev|td)-[a-z0-9-]+)['"]/g)) own.add(m[1]);
   assert.deepEqual([...own].sort(), [...configs].sort());

@@ -1,52 +1,18 @@
-import { useMemo, useRef, type ComponentProps, type ReactNode } from 'react';
+import { useMemo, useRef, type ReactNode } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { Group } from 'three';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { ModelLoader } from '@/components/3d/ModelLoader';
 import type { PartId } from './parts';
-import { BOARD_FACE, D, FRONT_FANS, H, MB, RAM, SSD, W } from './constants';
+import { FRONT_FANS, PSU, RAM } from './constants';
+import { caseInterior, fanFit, files, fits, frontFans, productFits, psuFit, rotorFit, sataFitFor, type CaseInterior } from './fits';
+
+const url = (name: string) => `${import.meta.env.BASE_URL}assets/models/hardware/${name}.glb`;
+const productUrl = (product: HardwareItem) => `${import.meta.env.BASE_URL}assets/models/${product.modelPath}`;
 import { pcRig } from './pcRig';
 import type { HardwareItem } from '@/data/hardware/types';
 import { LiquidCooler } from './LiquidCooler';
 import { isTieredModel } from '@/lib/three/modelUrls';
-
-type Fit = NonNullable<ComponentProps<typeof ModelLoader>['fit']>;
-const fits: Record<Exclude<PartId, 'fans'>, Fit> = {
-  motherboard: { axis: 1, size: 0.305, rotation: [0, -Math.PI / 2, 0], offset: [-0.024, 0, 0] },
-  cpu: { axis: 1, size: 0.04, rotation: [0, -Math.PI / 2, 0], offset: [-0.003, 0, 0] },
-  cooler: { axis: 0, size: 0.148, rotation: [0, 0, -Math.PI / 2], offset: [-0.078, 0, 0.01] },
-  ram: { axis: 1, size: 0.133, rotation: [Math.PI / 2, 0, Math.PI / 2], offset: [-0.029, 0, 0] },
-  gpu: { axis: 2, size: 0.323, rotation: [0, -Math.PI / 2, 0], offset: [-0.07, 0, 0.1615] },
-  ssd: { axis: 2, size: 0.08, rotation: [0, -Math.PI / 2, 0], offset: [-0.002, 0, 0] },
-  psu: { axis: 0, size: 0.15 },
-};
-const files = { motherboard: 'motherboard_x570', cpu: 'cpu_am4', cooler: 'cooler_tower', ram: 'ram_rgb', gpu: 'gpu_triple_fan', ssd: 'ssd_m2', psu: 'psu' };
-const fanFit: Fit = { axis: 0, size: 0.12, rotation: [Math.PI / 2, 0, 0] };
-const rotorFit: Fit = { axis: 0, size: 0.0935, rotation: [Math.PI / 2, 0, 0] };
-const url = (name: string) => `${import.meta.env.BASE_URL}assets/models/hardware/${name}.glb`;
-const productUrl = (product: HardwareItem) => `${import.meta.env.BASE_URL}assets/models/${product.modelPath}`;
-
-/**
- * Per-product models (V2-2b) are real size in a canonical pose (component side
- * up, see scripts/blender/configs/products): a quarter turn about Z lays them
- * against the board (component side −X, top edge up, I/O / bracket at the back).
- * `pin x max` puts the back of the part on its anchor, the offset is the height
- * of the socket / slot it sits in.
- */
-const ON_BOARD = [0, 0, Math.PI / 2] as const;
-const productFits: Record<Exclude<PartId, 'fans'>, Fit> = {
-  // ATX and mATX share the top edge and the I/O edge
-  motherboard: { axis: 1, rotation: ON_BOARD, pin: { x: 'max', y: 'max', z: 'min' }, offset: [0, MB.h / 2, -MB.d / 2] },
-  cpu: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.004, 0, 0] },
-  cooler: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.0105, 0, 0] },
-  ram: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.002, 0, 0] },
-  gpu: { axis: 1, rotation: ON_BOARD, pin: { x: 'max', z: 'min' }, offset: [-0.004, 0, 0] },
-  ssd: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.001, 0, 0] },
-  psu: { axis: 0 },
-};
-/** A 2.5″ SATA drive lies on the PSU shroud in front of the board, not in the M.2 slot. */
-const SATA_AT = [-W / 2 + 0.07, -H / 2 + 0.098, D / 2 - 0.13] as const;
-const sataFit: Fit = { axis: 0, align: 'floor', offset: [SATA_AT[0] - BOARD_FACE, SATA_AT[1] - SSD.y, SATA_AT[2] - SSD.z] };
 
 /**
  * A row of 120 mm fans along Y. Deliberately not instanced (measured in
@@ -55,26 +21,26 @@ const sataFit: Fit = { axis: 0, align: 'floor', offset: [SATA_AT[0] - BOARD_FACE
  * rotors would rewrite the instance buffer every frame, which stalled the
  * GPU (74 → 54 FPS) — all to save 13 draw calls for 3 fans and 2–4 RAM sticks.
  */
-export function HardwareFans({ ys, fallback }: { ys: readonly number[]; fallback: ReactNode }) {
-  const frames = useMemo(() => ys.map((y) => [0, y, 0] as const), [ys]);
+export function HardwareFans({ ys, z = 0, fallback }: { ys: readonly number[]; z?: number; fallback: ReactNode }) {
+  const frames = useMemo(() => ys.map((y) => [0, y, z] as const), [ys, z]);
   return (
     <>
       {frames.map((p, i) => <ModelLoader key={i} url={url('fan_frame')} fit={fanFit} position={[...p]} fallback={i === 0 ? fallback : null} />)}
       {ys.map((y) => (
-        <Rotor key={y} y={y} />
+        <Rotor key={y} y={y} z={z} />
       ))}
     </>
   );
 }
 
-function Rotor({ y }: { y: number }) {
+function Rotor({ y, z }: { y: number; z: number }) {
   const rotor = useRef<Group>(null);
   const reduced = useReducedMotion();
   useFrame((_, delta) => {
     if (rotor.current && !reduced) rotor.current.rotation.z -= Math.min(delta, 0.05) * 8 * pcRig.fanSpeed;
   });
   return (
-    <group ref={rotor} position={[0, y, 0.0018]}>
+    <group ref={rotor} position={[0, y, z + 0.0018]}>
       <ModelLoader url={url('fan_rotor')} fit={rotorFit} castShadow={false} fallback={null} />
     </group>
   );
@@ -94,11 +60,15 @@ function RamSticks({ count, fallback, product }: { count: number; fallback: Reac
 }
 
 /** Licensed PBR components; PCPart retains ownership of all choreography. */
-export function HardwarePart({ id, fallback, product, rgbColor, deferDetail = false }: { id: PartId; fallback: ReactNode; product?: HardwareItem; rgbColor?: string | null; deferDetail?: boolean }) {
+const PROCEDURAL_INTERIOR = caseInterior();
+
+/** `interior`: the case the part is installed in (its floor, shroud and front panel, see fits.ts). */
+export function HardwarePart({ id, fallback, product, rgbColor, deferDetail = false, interior = PROCEDURAL_INTERIOR }: { id: PartId; fallback: ReactNode; product?: HardwareItem; rgbColor?: string | null; deferDetail?: boolean; interior?: CaseInterior }) {
   const own = !!product && isTieredModel(product.modelPath);
   const fit = useMemo(() => {
     if (id === 'fans') return null;
-    if (own) return id === 'ssd' && /SATA/.test(product?.model ?? '') ? sataFit : productFits[id];
+    if (id === 'psu') return psuFit(interior, PSU.y, own);
+    if (own) return id === 'ssd' && /SATA/.test(product?.model ?? '') ? sataFitFor(interior) : productFits[id];
     const base = fits[id];
     if (id === 'gpu' && product?.modelSize) return { ...base, size: product.modelSize, offset: [-0.07, 0, product.modelSize / 2] as const };
     if (id === 'cooler' && product?.compatibility.coolerHeightMm) {
@@ -106,8 +76,9 @@ export function HardwarePart({ id, fallback, product, rgbColor, deferDetail = fa
       return { ...base, size: height, offset: [-height / 2, 0, 0.01] as const };
     }
     return base;
-  }, [id, product, own]);
-  if (id === 'fans') return <HardwareFans ys={FRONT_FANS.ys} fallback={fallback} />;
+  }, [id, product, own, interior]);
+  const fans = useMemo(() => frontFans(interior), [interior]);
+  if (id === 'fans') return <HardwareFans ys={fans.ys} z={fans.z - FRONT_FANS.z} fallback={fallback} />;
   if (id === 'cooler' && product?.compatibility.radiatorMm) return <LiquidCooler radiatorMm={product.compatibility.radiatorMm} rgbColor={rgbColor} />;
   if (id === 'ram') {
     const count = product ? Number(product.model.match(/\((\d+)\s*[×x]/)?.[1] ?? 2) : RAM.count;

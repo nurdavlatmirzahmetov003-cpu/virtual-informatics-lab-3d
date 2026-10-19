@@ -333,6 +333,12 @@ legacy/                     ескі ES-module прототип (python http.ser
     - `models/Decor.tsx` + `lib/three/mergeStatic.ts`: статикалық безендіру бір материалға бір mesh-ке біріктіріледі (React түпнұсқаларды ұстап қалады, олар жасырын).
     - `pages/Auth/AuthShell.tsx`: кіру/қосылу/жаңарту беттерінің фоны мен логотипі.
 
+57. **Корпус ішіндегі орналасу (0.37).**
+    - `lib/three/fit.ts` — `fitModel` (ModelLoader мен тесттер ортақ қолданады, GPU керек емес).
+    - `scenes/DeskScene/pc/fits.ts` — бөлшек fit кестелері, `caseFit`, `CASE_INTERIORS` (әр корпустың едені, төбесі, алды, арты, PSU қаптамасы; Blender-де өлшенген), `psuFit`, `sataFitFor`, `frontFans`, `rearFanZ`, `driveBay`. `PCCase` корпустың interior-ын `HardwarePart`-қа береді.
+    - `data/hardware/house.ts` — BitLab-тың өз модельдері (каталогтан тыс): `BITLAB_AERO`.
+    - `scripts/lib/glbBounds.mjs` — GLB-дің accessor min/max-тарынан bounding box (тесттер үшін).
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

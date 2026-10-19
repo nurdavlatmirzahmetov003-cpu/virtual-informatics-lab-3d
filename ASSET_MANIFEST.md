@@ -115,6 +115,7 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 
 | Product | Source model | Author | Licence | Changes |
 |---|---|---|---|---|
+| `case-bitlab-aero` (0.37) | — жобаның өз моделі, `scripts/blender/make-bitlab-aero.py` примитивтерден құрады | BitLab | CC0 (өз жұмысымыз) | ақ корпус, 230×470×450 мм, ішкі орналасу сахна якорьлеріне дәл сай; 4 материал (4 draw call); 19 port/slot маркері; әйнегі сахнаның процедуралық панелі |
 | `case-corsair-4000d-airflow` | [Corsair 4000D PC Case](https://sketchfab.com/3d-models/corsair-4000d-pc-case-bc15e007d6634579bc0e8ffdf238e665) | SzaBa | CC BY 4.0 | canonical pose, real size 230×450×470 mm, 1 logo/helper/hidden meshes removed, 19 port/slot markers |
 | `case-deepcool-cc560-v2` | [Corsair 4000D PC Case](https://sketchfab.com/3d-models/corsair-4000d-pc-case-bc15e007d6634579bc0e8ffdf238e665) | SzaBa | CC BY 4.0 | canonical pose, real size 230×450×470 mm, 1 logo/helper/hidden meshes removed, finish recoloured, 19 port/slot markers |
 | `case-fractal-north` | [Corsair 4000D x Fractal North](https://sketchfab.com/3d-models/crosair-4000d-x-fractal-north-8366a780be1e4ef2bd9098ac4dd7a02d) | tavanth | CC BY 4.0 | canonical pose, real size 230×450×470 mm, 2 logo/helper/hidden meshes removed, 19 port/slot markers |

@@ -1,5 +1,30 @@
 [
   {
+    "id": "case-bitlab-aero",
+    "source": "assets-src/blender/products/case-bitlab-aero.glb",
+    "sourceBytes": 606012,
+    "levels": [
+      {
+        "file": "case-bitlab-aero.glb",
+        "bytes": 164880,
+        "triangles": 21148,
+        "textureMB": 0
+      },
+      {
+        "file": "case-bitlab-aero_lod1.glb",
+        "bytes": 105752,
+        "triangles": 11628,
+        "textureMB": 0
+      },
+      {
+        "file": "case-bitlab-aero_lod2.glb",
+        "bytes": 63588,
+        "triangles": 5508,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
     "id": "case-corsair-4000d-airflow",
     "source": "assets-src/blender/products/case-corsair-4000d-airflow.glb",
     "sourceBytes": 19506652,

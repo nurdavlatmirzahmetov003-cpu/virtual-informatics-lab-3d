@@ -234,7 +234,7 @@ function Monitor({ product, paint, animated }: { product: HardwareItem; paint: P
 /* ── PC ──────────────────────────────────────────────────── */
 
 /** Finish a catalog case model already has (V2-2b); other finishes are painted on. */
-const NATIVE_CASE_FINISH: Readonly<Record<string, CaseFinish>> = { 'case-lianli-o11d-evo': 'white', 'case-nzxt-h5-flow-2024': 'white' };
+const NATIVE_CASE_FINISH: Readonly<Record<string, CaseFinish>> = { 'case-lianli-o11d-evo': 'white', 'case-nzxt-h5-flow-2024': 'white', 'case-bitlab-aero': 'white' };
 
 /** System unit with case paint and RGB; parts missing from the build are hidden. */
 function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish; rig: PcRigMode }) {

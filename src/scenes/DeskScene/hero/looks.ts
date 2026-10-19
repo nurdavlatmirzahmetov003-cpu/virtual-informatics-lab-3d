@@ -1,6 +1,7 @@
 import type { DeskSurface, Finish } from '@/data/studio/options';
 import { resolveBuild, type Build, type ResolvedBuild } from '@/lib/studio/build';
 import { recommendBuild } from '@/lib/studio/recommend';
+import { BITLAB_AERO } from '@/data/hardware/house';
 
 /**
  * The setups the home hero cycles through (0.37 "living lab"): each look is a
@@ -23,12 +24,11 @@ const look = (id: HeroLook['id'], desk: DeskSurface, finish: Omit<Finish, 'rgbCu
   id,
   desk,
   finish: { ...finish, desk, rgbCustom: '#38d6f5' },
-  build: resolveBuild({ ...inside, ...devices }),
+  build: { ...resolveBuild({ ...inside, ...devices }), ...(id === 'white' ? { case: BITLAB_AERO } : {}) },
 });
 
 export const HERO_LOOKS: readonly HeroLook[] = [
   look('white', 'white', { case: 'white', rgb: 'white', peripherals: 'white' }, {
-    case: 'case-lianli-o11d-evo',
     monitor: 'mon-asus-xg27acs',
     keyboard: 'kb-logitech-pro-x-tkl',
     mouse: 'mouse-logitech-superlight2',
