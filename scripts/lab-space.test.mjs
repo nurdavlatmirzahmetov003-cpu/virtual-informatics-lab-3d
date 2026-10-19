@@ -11,8 +11,9 @@ import { clampToHall, keyAction, loadPlan, stepZone, toMinimap, zoneNumber, zone
 
 const inside = ([x, z], m = 0) => x >= LAB_HALL.minX + m && x <= LAB_HALL.maxX - m && z >= LAB_HALL.minZ + m && z <= LAB_HALL.maxZ - m;
 
-test('nine zones, unique ids, inside the hall, platforms do not overlap', () => {
-  assert.equal(LAB_ZONES.length, 9);
+test('ten zones (the stage is zone 10), unique ids, inside the hall, platforms do not overlap', () => {
+  assert.equal(LAB_ZONES.length, 10);
+  assert.equal(LAB_ZONE_IDS[9], 'stage');
   assert.deepEqual(LAB_ZONES.map((z) => z.id), [...LAB_ZONE_IDS]);
   for (const z of LAB_ZONES) {
     assert.ok(inside(z.center, 1), `${z.id} inside`);
@@ -56,8 +57,8 @@ test('keyboard: digits, escape, stepping, zoom and orbit', () => {
   assert.deepEqual(keyAction('ArrowLeft'), { type: 'orbit', dir: -1 });
   assert.equal(keyAction('a'), null);
   assert.equal(stepZone(null, 1), LAB_ZONE_IDS[0]);
-  assert.equal(stepZone(null, -1), LAB_ZONE_IDS[8]);
-  assert.equal(stepZone(LAB_ZONE_IDS[8], 1), LAB_ZONE_IDS[0]);
+  assert.equal(stepZone(null, -1), LAB_ZONE_IDS[9]);
+  assert.equal(stepZone(LAB_ZONE_IDS[9], 1), LAB_ZONE_IDS[0]);
   assert.equal(zoneNumber('storage'), 3);
 });
 
@@ -208,4 +209,55 @@ test('decor stays in the hall, off the platforms and out of every camera path', 
       if (d.kind === 'plant_tall' && off < 1.5) assert.ok(along > p.size[0] / 2 + d.radius, `${d.kind} in front of poster ${p.id}`);
     }
   }
+});
+
+test('robots: routes through the open floor, clear of platforms, decor, the robot teacher and the cameras', async () => {
+  const { ROUTES, PARCEL_STACK, advisorWorld, BUILDER, zoneToWorld } = await import('../src/data/lab/robots.ts');
+  const { routeLength, routeAt } = await import('../src/scenes/LabSpace/robots/route.ts');
+  const shots = [...LAB_ZONES.map((z) => zoneShot(z)), robotShot()];
+  const robot = [ROBOT.position[0], ROBOT.position[2]];
+  for (const [name, route] of Object.entries(ROUTES)) {
+    const closed = name === 'cleaner';
+    const len = routeLength(route, closed);
+    assert.ok(len > 3, `${name} route has length`);
+    // sample the route every 10 cm
+    for (let d = 0; d <= len; d += 0.1) {
+      const { at } = routeAt(route, d, closed);
+      assert.ok(inside(at, 0.4), `${name} at ${at} stays in the hall`);
+      for (const z of LAB_ZONES) {
+        const gap = Math.hypot(at[0] - z.center[0], at[1] - z.center[1]) - Math.max(...z.size) / 2;
+        assert.ok(gap > 0.35, `${name} at ${at.map((v) => v.toFixed(2))} drives over the ${z.id} platform`);
+      }
+      for (const dec of DECOR) assert.ok(Math.hypot(at[0] - dec.at[0], at[1] - dec.at[1]) > dec.radius + 0.35, `${name} hits the ${dec.kind} at ${dec.at}`);
+      assert.ok(Math.hypot(at[0] - robot[0], at[1] - robot[1]) > 0.7, `${name} bumps into the robot teacher`);
+      for (const s of shots) assert.ok(Math.hypot(at[0] - s.position[0], at[1] - s.position[2]) > 0.5, `${name} drives through a camera stop`);
+    }
+  }
+  // the parcels pile up off the showcase platform and off the teacher
+  const show = zoneById('showcase');
+  assert.ok(Math.hypot(PARCEL_STACK[0] - show.center[0], PARCEL_STACK[1] - show.center[1]) > Math.max(...show.size) / 2 + 0.2);
+  // advisors stand on their own platform, one per zone with something to present
+  for (const { id, at } of advisorWorld()) {
+    const z = zoneById(id);
+    assert.ok(Math.abs(at[0] - z.center[0]) <= z.size[0] && Math.abs(at[1] - z.center[1]) <= z.size[0], `${id} advisor on its zone`);
+  }
+  const b = zoneToWorld(zoneById(BUILDER.zone), BUILDER.local);
+  assert.ok(inside(b, 0.3), 'builder in the hall');
+});
+
+test('branding: banners on the walls clear of posters, windows and zone signs; a flag on every zone', async () => {
+  const { BRANDING_BANNERS, BRANDING_LOGO, flagPlace } = await import('../src/data/lab/branding.ts');
+  const { WINDOWS, ROOM_SIGN, CLOCK } = await import('../src/data/lab/classroom.ts');
+  assert.equal(BRANDING_BANNERS.length, 4);
+  for (const b of BRANDING_BANNERS) {
+    const wall = b.yaw === 0 ? 'back' : b.yaw > 0 ? 'left' : 'right';
+    const along = wall === 'back' ? b.at[0] : b.at[2];
+    for (const p of POSTERS) if (p.wall === wall) assert.ok(Math.abs(along - (wall === 'back' ? p.center[0] : p.center[2])) > (b.size[0] + p.size[0]) / 2, `${b.id} covers poster ${p.id}`);
+    for (const w of WINDOWS) if (w.wall === wall) assert.ok(Math.abs(along - w.z) > (b.size[0] + w.w) / 2, `${b.id} covers a window`);
+    assert.ok(b.at[1] + b.size[1] / 2 < LAB_HALL.height - 0.3, `${b.id} under the ceiling`);
+  }
+  // the wall logo sits beside the room's name, not over it or the clock
+  assert.ok(Math.abs(BRANDING_LOGO.center[0] - ROOM_SIGN.center[0]) > (BRANDING_LOGO.size[0] + ROOM_SIGN.size[0]) / 2);
+  assert.ok(Math.abs(BRANDING_LOGO.center[0] - CLOCK.center[0]) > BRANDING_LOGO.size[0] / 2 + CLOCK.radius);
+  for (const z of LAB_ZONES) assert.ok(inside(flagPlace(z).at, 0.2), `${z.id} flag in the hall`);
 });

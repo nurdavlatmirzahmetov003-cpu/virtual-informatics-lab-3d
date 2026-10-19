@@ -339,6 +339,13 @@ legacy/                     ескі ES-module прототип (python http.ser
     - `data/hardware/house.ts` — BitLab-тың өз модельдері (каталогтан тыс): `BITLAB_AERO`.
     - `scripts/lib/glbBounds.mjs` — GLB-дің accessor min/max-тарынан bounding box (тесттер үшін).
 
+58. **Зертхана, 0.37.**
+    - `devices/Impostors.tsx` + `impostorGrid.ts` + `data/lab/impostors.json`: шолудағы құрылғы суреттері (Y осі бойынша billboard шейдері, instancing). Атлас `scripts/make-impostors.mjs` арқылы dev-бетінен (`dev/impostors.html` → `src/dev/impostorSheet.tsx`) жасалады.
+    - `visibilityAudit.ts`: `auditSignage` (сәуле тастау) және `auditScreens` (UV бағыты). `?debug` немесе dev режимінде `window.__labAudit` / `__labScreens`. Тест: `scripts/lab-visibility.test.mjs`, ортақ CDP көмекшісі `scripts/lib/cdp.mjs`.
+    - `LabBranding.tsx` + `data/lab/branding.ts`: баннерлер, жалаушалар, қабырғадағы логотип.
+    - `robots/` (`robotKit.ts`: бес робот түрі merged-геометриямен; `Robot.tsx`; `LabRobots.tsx`; `route.ts`; `brandMark.ts`) + `data/lab/robots.ts` (жолдар мен орындар).
+    - `zones/StageZone.tsx` + `stageSlides.ts`: 10-аймақ. `store/lessonBoardStore.ts`: мұғалім сабағы мен тақта.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

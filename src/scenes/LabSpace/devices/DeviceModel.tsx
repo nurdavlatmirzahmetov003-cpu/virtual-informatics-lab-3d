@@ -179,6 +179,8 @@ function Model({ id, light }: { id: string; light: boolean }): ReactNode {
           </group>
         </group>
       );
+    case 'monitor':
+      return <ScreenProduct product={product} light={light} w={2048} h={1152} />;
     case 'laptop':
       return <ScreenProduct product={product} light={light} w={1536} h={864} />;
     case 'all_in_one':

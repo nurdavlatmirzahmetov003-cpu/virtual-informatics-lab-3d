@@ -25,6 +25,9 @@ PC Assembly Lab reuses the existing credited `hardware/*.glb` assets. Slot ghost
 | fabric_leather_02_{diff,nor_gl,rough}_1k.jpg | Fabric Leather 02 | Rob Tuytel | CC0 | https://polyhaven.com/a/fabric_leather_02 | Құлаққап жастықтары / бас жолағы. 1K |
 | grey_plaster_{diff,nor_gl,rough}_1k.jpg | Grey Plaster | Rob Tuytel | CC0 | https://polyhaven.com/a/grey_plaster | Бөлме қабырғасы. 1K |
 
+## Зертхана шолуының суреттері (0.37)
+- `public/assets/textures/lab-impostors.webp` — зертхана құрылғыларының 3D модельдерінен (осы манифесттегі модельдер, олардың лицензиялары сақталады) және процедуралық модельдерінен салынған атлас. Өзіміздің рендеріміз, `npm run lab:impostors` арқылы жасалады.
+
 ## 3D модельдер (`public/assets/models/`)
 Hero сахнасындағы перифериялар мен ПК бөлшектері — Sketchfab CC BY 4.0 GLB-лер (төменде). Үстел, коврик, бөлме және артқы желдеткіш әлі жобаның өз процедуралық модельдері (TODO.md `[PLACEHOLDER]`). GLB жүктелмесе, `ModelLoader` бұрынғы процедуралық модельді көрсетеді.
 

@@ -12,6 +12,7 @@ import { Desk } from '@/scenes/DeskScene/models/Desk';
 import { DeskMat } from '@/scenes/DeskScene/models/DeskMat';
 import { MONITOR, PC } from '@/scenes/DeskScene/layout';
 import { ProductDesk } from '@/scenes/SetupStudio/ProductDesk';
+import { useMonitorWallpaper } from '@/scenes/DeskScene/models/useMonitorWallpaper';
 import { SetupItems } from '@/scenes/SetupStudio/SetupItems';
 import { Pedestal, Turntable } from '../furniture';
 import { Product } from './common';
@@ -49,6 +50,12 @@ export function WorkstationZone({ detail }: ZoneContentProps) {
   );
 }
 
+/** The showcase monitor, with the wallpaper on its screen. */
+function ShowcaseMonitor({ light }: { light: boolean }) {
+  const onLoaded = useMonitorWallpaper();
+  return <Product product={SHOWCASE.monitor} lightOnly={light} onLoaded={onLoaded} />;
+}
+
 /** Showcase: three pedestals round a turntable carrying the hero case. */
 export function ShowcaseZone({ detail, accent }: ZoneContentProps) {
   const light = detail === 'preview';
@@ -61,7 +68,7 @@ export function ShowcaseZone({ detail, accent }: ZoneContentProps) {
       </Pedestal>
       <group position={[-1.25, 0, 0.55]} rotation-y={0.5}>
         <Pedestal height={0.75} radius={0.36} accent={accent}>
-          <Product product={SHOWCASE.monitor} lightOnly={light} />
+          <ShowcaseMonitor light={light} />
         </Pedestal>
       </group>
       {!light && (

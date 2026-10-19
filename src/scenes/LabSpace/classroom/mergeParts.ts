@@ -30,6 +30,8 @@ const KEEP = new Set(['position', 'normal', 'uv']);
 
 /** One geometry from the pieces; with `colors`, a `color` attribute from each piece's colour (default white). */
 export function mergePieces(pieces: readonly Piece[], colors = false): BufferGeometry {
+  // nothing to merge (e.g. no decor item with glowing parts): an empty geometry, not a crash
+  if (!pieces.length) return new BufferGeometry();
   const parts = pieces.map((p) => {
     const g = p.geo.index ? p.geo.toNonIndexed() : p.geo.clone();
     p.geo.dispose();

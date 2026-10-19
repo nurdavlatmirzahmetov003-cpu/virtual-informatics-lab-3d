@@ -67,8 +67,8 @@
     "modules": {
       "space": {
         "title": "3D lab",
-        "desc": "A large hall with nine zones: workstation, PC build, storage, input/output, printing, networking, power, mobile devices and a showcase. Minimap and keyboard control.",
-        "tag": "3D · 9 zones"
+        "desc": "A large hall with ten zones: workstation, PC build, storage, input/output, printing, networking, power, mobile devices, a showcase and the BitLab stage. Minimap and keyboard control.",
+        "tag": "3D · 10 zones"
       },
       "hardware": {
         "title": "Computer hardware",
@@ -3340,13 +3340,17 @@
         "network": "A router links networks, a switch links the devices of one network. Try connecting them yourself in the network lab.",
         "power": "A UPS gives the computer time when the power goes off — time to save your work.",
         "mobile": "Take apart the laptop, smartphone and tablet: inside they are much like a PC, only far more compact.",
-        "showcase": "The computer in the showcase is a build from Setup Studio. Turn it around and look at every part."
-      }
+        "showcase": "The computer in the showcase is a build from Setup Studio. Turn it around and look at every part.",
+        "stage": "On the stage the robots present BitLab. Watch the slides on the screen and listen to Bit."
+      },
+      "lesson": "Lesson: {topic}",
+      "lessonStop": "Stop the lesson",
+      "board": "Lesson"
     },
     "title": "3D lab",
     "eyebrow": "The large lab space",
-    "lead": "Tour nine zones: pick a zone and the camera flies there.",
-    "sceneLabel": "3D lab hall with nine zones",
+    "lead": "Tour ten zones: pick a zone and the camera flies there.",
+    "sceneLabel": "3D lab hall with ten zones",
     "overview": "Overview",
     "next": "Next zone",
     "prev": "Previous zone",
@@ -3426,7 +3430,48 @@
         "caption": "The best of the catalog",
         "description": "In the middle of the hall, a premium case on a turntable, with a monitor, gaming chair, keyboard and headset from the Setup Studio catalog around it.",
         "action": "Setup Studio"
+      },
+      "stage": {
+        "name": "BitLab stage",
+        "caption": "A live tour of the site",
+        "description": "Robots present BitLab: slides on the screen, and Bit tells you about each section in its own voice. Come closer and the presentation starts."
       }
+    },
+    "stage": {
+      "eyebrow": "BitLab presents",
+      "slides": {
+        "s1": {
+          "title": "Welcome to BitLab!",
+          "body": "A virtual lab where you learn computer science in 3D. Open a computer, look inside and build one with your own hands."
+        },
+        "s2": {
+          "title": "The big 3D lab",
+          "body": "Ten zones and sixty devices. Click any device to learn what it does, which ports it has and what is inside."
+        },
+        "s3": {
+          "title": "Setup Studio",
+          "body": "Build your own setup for your goal and budget. The site checks that the parts fit together."
+        },
+        "s4": {
+          "title": "Hands-on labs",
+          "body": "Build a computer, wire a network, plug in cables, design an algorithm and a logic circuit."
+        },
+        "s5": {
+          "title": "Games and contests",
+          "body": "Earn points, compete with your classmates, unlock achievements and a certificate."
+        },
+        "s6": {
+          "title": "Your helper — Bit",
+          "body": "I answer any question in Kazakh, Russian and English. Just ask!"
+        }
+      },
+      "advisorHint": "Got a question? Click me"
+    },
+    "robots": {
+      "advisor": "Advisor robot",
+      "cleaner": "Cleaning robot",
+      "courier": "Courier robot",
+      "builder": "Builder robot"
     }
   },
   "devices": {

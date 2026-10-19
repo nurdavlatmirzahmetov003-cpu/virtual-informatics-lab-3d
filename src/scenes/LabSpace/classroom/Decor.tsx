@@ -10,6 +10,12 @@ import { DECOR, type DecorItem } from '@/data/lab/decor';
 import { useDisposable } from '@/hooks/useDisposable';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useTheme } from '@/hooks/useTheme';
+import { useEffect } from 'react';
+import { useT } from '@/hooks/useT';
+import { useCanvasFonts } from '@/hooks/useCanvasFonts';
+import { FONT_HERO, FONT_SANS } from '@/lib/fonts';
+import { useLessonBoard } from '@/store/lessonBoardStore';
+import { signage } from '../visibilityAudit';
 import { mergePieces, type Piece, type Place, type Vec3 } from './mergeParts';
 
 interface Colors {
@@ -276,11 +282,81 @@ function build(light: boolean): { solid: BufferGeometry; glow: BufferGeometry; b
   return { solid: mergePieces(solid, true), glow: mergePieces(glow), board: mergePieces(board) };
 }
 
+/** The lesson slide (0.37): topic in a brand header, the sentence being spoken in marker ink, progress. */
+function drawLesson(canvas: HTMLCanvasElement, label: string, title: string, line: string, index: number, total: number) {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  const { width: w, height: h } = canvas;
+  ctx.fillStyle = '#fbfcff';
+  ctx.fillRect(0, 0, w, h);
+  const g = ctx.createLinearGradient(0, 0, w, 0);
+  g.addColorStop(0, '#2fc8f2');
+  g.addColorStop(0.55, '#5f7bff');
+  g.addColorStop(1, '#a95cf5');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, 120);
+  ctx.fillStyle = '#fff';
+  ctx.textBaseline = 'middle';
+  ctx.font = `600 34px ${FONT_SANS}`;
+  ctx.fillText(label.toUpperCase(), 40, 40);
+  ctx.font = `700 46px ${FONT_HERO}`;
+  ctx.fillText(title, 40, 88, w - 80);
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = '#1e2a4a';
+  let size = 52;
+  let lines: string[] = [];
+  // the longest sentence still fits: shrink until it does
+  for (; size >= 30; size -= 4) {
+    ctx.font = `600 ${size}px ${FONT_SANS}`;
+    lines = [];
+    let cur = '';
+    for (const word of line.split(/\s+/)) {
+      const next = cur ? `${cur} ${word}` : word;
+      if (ctx.measureText(next).width > w - 90 && cur) {
+        lines.push(cur);
+        cur = word;
+      } else cur = next;
+    }
+    if (cur) lines.push(cur);
+    if (lines.length * size * 1.3 < h - 230) break;
+  }
+  lines.forEach((l, i) => ctx.fillText(l, 45, 200 + i * size * 1.3));
+  for (let i = 0; i < total; i++) {
+    ctx.fillStyle = i === index ? '#5f7bff' : '#d4dbea';
+    ctx.beginPath();
+    ctx.roundRect(45 + i * 34, h - 48, i === index ? 26 : 14, 14, 7);
+    ctx.fill();
+  }
+}
+
+/** The whiteboard: its marker drawing, or the robot teacher's lesson while one is on. */
+function useBoardTexture() {
+  const t = useT();
+  const fonts = useCanvasFonts();
+  const drawing = useDisposable(boardTexture, []);
+  const lessonTex = useDisposable(() => {
+    const c = document.createElement('canvas');
+    c.width = 1024;
+    c.height = 648;
+    const tex = new CanvasTexture(c);
+    tex.colorSpace = SRGBColorSpace;
+    tex.anisotropy = 8;
+    return tex;
+  }, []);
+  const { active, title, lines, index } = useLessonBoard();
+  useEffect(() => {
+    if (!active) return;
+    drawLesson(lessonTex.image as HTMLCanvasElement, t('lab.teacher.board'), title, lines[index] ?? '', index, lines.length);
+    lessonTex.needsUpdate = true;
+  }, [active, title, lines, index, lessonTex, t, fonts]);
+  return active ? lessonTex : drawing;
+}
+
 export function Decor() {
   const light = useTheme() === 'light';
   const level = useQualityPreset().level;
   const geo = useDisposable(() => build(light), [light]);
-  const drawing = useDisposable(boardTexture, []);
+  const drawing = useBoardTexture();
   const cheap = level === 'low' || level === 'medium';
   return (
     <group>
@@ -290,7 +366,7 @@ export function Decor() {
       <mesh geometry={geo.glow}>
         <meshBasicMaterial color={light ? '#fff1d6' : '#ffe2a8'} side={DoubleSide} toneMapped={false} />
       </mesh>
-      <mesh geometry={geo.board}>
+      <mesh geometry={geo.board} userData={signage('lesson-board')}>
         <meshBasicMaterial map={drawing} color={light ? '#ffffff' : '#d8dcea'} />
       </mesh>
     </group>

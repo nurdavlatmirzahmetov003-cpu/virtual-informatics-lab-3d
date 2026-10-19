@@ -18,6 +18,7 @@ import { useQualityPreset } from '@/hooks/useQualityPreset';
 import type { TranslationKey } from '@/lib/i18n';
 import { useLabStore } from '@/store/labStore';
 import { mergePieces, type Place } from './mergeParts';
+import { signage } from '../visibilityAudit';
 import { posterTexture, roomSignTexture } from './posterTexture';
 
 const k = (s: string) => s as TranslationKey;
@@ -80,6 +81,7 @@ function PosterBoard({ poster, light, fonts }: { poster: Poster; light: boolean;
         </mesh>
       )}
       <mesh
+        userData={signage(`poster:${poster.id}`)}
         position-z={0.026}
         onClick={click}
         onPointerOver={(e) => {
@@ -199,7 +201,7 @@ function RoomSign({ light, fonts }: { light: boolean; fonts: number }) {
   const texture = useDisposable(() => roomSignTexture(t('lab.classroom.room'), t('lab.classroom.roomCaption'), light), [t, light, fonts]);
   const [w, h] = ROOM_SIGN.size;
   return (
-    <mesh position={[ROOM_SIGN.center[0], ROOM_SIGN.center[1], ROOM_SIGN.center[2] + 0.02]}>
+    <mesh position={[ROOM_SIGN.center[0], ROOM_SIGN.center[1], ROOM_SIGN.center[2] + 0.02]} userData={signage('room-sign')}>
       <planeGeometry args={[w, h]} />
       <meshBasicMaterial map={texture} transparent toneMapped={false} />
     </mesh>

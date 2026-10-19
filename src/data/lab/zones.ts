@@ -1,12 +1,12 @@
 /**
- * The large 3D lab (V2-3): one hall, nine zones. Pure data (no three.js), so
+ * The large 3D lab (V2-3): one hall, ten zones (zone 10, the stage, 0.37). Pure data (no three.js), so
  * navigation logic and tests can use it. World units are metres; the hall
  * floor is y = 0, the open (cut-away) side faces +Z, the entrance.
  *
  * Zone ids follow DEVICE_CATALOG.md ("Lab zones"); `workstation` (the home
  * desk setup) and `showcase` complete the PLAN_V2 list.
  */
-export const LAB_ZONE_IDS = ['workstation', 'assembly', 'storage', 'peripherals', 'print_media', 'network', 'power', 'mobile', 'showcase'] as const;
+export const LAB_ZONE_IDS = ['workstation', 'assembly', 'storage', 'peripherals', 'print_media', 'network', 'power', 'mobile', 'showcase', 'stage'] as const;
 export type LabZoneId = (typeof LAB_ZONE_IDS)[number];
 
 export type Vec2 = readonly [number, number];
@@ -34,6 +34,8 @@ export const LAB_HALL = { minX: -10, maxX: 10, minZ: -7, maxZ: 8, height: 4.2 } 
 const BACK: Vec2 = [0, 1];
 const FROM_LEFT: Vec2 = [1, 0];
 const FROM_RIGHT: Vec2 = [-1, 0];
+/** Into the hall and a little towards the entrance: the overview and the visitors see its screen. */
+const STAGE_FACING: Vec2 = [-0.99 / Math.hypot(0.99, 0.15), 0.15 / Math.hypot(0.99, 0.15)];
 
 export const LAB_ZONES: readonly LabZone[] = [
   {
@@ -80,6 +82,12 @@ export const LAB_ZONES: readonly LabZone[] = [
   {
     id: 'showcase', accent: '#e879f9', center: [0, 0.2], size: [3.6, 3.6], facing: BACK,
     view: { distance: 4.6, height: 2.1, targetY: 0.8 },
+    devices: [],
+  },
+  {
+    // zone 10 (0.37): the BitLab presentation stage in the front right corner, by the window
+    id: 'stage', accent: '#5f7bff', center: [7.6, 7.0], size: [2.8, 1.6], facing: STAGE_FACING,
+    view: { distance: 3.45, height: 1.85, targetY: 1.3 },
     devices: [],
   },
 ];

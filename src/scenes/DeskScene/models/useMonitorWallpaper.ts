@@ -1,7 +1,8 @@
 import { useCallback, useEffect } from 'react';
-import { CanvasTexture, SRGBColorSpace, type BufferGeometry, type Mesh, type MeshStandardMaterial, type Object3D, type Texture } from 'three';
+import { CanvasTexture, FrontSide, SRGBColorSpace, type BufferGeometry, type Mesh, type MeshStandardMaterial, type Object3D, type Texture } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
 import { useCanvasFonts } from '@/hooks/useCanvasFonts';
+import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { drawWallpaper } from '@/lib/three/proceduralTextures';
 
 /**
@@ -52,13 +53,20 @@ function fitted(wallpaper: Texture, geometry: BufferGeometry) {
  * onLoaded callback that puts the project wallpaper on a GLB's "Screen" material
  * (monitors; laptops, phones and tablets pass their own screen proportions).
  */
-export function useMonitorWallpaper(width = 1536, height = 672) {
+export function useMonitorWallpaper(w?: number, h?: number) {
+  // 2K where the preset allows it (sharp close-ups); phones and Low keep 1K
+  const small = useQualityPreset().maxTextureSize < 2048;
+  const k = small ? 0.5 : 1;
+  const width = Math.round((w ?? 2048) * k);
+  const height = Math.round((h ?? 896) * k);
   const wallpaper = useDisposable(() => {
     const canvas = document.createElement('canvas');
     canvas.width = width; canvas.height = height;
     drawWallpaper(canvas);
     const texture = new CanvasTexture(canvas);
     texture.colorSpace = SRGBColorSpace;
+    // 2K with mipmaps (CanvasTexture default) and anisotropy: the logo stays sharp at an angle (0.37)
+    texture.anisotropy = 8;
     return texture;
   }, [width, height]);
   // redraw in place once the web fonts are in; clones share the image source, so they follow
@@ -79,6 +87,8 @@ export function useMonitorWallpaper(width = 1536, height = 672) {
         const map = fitted(wallpaper, mesh.geometry);
         m.map = map; m.emissiveMap = map;
         m.color.set('#ffffff'); m.emissive.set('#ffffff'); m.emissiveIntensity = 0.65;
+        // front only: from behind a screen would show its picture mirrored
+        m.side = FrontSide;
         m.roughness = 0.27; m.metalness = 0; m.needsUpdate = true;
       });
     });

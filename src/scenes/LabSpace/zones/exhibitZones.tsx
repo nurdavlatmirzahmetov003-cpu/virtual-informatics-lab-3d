@@ -14,6 +14,8 @@ import { DeviceModel } from '../devices/DeviceModel';
 import { Pedestal } from '../furniture';
 import { useWallpaper } from './useWallpaper';
 import { speedRows, type SpeedRow, type ZoneContentProps } from './zoneData';
+import { Spot } from '../devices/Impostors';
+import { signage } from '../visibilityAudit';
 import { FONT_DISPLAY, FONT_SANS } from '@/lib/fonts';
 
 function chartTexture(title: string, unit: string, rows: SpeedRow[], light: boolean, accent: string) {
@@ -65,7 +67,7 @@ function SpeedChart({ accent }: { accent: string }) {
   const rows = useMemo(() => speedRows(t('lab.storage.hdd')), [t]);
   const tex = useDisposable(() => chartTexture(t('lab.storage.chartTitle'), t('lab.storage.unit'), rows, light, accent), [t, rows, light, accent, fonts]);
   return (
-    <mesh>
+    <mesh userData={signage('storage-chart')}>
       <planeGeometry args={[1.6, 0.875]} />
       <meshBasicMaterial map={tex} transparent toneMapped={false} />
     </mesh>
@@ -91,10 +93,14 @@ export function AssemblyZone({ detail, accent }: ZoneContentProps) {
       </group>
       {/* the case stands on the floor beside the bench, open side towards the visitor */}
       <group position={[1.3, 0, -0.32]}>
-        <DeviceSpot id="case" accent={accent} padSize={[0.58, 0.34]} light={detail === 'preview'} plate={detail === 'full'} plateZ={0.3}>
-          <group rotation-y={Math.PI / 2}>
-            <DeviceModel id="case" light={detail === 'preview'} />
-          </group>
+        <DeviceSpot id="case" accent={accent} padSize={[0.58, 0.34]} plate={detail === 'full'} plateZ={0.3}>
+          {detail === 'full' ? (
+            <group rotation-y={Math.PI / 2}>
+              <DeviceModel id="case" />
+            </group>
+          ) : (
+            <Spot id="case" />
+          )}
         </DeviceSpot>
       </group>
     </>
@@ -150,7 +156,7 @@ export function PrintMediaZone({ detail, accent }: ZoneContentProps) {
   return (
     <>
       {/* projection screen on the wall */}
-      <mesh position={[0, 1.95, -1.72]}>
+      <mesh position={[0, 1.95, -1.72]} userData={signage('projection-screen')}>
         <planeGeometry args={[1.9, 1.07]} />
         <meshStandardMaterial color="#000" emissive="#ffffff" emissiveMap={wallpaper} emissiveIntensity={0.55} roughness={0.9} />
       </mesh>
@@ -167,13 +173,13 @@ export function PrintMediaZone({ detail, accent }: ZoneContentProps) {
       <group position={[-1.42, 0, 0.45]}>
         <DeviceSpot id="printer_3d" accent={accent} padSize={[0.5, 0.5]} plate={detail === 'full'} plateZ={0.33}>
           <Pedestal height={0.42} radius={0.32} accent={accent}>
-            {detail === 'full' ? <DeviceModel id="printer_3d" /> : null}
+            {detail === 'full' ? <DeviceModel id="printer_3d" /> : <Spot id="printer_3d" />}
           </Pedestal>
         </DeviceSpot>
       </group>
       <group position={[1.4, 0, 0.45]} rotation-y={-0.35}>
         <DeviceSpot id="interactive_panel" accent={accent} padSize={[0.74, 0.52]} plate={detail === 'full'} plateZ={0.34}>
-          {detail === 'full' ? <DeviceModel id="interactive_panel" /> : null}
+          {detail === 'full' ? <DeviceModel id="interactive_panel" /> : <Spot id="interactive_panel" />}
         </DeviceSpot>
       </group>
     </>

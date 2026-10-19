@@ -4,7 +4,7 @@ import { useProgress } from '@react-three/drei';
 import { ArrowLeft, ArrowRight, Keyboard, LayoutGrid, List, Minus, Plus, RotateCcw } from 'lucide-react';
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
 import { ButtonLink } from '@/components/ui/Button';
-import { zoneById, type LabZoneId } from '@/data/lab/zones';
+import { LAB_ZONES, zoneById, type LabZoneId } from '@/data/lab/zones';
 import { POSTERS } from '@/data/lab/classroom';
 import { keyAction, zoneNumber } from '@/lib/lab/navigation';
 import type { TranslationKey } from '@/lib/i18n';
@@ -152,7 +152,7 @@ function Status() {
   );
 }
 
-/** `/lab?device=<id>` (links from the task list) opens that device; `&teardown=<id>` its teardown; `poster` / `teacher` the classroom panels. */
+/** `/lab?zone=<id>` flies to a zone; `?device=<id>` (links from the task list) opens that device; `&teardown=<id>` its teardown; `poster` / `teacher` the classroom panels. */
 function useDeviceParam() {
   const [params] = useSearchParams();
   const requested = params.get('device');
@@ -163,6 +163,11 @@ function useDeviceParam() {
   useEffect(() => {
     if (isTeardownId(teardown)) useLabStore.getState().openTeardown(teardown);
   }, [teardown]);
+  // `?zone=<id>` flies straight to a zone (0.37: links, checks)
+  const zone = params.get('zone');
+  useEffect(() => {
+    if (zone && LAB_ZONES.some((z) => z.id === zone)) useLabStore.getState().focusZone(zone as LabZoneId);
+  }, [zone]);
   // `&poster=<id>` opens a classroom poster, `&teacher=1` the robot teacher
   const poster = params.get('poster');
   const teacher = params.get('teacher');

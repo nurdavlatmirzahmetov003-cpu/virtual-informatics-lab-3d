@@ -5,9 +5,9 @@
  */
 import { DeviceSpot, ExhibitTable } from '../devices/Exhibit';
 import { DeviceModel } from '../devices/DeviceModel';
-import { CableCoil, RackShell } from '../devices/v24bDevices';
-import { useQualityPreset } from '@/hooks/useQualityPreset';
-import { inOverview } from '../devices/deviceAssets';
+import { CableCoil } from '../devices/v24bDevices';
+import { Impostors, Spot } from '../devices/Impostors';
+import { Suspense } from 'react';
 import type { ZoneContentProps } from './zoneData';
 
 export function NetworkZone({ detail, accent }: ZoneContentProps) {
@@ -17,7 +17,7 @@ export function NetworkZone({ detail, accent }: ZoneContentProps) {
       <group position={[-1.05, 0, -0.55]}>
         <DeviceSpot id="server_rack" accent={accent} padSize={[0.7, 0.66]} plate={full} plateZ={0.42}>
           {/* overview: the shell only (two draw calls instead of ~25) */}
-          {full ? <DeviceModel id="server_rack" /> : <RackShell />}
+          {full ? <DeviceModel id="server_rack" /> : <Spot id="server_rack" />}
         </DeviceSpot>
       </group>
       <group position={[0.42, 0, -0.32]}>
@@ -39,10 +39,19 @@ export function NetworkZone({ detail, accent }: ZoneContentProps) {
 
 const WALL_CABLES = ['hdmi_cable', 'displayport_cable', 'usb_c_cable', 'usb_a_cable', 'audio_cable'] as const;
 
+const CABLE_PICTURES = WALL_CABLES.map((id, i) => ({ id, at: [-0.88 + i * 0.44, 1.14, 0.03] as const }));
+
+/** Overview: the cables on the pegboard as pictures (one draw call). */
+function WallCables() {
+  return (
+    <Suspense fallback={null}>
+      <Impostors items={CABLE_PICTURES} />
+    </Suspense>
+  );
+}
+
 export function PowerZone({ detail, accent }: ZoneContentProps) {
   const full = detail === 'full';
-  const level = useQualityPreset().level;
-  const ups = full || inOverview('ups', level);
   return (
     <>
       {/* pegboard: every cable on its own hook, name plate under it */}
@@ -51,6 +60,7 @@ export function PowerZone({ detail, accent }: ZoneContentProps) {
           <boxGeometry args={[2.3, 1.1, 0.03]} />
           <meshStandardMaterial color="#c9a27a" roughness={0.8} />
         </mesh>
+        {!full && <WallCables />}
         {full && WALL_CABLES.map((id, i) => (
           <group key={id} position={[-0.88 + i * 0.44, 1.12, 0.02]}>
             <DeviceSpot id={id} accent={accent} padSize={[0.4, 0.1]} bare plate={full} plateZ={0.08}>
@@ -64,7 +74,7 @@ export function PowerZone({ detail, accent }: ZoneContentProps) {
       </group>
       <group position={[-1.12, 0, -0.45]}>
         <DeviceSpot id="ups" accent={accent} padSize={[0.3, 0.5]} plate={full} plateZ={0.32}>
-          {ups ? <DeviceModel id="ups" /> : null}
+          {full ? <DeviceModel id="ups" /> : <Spot id="ups" />}
         </DeviceSpot>
       </group>
       <group position={[0.4, 0, -0.3]}>
