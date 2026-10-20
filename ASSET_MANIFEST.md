@@ -202,6 +202,22 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | `td-phone` | [iPhone 12 Teardown](https://sketchfab.com/3d-models/iphone-12-teardown-708eaa5d195544918e5f70b69eedcdfa) | Peter_D | CC BY 4.0 | canonical pose, real size 72×147×9 mm, 2 logo/extra meshes removed, 3 texture areas repainted (logos / print / screenshots), parts: display, sim_tray, cameras, battery, vibration, speaker, usb_port, mainboard, frame |
 | `td-sodimm` | [8 GB RAM SODIMM DDR4](https://sketchfab.com/3d-models/8-gb-ram-sodimm-ddr4-d5c9a2a4d15146889aa2e0b360ff00a2) | Cashierob | CC BY 4.0 | canonical pose, real size 30×70×1 mm, 2 texture areas repainted (logos / print / screenshots) |
 
+### More lab devices (0.37 "Living Lab", 2026-10-20) — `public/assets/models/products/`
+
+- **Source:** 12 Sketchfab models picked for the devices that still were procedural; the owner approved the list and the downloads (2026-10-20). They were downloaded through the owner's signed-in browser session as the official "Download → glTF/GLB" archives and kept in `assets-src/sketchfab/v37/` (not in git). Every one is **CC BY 4.0** (checked on Sketchfab's API the same day). Credits are on `/credits` (`src/data/assets/hardware.json`).
+- **Changes (CC BY):** Blender pipeline configs `scripts/blender/configs/products/dev-*.json`: rotated into the lab pose (front +Z on the site, base on the floor) and scaled to real size; on the liquid cooler the maker's logo meshes are removed and its full level is simplified to ~50k triangles (from 499k; Medium 30k, Low 8k). Web levels: `npm run assets:optimize -- products <id>`.
+- **Downloaded but not used** (they keep their procedural models): "Basic Projector" (abhishai4023602) — the file holds a wooden floor scene, not a projector; "Startech Tex" (Phoenix_Connor) — a disk duplicator, not a laptop docking station; "Aux Cord | 3.5mm" (Pax Red) — only the plug, no cable; "Internet cable | Ethernet | Lan" (Yan) — a 519k-triangle tangle; "Sata Cable" (neilvfx) — only the connector, 111k triangles.
+
+| Product | Source | Author | Licence | Changes |
+|---|---|---|---|---|
+| `dev-aio-cooler` | [Corsair H150i Elitie CPU Liquid Cooler](https://sketchfab.com/3d-models/corsair-h150i-elitie-cpu-liquid-cooler-faa8f55407404fd2870e35ab6a8f03bb) | MajdyModels | CC BY 4.0 | stood upright, real size 400×138×114 mm, 4 logo meshes removed, simplified 499k → 53k / 30k / 8k triangles |
+| `dev-card-reader` | [SD card reader steel](https://sketchfab.com/3d-models/sd-card-reader-steel-4ef2760222054265a20826777ab1823e) | Kentura | CC BY 4.0 | pose as downloaded, real size 73×20×250 mm (with its cable) |
+| `dev-cmos-battery` | [CR2032](https://sketchfab.com/3d-models/cr2032-b5a1728098b64d2991a6833b303e92b1) | David_Fraas | CC BY 4.0 | pose as downloaded, real size Ø20×3.2 mm |
+| `dev-hdd-25` | [2.5 inch hdd](https://sketchfab.com/3d-models/25-inch-hdd-bec2bad7cfff4f4e9f06bc72d8432a16) | RARYA | CC BY 4.0 | pose as downloaded, real size 69×6×100 mm |
+| `dev-optical-drive` | [CD/DVD Drive](https://sketchfab.com/3d-models/cddvd-drive-1ccab191f993433e84e3fd66778a7708) | risenshine092 | CC BY 4.0 | turned 90° (bezel to the front), real size 133×38×170 mm |
+| `dev-usb-a-cable` | [USB cable](https://sketchfab.com/3d-models/usb-cable-e2d9a8d59e7245f99ffa14e5f9784c3e) | ABSTRACT_DUCK | CC BY 4.0 | pose as downloaded, coiled, 300 mm across |
+| `dev-usb-c-cable` | [USB-C Charging Cable (Type-C – Type-C)](https://sketchfab.com/3d-models/usb-c-charging-cable-type-c-type-c-39cb1374a9c24cfa815f8efe86a14f61) | alessandroparca | CC BY 4.0 | pose as downloaded, 250 mm across |
+
 ### Тікелей ойындар (V2-11b, 2026-10-17)
 Жаңа ассет жоқ. QR — өз кодтауышымыз (`src/lib/qr`), иконалар — бар `lucide-react` (ISC). WebSocket тәуелділіксіз (`node:http`, `node:crypto`).
 

@@ -86,5 +86,12 @@
   {"name":"Mac Laptop Battery","file":"products/td-laptop-battery.glb","author":"Graphitage","url":"https://sketchfab.com/3d-models/mac-laptop-battery-e463a4413af647a3b88b6c6d40a12e72"},
   {"name":"8 GB RAM SODIMM DDR4","file":"products/td-sodimm.glb","author":"Cashierob","url":"https://sketchfab.com/3d-models/8-gb-ram-sodimm-ddr4-d5c9a2a4d15146889aa2e0b360ff00a2"},
   {"name":"Lowpoly Ps2 Motherboard textured model","file":"products/td-board.glb","author":"B._.render","url":"https://sketchfab.com/3d-models/lowpoly-ps2-motherboard-textured-model-5819601dfedb463db9ed101ba7d3821e"},
-  {"name":"[CC0] Set of Electronic Components","file":"products/td-components.glb","author":"literallylara","url":"https://sketchfab.com/3d-models/cc0-set-of-electronic-components-f4cb777b4ea3490587008e24b61bcf75"}
+  {"name":"[CC0] Set of Electronic Components","file":"products/td-components.glb","author":"literallylara","url":"https://sketchfab.com/3d-models/cc0-set-of-electronic-components-f4cb777b4ea3490587008e24b61bcf75"},
+  {"name":"Corsair H150i Elitie CPU Liquid Cooler","file":"products/dev-aio-cooler.glb","author":"MajdyModels","url":"https://sketchfab.com/3d-models/corsair-h150i-elitie-cpu-liquid-cooler-faa8f55407404fd2870e35ab6a8f03bb"},
+  {"name":"SD card reader steel","file":"products/dev-card-reader.glb","author":"Kentura","url":"https://sketchfab.com/3d-models/sd-card-reader-steel-4ef2760222054265a20826777ab1823e"},
+  {"name":"CR2032","file":"products/dev-cmos-battery.glb","author":"David_Fraas","url":"https://sketchfab.com/3d-models/cr2032-b5a1728098b64d2991a6833b303e92b1"},
+  {"name":"2.5 inch hdd","file":"products/dev-hdd-25.glb","author":"RARYA","url":"https://sketchfab.com/3d-models/25-inch-hdd-bec2bad7cfff4f4e9f06bc72d8432a16"},
+  {"name":"CD/DVD Drive","file":"products/dev-optical-drive.glb","author":"risenshine092","url":"https://sketchfab.com/3d-models/cddvd-drive-1ccab191f993433e84e3fd66778a7708"},
+  {"name":"USB cable","file":"products/dev-usb-a-cable.glb","author":"ABSTRACT_DUCK","url":"https://sketchfab.com/3d-models/usb-cable-e2d9a8d59e7245f99ffa14e5f9784c3e"},
+  {"name":"USB-C Charging Cable (Type-C – Type-C)","file":"products/dev-usb-c-cable.glb","author":"alessandroparca","url":"https://sketchfab.com/3d-models/usb-c-charging-cable-type-c-type-c-39cb1374a9c24cfa815f8efe86a14f61"}
 ]

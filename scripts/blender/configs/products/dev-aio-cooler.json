@@ -1,0 +1,45 @@
+{
+    "name":  "dev-aio-cooler",
+    "description":  "All-in-one liquid cooler (radiator, three fans, pump), stood upright; the maker\u0027s logo meshes removed.",
+    "input":  "assets-src/sketchfab/v37/aio-cooler.glb",
+    "output":  "assets-src/blender/products/dev-aio-cooler.glb",
+    "rotate":  [
+                   [
+                       "Z",
+                       90
+                   ]
+               ],
+    "cleanup":  {
+                    "removeInvisible":  true,
+                    "weldDistance":  1E-05,
+                    "remove":  [
+                                   {
+                                       "materials":  "^(CRSR|SVGMat)"
+                                   }
+                               ],
+                    "paint":  [
+
+                              ]
+                },
+    "materials":  {
+                      "rename":  {
+
+                                 },
+                      "paint":  [
+
+                                ]
+                  },
+    "parts":  [
+                  {
+                      "id":  "body",
+                      "fallback":  true
+                  }
+              ],
+    "ports":  [
+
+              ],
+    "preview":  {
+                    "assembled":  "assets-src/blender/products/dev-aio-cooler.jpg"
+                },
+    "realSize":  0.4
+}

@@ -450,6 +450,31 @@
     ]
   },
   {
+    "id": "dev-aio-cooler",
+    "source": "assets-src/blender/products/dev-aio-cooler.glb",
+    "sourceBytes": 19719040,
+    "levels": [
+      {
+        "file": "dev-aio-cooler.glb",
+        "bytes": 825220,
+        "triangles": 52602,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-aio-cooler_lod1.glb",
+        "bytes": 458444,
+        "triangles": 29991,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-aio-cooler_lod2.glb",
+        "bytes": 137116,
+        "triangles": 8010,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
     "id": "dev-all-in-one",
     "source": "assets-src/blender/products/dev-all-in-one.glb",
     "sourceBytes": 5371364,
@@ -471,6 +496,56 @@
         "bytes": 206560,
         "triangles": 7920,
         "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "dev-card-reader",
+    "source": "assets-src/blender/products/dev-card-reader.glb",
+    "sourceBytes": 26324876,
+    "levels": [
+      {
+        "file": "dev-card-reader.glb",
+        "bytes": 378612,
+        "triangles": 8591,
+        "textureMB": 21.3
+      },
+      {
+        "file": "dev-card-reader_lod1.glb",
+        "bytes": 193944,
+        "triangles": 5109,
+        "textureMB": 13.3
+      },
+      {
+        "file": "dev-card-reader_lod2.glb",
+        "bytes": 117180,
+        "triangles": 3345,
+        "textureMB": 3.3
+      }
+    ]
+  },
+  {
+    "id": "dev-cmos-battery",
+    "source": "assets-src/blender/products/dev-cmos-battery.glb",
+    "sourceBytes": 111904,
+    "levels": [
+      {
+        "file": "dev-cmos-battery.glb",
+        "bytes": 27192,
+        "triangles": 5958,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-cmos-battery_lod1.glb",
+        "bytes": 17700,
+        "triangles": 3276,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-cmos-battery_lod2.glb",
+        "bytes": 9844,
+        "triangles": 1488,
+        "textureMB": 0
       }
     ]
   },
@@ -571,6 +646,31 @@
         "bytes": 144792,
         "triangles": 7994,
         "textureMB": 2.7
+      }
+    ]
+  },
+  {
+    "id": "dev-hdd-25",
+    "source": "assets-src/blender/products/dev-hdd-25.glb",
+    "sourceBytes": 290240,
+    "levels": [
+      {
+        "file": "dev-hdd-25.glb",
+        "bytes": 75148,
+        "triangles": 6776,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-hdd-25_lod1.glb",
+        "bytes": 58928,
+        "triangles": 4172,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-hdd-25_lod2.glb",
+        "bytes": 50728,
+        "triangles": 3130,
+        "textureMB": 0
       }
     ]
   },
@@ -746,6 +846,31 @@
         "bytes": 122084,
         "triangles": 1536,
         "textureMB": 3.3
+      }
+    ]
+  },
+  {
+    "id": "dev-optical-drive",
+    "source": "assets-src/blender/products/dev-optical-drive.glb",
+    "sourceBytes": 100544,
+    "levels": [
+      {
+        "file": "dev-optical-drive.glb",
+        "bytes": 31000,
+        "triangles": 1731,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-optical-drive_lod1.glb",
+        "bytes": 30132,
+        "triangles": 1559,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-optical-drive_lod2.glb",
+        "bytes": 29884,
+        "triangles": 1509,
+        "textureMB": 0
       }
     ]
   },
@@ -1096,6 +1221,56 @@
         "bytes": 147420,
         "triangles": 6893,
         "textureMB": 4
+      }
+    ]
+  },
+  {
+    "id": "dev-usb-a-cable",
+    "source": "assets-src/blender/products/dev-usb-a-cable.glb",
+    "sourceBytes": 1160024,
+    "levels": [
+      {
+        "file": "dev-usb-a-cable.glb",
+        "bytes": 258808,
+        "triangles": 21112,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-usb-a-cable_lod1.glb",
+        "bytes": 255256,
+        "triangles": 20314,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-usb-a-cable_lod2.glb",
+        "bytes": 102920,
+        "triangles": 8018,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "dev-usb-c-cable",
+    "source": "assets-src/blender/products/dev-usb-c-cable.glb",
+    "sourceBytes": 385888,
+    "levels": [
+      {
+        "file": "dev-usb-c-cable.glb",
+        "bytes": 85912,
+        "triangles": 13352,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-usb-c-cable_lod1.glb",
+        "bytes": 60440,
+        "triangles": 7342,
+        "textureMB": 0
+      },
+      {
+        "file": "dev-usb-c-cable_lod2.glb",
+        "bytes": 36232,
+        "triangles": 3662,
+        "textureMB": 0
       }
     ]
   },

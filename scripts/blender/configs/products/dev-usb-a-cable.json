@@ -1,0 +1,28 @@
+{
+  "name": "dev-usb-a-cable",
+  "description": "USB-A cable.",
+  "input": "assets-src/sketchfab/v37/usb-a-cable.glb",
+  "output": "assets-src/blender/products/dev-usb-a-cable.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-usb-a-cable.jpg"
+  },
+  "realSize": 0.3
+}
