@@ -22,7 +22,17 @@ export const productUrl = (id: string) => `${import.meta.env.BASE_URL}assets/mod
 export const tieredId = (path?: string) => (path && isTieredModel(path) ? path.replace(/^products\/|\.glb$/g, '') : null);
 
 export const SSDS = ['ssd-samsung-870-evo-1tb', 'ssd-kingston-nv3-1tb', 'ssd-wd-sn850x-1tb', 'ssd-samsung-990-pro-2tb'] as const;
-export const SHOWCASE = { case: 'case-lianli-o11d-evo', monitor: 'mon-asus-xg27aqmr', chair: 'chair-secretlab-titan-evo', keyboard: 'kb-razer-huntsman-v3-pro-tkl', headset: 'hs-logitech-pro-x2' } as const;
+/** The showcase's best-looking models (0.37): the case in the middle, the rest on turntables round it. */
+export const SHOWCASE = { case: 'case-lianli-o11d-evo', monitor: 'mon-asus-xg27aqmr', gpu: 'gpu-asus-rog-astral-5090', keyboard: 'kb-razer-huntsman-v3-pro-tkl', headset: 'hs-logitech-pro-x2', mouse: 'mouse-logitech-superlight2' } as const;
+
+/** Pedestals of the showcase in zone space (x, z), height, radius and the product on each. */
+export const SHOWCASE_PEDESTALS = [
+  { product: SHOWCASE.monitor, at: [-1.3, 0.55], height: 0.62, radius: 0.36, yaw: 0.5 },
+  { product: SHOWCASE.gpu, at: [-1.3, -0.75], height: 0.95, radius: 0.32, yaw: 0.8 },
+  { product: SHOWCASE.keyboard, at: [1.3, -0.75], height: 0.95, radius: 0.3, yaw: -0.8 },
+  { product: SHOWCASE.headset, at: [1.3, 0.55], height: 0.9, radius: 0.28, yaw: -0.5 },
+  { product: SHOWCASE.mouse, at: [0, 1.15], height: 0.55, radius: 0.22, yaw: 0 },
+] as const;
 
 /** Typical sequential read of a 7200 rpm 3.5″ desktop HDD (MB/s), for the comparison bar. */
 export const HDD_READ_MBPS = 200;

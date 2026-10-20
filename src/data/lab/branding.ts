@@ -27,10 +27,10 @@ export const BRANDING_BANNERS: readonly Banner[] = [
 export const BRANDING_LOGO = { center: [-2.75, 3.72, minZ + 0.05] as Vec3, size: [1.2, 0.375] as const };
 
 /**
- * A zone's flag: on the back-left corner of its platform, cloth pointing
- * along the zone's +X, low like a table pennant: under the sight line from the
- * zone camera to the wall posters (tall flags hid them — the visibility audit
- * caught it) and out of the camera's way. The stage has its own branding.
+ * A zone's flag: a knee-high pennant on the front-left corner of its
+ * platform, cloth pointing along the zone's +X — below the table tops, so it
+ * hides neither the devices nor the wall posters (tall flags did; the
+ * visibility audit caught it). The stage has its own branding.
  */
 export const flagZones = (zones: readonly LabZone[]) => zones.filter((z) => z.id !== 'stage');
 
@@ -38,8 +38,8 @@ export function flagPlace(zone: LabZone): { at: Vec2; yaw: number; top: number }
   const [w, d] = zone.size;
   const yaw = Math.atan2(zone.facing[0], zone.facing[1]);
   const lx = -w / 2 + 0.12;
-  const lz = -d / 2 + 0.12;
+  const lz = d / 2 - 0.12;
   const c = Math.cos(yaw);
   const s = Math.sin(yaw);
-  return { at: [zone.center[0] + lx * c + lz * s, zone.center[1] - lx * s + lz * c], yaw, top: 1.25 };
+  return { at: [zone.center[0] + lx * c + lz * s, zone.center[1] - lx * s + lz * c], yaw, top: 0.6 };
 }

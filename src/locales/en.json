@@ -3428,7 +3428,7 @@
       "showcase": {
         "name": "Showcase",
         "caption": "The best of the catalog",
-        "description": "In the middle of the hall, a premium case on a turntable, with a monitor, gaming chair, keyboard and headset from the Setup Studio catalog around it.",
+        "description": "The showcase holds the best-looking models of the Setup Studio catalog: a premium case on a turntable in the middle, with a graphics card, monitor, keyboard, headset and mouse around it. Every pedestal shows the model's name and price.",
         "action": "Setup Studio"
       },
       "stage": {
@@ -5678,6 +5678,14 @@
       "gpio": "GPIO (40-pin)",
       "cellular": "Cellular (4G/5G)",
       "magnetic_charger": "Magnetic charger"
+    },
+    "variants": {
+      "title": "Other models ({n})",
+      "lead": "Pick a model to open it in 3D above; the table below compares their specs.",
+      "lab": "The lab's one",
+      "compare": "Spec comparison",
+      "spec": "Spec",
+      "price": "Price"
     }
   },
   "teardown": {

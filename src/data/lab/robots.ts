@@ -42,8 +42,8 @@ export const ADVISOR_ZONES: readonly LabZoneId[] = ['workstation', 'assembly', '
 
 export function advisorPlace(zone: LabZone): { local: readonly [number, number, number]; yaw: number } {
   const [w, d] = zone.size;
-  // the showcase is round: the advisor stands at its front, off the pedestals
-  if (zone.id === 'showcase') return { local: [-1.5, 0.05, 0.6], yaw: 0.6 };
+  // the showcase: behind the graphics card's pedestal, out of the camera's way
+  if (zone.id === 'showcase') return { local: [-1.55, 0.05, -1.45], yaw: 0.7 };
   return { local: [w / 2 - 0.24, 0.05, Math.min(0.25, d / 2 - 0.4)], yaw: -0.7 };
 }
 

@@ -113,8 +113,8 @@ function ZoneFlags() {
   const fonts = useCanvasFonts();
   const tex = useDisposable(() => flagTexture(), [fonts]);
   const geo = useDisposable(() => {
-    const g = new PlaneGeometry(0.6, 0.375, 12, 1);
-    g.translate(0.3, 0, 0);
+    const g = new PlaneGeometry(0.48, 0.3, 12, 1);
+    g.translate(0.24, 0, 0);
     return g;
   }, []);
   const places = useMemo(() => flagZones(LAB_ZONES).map((z) => ({ ...flagPlace(z), color: z.accent })), []);
@@ -129,7 +129,7 @@ function ZoneFlags() {
     const col = new Color();
     places.forEach((f, i) => {
       q.setFromAxisAngle(new Vector3(0, 1, 0), f.yaw);
-      c.setMatrixAt(i, m.compose(new Vector3(f.at[0], f.top - 0.22, f.at[1]), q, new Vector3(1, 1, 1)));
+      c.setMatrixAt(i, m.compose(new Vector3(f.at[0], f.top - 0.17, f.at[1]), q, new Vector3(1, 1, 1)));
       // the zone colour, lifted so the white field stays light
       c.setColorAt(i, col.set(f.color).lerp(new Color('#ffffff'), 0.35));
       p.setMatrixAt(i, m.compose(new Vector3(f.at[0], f.top / 2, f.at[1]), new Quaternion(), new Vector3(1, 1, 1)));
@@ -149,7 +149,7 @@ function ZoneFlags() {
       shader.uniforms.uTime = uniforms.uTime;
       shader.vertexShader = `uniform float uTime;\n${shader.vertexShader}`.replace(
         '#include <begin_vertex>',
-        '#include <begin_vertex>\n  float k = position.x / 0.6;\n  transformed.z += sin(uTime * 2.2 + position.x * 9.0 + float(gl_InstanceID)) * 0.025 * k;\n  transformed.y -= k * k * 0.02;',
+        '#include <begin_vertex>\n  float k = position.x / 0.48;\n  transformed.z += sin(uTime * 2.2 + position.x * 9.0 + float(gl_InstanceID)) * 0.025 * k;\n  transformed.y -= k * k * 0.02;',
       );
     },
     [uniforms],

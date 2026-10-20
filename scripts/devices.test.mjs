@@ -72,3 +72,25 @@ test('no unused port labels and no near-empty explanations', () => {
     for (const d of DEVICES) assert.ok(get(dict, deviceKey(d, 'adult')).length > 80, `${lang}: ${d.id} adult text is substantial`);
   }
 });
+
+test('"Other models": every lab device with a catalog category offers its models and a comparison', async () => {
+  const { DEVICE_CATEGORY, variantsOf, comparisonRows, productModelCount } = await import('../src/data/devices/variants.ts');
+  const { existsSync } = await import('node:fs');
+  const { DEVICES } = await import('../src/data/devices/devices.ts');
+  const ids = new Set(DEVICES.map((d) => d.id));
+  for (const [id, category] of Object.entries(DEVICE_CATEGORY)) {
+    assert.ok(ids.has(id), `${id} is a lab device`);
+    const list = variantsOf(id);
+    assert.ok(list.length >= 2, `${id}: at least two ${category} models`);
+    for (const p of list) {
+      assert.equal(p.category, category);
+      assert.ok(existsSync(new URL(`../public/assets/models/${p.modelPath}`, import.meta.url)), `${p.id} model file`);
+    }
+    for (let i = 1; i < list.length; i++) assert.ok(list[i - 1].priceKZT <= list[i].priceKZT, `${id}: cheapest first`);
+    const rows = comparisonRows(list);
+    assert.ok(rows.length >= 2, `${id}: something to compare`);
+    for (const r of rows) assert.equal(r.cells.length, list.length);
+  }
+  assert.equal(variantsOf('router').length, 0, 'devices without a catalog category offer nothing');
+  assert.ok(productModelCount() >= 60);
+});

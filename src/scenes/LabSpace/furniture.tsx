@@ -66,7 +66,8 @@ export function Pedestal({ height = 0.9, radius = 0.32, accent, children }: { he
         <cylinderGeometry args={[radius, radius * 1.05, height, 48]} />
         <meshStandardMaterial color={c.body} roughness={0.35} metalness={0.15} />
       </mesh>
-      <mesh position-y={height - 0.012}>
+      {/* the glow ring lies flat round the top edge (it used to stand up as a hoop) */}
+      <mesh position-y={height + 0.001} rotation-x={Math.PI / 2}>
         <torusGeometry args={[radius - 0.012, 0.006, 8, 64]} />
         <meshStandardMaterial color="#000" emissive={accent} emissiveIntensity={2} toneMapped={false} />
       </mesh>
