@@ -19,6 +19,14 @@ export interface TeardownRig {
   selected: string | null;
   /** 3D-printer demo print: running, progress 0 … 1. */
   print: { active: boolean; t: number };
+  /**
+   * Build games (0.37): each part moves on its own (0 in … 1 out on the mat)
+   * instead of following the timeline, so parts go back in any order that
+   * works. Null: the teardown timeline drives them.
+   */
+  parts: Record<string, { shown: number; goal: number }> | null;
+  /** Build games: the labels carry no numbers (they would give the order away). */
+  game: boolean;
   /** Snapshot for the DOM: changes only when the step, active part, selection or print percent changes. */
   snapshot: { step: number; active: number; selected: string | null; print: number; printing: boolean };
   listeners: Set<() => void>;
@@ -32,6 +40,8 @@ export function createRig(count: number): TeardownRig {
     count,
     selected: null,
     print: { active: false, t: 0 },
+    parts: null,
+    game: false,
     snapshot: { step: 0, active: -1, selected: null, print: 0, printing: false },
     listeners: new Set(),
   };

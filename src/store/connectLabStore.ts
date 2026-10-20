@@ -27,6 +27,10 @@ interface ConnectState {
   dragging: boolean;
   message: ConnectMessage | null;
   sessions: Record<ConnectTaskId, TaskSession>;
+  /** A game plays the PC task (0.37 «Plug it in»): plugging in and pulling out are reported to it as moves. */
+  onMove: ((move: { t: 'plug'; end: string; port: string } | { t: 'unplug'; end: string }) => void) | null;
+  /** Starts a game session on the PC task (null ends it). */
+  playGame: (onMove: ConnectState['onMove']) => void;
   setTask: (task: ConnectTaskId) => void;
   pick: (end: string, drag: boolean) => void;
   drop: () => void;
@@ -51,6 +55,10 @@ export const useConnectLabStore = create<ConnectState>()((set, get) => ({
   dragging: false,
   message: null,
   sessions: { pc: freshSession('pc'), ethernet: freshSession('ethernet'), wifi: freshSession('wifi') },
+  onMove: null,
+
+  playGame: (onMove) =>
+    set((s) => ({ task: 'pc', plugs: { ...s.plugs, pc: emptyPlugState() }, carrying: null, dragging: false, message: null, sessions: { ...s.sessions, pc: freshSession('pc') }, onMove })),
 
   setTask: (task) => set({ task, carrying: null, dragging: false, message: null }),
 
@@ -58,6 +66,7 @@ export const useConnectLabStore = create<ConnectState>()((set, get) => ({
     const sid = scenarioOf(get().task);
     if (!sid || !endById(SCENARIOS[sid], end)) return;
     // picking up a plugged end pulls it out
+    if (sid === 'pc' && end in get().plugs.pc.plugged) get().onMove?.({ t: 'unplug', end });
     set((s) => ({ carrying: end, dragging: drag, plugs: { ...s.plugs, [sid]: unplug(s.plugs[sid], end) } }));
   },
   drop: () => set({ carrying: null, dragging: false }),
@@ -66,6 +75,7 @@ export const useConnectLabStore = create<ConnectState>()((set, get) => ({
     const sid = scenarioOf(get().task);
     if (!sid) return;
     const r = tryPlug(SCENARIOS[sid], get().plugs[sid], end, port);
+    if (sid === 'pc') get().onMove?.({ t: 'plug', end, port });
     set((s) => ({
       plugs: { ...s.plugs, [sid]: r.state },
       carrying: null,
@@ -76,6 +86,7 @@ export const useConnectLabStore = create<ConnectState>()((set, get) => ({
   unplugEnd: (end) => {
     const sid = scenarioOf(get().task);
     if (!sid) return;
+    if (sid === 'pc' && end in get().plugs.pc.plugged) get().onMove?.({ t: 'unplug', end });
     set((s) => ({ plugs: { ...s.plugs, [sid]: unplug(s.plugs[sid], end) }, message: null }));
   },
 

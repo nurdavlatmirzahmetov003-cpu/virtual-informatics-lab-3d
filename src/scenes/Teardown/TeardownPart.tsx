@@ -47,7 +47,8 @@ export function TeardownPart({ id, index, name, motion, children }: { id: string
   useFrame(() => {
     const g = group.current;
     if (!g) return;
-    const e = ease(partProgress(rig.shown, index, rig.count));
+    const own = rig.parts?.[id];
+    const e = ease(own ? own.shown : partProgress(rig.shown, index, rig.count));
     p.current = e;
     const [dx, dy, dz] = pathPoint(motion.path, e);
     g.position.set(motion.at[0] + dx, motion.at[1] + dy, motion.at[2] + dz);
@@ -55,12 +56,12 @@ export function TeardownPart({ id, index, name, motion, children }: { id: string
     const el = tag.current;
     if (el) {
       // every part out keeps its number; the name shows for the current one (or on hover)
-      const current = rig.selected ? rig.selected === id : rig.snapshot.active === index;
+      const current = rig.game ? e > 0.98 : rig.selected ? rig.selected === id : rig.snapshot.active === index;
       el.dataset.show = String(e > 0.02 || current);
       el.dataset.active = String(current);
     }
     // where the current part sat before it came out
-    if (home.current) home.current.dataset.show = String(e > 0.35 && (rig.selected ? rig.selected === id : rig.snapshot.active === index));
+    if (home.current) home.current.dataset.show = String(!rig.game && e > 0.35 && (rig.selected ? rig.selected === id : rig.snapshot.active === index));
   });
 
   const label = useCallback(
@@ -71,13 +72,13 @@ export function TeardownPart({ id, index, name, motion, children }: { id: string
           type="button"
           className={styles.tag}
           data-show="false"
-          aria-label={`${index + 1}. ${name}`}
+          aria-label={rig.game ? name : `${index + 1}. ${name}`}
           onClick={() => {
             rig.selected = id;
             publish(rig);
           }}
         >
-          <span className={styles.num}>{index + 1}</span>
+          {!rig.game && <span className={styles.num}>{index + 1}</span>}
           <span className={styles.name}>{name}</span>
         </button>
       </Html>

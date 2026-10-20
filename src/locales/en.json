@@ -7053,14 +7053,20 @@
       "assembly": "PC assembly race",
       "connect": "Port connection race",
       "fault": "“Find the fault” race",
-      "device": "What device is this?"
+      "device": "What device is this?",
+      "phone": "«Build the phone» race",
+      "laptop": "«Build the laptop» race",
+      "network": "«Build the network» race"
     },
     "kindHints": {
       "quiz": "Timed questions: a fast, correct answer earns more points.",
       "assembly": "Install 11 parts in the right places and the right order. Each mistake adds 10 seconds.",
       "connect": "Plug 5 cables into the right ports of the PC. Each mistake adds 10 seconds.",
       "fault": "5 broken computers: find the cause from the symptoms. Each mistake adds 10 seconds.",
-      "device": "Name the device from its 3D model: four options, faster answers score more"
+      "device": "Name the device from its 3D model: four options, faster answers score more",
+      "phone": "Rebuild a taken-apart smartphone in 3D in an order that works. Each mistake +10 seconds.",
+      "laptop": "Return a laptop's 10 parts to their places in 3D. Each mistake +10 seconds.",
+      "network": "Run cables until three computers reach the server. Each mistake +10 seconds."
     },
     "join": {
       "title": "Join a game",
@@ -7202,7 +7208,9 @@
       "badClass": "That class isn’t yours.",
       "offline": "No connection to the server.",
       "server": "Something went wrong on the server."
-    }
+    },
+    "board3d": "3D view",
+    "board2d": "Simple view"
   },
   "bit": {
     "name": "Bit",
@@ -7259,7 +7267,7 @@
   "arcade": {
     "eyebrow": "Games arena",
     "title": "Who's fastest? Who knows most?",
-    "subtitle": "Five quick games: name the device, cable and socket, build the PC, binary numbers and networks. The server checks every score; leaderboards run per class and per school.",
+    "subtitle": "Six hands-on 3D games and five quick ones: rebuild a phone and a laptop, plug in cables, build a network, find the fault, name the device. The server checks every score; leaderboards run per class and per school.",
     "play": "Play",
     "again": "Play again",
     "back": "All games",
@@ -7329,6 +7337,30 @@
       "subnet": {
         "title": "Network master",
         "desc": "Are two IP addresses on the same network? 60 seconds; wrong guesses cost points."
+      },
+      "phone": {
+        "title": "Build the phone",
+        "desc": "Put a taken-apart smartphone back together in 3D: every part into its place, in its turn."
+      },
+      "laptop": {
+        "title": "Build the laptop",
+        "desc": "Return a laptop's internal parts to their places in 3D, in an order that works."
+      },
+      "pcbuild": {
+        "title": "PC build race",
+        "desc": "The Assembly Lab against the clock: install 11 parts on the motherboard and in the case in 3D."
+      },
+      "plug": {
+        "title": "Plug it in",
+        "desc": "Look at the back of the computer: plug the monitor, keyboard, mouse, speaker and power cables into the right sockets."
+      },
+      "network": {
+        "title": "Build the network",
+        "desc": "A router, a switch, three computers and a server. Run cables until every computer's PING reaches the server."
+      },
+      "fault": {
+        "title": "Find the fault",
+        "desc": "Five broken computers. Read the symptoms and point at the guilty part in 3D."
       }
     },
     "device": {
@@ -7481,6 +7513,100 @@
     "errors": {
       "notYet": "Complete every task first to get the certificate.",
       "generic": "Could not get the certificate."
+    }
+  },
+  "games3d": {
+    "section": "Hands-on 3D games",
+    "sectionNote": "Install parts with your own hands, run cables, hunt down faults. The server keeps the score, and you can challenge a friend.",
+    "quick": "Quick games",
+    "mistake": "That step is wrong. Think again.",
+    "combo": "Combo ×{n}",
+    "stars": "{n} of 3 stars",
+    "xp": "+{n} XP",
+    "level": {
+      "title": "Player level",
+      "n": "Level {n}",
+      "xp": "{xp} XP · {next} to the next level"
+    },
+    "badges": {
+      "title": "Badges",
+      "got": "earned",
+      "builder": {
+        "name": "Builder",
+        "how": "Rebuild both the smartphone and the laptop"
+      },
+      "engineer": {
+        "name": "Engineer",
+        "how": "Finish the PC build race"
+      },
+      "cabler": {
+        "name": "Cable master",
+        "how": "Finish «Plug it in» and «Build the network»"
+      },
+      "detective": {
+        "name": "Troubleshooter",
+        "how": "Find the fault in all five computers"
+      },
+      "eagleEye": {
+        "name": "Eagle eye",
+        "how": "Score 900 in «What device is this?»"
+      },
+      "allRounder": {
+        "name": "All-rounder",
+        "how": "Play all 11 games of the arena"
+      },
+      "champion": {
+        "name": "Champion",
+        "how": "Score over 1800 in any 3D game"
+      }
+    },
+    "build": {
+      "tray": "Parts",
+      "next": "Pick the next part (you can also tap its name in 3D)",
+      "inside": "In place",
+      "early": "Too early: another part has to go in first."
+    },
+    "phone": {
+      "scene": "A taken-apart smartphone on a repair mat"
+    },
+    "laptop": {
+      "scene": "A taken-apart laptop on a repair mat"
+    },
+    "pcbuild": {
+      "scene": "The assembly bench: motherboard, case and parts",
+      "tray": "Drag a part in 3D or tap it here"
+    },
+    "plug": {
+      "scene": "The desk from behind: the system unit and the devices' cables",
+      "ends": "Cable ends",
+      "start": "Pick up a cable end (in 3D or from the list), then tap the right socket.",
+      "carrying": "In hand: {cable}. Now tap a socket."
+    },
+    "network": {
+      "scene": "The network bench: three computers, a switch, a router and a server",
+      "switch": "Switch",
+      "router": "Router",
+      "server": "Server",
+      "start": "Tap a socket, then another — a cable runs between them. Tap a socket with a cable to pull it out.",
+      "picked": "Socket {port} picked. Now tap the socket for the cable's other end.",
+      "ping": "PING to the server",
+      "reply": "reply",
+      "noReply": "no reply",
+      "list": "List of sockets (to play with the keyboard)",
+      "refused": "That cable cannot be run: {a} → {b}. Is the socket taken, or is it the same device?",
+      "works": "The network works: every computer reaches the server!"
+    },
+    "fault": {
+      "scene": "Six suspect parts on the bench",
+      "ask": "Which part is to blame? Tap it in 3D or below.",
+      "suspects": {
+        "ram": "Memory (RAM)",
+        "gpu": "Graphics card",
+        "monitor": "Monitor cable",
+        "storage": "Storage drive",
+        "cooler": "CPU cooler",
+        "psu": "Power supply"
+      }
     }
   }
 }

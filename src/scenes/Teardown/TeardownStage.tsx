@@ -36,6 +36,7 @@ function Driver({ rig }: { rig: TeardownRig }) {
   const reduced = useReducedMotion();
   useFrame((_, dt) => {
     rig.shown = approach(rig.shown, rig.goal, dt, rig.rate, reduced);
+    if (rig.parts) for (const p of Object.values(rig.parts)) p.shown = approach(p.shown, p.goal, dt, rig.rate * rig.count * 0.6, reduced);
     if (rig.print.active) {
       rig.print.t = advancePrint(rig.print.t, dt, reduced);
       if (rig.print.t >= 1) rig.print.active = false;
@@ -53,7 +54,7 @@ function Framing({ position, target }: { position: readonly number[]; target: re
     const t = new Vector3(...target);
     const offset = new Vector3(...position).sub(t);
     const wide = 1.3;
-    offset.multiplyScalar(aspect < wide ? Math.min(2.2, (wide / aspect) ** 0.75) : 1);
+    offset.multiplyScalar(aspect < wide ? Math.min(2.8, (wide / aspect) ** 1.05) : 1);
     camera.position.copy(t).add(offset);
     camera.lookAt(t);
   }, [camera, aspect, position, target]);

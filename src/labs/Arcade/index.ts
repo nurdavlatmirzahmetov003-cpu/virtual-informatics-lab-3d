@@ -10,19 +10,39 @@
  *   order   «Build the PC»          — install the parts in a valid order (11 steps)
  *   binary  «Binary rush»           — decimal ↔ binary, 60 seconds
  *   subnet  «Network master»        — same network or not? 60 seconds
+ *
+ * Hands-on 3D games (0.37): the live races played alone, in 3D. The answers
+ * are the moves; the referee replays them with the race rules
+ * (labs/LiveGames/races `applyMove`), so the arena and the class room judge
+ * the same way.
+ *
+ *   phone    «Build the phone»     — the smartphone back together, part by part
+ *   laptop   «Build the laptop»    — the same for a laptop
+ *   pcbuild  «PC build race»       — the Assembly Lab against the clock
+ *   plug     «Plug it in»          — every cable of the PC into the right socket
+ *   network  «Build the network»   — cable it until every computer PINGs the server
+ *   fault    «Find the fault»      — five broken computers: which part is to blame?
  */
 import { DEVICES } from '@/data/devices/devices';
 import { rng, shuffle, type LiveQuestion } from '@/labs/LiveGames/quiz';
+import { applyMove, asMove, faultOrder, newRacer, type RaceKind, type RacerState } from '@/labs/LiveGames/races';
 import { STEP_IDS, canInstall, type StepId } from '@/labs/AssemblyLab/steps';
 import { formatIp, maskFromPrefix, parseIp, parseMask, sameSubnet } from '@/labs/NetworkLab/ipv4';
 
-export const ARCADE_GAMES = ['device', 'order', 'ports', 'binary', 'subnet'] as const;
+export const QUICK_GAMES = ['device', 'order', 'ports', 'binary', 'subnet'] as const;
+export const HANDS_ON_GAMES = ['phone', 'laptop', 'pcbuild', 'plug', 'network', 'fault'] as const;
+export const ARCADE_GAMES = [...QUICK_GAMES, ...HANDS_ON_GAMES] as const;
 export type ArcadeGame = (typeof ARCADE_GAMES)[number];
+export type HandsOnGame = (typeof HANDS_ON_GAMES)[number];
 export const isArcadeGame = (v: unknown): v is ArcadeGame => typeof v === 'string' && (ARCADE_GAMES as readonly string[]).includes(v);
+export const isHandsOn = (g: ArcadeGame): g is HandsOnGame => (HANDS_ON_GAMES as readonly string[]).includes(g);
+
+/** The race whose rules referee each hands-on game. */
+export const HANDS_ON_RACE: Readonly<Record<HandsOnGame, RaceKind>> = { phone: 'phone', laptop: 'laptop', pcbuild: 'assembly', plug: 'connect', network: 'network', fault: 'fault' };
 
 export interface ArcadeSpec {
-  /** rounds: answer every round, time only adds a bonus; timed: as many as you can before the clock runs out. */
-  mode: 'rounds' | 'timed';
+  /** rounds: answer every round, time only adds a bonus; timed: as many as you can before the clock runs out; build: a hands-on 3D job, finished fast and clean. */
+  mode: 'rounds' | 'timed' | 'build';
   rounds: number;
   /** Time limit (s). */
   seconds: number;
@@ -36,6 +56,13 @@ export const ARCADE: Record<ArcadeGame, ArcadeSpec> = {
   order: { mode: 'rounds', rounds: STEP_IDS.length, seconds: 120, minAnswerMs: 150 },
   binary: { mode: 'timed', rounds: 60, seconds: 60, minAnswerMs: 450 },
   subnet: { mode: 'timed', rounds: 60, seconds: 60, minAnswerMs: 350 },
+  // build games: `rounds` = the most moves a run may send; `minAnswerMs` per move that worked
+  phone: { mode: 'build', rounds: 60, seconds: 120, minAnswerMs: 350 },
+  laptop: { mode: 'build', rounds: 60, seconds: 150, minAnswerMs: 350 },
+  pcbuild: { mode: 'build', rounds: 80, seconds: 240, minAnswerMs: 500 },
+  plug: { mode: 'build', rounds: 80, seconds: 180, minAnswerMs: 400 },
+  network: { mode: 'build', rounds: 80, seconds: 180, minAnswerMs: 400 },
+  fault: { mode: 'build', rounds: 40, seconds: 150, minAnswerMs: 800 },
 };
 
 /** A server-side clock slack for the network and the last answer (ms). */
@@ -216,6 +243,36 @@ export function subnetRounds(seed: number): SubnetRound[] {
   });
 }
 
+/* ── hands-on 3D games ─────────────────────────────────────────────── */
+
+/** The broken computers of a «Find the fault» run (the same for one seed). */
+export const handsOnFaults = (game: HandsOnGame, seed: number) => (game === 'fault' ? faultOrder(seed) : []);
+
+/** A fresh racer for a hands-on run. */
+export const handsOnStart = (game: HandsOnGame, seed: number): RacerState => newRacer(HANDS_ON_RACE[game], seed);
+
+/** Replays the moves of a run; malformed moves are skipped, `ok` counts the moves that worked. */
+export function replayHandsOn(game: HandsOnGame, seed: number, moves: readonly unknown[]): { state: RacerState; ok: number } {
+  const kind = HANDS_ON_RACE[game];
+  const faults = handsOnFaults(game, seed);
+  let state = handsOnStart(game, seed);
+  let ok = 0;
+  for (const raw of moves) {
+    const move = asMove(raw);
+    if (!move || state.done) continue;
+    const r = applyMove(kind, state, move, faults, seed);
+    state = r.state;
+    if (r.ok) ok++;
+  }
+  return { state, ok };
+}
+
+/** Points of a hands-on run: a finished job earns 1000, up to 1000 more for time left, 80 less per mistake. */
+export function handsOnScore(done: boolean, progress: number, mistakes: number, elapsedMs: number, limitMs: number): number {
+  if (!done) return Math.round(progress * 500);
+  return Math.max(100, 1000 + Math.round(1000 * Math.max(0, 1 - elapsedMs / limitMs)) - mistakes * 80);
+}
+
 /* ── scoring (the referee) ─────────────────────────────────────────── */
 
 export interface ArcadeResult {
@@ -223,7 +280,27 @@ export interface ArcadeResult {
   correct: number;
   total: number;
   mistakes: number;
+  /** 0 … 3 stars (0.37). */
+  stars: number;
 }
+
+/**
+ * Stars of a run: three for a clean, fast job (or ≥ 90 % right), two for a
+ * good one, one for finishing (or ≥ 40 % right).
+ */
+export function starsOf(game: ArcadeGame, r: Omit<ArcadeResult, 'stars'>, elapsedMs: number): number {
+  const spec = ARCADE[game];
+  if (spec.mode === 'build') {
+    if (r.correct < r.total) return 0;
+    if (r.mistakes === 0 && elapsedMs <= spec.seconds * 500) return 3;
+    return r.mistakes <= 2 ? 2 : 1;
+  }
+  const share = spec.mode === 'timed' ? Math.min(1, r.correct / 25) * (r.total ? r.correct / r.total : 0) : r.total ? r.correct / r.total : 0;
+  return share >= 0.9 ? 3 : share >= 0.7 ? 2 : share >= 0.4 ? 1 : 0;
+}
+
+/** Experience for a run (0.37): a tenth of the points, at least 5 for playing it through. */
+export const xpOf = (r: ArcadeResult) => Math.max(5, Math.floor(r.score / 10));
 
 export type ArcadeVerdict = { ok: true; result: ArcadeResult } | { ok: false; reason: 'tooFast' | 'expired' | 'badAnswers' };
 
@@ -239,20 +316,30 @@ export function scoreRun(game: ArcadeGame, seed: number, answers: unknown, elaps
   if (!Array.isArray(answers) || answers.length > (game === 'order' ? 60 : spec.rounds)) return { ok: false, reason: 'badAnswers' };
   const limit = spec.seconds * 1000;
   if (elapsedMs > limit + GRACE_MS) return { ok: false, reason: 'expired' };
-  const counted = game === 'order' ? replayOrder(answers).installed.length : answers.filter((a) => a !== null && a !== '').length;
+  const replay = isHandsOn(game) ? replayHandsOn(game, seed, answers) : null;
+  const counted = replay ? replay.ok : game === 'order' ? replayOrder(answers).installed.length : answers.filter((a) => a !== null && a !== '').length;
   if (counted > 0 && elapsedMs < counted * spec.minAnswerMs) return { ok: false, reason: 'tooFast' };
+  const result = rawResult(game, seed, answers, elapsedMs, limit, replay?.state ?? null);
+  return { ok: true, result: { ...result, stars: starsOf(game, result, elapsedMs) } };
+}
 
+function rawResult(game: ArcadeGame, seed: number, answers: unknown[], elapsedMs: number, limit: number, racer: RacerState | null): Omit<ArcadeResult, 'stars'> {
+  if (racer) {
+    // a hands-on job: done or how far it got; «correct» counts the finished share in steps of 1 %
+    const correct = racer.done ? 100 : Math.floor(racer.progress * 100);
+    return { score: handsOnScore(racer.done, racer.progress, racer.mistakes, elapsedMs, limit), correct, total: 100, mistakes: racer.mistakes };
+  }
   if (game === 'device' || game === 'ports') {
     const keys = game === 'device' ? deviceRounds(seed).map((x) => x.device) : portRounds(seed).map((x) => PORT_JOBS[x.job]);
     const correct = keys.filter((k, i) => answers[i] === k).length;
     const total = keys.length;
-    return { ok: true, result: { score: correct * 100 + timeBonus(500, elapsedMs, limit, correct / total), correct, total, mistakes: total - correct } };
+    return { score: correct * 100 + timeBonus(500, elapsedMs, limit, correct / total), correct, total, mistakes: total - correct };
   }
   if (game === 'order') {
     const { installed, mistakes, done } = replayOrder(answers);
     const seconds = Math.floor(elapsedMs / 1000);
     const score = done ? Math.max(100, 1500 - mistakes * 100 - seconds * 10) : installed.length * 20;
-    return { ok: true, result: { score, correct: installed.length, total: STEP_IDS.length, mistakes } };
+    return { score, correct: installed.length, total: STEP_IDS.length, mistakes };
   }
   // timed games: points per right answer, a growing bonus for a streak
   const rounds = game === 'binary' ? binaryRounds(seed) : subnetRounds(seed);
@@ -274,7 +361,7 @@ export function scoreRun(game: ArcadeGame, seed: number, answers: unknown, elaps
       if (game === 'subnet') score -= 50;
     }
   });
-  return { ok: true, result: { score: Math.max(0, score), correct, total: answers.length, mistakes } };
+  return { score: Math.max(0, score), correct, total: answers.length, mistakes };
 }
 
 /** A fresh seed (32-bit, positive). */

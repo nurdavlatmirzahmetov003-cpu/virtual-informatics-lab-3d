@@ -2,16 +2,24 @@
  * One arena game (0.36): intro → 3-2-1 → play → result with the record,
  * a challenge link (same seed = same rounds for a friend) and the class /
  * school leaderboard. Rounds come from labs/Arcade; the server referees
- * signed-in runs.
+ * signed-in runs. 0.37: the hands-on 3D games (moves are the answers), a
+ * timer bar, combos with sounds, stars and experience on the result.
  */
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Check, CircleCheck, CircleX, Copy, Play, RotateCcw, Trophy, X } from 'lucide-react';
+import { ArrowLeft, Check, CircleCheck, CircleX, Copy, Flame, Play, RotateCcw, Sparkles, Star, Trophy, X } from 'lucide-react';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { deviceById, deviceKey } from '@/data/devices/devices';
-import { ARCADE, PORT_JOBS, binaryPrompt, binaryRight, binaryRounds, deviceRounds, isArcadeGame, isSeed, orderCards, portRounds, replayOrder, subnetRounds, type ArcadeGame } from '@/labs/Arcade';
+import {
+  ARCADE, HANDS_ON_RACE, PORT_JOBS, binaryPrompt, binaryRight, binaryRounds, deviceRounds, handsOnFaults, handsOnStart, isArcadeGame, isHandsOn, isSeed, orderCards, portRounds, replayOrder, subnetRounds, xpOf,
+  type ArcadeGame, type HandsOnGame,
+} from '@/labs/Arcade';
+import { applyMove, type Move } from '@/labs/LiveGames/races';
+import { playSfx } from '@/lib/audio/sfx';
+import { feedbackText } from '@/pages/Live/text';
+import { HandsOnBoard } from './handsOn/HandsOnBoard';
 import { STEP_IDS, canInstall, type StepId } from '@/labs/AssemblyLab/steps';
 import { maskFromPrefix } from '@/labs/NetworkLab/ipv4';
 import { finishRun, startRun, type Finish, type Run } from '@/services/arcade/api';
@@ -294,13 +302,116 @@ function SubnetPlay({ seed, answer }: PlayProps) {
   );
 }
 
+/** Kinds whose own scene already says what happened (the lab stores carry the messages and sounds). */
+const SELF_SPOKEN = new Set(['assembly', 'connect']);
+
+/**
+ * A hands-on 3D game: the race state is replayed here with the same rules
+ * the server uses, so every move gets its answer at once; the moves are the
+ * run's answers. A streak of moves that worked is a combo.
+ */
+function HandsOnPlay({ game, seed, answer, done }: PlayProps & { game: HandsOnGame }) {
+  const t = useT();
+  const kind = HANDS_ON_RACE[game];
+  const faults = useMemo(() => handsOnFaults(game, seed), [game, seed]);
+  const [state, setState] = useState(() => handsOnStart(game, seed));
+  const [combo, setCombo] = useState(0);
+  const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null);
+  const live = useRef({ state, combo: 0, finished: false });
+  const move = useCallback(
+    (m: Move) => {
+      const cur = live.current;
+      if (cur.state.done) return;
+      const r = applyMove(kind, cur.state, m, faults, seed);
+      // nothing happened (a move that does not apply): not an answer
+      if (!r.ok && r.state.mistakes === cur.state.mistakes) return;
+      answer(m);
+      const mistake = r.state.mistakes > cur.state.mistakes;
+      cur.combo = mistake ? 0 : r.ok ? cur.combo + 1 : cur.combo;
+      cur.state = r.state;
+      setState(r.state);
+      setCombo(cur.combo);
+      const comboUp = r.ok && cur.combo >= 3 && cur.combo % 3 === 0;
+      if (!SELF_SPOKEN.has(kind)) {
+        if (r.message) setNote({ ok: r.ok, text: feedbackText(t, r.message) });
+        else if (mistake) setNote({ ok: false, text: t('games3d.mistake') });
+        else if (r.ok) setNote(null);
+        if (mistake) playSfx('error');
+        else if (r.ok) playSfx(comboUp ? 'combo' : 'snap');
+      } else if (comboUp) playSfx('combo');
+      if (r.state.done && !cur.finished) {
+        cur.finished = true;
+        playSfx('win');
+        window.setTimeout(done, 1200);
+      }
+    },
+    [answer, done, faults, kind, seed, t],
+  );
+  return (
+    <div className={styles.round}>
+      <div className={styles.progress}>
+        <span>{Math.round(state.progress * 100)}%</span>
+        <i style={{ width: `${state.progress * 100}%` }} />
+      </div>
+      <p className={styles.hud}>
+        {t('arcade.mistakes', { n: state.mistakes })}
+        {combo >= 2 && (
+          <span className={styles.streak}>
+            <Flame size={14} aria-hidden="true" /> {t('games3d.combo', { n: combo })}
+          </span>
+        )}
+        {state.done && (
+          <span className={styles.last} data-ok="true">
+            <Check size={16} />
+          </span>
+        )}
+      </p>
+      {note && (
+        <p className={styles.flash} data-ok={note.ok} role="status">
+          {note.text}
+        </p>
+      )}
+      <HandsOnBoard kind={kind} seed={seed} state={state} faults={faults} move={move} />
+    </div>
+  );
+}
+
+const handsOn = (game: HandsOnGame) =>
+  function HandsOnRun(p: PlayProps) {
+    return <HandsOnPlay game={game} {...p} />;
+  };
+
 const PLAY: Record<ArcadeGame, (p: PlayProps) => React.ReactNode> = {
   device: DevicePlay,
   ports: PortsPlay,
   order: OrderPlay,
   binary: BinaryPlay,
   subnet: SubnetPlay,
+  phone: handsOn('phone'),
+  laptop: handsOn('laptop'),
+  pcbuild: handsOn('pcbuild'),
+  plug: handsOn('plug'),
+  network: handsOn('network'),
+  fault: handsOn('fault'),
 };
+
+/** Three stars, lit one after another. */
+function Stars({ n }: { n: number }) {
+  const t = useT();
+  const reduced = useReducedMotion();
+  useEffect(() => {
+    if (!n) return;
+    const ids = Array.from({ length: n }, (_, i) => window.setTimeout(() => playSfx('star'), reduced ? 0 : 350 + i * 300));
+    return () => ids.forEach((id) => window.clearTimeout(id));
+  }, [n, reduced]);
+  return (
+    <span className={styles.stars} role="img" aria-label={t('games3d.stars', { n })}>
+      {[0, 1, 2].map((i) => (
+        <Star key={i} size={34} aria-hidden="true" data-on={i < n || undefined} style={{ animationDelay: `${350 + i * 300}ms` }} />
+      ))}
+    </span>
+  );
+}
 
 /* ── the page ──────────────────────────────────────────────────────── */
 
@@ -370,6 +481,8 @@ export default function GamePlayPage() {
     if (phase !== 'play') return;
     const timer = window.setTimeout(() => {
       setLeft(left - 1);
+      // the last five seconds tick
+      if (left <= 6 && left > 1) playSfx('tick');
       if (left <= 1) void end();
     }, 1000);
     return () => window.clearTimeout(timer);
@@ -397,7 +510,7 @@ export default function GamePlayPage() {
   };
 
   return (
-    <div className={styles.page} style={{ ['--tone' as string]: GAME_TONE[game] }} onKeyDown={onKeyDown}>
+    <div className={styles.page} data-wide={isHandsOn(game) || undefined} style={{ ['--tone' as string]: GAME_TONE[game] }} onKeyDown={onKeyDown}>
       <header className={styles.bar}>
         <Link to="/games" className={styles.backLink}>
           <ArrowLeft size={16} aria-hidden="true" /> {t('arcade.back')}
@@ -411,6 +524,11 @@ export default function GamePlayPage() {
           </span>
         )}
       </header>
+      {phase === 'play' && (
+        <div className={styles.timeBar} data-low={left <= 10 || undefined} aria-hidden="true">
+          <i style={{ width: `${(left / spec.seconds) * 100}%` }} />
+        </div>
+      )}
 
       {phase === 'intro' && (
         <section className={styles.intro}>
@@ -442,7 +560,11 @@ export default function GamePlayPage() {
           {finish ? (
             <>
               <span className={styles.resultLabel}>{t('arcade.result')}</span>
+              <Stars n={finish.result.stars ?? 0} />
               <b className={styles.score}>{t('arcade.points', { n: finish.result.score.toLocaleString('ru-RU') })}</b>
+              <span className={styles.xp}>
+                <Sparkles size={15} aria-hidden="true" /> {t('games3d.xp', { n: xpOf(finish.result) })}
+              </span>
               {finish.previousBest !== null && finish.result.score > finish.previousBest && <span className={styles.newBest}>{t('arcade.newBest')}</span>}
               {finish.previousBest === null && finish.result.score > 0 && <span className={styles.newBest}>{t('arcade.newBest')}</span>}
               <p className={styles.stats}>
@@ -473,7 +595,7 @@ export default function GamePlayPage() {
           {status === 'signedIn' && <ArcadeBoard game={game} refresh={finish?.ranked ? finish.result.score : 0} />}
         </section>
       )}
-      <p className={styles.specLine}>{spec.mode === 'timed' ? t('arcade.seconds', { n: spec.seconds }) : t('arcade.rounds', { n: spec.rounds })}</p>
+      <p className={styles.specLine}>{spec.mode === 'rounds' ? t('arcade.rounds', { n: spec.rounds }) : t('arcade.seconds', { n: spec.seconds })}</p>
     </div>
   );
 }

@@ -49,6 +49,8 @@ export interface LiveRoom {
     startsAt: number;
     endsAt: number;
     rounds: number;
+    /** The room's seed (the network race's router ports, 0.37). */
+    seed: number;
     me: null | {
       progress: number;
       mistakes: number;
@@ -56,6 +58,10 @@ export interface LiveRoom {
       installed: string[] | null;
       plugged: Record<string, string> | null;
       round: number | null;
+      /** phone / laptop race: the parts back in (0.37) */
+      built: string[] | null;
+      /** network race: the cables, socket to socket (0.37) */
+      links: Array<[string, string]> | null;
       symptoms: Symptoms | null;
       seconds: number | null;
     };

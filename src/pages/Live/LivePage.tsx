@@ -6,7 +6,7 @@
  */
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Cable, ChevronDown, CircleHelp, Cpu, History, LogIn, MonitorPlay, Plus, ScanSearch, Stethoscope, Trash2, type LucideIcon } from 'lucide-react';
+import { Cable, ChevronDown, CircleHelp, Cpu, History, Laptop, LogIn, MonitorPlay, Plus, ScanSearch, Smartphone, Stethoscope, Trash2, Waypoints, type LucideIcon } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useT } from '@/hooks/useT';
 import { QUIZ_TOPICS, type QuizTopic } from '@/labs/LiveGames/quiz';
@@ -21,7 +21,7 @@ import { LiveRoomView } from './LiveRoom';
 import { k } from './text';
 import styles from './Live.module.css';
 
-const KIND_ICON: Record<GameKind, LucideIcon> = { quiz: CircleHelp, device: ScanSearch, assembly: Cpu, connect: Cable, fault: Stethoscope };
+const KIND_ICON: Record<GameKind, LucideIcon> = { quiz: CircleHelp, device: ScanSearch, assembly: Cpu, connect: Cable, fault: Stethoscope, phone: Smartphone, laptop: Laptop, network: Waypoints };
 const collator = new Intl.Collator(['kk', 'ru', 'en']);
 
 type Rooms = Awaited<ReturnType<typeof liveApi.rooms>>;
