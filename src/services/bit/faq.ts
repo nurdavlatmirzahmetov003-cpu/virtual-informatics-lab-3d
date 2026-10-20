@@ -4,9 +4,11 @@
  * still answers in the site's language). The answers themselves live in
  * content/<lang>.ts, loaded with the assistant. Works without a network.
  */
-import { countStems, normalize, words } from './text';
+import { CURRICULUM_IDS, CURRICULUM_KEYS } from './faqCurriculum';
+import { hasStem, normalize, words } from './text';
 
-export const FAQ_IDS = [
+/** The first sixty topics (0.36); the curriculum topics (0.37) follow them. */
+const CORE_IDS = [
   'computer',
   'cpu',
   'ram',
@@ -68,6 +70,7 @@ export const FAQ_IDS = [
   'pixel',
   'compression',
 ] as const;
+export const FAQ_IDS = [...CORE_IDS, ...CURRICULUM_IDS] as const;
 export type FaqId = (typeof FAQ_IDS)[number];
 
 /** Topic words; `strong` ones decide alone, `weak` ones only together with another hit. */
@@ -76,7 +79,7 @@ interface FaqKeys {
   weak?: readonly string[];
 }
 
-export const FAQ_KEYS: Record<FaqId, FaqKeys> = {
+const CORE_KEYS: Record<(typeof CORE_IDS)[number], FaqKeys> = {
   computer: { strong: ['компьютер деген', 'что такое компьютер$', 'what is a computer$', 'компьютер дегеніміз'] },
   cpu: { strong: ['процессор', 'процессорд', 'cpu', 'processor', 'орталық процессор'] },
   ram: { strong: ['жедел жад', 'жедел жат', 'оперативн', 'ram', 'озу', 'memory'], weak: ['жад'] },
@@ -86,10 +89,10 @@ export const FAQ_KEYS: Record<FaqId, FaqKeys> = {
   psu: { strong: ['қуат блог', 'блок питания', 'power supply', 'psu'] },
   cooling: { strong: ['салқындат', 'кулер', 'охлажден', 'cooling', 'cooler', 'радиатор', 'қызып', 'перегрев', 'overheat'] },
   os: { strong: ['операциялық жүйе', 'операционн', 'operating system', 'windows', 'linux', 'android', 'macos'] },
-  binary: { strong: ['екілік', 'двоичн', 'binary', 'нөл мен бір', 'ноль и один'] },
+  binary: { strong: ['екілік', 'двоичн', 'binary', 'нөл мен бір', 'ноль и один', 'екілік санау', 'двоичн систем', 'binary number'] },
   bitByte: { strong: ['байт', 'byte', 'килобайт', 'мегабайт', 'гигабайт', 'kilobyte', 'megabyte', 'gigabyte'], weak: ['бит', 'bit'] },
   algorithm: { strong: ['алгоритм деген', 'что такое алгоритм', 'what is an algorithm', 'алгоритм дегеніміз'], weak: ['алгоритм', 'algorithm'] },
-  programming: { strong: ['бағдарламала', 'программирован', 'programming', 'python', 'javascript', 'код жаз', 'писать код', 'write code', 'бағдарламалау тілі', 'язык программир'] },
+  programming: { strong: ['бағдарламала', 'программирован', 'programming', 'javascript', 'код жаз', 'писать код', 'write code', 'бағдарламалау тілі', 'язык программир'] },
   network: { strong: ['желі', 'сеть', 'network', 'желі деген', 'компьютерлік желі', 'жергілікті желі', 'что такое сеть', 'компьютерная сеть', 'локальная сеть', 'what is a network', 'computer network', 'local network', 'lan'] },
   internet: { strong: ['интернет', 'internet', 'tcp'] },
   ip: { strong: ['ip мекенжай', 'ip адрес', 'ip address', 'айпи', 'маска', 'subnet'] },
@@ -97,7 +100,7 @@ export const FAQ_KEYS: Record<FaqId, FaqKeys> = {
   switch: { strong: ['коммутатор', 'свитч', 'switch', 'network switch'] },
   wifi: { strong: ['wi fi', 'wifi', 'вайфай', 'вай фай', 'сымсыз', 'беспровод', 'wireless'] },
   password: { strong: ['құпия сөз', 'пароль', 'password', 'құпиясөз'] },
-  safety: { strong: ['қауіпсіз', 'безопасн', 'safety', 'safe online', 'stay safe', 'интернетте қауіпсіз', 'қауіпсіз бол', 'безопасности в интернете', 'фишинг', 'phishing', 'алаяқ', 'мошенни', 'scam'] },
+  safety: { strong: ['қауіпсіз', 'безопасн', 'safety', 'safe online', 'stay safe', 'интернетте қауіпсіз', 'қауіпсіз бол', 'безопасности в интернете'] },
   virus: { strong: ['вирус', 'virus', 'антивирус', 'antivirus', 'malware', 'зиянды бағдарлама'] },
   cloud: { strong: ['бұлт', 'облак', 'облачн', 'cloud', 'google drive'] },
   inputOutput: { strong: ['енгізу құрылғы', 'шығару құрылғы', 'устройства ввода', 'устройства вывода', 'input device', 'output device', 'енгізу және шығару', 'ввода и вывода', 'input and output'] },
@@ -139,6 +142,8 @@ export const FAQ_KEYS: Record<FaqId, FaqKeys> = {
   compression: { strong: ['сығу', 'архив', 'архивац', 'zip', 'rar', 'сжати', 'compress', 'file compression'] },
 };
 
+export const FAQ_KEYS: Record<FaqId, FaqKeys> = { ...CORE_KEYS, ...CURRICULUM_KEYS };
+
 export interface FaqMatch {
   id: FaqId;
   /** Strong hits ×2 + weak hits. */
@@ -147,20 +152,28 @@ export interface FaqMatch {
   topics: number;
 }
 
-/** The best built-in topic for a question, or null (score ≥ 2: one strong word or two weak ones). */
+/**
+ * The best built-in topic for a question, or null (score ≥ 2: one strong
+ * word or two weak ones). On a tie the more specific topic wins — the one
+ * whose matched words are longer: «желі топологиясы» is about topology,
+ * not about networks in general.
+ */
 export function matchFaq(text: string): FaqMatch | null {
   const n = normalize(text);
   if (!n) return null;
-  let best: FaqMatch | null = null;
-  let topics = 0;
+  let best: (FaqMatch & { length: number }) | null = null;
+  const scores: number[] = [];
   for (const id of FAQ_IDS) {
     const k = FAQ_KEYS[id];
-    const score = countStems(n, k.strong) * 2 + countStems(n, k.weak ?? []);
+    const strong = k.strong.filter((s) => hasStem(n, s));
+    const weak = (k.weak ?? []).filter((s) => hasStem(n, s));
+    const score = strong.length * 2 + weak.length;
     if (score < 2) continue;
-    topics++;
-    if (!best || score > best.score) best = { id, score, topics: 0 };
+    scores.push(score);
+    const length = [...strong, ...weak].reduce((sum, s) => sum + s.length, 0);
+    if (!best || score > best.score || (score === best.score && length > best.length)) best = { id, score, topics: 0, length };
   }
-  return best && { ...best, topics };
+  return best && { id: best.id, score: best.score, topics: scores.length };
 }
 
 /** A short, direct question the built-in answer covers fully (longer ones go to the model when it is on). */

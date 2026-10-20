@@ -1,7 +1,9 @@
+import { CURRICULUM_EN } from './curriculum.en';
 import type { BitContent } from './types';
 
 const en: BitContent = {
   faq: {
+    ...CURRICULUM_EN,
     computer: {
       q: 'What is a computer?',
       a: 'A computer is a device that takes in information, processes it, stores it and shows the result. Its main parts are the processor, the memory, the storage drive, the motherboard and the power supply. Programs tell it what to do.',
@@ -299,8 +301,8 @@ const en: BitContent = {
     ],
     explorer: [
       'Let’s start the computer anatomy lesson. Choose a category at the top: external devices or internal components.',
-      'Click a device: the camera moves in and the panel shows its name, its purpose and its key specs.',
-      'Turn the device with the mouse and look at it from every side. If a spec is unclear, ask me.',
+      'Let me open the monitor for you: the camera has moved in and the panel shows its name, its purpose and its key specs. Try clicking any other device too.',
+      'Now on to the internal components: I am showing you the processor. Turn it with the mouse and look at it from every side, and if a spec is unclear, ask me.',
       'Every device has a mini test of three questions. Pass it and move on to the next device.',
     ],
     studio: [
@@ -308,6 +310,36 @@ const en: BitContent = {
       'In the next step set the budget. It is shared out by purpose: gaming puts more into the graphics card, programming into the processor and memory.',
       'Pick a style, then try swapping each part in the Products step. The studio checks compatibility for you: the socket, the memory type and the power supply rating.',
       'When you are done, the summary page shows the price and specs of your build. Tell me “build a PC for 400,000 tenge” and I will suggest my own version.',
+    ],
+    lab: [
+      'Welcome to the 3D lab! The hall has ten zones, each with real devices. First let us fly to the workstation: here are the computer, the monitor and the peripherals.',
+      'Now to the assembly bench. Look, the processor is lit up, and the panel on the right says what it does. Turn the model with your mouse and look at it from every side.',
+      'This is the network zone. I am showing you the router: it links the network of a home or school to the internet. The Test tab in the panel lets you check yourself.',
+      'Finally, look at the showcase in the middle, with the most powerful devices. Click any device and ask me a question; the Overview button shows the whole hall.',
+    ],
+    games: [
+      'Welcome to the games arena! There are six hands-on 3D games and five quick ones. The server checks every score, so the leaderboard is fair.',
+      'In the 3D games you install the parts with your own hands: rebuild a phone, a laptop and a computer, plug in cables, build a network or find a fault. Pick a part in 3D or from the list under the scene.',
+      'Watch the time bar: fast work without mistakes earns more points. Correct moves in a row give you a combo, and at the end you get one to three stars.',
+      'After a game, press Play again to beat your record, or send the Challenge a friend link: your friend gets exactly the same job. Your records earn experience and levels.',
+    ],
+    live: [
+      'Live games are played by the whole class together. The teacher opens a room and shows its code on the screen.',
+      'Type the code under Join a game, or scan the QR code with your phone. Then wait for the teacher to start.',
+      'In a quiz the question appears on the projector and you choose the answer on your phone: right and fast answers earn the most points. In races you build a computer or a network, and every mistake adds ten seconds.',
+      'At the end the top three climb onto the podium. The teacher keeps the results and can go through them with the class later.',
+    ],
+    tasks: [
+      'Let us open the tasks section. Here are the labs\' automatically checked tasks and the tasks your teacher set.',
+      'Choose a task and its lab opens. At the top it says what to do and how it is marked.',
+      'Do the task and press Check. The site checks your work against the rules, gives points and explains any mistakes.',
+      'If you are not happy with the result, do it again: your best result is kept. You can take a hint, but it costs one point.',
+    ],
+    progress: [
+      'My results is your achievement book. It shows your total points, average mark and how many labs you have completed.',
+      'The table by lab shows how many tasks you have done in each one. Your activity over the last 14 days is on the chart.',
+      'The achievements section holds the badges you have unlocked. Under each badge it says how to earn it.',
+      'When you are signed in, your results are saved on the server and your teacher can see them. Finish every task and you can get a certificate.',
     ],
   },
   say: {

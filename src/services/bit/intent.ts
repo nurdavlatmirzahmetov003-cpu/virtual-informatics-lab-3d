@@ -48,7 +48,8 @@ export function findSection(normalized: string): SectionId | null {
 
 const lessonFor = (section: SectionId | null): LessonId | null => (section && (LESSON_IDS as readonly string[]).includes(section) ? (section as LessonId) : null);
 
-export function understand(raw: string, options: { modelAvailable?: boolean } = {}): Intent {
+/** `page`: the section on screen — «сабақты баста» there starts its lesson (0.37). */
+export function understand(raw: string, options: { modelAvailable?: boolean; page?: SectionId } = {}): Intent {
   // amounts said in words («бес жүз мың») become digits for the budget
   const text = wordsToDigits(stripWakeWord(raw));
   const n = normalize(text);
@@ -62,7 +63,7 @@ export function understand(raw: string, options: { modelAvailable?: boolean } = 
 
   const section = findSection(n);
   if (MONEY.test(text) && countStems(n, BUILD)) return { kind: 'build', message: text };
-  const lesson = lessonFor(section);
+  const lesson = lessonFor(section) ?? (section ? null : lessonFor(options.page ?? null));
   if (lesson && countStems(n, LESSON)) return { kind: 'lesson', lesson };
   const question = /\?/.test(raw) || countStems(n, QUESTION) > 0;
   if (section && (countStems(n, OPEN) || (wordCount <= 3 && !question))) return { kind: 'navigate', section };

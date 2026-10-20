@@ -28,7 +28,8 @@ export const words = (normalized: string): string[] => (normalized ? normalized.
 
 /**
  * True when `stem` occurs in the text: a one-word stem must start a word
- * ("желі" → "желілер"), a stem with spaces must start a word and may run on.
+ * ("желі" → "желілер"); in a stem with spaces every word starts one of
+ * consecutive words ("оптическ диск" → "оптический диск", 0.37).
  * A trailing "$" means the phrase ends the text: "what is a computer$" is not
  * "what is a computer virus".
  */
@@ -39,7 +40,10 @@ export function hasStem(normalized: string, stem: string): boolean {
   const n = fold(normalized);
   if (exact) return ` ${n}`.endsWith(` ${s}`);
   if (!s.includes(' ')) return words(n).some((w) => w.startsWith(s));
-  return ` ${n}`.includes(` ${s}`);
+  // several words: each one starts a word, in a row ("оптическ диск" finds "оптический диск")
+  const parts = s.split(' ');
+  const all = words(n);
+  return all.some((_, i) => parts.every((p, j) => all[i + j]?.startsWith(p)));
 }
 
 export const countStems = (normalized: string, stems: readonly string[]) => stems.reduce((n, s) => n + (hasStem(normalized, s) ? 1 : 0), 0);

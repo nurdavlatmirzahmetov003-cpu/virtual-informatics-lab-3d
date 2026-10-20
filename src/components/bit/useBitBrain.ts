@@ -14,7 +14,8 @@ import { useSettingsStore } from '@/store/settingsStore';
 import { useBitStore, type BitSource } from '@/store/bitStore';
 import { loadBitContent, type BitContent } from '@/services/bit/content';
 import { understand, type Intent } from '@/services/bit/intent';
-import { LESSON_IDS, TOUR_STOPS, type LessonId } from '@/services/bit/lessons';
+import { LESSON_IDS, TOUR_STOPS, lessonPoint, type LessonId } from '@/services/bit/lessons';
+import { pointAt } from '@/services/bit/pointer';
 import { sectionById, sectionOfPath, type SectionId } from '@/services/bit/sections';
 import { askBit, bitCapabilities, resetBitHealth, type BitCapabilities, type Turn } from '@/services/bit/client';
 import { splitSentences } from '@/services/bit/text';
@@ -132,6 +133,8 @@ export function useBitBrain() {
       }
       useBitStore.getState().setGuide({ kind: 'lesson', lesson, index });
       say(steps[index]);
+      // the object this step is about: the camera flies to it and it lights up (0.37)
+      pointAt(lessonPoint(lesson, index));
     },
     [say],
   );
@@ -300,7 +303,7 @@ export function useBitBrain() {
         .map((m) => ({ role: m.role, text: m.text }));
       store.push({ role: 'user', text: trimmed });
       bitVoice.stop();
-      act(c, understand(trimmed, { modelAvailable: model === 'online' }), history);
+      act(c, understand(trimmed, { modelAvailable: model === 'online', page: page.current }), history);
     },
     [act, content, model],
   );

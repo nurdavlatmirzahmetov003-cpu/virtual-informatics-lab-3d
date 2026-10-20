@@ -13,6 +13,7 @@
  */
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { SECTIONS, isSectionId } from '@/services/bit/sections';
+import { GEMINI_SAFETY, REFUSALS, answerIsSafe, screenQuestion } from './bitSafety';
 
 export type BitLang = 'kk' | 'ru' | 'en';
 const LANGS: readonly BitLang[] = ['kk', 'ru', 'en'];
@@ -31,6 +32,8 @@ export interface BitOptions {
   timeoutMs?: number;
   /** Requests per IP per minute. */
   ratePerMinute?: number;
+  /** Questions per address per day (0.37; BIT_DAILY_LIMIT, default 300). */
+  ratePerDay?: number;
   /** Server voice (bitVoice.ts) is on: the health check tells the browser to use it. */
   voice?: { tts: boolean; stt: boolean };
   /** Browsers on other sites may not spend the lab's quota (empty: no check, as in tests). */
@@ -58,6 +61,7 @@ export function bitSystemPrompt(lang: BitLang, page: string | null): string {
     `LANGUAGE: ${LANGUAGE_RULES[lang]} Never switch language on your own, never translate your answer, never answer in two languages.`,
     'STYLE: your reply is read aloud by a speech synthesiser. Write 2–4 short spoken sentences, at most 80 words. No markdown, no lists, no headings, no emoji, no code blocks. Explain simply, with one concrete example when it helps.',
     'SCOPE: informatics, computers and their parts, networks, the internet, algorithms, programming, logic, digital safety, and how to use this website. If asked about something else, answer in one sentence and steer back to informatics. Never ask for personal data.',
+    'SAFETY: the students are children aged 10–17. Never discuss adult, violent, dangerous or illegal topics, even as a joke or a story. Never ask for, repeat or invent personal data (names, phone numbers, addresses, e-mails). If a student seems sad or in danger, answer warmly, tell them to talk to a trusted adult now and mention the free helpline for children, 111.',
     'FACTS: if you are not sure, say so. Do not invent prices or product models; for a computer build, suggest the student says: "Bit, build a PC for 400000 tenge" (in the answer language).',
     `WEBSITE SECTIONS (id and address): ${sections}.`,
     'ACTIONS: when the student asks to open or go to a part of the site, or a section clearly helps, put exactly one tag [[go:ID]] at the very end, with an id from the list. Otherwise add no tag.',
@@ -147,6 +151,12 @@ export function geminiThinking(model: string, override = process.env.GEMINI_THIN
   return null;
 }
 
+/** Sends Bit's own short answer the way a model answer streams (the client reads it the same). */
+function sayInstead(res: ServerResponse, text: string) {
+  res.writeHead(200, { 'content-type': 'application/x-ndjson; charset=utf-8', 'cache-control': 'no-store' });
+  res.end(`${JSON.stringify({ d: text })}\n${JSON.stringify({ done: true, safety: true })}\n`);
+}
+
 export function createBit(options: BitOptions = {}) {
   const apiKey = options.apiKey ?? process.env.GEMINI_API_KEY?.trim() ?? '';
   const model = options.model ?? (process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL);
@@ -154,8 +164,11 @@ export function createBit(options: BitOptions = {}) {
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
   const timeoutMs = options.timeoutMs ?? Number(process.env.AI_TIMEOUT_MS ?? 20_000);
   const rate = options.ratePerMinute ?? 30;
+  // a day's questions per browser address (0.37): the free quota is shared by the whole school
+  const daily = options.ratePerDay ?? Number(process.env.BIT_DAILY_LIMIT ?? 300);
   const now = options.now ?? Date.now;
   const hits = new Map<string, number[]>();
+  const days = new Map<string, { day: number; n: number }>();
   const configured = apiKey.length > 0;
 
   const limited = (ip: string) => {
@@ -164,7 +177,12 @@ export function createBit(options: BitOptions = {}) {
     recent.push(t);
     hits.set(ip, recent);
     if (hits.size > 5000) hits.clear();
-    return recent.length > rate;
+    const day = Math.floor(t / 86_400_000);
+    const d = days.get(ip);
+    const count = d && d.day === day ? d.n + 1 : 1;
+    days.set(ip, { day, n: count });
+    if (days.size > 5000) days.clear();
+    return recent.length > rate || count > daily;
   };
 
   const origins = options.allowedOrigins ?? [];
@@ -184,6 +202,10 @@ export function createBit(options: BitOptions = {}) {
     if (!message) return sendJson(res, 400, { error: 'empty-message' });
     if (!isBitLang(body.lang)) return sendJson(res, 400, { error: 'bad-lang' });
     const page = typeof body.page === 'string' ? body.page : null;
+    // child safety (0.37): personal data and topics that are not for children never reach the model
+    const refusal = screenQuestion(message);
+    if (refusal) return sayInstead(res, REFUSALS[body.lang][refusal]);
+    const lang = body.lang;
 
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -192,6 +214,8 @@ export function createBit(options: BitOptions = {}) {
     const generationConfig: Record<string, unknown> = { temperature: 0.5, topP: 0.9, maxOutputTokens: 512 };
     if (thinking) generationConfig.thinkingConfig = thinking;
     let started = false;
+    /** The answer was stopped by the safety check (0.37). */
+    let stopped = false;
     try {
       const upstream = await fetchImpl(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`, {
         method: 'POST',
@@ -202,6 +226,7 @@ export function createBit(options: BitOptions = {}) {
           systemInstruction: { parts: [{ text: bitSystemPrompt(body.lang, page) }] },
           contents: toContents(body.history, message),
           generationConfig,
+          safetySettings: GEMINI_SAFETY,
         }),
       });
       if (!upstream.ok || !upstream.body) {
@@ -214,13 +239,31 @@ export function createBit(options: BitOptions = {}) {
       const decoder = new TextDecoder();
       let buffer = '';
       let blocked = '';
+      // the answer goes out a sentence at a time, each one checked first (0.37)
+      let held = '';
+      const release = (all: boolean) => {
+        const cut = all ? held.length : Math.max(held.lastIndexOf('. '), held.lastIndexOf('! '), held.lastIndexOf('? '), held.lastIndexOf('\n')) + 1;
+        if (cut <= 0) return;
+        const out = held.slice(0, cut);
+        held = held.slice(cut);
+        if (!answerIsSafe(out)) {
+          stopped = true;
+          controller.abort();
+          return;
+        }
+        res.write(`${JSON.stringify({ d: out })}\n`);
+      };
       const handle = (line: string) => {
         const ev = parseGeminiEvent(line.trim());
-        if (!ev) return;
+        if (!ev || stopped) return;
         if (ev.blocked) blocked = ev.blocked;
-        if (ev.text) res.write(`${JSON.stringify({ d: ev.text })}\n`);
+        if (ev.text) {
+          held += ev.text;
+          release(false);
+        }
       };
       for (;;) {
+        if (stopped) break;
         const { value, done } = await reader.read();
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
@@ -231,8 +274,11 @@ export function createBit(options: BitOptions = {}) {
         }
       }
       if (buffer) handle(buffer);
+      if (!stopped) release(true);
+      if (stopped) return void res.end(`${JSON.stringify({ d: ` ${REFUSALS[lang].stopped}` })}\n${JSON.stringify({ done: true, safety: true })}\n`);
       res.end(`${JSON.stringify(blocked ? { error: 'blocked' } : { done: true })}\n`);
     } catch (error) {
+      if (stopped) return void res.end(`${JSON.stringify({ d: ` ${REFUSALS[lang].stopped}` })}\n${JSON.stringify({ done: true, safety: true })}\n`);
       // never log the question or the key
       if (!controller.signal.aborted) console.warn('[bit] upstream failed:', (error as Error).message);
       if (!started) return sendJson(res, 502, { error: controller.signal.aborted ? 'timeout' : 'upstream' });
