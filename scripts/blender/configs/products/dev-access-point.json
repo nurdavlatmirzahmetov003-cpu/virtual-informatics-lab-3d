@@ -1,0 +1,27 @@
+{
+  "name": "dev-access-point",
+  "description": "Wi-Fi ceiling access point on a display stand, the project's own model (scripts/blender/make-lab-devices.py).",
+  "input": "assets-src/bitlab/dev-access-point-src.glb",
+  "output": "assets-src/blender/products/dev-access-point.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-access-point.jpg"
+  }
+}

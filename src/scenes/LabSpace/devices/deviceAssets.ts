@@ -43,6 +43,9 @@ export const PRODUCT: Record<string, string> = {
   tablet: 'dev-tablet',
   smartwatch: 'dev-smartwatch',
   sbc: 'dev-sbc',
+  // the project's own models (0.37, scripts/blender/make-lab-devices.py)
+  scanner: 'dev-scanner',
+  access_point: 'dev-access-point',
 };
 
 /** Product files a set of devices uses, for prefetching. */

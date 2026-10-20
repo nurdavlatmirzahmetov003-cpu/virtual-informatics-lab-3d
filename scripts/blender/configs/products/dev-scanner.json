@@ -1,0 +1,27 @@
+{
+  "name": "dev-scanner",
+  "description": "Flatbed A4 scanner, the project's own model (scripts/blender/make-lab-devices.py).",
+  "input": "assets-src/bitlab/dev-scanner-src.glb",
+  "output": "assets-src/blender/products/dev-scanner.glb",
+  "rotate": 0,
+  "cleanup": {
+    "removeInvisible": true,
+    "weldDistance": 1e-05,
+    "remove": [],
+    "paint": []
+  },
+  "materials": {
+    "rename": {},
+    "paint": []
+  },
+  "parts": [
+    {
+      "id": "body",
+      "fallback": true
+    }
+  ],
+  "ports": [],
+  "preview": {
+    "assembled": "assets-src/blender/products/dev-scanner.jpg"
+  }
+}

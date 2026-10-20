@@ -151,13 +151,13 @@ function Model({ id, light }: { id: string; light: boolean }): ReactNode {
     case 'optical_drive':
       return <OpticalDrive />;
     case 'scanner':
-      return <Scanner />;
+      return <Product product={product} lightOnly={light} fallback={<Scanner />} />;
     case 'projector':
       return <Projector />;
     case 'interactive_panel':
       return <InteractivePanel light={light} />;
     case 'access_point':
-      return <AccessPoint />;
+      return <Product product={product} lightOnly={light} fallback={<AccessPoint />} />;
     case 'docking_station':
       return <DockingStation />;
     case 'card_reader':

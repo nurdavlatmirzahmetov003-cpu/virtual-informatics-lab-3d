@@ -173,7 +173,7 @@ test('merged pieces: one geometry, parent transforms applied, a vertex colour pe
   assert.equal(inOverview('ups', 'low'), false);
   assert.equal(inOverview('ups', 'high'), true);
   assert.equal(inOverview('monitor', 'low'), true);
-  assert.equal(inOverview('scanner', 'medium'), true, 'no model of its own');
+  assert.equal(inOverview('docking_station', 'medium'), true, 'no model of its own');
 });
 
 /** Distance from point p to the segment a–b on the floor plane. */
