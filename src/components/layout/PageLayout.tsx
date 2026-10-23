@@ -20,6 +20,7 @@ function Footer() {
         <Link to="/certificate">{t('footer.certificate')}</Link>
         <Link to="/games">{t('footer.games')}</Link>
         <Link to="/credits">{t('footer.credits')}</Link>
+        <Link to="/privacy">{t('footer.privacy')}</Link>
       </nav>
     </footer>
   );

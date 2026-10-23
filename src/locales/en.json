@@ -500,8 +500,15 @@
   },
   "notFound": {
     "title": "Page not found",
-    "body": "The requested page does not exist or has moved.",
-    "back": "Back to home"
+    "body": "That page does not exist or has moved to another address.",
+    "back": "Back to home",
+    "bit": "I could not find this page either. Maybe there is a typo in the address. Pick one of the sections below and we will carry on together!",
+    "where": "Where shall we go?",
+    "errorEyebrow": "Error",
+    "errorTitle": "The page did not open",
+    "errorBody": "Something went wrong. Reload the page, and if the error comes back, write to us through Contact.",
+    "errorStale": "The site has been updated. Reload the page to open the new version.",
+    "reload": "Reload"
   },
   "errors": {
     "webglTitle": "WebGL unavailable",
@@ -7415,7 +7422,8 @@
     "certificate": "Certificate",
     "games": "Games",
     "credits": "Credits and licences",
-    "rating": "Site rating: {avg} / 5"
+    "rating": "Site rating: {avg} / 5",
+    "privacy": "Privacy"
   },
   "feedback": {
     "eyebrow": "Feedback",
@@ -7608,5 +7616,44 @@
         "psu": "Power supply"
       }
     }
+  },
+  "privacy": {
+    "eyebrow": "Privacy",
+    "title": "How we keep your data",
+    "subtitle": "What BitLab keeps about you, who sees it and how to delete it — in plain words.",
+    "s1": {
+      "h": "Guest mode",
+      "p": "Without an account, your results and settings stay only in this browser. Nothing is sent to our server, and clearing the browser data deletes them."
+    },
+    "s2": {
+      "h": "Account",
+      "p": "Accounts are created by the school or a teacher. An account keeps the login, your name, your role (student, teacher, administrator) and your class. Your password is never stored as it is: only an irreversible hash of it is kept."
+    },
+    "s3": {
+      "h": "Learning results",
+      "p": "Task scores, game records, live game results and certificates are kept on the server. You, your teacher and the school administrator can see them. You can hide your name on the leaderboard."
+    },
+    "s4": {
+      "h": "Bit and artificial intelligence",
+      "p": "A question you ask Bit is sent to Google Gemini to get the answer. The site does not keep your questions. A question with a phone number, e-mail, ID number or card number is never sent, and topics that are not for children do not pass the filter."
+    },
+    "s5": {
+      "h": "Voice and camera",
+      "p": "The microphone and camera only switch on when you press the button. A spoken question or a photo of a device is sent only to be recognised and is not kept on the server."
+    },
+    "s6": {
+      "h": "Feedback and messages",
+      "p": "Only the site administrator reads feedback and messages sent through Contact. If you do not need a reply, you do not have to leave contact details."
+    },
+    "s7": {
+      "h": "What we do not do",
+      "p": "We show no adverts, sell no data and use no third-party trackers. Cookies are used only to keep you signed in."
+    },
+    "s8": {
+      "h": "Deleting your data",
+      "p": "In guest mode, clearing the browser data is enough. To delete account data, ask your teacher or school administrator, or write to us through Contact."
+    },
+    "contact": "Questions? Write to us:",
+    "updated": "Last updated: October 2026."
   }
 }

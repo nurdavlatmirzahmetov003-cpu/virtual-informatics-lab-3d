@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import { RouteError } from '@/pages/NotFound/NotFoundPage';
 import { createBrowserRouter } from 'react-router-dom';
 import { AppShell } from '@/components/layout/AppShell';
 
@@ -34,10 +35,13 @@ const FeedbackPage = lazy(() => import('@/pages/Feedback/FeedbackPage'));
 const CertificatePage = lazy(() => import('@/pages/Certificate/CertificatePage'));
 const CertificateCheckPage = lazy(() => import('@/pages/Certificate/CheckPage'));
 const LivePage = lazy(() => import('@/pages/Live/LivePage'));
+const PrivacyPage = lazy(() => import('@/pages/Privacy/PrivacyPage'));
 
 export const router = createBrowserRouter([
   {
     element: <AppShell />,
+    // a page that failed to load or crashed: a friendly screen instead of a blank one (0.37)
+    errorElement: <RouteError />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'lab', element: <LabPage /> },
@@ -62,6 +66,7 @@ export const router = createBrowserRouter([
       { path: 'certificate', element: <CertificatePage /> },
       { path: 'certificate/check/:code', element: <CertificateCheckPage /> },
       { path: 'credits', element: <CreditsPage /> },
+      { path: 'privacy', element: <PrivacyPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'teacher', element: <TeacherHome /> },
       { path: 'teacher/class/:id', element: <ClassPage /> },
