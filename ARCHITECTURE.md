@@ -346,6 +346,47 @@ legacy/                     ескі ES-module прототип (python http.ser
     - `robots/` (`robotKit.ts`: бес робот түрі merged-геометриямен; `Robot.tsx`; `LabRobots.tsx`; `route.ts`; `brandMark.ts`) + `data/lab/robots.ts` (жолдар мен орындар).
     - `zones/StageZone.tsx` + `stageSlides.ts`: 10-аймақ. `store/lessonBoardStore.ts`: мұғалім сабағы мен тақта.
 
+59. **3D практикалық ойындар, 0.37 (6-бөлім).**
+    - Бір ереже қозғалтқышы: `labs/LiveGames/races.ts` (`applyMove`, `asMove`, `MOVE_TYPES`). Бұрынғы assembly, connect және fault жарыстарына phone, laptop және network қосылды. `networkGame.ts` NetworkLab-тың `connect` пен `ping` функцияларын пайдаланады, ал `data/teardown` ішіндегі `BUILD_GROUPS` бөлшектерді орнату ретін анықтайды.
+    - Алаң ойындары (`labs/Arcade`, `HANDS_ON_GAMES`): жүрістер — жауаптар. `scoreRun` оларды `replayHandsOn` арқылы қайта ойнатады, сондықтан сервер мен сынып бөлмесі бірдей бағалайды. Жұлдыздар, тәжірибе ұпайы, деңгей мен белгілер: `labs/Arcade/badges.ts`.
+    - Көріністер: `pages/Games/handsOn/*` (`HandsOnBoard` түрге қарай таңдайды).
+      - Бөлшектеу сахнасы құрастыру режимінде жұмыс істейді: `rig.parts` әр бөлшектің жеке прогресін ұстайды, `rig.game` нөмірлерді жасырады.
+      - Жинау мен жалғау зертханаларының store-ларында ойынға арналған тыңдаушылар бар: `playGame(onDrop / onMove)`.
+      - Ақаулық пен желі ойындары: `GameStage.tsx`.
+
+60. **Бит, 0.37 (7-бөлім).**
+    - 158 дайын жауап: `faqCurriculum.ts` (98 тақырып пен кілт сөздері) және `content/curriculum.<lang>.ts`.
+      - Сәйкестендіру тең ұпайда нақтырақ тақырыпты таңдайды (сәйкес келген түбірлердің ұзындығы бойынша).
+      - Бірнеше сөзден тұратын түбір әр сөздің басымен салыстырылады (`text.ts`).
+    - 14 сабақ. `LESSON_POINTS` және `services/bit/pointer.ts` сабақ кезінде 3D-де зерттеу аймағын, құрылғыны немесе анатомия бөлшегін көрсетеді.
+    - Балалар қауіпсіздігі: `server/bitSafety.ts`.
+      - Сұрақ модельге жіберілмес бұрын тексеріледі (`screenQuestion`): жеке деректер, балаларға арналмаған тақырыптар, өзіне зиян келтіру — соңғысына 111 телефоны айтылады.
+      - Жауап сөйлем-сөйлеммен тексеріледі (`answerIsSafe`).
+      - Gemini-ге `BLOCK_LOW_AND_ABOVE` деңгейі беріледі.
+      - Тәуліктік шек: `BIT_DAILY_LIMIT`.
+
+61. **8-бөлім, 0.37.**
+    - Сынып режимі.
+      - Сервер: `server/live/remote.ts` (`RemoteHub`, `WS /api/live/remote?role=screen|remote`, бір мұғалім аккаунтының ішінде ғана).
+      - Клиент: `services/live/remote.ts`, `pages/Lab/ClassMode.tsx` (`/lab?class=1`), `pages/Remote/RemotePage.tsx` (`/remote`).
+    - Оқу жолы мен апталық есеп: `services/progress/learningPath.ts` (келесі қадам, аралықты қайталау, Лейтнер карточкалары) және `weeklyReport.ts`. Беттер: `/path`, `/progress/report`.
+    - Камерамен тану: `server/bitVision.ts` (тек `DEVICES` id-лері, JSON-схема, сенімділік шегі) және `POST /api/ai/bit/identify`. Бет: `/identify`.
+    - Арнайы мүмкіндіктер.
+      - Баптаулар `settingsStore.a11y` ішінде сақталады.
+      - `AppShell` `<html>` элементіне `data-contrast`, `data-readable`, `data-calm` атрибуттарын қояды; оларға `global.css` ережелері жауап береді.
+      - `useReducedMotion` «анимациясыз» баптауын да ескереді.
+      - Субтитрлерді `components/bit/Captions.tsx` көрсетеді.
+    - Офлайн режим.
+      - `public/sw.js`: беттер желіден алынады, желі жоқ болса кэштегі қабық ашылады. Хэші бар файлдар бірден кэштен беріледі, ал басқалары кэштен беріліп, артынан жаңартылады. `/api` кэштелмейді.
+      - Vite плагині `precacheList` `dist/precache.json` файлын жасайды.
+      - Сайт `public/manifest.webmanifest` арқылы орнатылады.
+      - Headless тексерулер `vil3d:no-sw` арқылы Service Worker-ді өшіреді.
+    - Басқалары:
+      - `components/onboarding/Onboarding.tsx` — алғашқы таныстыру;
+      - `RouteError` (роутердің `errorElement`-і);
+      - `/privacy` беті;
+      - `scripts/make-og.mjs` және `scripts/make-icons.mjs`.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |
