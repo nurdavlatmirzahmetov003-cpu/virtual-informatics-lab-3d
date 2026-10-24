@@ -15,7 +15,8 @@
     "lab": "3D lab",
     "games": "Games",
     "path": "My path",
-    "report": "Report for parents"
+    "report": "Report for parents",
+    "identify": "Identify with the camera"
   },
   "settings": {
     "language": "Language",
@@ -7752,5 +7753,31 @@
     "nextStep": "Next step",
     "note": "The report is built from the results on this device or in the student's account. Time counts checked tasks only.",
     "back": "Back to my results"
+  },
+  "identify": {
+    "eyebrow": "Identify with the camera",
+    "title": "What device is this?",
+    "subtitle": "Take a photo of a real device with your phone: Bit recognises it, shows its 3D model and explains what it is for.",
+    "take": "Take a photo",
+    "choose": "Choose a photo",
+    "hint": "Photograph the device up close in good light: a mouse, keyboard, monitor, router, printer, memory module and more.",
+    "busy": "Bit is looking at the photo…",
+    "photoAlt": "Your photo",
+    "privacy": "The photo is sent only to be recognised and is not kept anywhere. Do not photograph people.",
+    "what": "The recognised device appears here in 3D.",
+    "listen": "Read it, Bit",
+    "openLab": "Open in the 3D lab",
+    "noneTitle": "Not recognised",
+    "none": "Bit could not find a lab device in this photo. Try again closer and in better light.",
+    "again": "Try again",
+    "errors": {
+      "no-key": "The recognition service is not connected yet. Tell your teacher or the site administrator.",
+      "rate-limited": "There have been too many requests today. Try again later.",
+      "busy": "The recognition service is busy. Try again in a minute.",
+      "offline": "There seems to be no internet. Recognition needs a connection.",
+      "too-large": "The photo is too large. Choose another one.",
+      "bad-image": "That photo could not be opened. Choose another one.",
+      "upstream": "Something went wrong. Try once more."
+    }
   }
 }

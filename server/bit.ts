@@ -14,6 +14,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { SECTIONS, isSectionId } from '@/services/bit/sections';
 import { GEMINI_SAFETY, REFUSALS, answerIsSafe, screenQuestion } from './bitSafety';
+import { MAX_IMAGE_BYTES, VISION_SCHEMA, parseImage, parseVision, visionPrompt } from './bitVision';
 
 export type BitLang = 'kk' | 'ru' | 'en';
 const LANGS: readonly BitLang[] = ['kk', 'ru', 'en'];
@@ -119,13 +120,13 @@ function sendJson(res: ServerResponse, status: number, body: unknown) {
   res.end(JSON.stringify(body));
 }
 
-function readBody(req: IncomingMessage): Promise<string> {
+function readBody(req: IncomingMessage, max = MAX_BODY): Promise<string> {
   return new Promise((resolve, reject) => {
     let size = 0;
     const chunks: Buffer[] = [];
     req.on('data', (c: Buffer) => {
       size += c.length;
-      if (size > MAX_BODY) {
+      if (size > max) {
         reject(new Error('too large'));
         req.destroy();
       } else chunks.push(c);
@@ -288,12 +289,54 @@ export function createBit(options: BitOptions = {}) {
     }
   }
 
+  /**
+   * POST /api/ai/bit/identify { image: data URL } → { device, confidence } (0.37):
+   * a photo of a real device, named by Gemini Vision from the lab's own device list.
+   */
+  async function identify(req: IncomingMessage, res: ServerResponse) {
+    const origin = req.headers.origin;
+    if (origin && origins.length && !origins.includes(origin)) return sendJson(res, 403, { error: 'origin' });
+    if (!configured) return sendJson(res, 503, { error: 'no-key' });
+    if (limited(req.socket.remoteAddress ?? '?')) return sendJson(res, 429, { error: 'rate-limited' });
+    let image: ReturnType<typeof parseImage>;
+    try {
+      image = parseImage((JSON.parse(await readBody(req, MAX_IMAGE_BYTES * 1.4 + 1024)) as { image?: unknown }).image);
+    } catch {
+      return sendJson(res, 413, { error: 'too-large' });
+    }
+    if (!image) return sendJson(res, 400, { error: 'bad-image' });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const upstream = await fetchImpl(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+        method: 'POST',
+        signal: controller.signal,
+        headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ inline_data: { mime_type: image.mime, data: image.data } }, { text: visionPrompt() }] }],
+          generationConfig: { temperature: 0, responseMimeType: 'application/json', responseSchema: VISION_SCHEMA, ...(thinking ? { thinkingConfig: thinking } : {}) },
+          safetySettings: GEMINI_SAFETY,
+        }),
+      });
+      if (!upstream.ok) return sendJson(res, 502, { error: upstream.status === 429 ? 'busy' : 'upstream' });
+      const j = (await upstream.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
+      const text = j.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '';
+      // the photo is not kept or logged, only the answer goes back
+      sendJson(res, 200, parseVision(text));
+    } catch {
+      sendJson(res, 502, { error: controller.signal.aborted ? 'timeout' : 'upstream' });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   /** Handles /api/ai/bit/*; false for any other path. */
   async function handle(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
     const path = new URL(req.url ?? '/', 'http://local').pathname;
     if (!path.startsWith('/api/ai/bit/')) return false;
     if (path === '/api/ai/bit/health' && req.method === 'GET') sendJson(res, 200, { configured, model: configured ? model : null, tts: !!options.voice?.tts, stt: !!options.voice?.stt });
     else if (path === '/api/ai/bit/ask' && req.method === 'POST') await ask(req, res);
+    else if (path === '/api/ai/bit/identify' && req.method === 'POST') await identify(req, res);
     else sendJson(res, 404, { error: 'not-found' });
     return true;
   }

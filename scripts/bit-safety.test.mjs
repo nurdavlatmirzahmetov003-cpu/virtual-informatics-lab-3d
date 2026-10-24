@@ -155,3 +155,36 @@ test('«start the lesson» on a page starts that page\'s lesson; a named section
   assert.deepEqual(understand('логика сабағын баста', { page: 'lab' }), { kind: 'lesson', lesson: 'logic' });
   assert.notEqual(understand('сабақты баста', { page: 'home' }).kind, 'lesson', 'the home page has no lesson');
 });
+
+test('identify with the camera: only lab device ids come back, the photo is checked, the key stays in a header', async () => {
+  const { parseImage, parseVision, visionPrompt, DEVICE_IDS } = await import('../server/bitVision.ts');
+  assert.equal(parseVision('{"device":"router","confidence":0.9}').device, 'router');
+  assert.equal(parseVision('{"device":"spaceship","confidence":0.9}').device, null, 'not a lab device');
+  assert.equal(parseVision('{"device":"router","confidence":0.1}').device, null, 'too unsure');
+  assert.equal(parseVision('not json').device, null);
+  assert.equal(parseImage('data:image/jpeg;base64,AAAA').mime, 'image/jpeg');
+  assert.equal(parseImage('data:text/html;base64,AAAA'), null);
+  assert.equal(parseImage('data:image/jpeg;base64,' + 'A'.repeat(2_100_000)), null, 'too large');
+  for (const id of ['mouse', 'router', 'printer_laser']) assert.ok(DEVICE_IDS.includes(id) && visionPrompt().includes(id));
+
+  const calls = [];
+  const fetchImpl = async (url, init) => {
+    calls.push({ url, init, body: JSON.parse(init.body) });
+    return new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: '{"device":"keyboard","confidence":0.82}' }] } }] }), { status: 200 });
+  };
+  const bit = createBit({ apiKey: 'secret-key-123', fetchImpl });
+  const s = await serve(bit);
+  try {
+    const ok = await fetch(`${s.base}/api/ai/bit/identify`, { method: 'POST', body: JSON.stringify({ image: 'data:image/jpeg;base64,/9j/AAAA' }) });
+    assert.equal(ok.status, 200);
+    assert.deepEqual(await ok.json(), { device: 'keyboard', confidence: 0.82 });
+    assert.ok(!calls[0].url.includes('secret-key-123'));
+    assert.equal(calls[0].init.headers['x-goog-api-key'], 'secret-key-123');
+    assert.equal(calls[0].body.contents[0].parts[0].inline_data.mime_type, 'image/jpeg');
+    const bad = await fetch(`${s.base}/api/ai/bit/identify`, { method: 'POST', body: JSON.stringify({ image: 'https://example.com/a.jpg' }) });
+    assert.equal(bad.status, 400);
+    assert.equal(calls.length, 1, 'a bad image never reaches the model');
+  } finally {
+    await s.close();
+  }
+});

@@ -19,6 +19,8 @@ function Footer() {
         <Link to="/feedback#contact">{t('footer.contact')}</Link>
         <Link to="/certificate">{t('footer.certificate')}</Link>
         <Link to="/games">{t('footer.games')}</Link>
+        <Link to="/identify">{t('nav.identify')}</Link>
+        <Link to="/path">{t('nav.path')}</Link>
         <Link to="/credits">{t('footer.credits')}</Link>
         <Link to="/privacy">{t('footer.privacy')}</Link>
       </nav>
