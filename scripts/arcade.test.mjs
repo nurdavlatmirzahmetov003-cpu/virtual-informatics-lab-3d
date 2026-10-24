@@ -9,6 +9,7 @@ import { createUser } from '../server/users.ts';
 import { DEVICES } from '../src/data/devices/devices.ts';
 import { STEP_IDS, STEPS } from '../src/labs/AssemblyLab/steps.ts';
 import { parseIp, parseMask, maskFromPrefix, sameSubnet } from '../src/labs/NetworkLab/ipv4.ts';
+import { weekKey, weekStart } from '../src/services/progress/challenges.ts';
 import {
   ARCADE,
   ARCADE_GAMES,
@@ -137,7 +138,8 @@ test('referee: a perfect run scores the most, guessing and speed hacks do not pa
 
 // ── over the wire ──
 async function boot() {
-  let clock = Date.now();
+  // mid-week (Kazakhstan time): a run that crossed Monday 00:00 would fall out of «this week» (0.37 flake)
+  let clock = weekStart(weekKey(Date.now())) + 2.5 * 86_400_000;
   const db = openDb(':memory:');
   migrate(db);
   const app = createApp({ db, config: { ...serverConfig({}), dbFile: ':memory:' }, now: () => clock });
@@ -157,7 +159,7 @@ async function boot() {
     const body = await res.json();
     return { id: u.id, cookie: res.headers.get('set-cookie').split(';')[0], csrf: body.csrfToken };
   };
-  return { db, call, account, tick: (ms) => (clock += ms), close: () => new Promise((r) => server.close(r)) };
+  return { db, call, account, now: () => clock, tick: (ms) => (clock += ms), close: () => new Promise((r) => server.close(r)) };
 }
 
 test('server: runs are refereed on the server clock; class board ranks best scores, hides names when asked', async () => {
@@ -214,7 +216,7 @@ test('server: runs are refereed on the server clock; class board ranks best scor
     assert.equal(me.bests.device, fin.body.result.score);
     assert.deepEqual(me.boards.classes.map((c) => c.name), ['7А']);
     // a big score from a month ago counts all-time, not this week
-    s.db.prepare('INSERT INTO arcade_runs (id, user_id, game, seed, started_at, finished_at, score, correct, total, mistakes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run('old', b.id, 'device', 1, Date.now() - 30 * 86_400_000, Date.now() - 30 * 86_400_000, 1499, 10, 10, 0);
+    s.db.prepare('INSERT INTO arcade_runs (id, user_id, game, seed, started_at, finished_at, score, correct, total, mistakes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run('old', b.id, 'device', 1, s.now() - 30 * 86_400_000, s.now() - 30 * 86_400_000, 1499, 10, 10, 0);
     assert.equal((await s.call('/api/arcade/board?game=device&scope=class&id=c1&period=week', { as: b })).body.rows[0].me, false);
     assert.equal((await s.call('/api/arcade/board?game=device&scope=class&id=c1&period=all', { as: b })).body.rows[0].me, true);
   } finally {
