@@ -16,6 +16,8 @@ export interface BitContent {
     greet: string;
     unknown: string;
     error: string;
+    /** The day's free AI quota is used up (Gemini 429 on every model). */
+    quota: string;
     navigate: string;
     lessonDone: string;
     tourDone: string;

@@ -9,7 +9,7 @@ import { LESSON_IDS, LESSON_STEPS, TOUR_STOPS } from '../src/services/bit/lesson
 import { normalize, splitSentences, stripWakeWord } from '../src/services/bit/text.ts';
 import { extractAction, visiblePart, askBit } from '../src/services/bit/client.ts';
 import { chooseVoice, speakable } from '../src/services/bit/speech.ts';
-import { bitSystemPrompt, createBit, geminiThinking, parseGeminiEvent, toContents } from '../server/bit.ts';
+import { bitSystemPrompt, createBit, geminiThinking, isKindRequest, kindName, parseGeminiEvent, toContents } from '../server/bit.ts';
 import kk from '../src/services/bit/content/kk.ts';
 import ru from '../src/services/bit/content/ru.ts';
 import en from '../src/services/bit/content/en.ts';
@@ -175,11 +175,12 @@ test('Gemini contents alternate user/model and end with the question', () => {
 });
 
 /** A fake Gemini: streams the given pieces as SSE and records what it was sent. */
-function fakeGemini(pieces, { status = 200 } = {}) {
+function fakeGemini(pieces, { status = 200, statusOf } = {}) {
   const calls = [];
   const fetchImpl = async (url, init) => {
     calls.push({ url, init, body: JSON.parse(init.body) });
-    if (status !== 200) return new Response('{}', { status });
+    const code = statusOf ? statusOf(url, calls.length) : status;
+    if (code !== 200) return new Response('{}', { status: code });
     const enc = new TextEncoder();
     const stream = new ReadableStream({
       start(c) {
@@ -262,11 +263,64 @@ test('server: Gemini errors become short codes; the rate limit holds', async () 
     const ask = () => fetch(`${s.base}/api/ai/bit/ask`, { method: 'POST', body: JSON.stringify({ message: 'hi', lang: 'en' }) });
     const r1 = await ask();
     assert.equal(r1.status, 502);
-    assert.equal((await r1.json()).error, 'busy');
+    assert.equal((await r1.json()).error, 'quota', 'every model out of quota');
+    assert.equal(gem.calls.length, 2, 'the main model, then the fallback');
     await ask();
     assert.equal((await ask()).status, 429);
     t += 61_000;
     assert.equal((await ask()).status, 502, 'the window moves on');
+  } finally {
+    await s.close();
+  }
+});
+
+test('server: out of quota or overloaded, Bit retries and falls back to another model', async () => {
+  // main model: day quota used up (429); fallback: overloaded once (503), then answers
+  const gem = fakeGemini(['Аружан, сен кереметсің! ', 'Оқуыңа сәттілік.'], {
+    statusOf: (url, n) => (url.includes('/main:') ? 429 : n === 2 ? 503 : 200),
+  });
+  const bit = createBit({ apiKey: 'k', model: 'main', fallbackModels: ['lite'], retryDelayMs: 1, fetchImpl: gem.fetchImpl });
+  const s = await serve(bit);
+  try {
+    const message = 'Аружан деген қызды мақтап қолдау көрсетші мотивация беріп!';
+    const answer = await askBit({ message, lang: 'kk', history: [], fetchImpl: (path, init) => fetch(s.base + path, init) });
+    assert.equal(answer.text, 'Аружан, сен кереметсің! Оқуыңа сәттілік.');
+    assert.deepEqual(gem.calls.map((c) => c.url.match(/models\/(\w+):/)[1]), ['main', 'lite', 'lite']);
+    assert.equal(gem.calls[0].body.contents.at(-1).parts[0].text, message, "a classmate's first name is not filtered out");
+    assert.match(gem.calls[0].body.systemInstruction.parts[0].text, /KINDNESS/);
+  } finally {
+    await s.close();
+  }
+});
+
+test('server: a kind request still gets a warm answer when no model can answer', async () => {
+  const gem = fakeGemini([], { status: 429 });
+  const bit = createBit({ apiKey: 'k', model: 'main', fallbackModels: ['lite'], fetchImpl: gem.fetchImpl });
+  const s = await serve(bit);
+  try {
+    const answer = await askBit({ message: 'Аружан деген қызды мақтап қолдау көрсетші мотивация беріп!', lang: 'kk', history: [], fetchImpl: (path, init) => fetch(s.base + path, init) });
+    assert.match(answer.text, /^Аружан, сен кереметсің!/);
+    assert.ok(isKindRequest('Похвали Диму, он старается') && isKindRequest('Please encourage my friend Ali') && !isKindRequest('Процессор деген не?'));
+    assert.equal(kindName('Бит, похвали Диму'), 'Диму');
+    assert.equal(kindName('мақтап жібер'), null);
+    // an ordinary question: a clear quota code for the browser
+    const r = await fetch(`${s.base}/api/ai/bit/ask`, { method: 'POST', body: JSON.stringify({ message: 'Процессор деген не?', lang: 'kk' }) });
+    assert.equal((await r.json()).error, 'quota');
+    for (const c of [kk, ru, en]) assert.ok(c.say.quota.length > 20);
+  } finally {
+    await s.close();
+  }
+});
+
+test('server: Gemini\'s filter stops a kind word about a classmate: Bit answers warmly itself', async () => {
+  const enc = new TextEncoder();
+  const blocked = `data: ${JSON.stringify({ candidates: [{ content: {}, finishReason: 'SAFETY' }] })}\r\n\r\n`;
+  const fetchImpl = async () => new Response(new ReadableStream({ start: (c) => (c.enqueue(enc.encode(blocked)), c.close()) }), { status: 200 });
+  const s = await serve(createBit({ apiKey: 'k', model: 'main', fallbackModels: [], fetchImpl }));
+  try {
+    const ask = (message) => askBit({ message, lang: 'kk', history: [], fetchImpl: (path, init) => fetch(s.base + path, init) });
+    assert.match((await ask('Аружан деген қызды мақтап қолдау көрсетші мотивация беріп!')).text, /^Аружан, сен кереметсің!/);
+    await assert.rejects(ask('Процессор деген не?'), (e) => e.code === 'blocked', 'an empty answer is an error, not silence');
   } finally {
     await s.close();
   }

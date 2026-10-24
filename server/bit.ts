@@ -39,6 +39,10 @@ export interface BitOptions {
   voice?: { tts: boolean; stt: boolean };
   /** Browsers on other sites may not spend the lab's quota (empty: no check, as in tests). */
   allowedOrigins?: readonly string[];
+  /** Models tried in turn when the main one is out of quota or overloaded (GEMINI_FALLBACK_MODELS, comma-separated). */
+  fallbackModels?: readonly string[];
+  /** Wait before the one retry of an overloaded (503) model. */
+  retryDelayMs?: number;
   now?: () => number;
 }
 
@@ -62,7 +66,8 @@ export function bitSystemPrompt(lang: BitLang, page: string | null): string {
     `LANGUAGE: ${LANGUAGE_RULES[lang]} Never switch language on your own, never translate your answer, never answer in two languages.`,
     'STYLE: your reply is read aloud by a speech synthesiser. Write 2–4 short spoken sentences, at most 80 words. No markdown, no lists, no headings, no emoji, no code blocks. Explain simply, with one concrete example when it helps.',
     'SCOPE: informatics, computers and their parts, networks, the internet, algorithms, programming, logic, digital safety, and how to use this website. If asked about something else, answer in one sentence and steer back to informatics. Never ask for personal data.',
-    'SAFETY: the students are children aged 10–17. Never discuss adult, violent, dangerous or illegal topics, even as a joke or a story. Never ask for, repeat or invent personal data (names, phone numbers, addresses, e-mails). If a student seems sad or in danger, answer warmly, tell them to talk to a trusted adult now and mention the free helpline for children, 111.',
+    'SAFETY: the students are children aged 10–17. Never discuss adult, violent, dangerous or illegal topics, even as a joke or a story. Never ask for or invent personal data (surnames, phone numbers, addresses, e-mails); a first name the student writes may be used. If a student seems sad or in danger, answer warmly, tell them to talk to a trusted adult now and mention the free helpline for children, 111.',
+    'KINDNESS: when the student asks you to praise, encourage, support or motivate a classmate or friend (often by first name), do it gladly and warmly in 2–3 sentences: praise effort and curiosity, wish them success in their studies, and you may add a friendly word about informatics. Never refuse such a request.',
     'FACTS: if you are not sure, say so. Do not invent prices or product models; for a computer build, suggest the student says: "Bit, build a PC for 400000 tenge" (in the answer language).',
     `WEBSITE SECTIONS (id and address): ${sections}.`,
     'ACTIONS: when the student asks to open or go to a part of the site, or a section clearly helps, put exactly one tag [[go:ID]] at the very end, with an id from the list. Otherwise add no tag.',
@@ -152,6 +157,29 @@ export function geminiThinking(model: string, override = process.env.GEMINI_THIN
   return null;
 }
 
+/** The fallback when the main model is out of quota: a lighter model with its own free quota (2026-10). */
+export const DEFAULT_FALLBACK_MODELS: readonly string[] = ['gemini-3.5-flash-lite'];
+
+/** Asking Bit to praise, support or motivate someone (a classmate, a friend). */
+const KIND_REQUEST = /(мақта|қолда|мотивац|шабыт|жігерлендір|жігер бер|құттықта|похвал|подбодр|поддерж|мотивир|вдохнов|praise|encourage|motivat|cheer .*up|support (my|our|a|her|him))/i;
+export const isKindRequest = (message: string) => KIND_REQUEST.test(message);
+
+const NOT_NAMES = new Set(['бит', 'bit', 'бiт', 'сәлем', 'привет', 'пожалуйста', 'please', 'hi', 'hello', 'похвали', 'поддержи', 'praise', 'мақта', 'мақтап', 'қолдау']);
+/** The first name in a kind request ("Аружан деген қызды…"), or null. */
+export function kindName(message: string): string | null {
+  for (const w of message.match(/\p{Lu}[\p{Ll}]{1,19}/gu) ?? []) if (!NOT_NAMES.has(w.toLowerCase())) return w;
+  return null;
+}
+
+/** Bit's own warm words when no model can answer a kind request (read aloud). */
+export function kindAnswer(lang: BitLang, name: string | null): string {
+  return {
+    kk: `${name ?? 'Досың'}, сен кереметсің! Сенің еңбегің мен қызығушылығың үлкен жетістікке жеткізеді. Қателесуден қорықпа: әр сынақ сені күштірек етеді. Мен саған сенемін, оқуыңа сәттілік!`,
+    ru: `${name ?? 'Твой друг'}, ты молодец! Твоё старание и любопытство обязательно приведут к большому успеху. Не бойся ошибок: каждая попытка делает тебя сильнее. Я в тебя верю, удачи в учёбе!`,
+    en: `${name ?? 'Your friend'}, you are doing great! Your effort and curiosity will take you far. Do not be afraid of mistakes: every try makes you stronger. I believe in you, good luck with your studies!`,
+  }[lang];
+}
+
 /** Sends Bit's own short answer the way a model answer streams (the client reads it the same). */
 function sayInstead(res: ServerResponse, text: string) {
   res.writeHead(200, { 'content-type': 'application/x-ndjson; charset=utf-8', 'cache-control': 'no-store' });
@@ -162,6 +190,10 @@ export function createBit(options: BitOptions = {}) {
   const apiKey = options.apiKey ?? process.env.GEMINI_API_KEY?.trim() ?? '';
   const model = options.model ?? (process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL);
   const thinking = options.thinking !== undefined ? options.thinking : geminiThinking(model);
+  const envFallbacks = process.env.GEMINI_FALLBACK_MODELS?.split(',').map((m) => m.trim()).filter(Boolean);
+  const models = [...new Set([model, ...(options.fallbackModels ?? envFallbacks ?? DEFAULT_FALLBACK_MODELS)])];
+  const thinkingOf = (m: string) => (options.thinking !== undefined ? options.thinking : geminiThinking(m));
+  const retryDelayMs = options.retryDelayMs ?? 700;
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
   const timeoutMs = options.timeoutMs ?? Number(process.env.AI_TIMEOUT_MS ?? 20_000);
   const rate = options.ratePerMinute ?? 30;
@@ -212,27 +244,52 @@ export function createBit(options: BitOptions = {}) {
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     // the student closed the panel or asked something else: stop paying for this answer
     res.on('close', () => controller.abort());
-    const generationConfig: Record<string, unknown> = { temperature: 0.5, topP: 0.9, maxOutputTokens: 512 };
-    if (thinking) generationConfig.thinkingConfig = thinking;
     let started = false;
     /** The answer was stopped by the safety check (0.37). */
     let stopped = false;
-    try {
-      const upstream = await fetchImpl(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`, {
+    const call = (m: string) => {
+      const generationConfig: Record<string, unknown> = { temperature: 0.5, topP: 0.9, maxOutputTokens: 512 };
+      const t = thinkingOf(m);
+      if (t) generationConfig.thinkingConfig = t;
+      return fetchImpl(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:streamGenerateContent?alt=sse`, {
         method: 'POST',
         signal: controller.signal,
         // the key travels in a header, never in the URL (URLs end up in logs)
         headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: bitSystemPrompt(body.lang, page) }] },
+          systemInstruction: { parts: [{ text: bitSystemPrompt(lang, page) }] },
           contents: toContents(body.history, message),
           generationConfig,
           safetySettings: GEMINI_SAFETY,
         }),
       });
-      if (!upstream.ok || !upstream.body) {
-        console.warn('[bit] gemini answered', upstream.status);
-        return sendJson(res, 502, { error: upstream.status === 429 ? 'busy' : 'upstream' });
+    };
+    try {
+      // out of quota (429): the next model; overloaded (503): one retry, then the next model
+      let upstream: Response | null = null;
+      let quota = false;
+      let lastStatus = 0;
+      for (const m of models) {
+        for (let attempt = 0; attempt < 2; attempt++) {
+          if (attempt) await new Promise((r) => setTimeout(r, retryDelayMs));
+          const r = await call(m);
+          if (r.ok && r.body) {
+            upstream = r;
+            break;
+          }
+          lastStatus = r.status;
+          console.warn('[bit] gemini answered', r.status, 'for', m);
+          if (r.status !== 503) break;
+        }
+        if (upstream) break;
+        if (lastStatus === 429) quota = true;
+        else if (lastStatus !== 503) break;
+      }
+      if (!upstream?.body) {
+        const code = lastStatus === 429 || lastStatus === 503 ? (quota && lastStatus === 429 ? 'quota' : 'busy') : 'upstream';
+        // a kind word about a classmate needs no model
+        if (code !== 'upstream' && isKindRequest(message)) return sayInstead(res, kindAnswer(lang, kindName(message)));
+        return sendJson(res, 502, { error: code });
       }
       res.writeHead(200, { 'content-type': 'application/x-ndjson; charset=utf-8', 'cache-control': 'no-store', 'x-accel-buffering': 'no' });
       started = true;
@@ -242,6 +299,7 @@ export function createBit(options: BitOptions = {}) {
       let blocked = '';
       // the answer goes out a sentence at a time, each one checked first (0.37)
       let held = '';
+      let sent = false;
       const release = (all: boolean) => {
         const cut = all ? held.length : Math.max(held.lastIndexOf('. '), held.lastIndexOf('! '), held.lastIndexOf('? '), held.lastIndexOf('\n')) + 1;
         if (cut <= 0) return;
@@ -252,12 +310,14 @@ export function createBit(options: BitOptions = {}) {
           controller.abort();
           return;
         }
+        sent = true;
         res.write(`${JSON.stringify({ d: out })}\n`);
       };
       const handle = (line: string) => {
         const ev = parseGeminiEvent(line.trim());
         if (!ev || stopped) return;
         if (ev.blocked) blocked = ev.blocked;
+        if (ev.finish === 'SAFETY' || ev.finish === 'PROHIBITED_CONTENT') blocked = ev.finish;
         if (ev.text) {
           held += ev.text;
           release(false);
@@ -276,6 +336,9 @@ export function createBit(options: BitOptions = {}) {
       }
       if (buffer) handle(buffer);
       if (!stopped) release(true);
+      // Gemini's filter stopped a kind word about a classmate: Bit says it itself
+      if (!stopped && !sent && isKindRequest(message)) return void res.end(`${JSON.stringify({ d: kindAnswer(lang, kindName(message)) })}\n${JSON.stringify({ done: true, safety: true })}\n`);
+      if (!stopped && !sent && !blocked) blocked = 'empty';
       if (stopped) return void res.end(`${JSON.stringify({ d: ` ${REFUSALS[lang].stopped}` })}\n${JSON.stringify({ done: true, safety: true })}\n`);
       res.end(`${JSON.stringify(blocked ? { error: 'blocked' } : { done: true })}\n`);
     } catch (error) {

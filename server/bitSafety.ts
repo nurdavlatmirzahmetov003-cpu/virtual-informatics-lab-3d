@@ -108,8 +108,15 @@ export const REFUSALS: Readonly<Record<BitLang, Record<Refusal | 'stopped', stri
   },
 };
 
-/** Gemini's own content filters at their strictest (children are the users). */
-export const GEMINI_SAFETY = ['HARM_CATEGORY_HARASSMENT', 'HARM_CATEGORY_HATE_SPEECH', 'HARM_CATEGORY_SEXUALLY_EXPLICIT', 'HARM_CATEGORY_DANGEROUS_CONTENT'].map((category) => ({
-  category,
-  threshold: 'BLOCK_LOW_AND_ABOVE',
-}));
+/**
+ * Gemini's own content filters (children are the users): sexual and dangerous
+ * content at their strictest. Harassment and hate one step lower: at "low"
+ * Gemini blocks kind words about a classmate by name ("praise Aruzhan"), and
+ * our own checks above still run on every question and answer.
+ */
+export const GEMINI_SAFETY = [
+  { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+  { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+  { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_LOW_AND_ABOVE' },
+  { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_LOW_AND_ABOVE' },
+];

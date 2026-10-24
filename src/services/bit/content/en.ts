@@ -346,6 +346,7 @@ const en: BitContent = {
     greet: 'Hi! I am Bit, the {brand} assistant. Ask me about informatics, ask me to open a section, or let’s start a lesson together.',
     unknown: 'Sorry, I have no ready answer for that, and the AI is not connected right now. Pick one of the topics below or ask in a different way.',
     error: 'Sorry, I could not get an answer just now. Please try again in a moment.',
+    quota: "Sorry, today's limit of AI questions has run out. Ask again tomorrow. Meanwhile I can help with ready topics, lessons and the site sections.",
     navigate: 'Opening {name}.',
     lessonDone: 'Well done, the lesson is over! Now try the task on your own. Ask me if you have questions.',
     tourDone: 'That’s the tour. Good luck!',
