@@ -39,6 +39,7 @@ const PrivacyPage = lazy(() => import('@/pages/Privacy/PrivacyPage'));
 const PathPage = lazy(() => import('@/pages/Path/PathPage'));
 const ReportPage = lazy(() => import('@/pages/Progress/ReportPage'));
 const IdentifyPage = lazy(() => import('@/pages/Identify/IdentifyPage'));
+const RemotePage = lazy(() => import('@/pages/Remote/RemotePage'));
 
 export const router = createBrowserRouter([
   {
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
       { path: 'path', element: <PathPage /> },
       { path: 'progress/report', element: <ReportPage /> },
       { path: 'identify', element: <IdentifyPage /> },
+      { path: 'remote', element: <RemotePage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'teacher', element: <TeacherHome /> },
       { path: 'teacher/class/:id', element: <ClassPage /> },

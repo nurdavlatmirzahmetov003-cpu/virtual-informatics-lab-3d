@@ -1,0 +1,178 @@
+/* The class mode remote on the teacher's phone (0.37): big, thumb-friendly buttons. */
+
+.page {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 560px;
+  margin: 0 auto;
+  padding: calc(var(--topbar-h) + var(--space-4)) var(--gutter) var(--space-8);
+}
+
+.page h2 {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-lg);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.head h1 {
+  margin: 0;
+  font-size: var(--fs-xl);
+}
+
+.badge {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.badge[data-on] {
+  border-color: rgb(61 220 151 / 0.6);
+  color: var(--success);
+}
+
+.note {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.now {
+  display: grid;
+  gap: 4px;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--accent-soft);
+}
+
+.now small {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.now b {
+  font-size: var(--fs-lg);
+}
+
+.now p {
+  margin: 0;
+  font-style: italic;
+}
+
+.pad {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.pad button,
+.grid button,
+.ask button,
+.quiet,
+.primary {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pad button {
+  min-height: 76px;
+}
+
+.pad button:active,
+.grid button:active {
+  transform: scale(0.97);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.grid button {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.grid button[data-on] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.grid span {
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgb(var(--ink-rgb) / 0.08);
+  font-size: 0.8rem;
+}
+
+.ask {
+  display: flex;
+  gap: 8px;
+  margin-top: var(--space-3);
+}
+
+.ask input {
+  flex: 1;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.ask button {
+  width: 56px;
+  padding: 0;
+}
+
+.quiet {
+  width: 100%;
+  margin-top: var(--space-3);
+  border-color: color-mix(in srgb, var(--danger) 45%, transparent);
+  color: var(--danger);
+}
+
+.primary {
+  border-color: transparent;
+  background: var(--accent);
+  color: #fff;
+}
+
+.pad button:focus-visible,
+.grid button:focus-visible,
+.ask button:focus-visible,
+.quiet:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

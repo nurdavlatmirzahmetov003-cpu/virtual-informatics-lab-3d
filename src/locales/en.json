@@ -7779,5 +7779,42 @@
       "bad-image": "That photo could not be opened. Choose another one.",
       "upstream": "Something went wrong. Try once more."
     }
+  },
+  "classMode": {
+    "title": "Class mode",
+    "scan": "Remote QR code",
+    "how": "Open {url} on your phone (signed in to the same teacher account) — it becomes the remote.",
+    "connected": "Remote connected: {n}",
+    "waiting": "Waiting for the remote",
+    "offline": "No connection — reconnecting",
+    "teachersOnly": "Class mode works with a teacher account. Sign in as a teacher.",
+    "fullscreen": "Full screen",
+    "exit": "Leave class mode",
+    "start": "Class mode (projector)"
+  },
+  "remote": {
+    "title": "Class remote",
+    "signIn": "The remote works with the teacher's account: sign in with the same account as on the projector computer.",
+    "toLogin": "Sign in",
+    "screens": "Projector connected: {n}",
+    "noScreen": "No projector connected yet",
+    "howToScreen": "On the projector computer, open the 3D lab in class mode: the Class mode button on the 3D lab page, or /lab?class=1.",
+    "onScreen": "On screen",
+    "overview": "Overview",
+    "prev": "Previous zone",
+    "next": "Next zone",
+    "zones": "Zones",
+    "bit": "Ask Bit",
+    "askPlaceholder": "Ask Bit — the answer is for the whole class",
+    "send": "Send",
+    "quiet": "Stop Bit",
+    "prompts": {
+      "labLesson": "Start the 3D lab lesson",
+      "next": "next",
+      "zone": "What is in this zone?",
+      "cpu": "What is a processor?",
+      "network": "What is a computer network?",
+      "safety": "How do I stay safe online?"
+    }
   }
 }

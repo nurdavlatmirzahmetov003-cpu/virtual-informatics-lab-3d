@@ -7,6 +7,7 @@
  *   DELETE /api/live/rooms/:id       its host | admin (csrf)
  *   GET    /api/live/sessions/:id    its host | admin → saved results
  *   WS     /api/live/ws?code=XXXXXX  signed-in host or student (session cookie, allowed Origin)
+ *   WS     /api/live/remote?role=screen|remote  class mode (0.37): a teacher's projector and phone
  */
 import type { IncomingMessage } from 'node:http';
 import type { Duplex } from 'node:stream';
@@ -17,6 +18,7 @@ import type { Role, UserRow } from '../users';
 import { createRouter, type RouteCtx } from '../router';
 import { topicCounts } from '@/labs/LiveGames/quiz';
 import { LiveHub, pastSessions, sessionResults } from './hub';
+import { RemoteHub, isRemoteRole } from './remote';
 import { acceptUpgrade } from './ws';
 
 export interface LiveDeps {
@@ -62,16 +64,21 @@ export function liveRoutes({ db, now, hub, requireUser, checkCsrf }: LiveDeps) {
  * Upgrades /api/live/ws for a signed-in user from an allowed origin; refuses
  * everything else with a plain HTTP status before any WebSocket exists.
  */
-export function liveUpgrade(opts: { hub: LiveHub; userOf: (req: IncomingMessage) => UserRow | null; originOk: (req: IncomingMessage) => boolean; blocked: (req: IncomingMessage) => boolean }) {
+export function liveUpgrade(opts: { hub: LiveHub; remote: RemoteHub; userOf: (req: IncomingMessage) => UserRow | null; originOk: (req: IncomingMessage) => boolean; blocked: (req: IncomingMessage) => boolean }) {
   return (req: IncomingMessage, socket: Duplex) => {
     const url = new URL(req.url ?? '/', 'http://local');
     const refuse = (status: string) => socket.end(`HTTP/1.1 ${status}\r\nConnection: close\r\n\r\n`);
-    if (url.pathname !== '/api/live/ws') return refuse('404 Not Found');
+    const remote = url.pathname === '/api/live/remote';
+    if (url.pathname !== '/api/live/ws' && !remote) return refuse('404 Not Found');
     if (opts.blocked(req)) return refuse('403 Forbidden');
     if (!opts.originOk(req)) return refuse('403 Forbidden');
     const user = opts.userOf(req);
     if (!user) return refuse('401 Unauthorized');
+    const role = url.searchParams.get('role');
+    if (remote && !isRemoteRole(role)) return refuse('400 Bad Request');
     const conn = acceptUpgrade(req, socket);
-    if (conn) opts.hub.connect(user, url.searchParams.get('code') ?? '', conn);
+    if (!conn) return;
+    if (remote && isRemoteRole(role)) opts.remote.connect(user, role, conn);
+    else opts.hub.connect(user, url.searchParams.get('code') ?? '', conn);
   };
 }

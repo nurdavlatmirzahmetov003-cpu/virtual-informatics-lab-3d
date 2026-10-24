@@ -39,6 +39,7 @@ import { arcadeRoutes } from './arcade';
 import { feedbackRoutes } from './feedback';
 import { LiveHub } from './live/hub';
 import { liveRoutes, liveUpgrade } from './live/routes';
+import { RemoteHub } from './live/remote';
 import { EventHub } from './live/events';
 import { acceptUpgrade } from './live/ws';
 import { checkResetToken, listIpBlocks, redeemResetToken } from './admin';
@@ -237,7 +238,9 @@ export function createApp({
   };
   const originOk = (req: IncomingMessage) => !req.headers.origin || config.allowedOrigins.includes(req.headers.origin);
   const blocked = (req: IncomingMessage) => isBlocked(clientIp(req, config.trustProxy));
-  const liveGames = liveUpgrade({ hub, userOf, originOk, blocked });
+  // class mode (0.37): a teacher's projector screen and phone remote
+  const remote = new RemoteHub();
+  const liveGames = liveUpgrade({ hub, remote, userOf, originOk, blocked });
   /**
    * WebSocket upgrades — live games (/api/live/ws) and class events
    * (/api/events/ws): attach with `server.on('upgrade', app.upgrade)`.
