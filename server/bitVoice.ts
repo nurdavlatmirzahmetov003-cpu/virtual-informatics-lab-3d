@@ -60,8 +60,35 @@ export function sttPrompt(lang: BitLang) {
     .join(' ');
 }
 
-/** Cache key of a synthesised text (the same in the warm-up script). */
-export const ttsKey = (voice: string, lang: string, text: string) => createHash('sha1').update(`${voice}|${lang}|${text}`).digest('hex');
+/** How Bit sounds saying a sentence: praise, help after a mistake, a fun fact, or an explanation. */
+export type VoiceMood = 'joyful' | 'supportive' | 'curious' | 'calm';
+
+const MOOD_WORDS: Record<Exclude<VoiceMood, 'calm'>, RegExp> = {
+  supportive: /(қателес|қате емес|қорықпа|уайымдама|ештеңе етпейді|қайта көр|не бойся|не страшно|ошиб|попробуй ещё|don'?t worry|mistake|try again|it'?s okay)/i,
+  joyful: /(жарайсың|керемет|тамаша|құттықта|сенемін|сәттілік|молодец|отлично|поздравля|верю в тебя|удачи|well done|great job|congrat|believe in you|good luck|you are doing great)/i,
+  curious: /(қызық|білесің бе|таңғаларлық|елестетші|интересно|знаешь ли|представь|удивительно|did you know|fun fact|imagine|amazing)/i,
+};
+
+/** The mood of a sentence (the first match: a mistake first, then praise, then a fun fact). */
+export function voiceMood(text: string): VoiceMood {
+  for (const mood of ['supportive', 'joyful', 'curious'] as const) if (MOOD_WORDS[mood].test(text)) return mood;
+  return 'calm';
+}
+
+/** The director's note before the words (Gemini TTS reads only what follows the colon). */
+const MOOD_STYLE: Record<VoiceMood, string> = {
+  joyful: 'in a joyful, excited and warm voice, like a kind teacher proudly praising a student',
+  supportive: 'in a gentle, warm and encouraging voice, like a kind teacher helping after a mistake',
+  curious: 'in a curious, lively voice full of wonder, like sharing an amazing fact',
+  calm: 'in a calm, clear and friendly voice, like a kind teacher explaining',
+};
+export const ttsPrompt = (lang: BitLang, text: string) => `Say ${MOOD_STYLE[voiceMood(text)]}, clearly in ${LANG_NAME[lang]}: ${text}`;
+
+/** Cache key of a synthesised text (the same in the warm-up script); a non-calm mood is a different recording. */
+export function ttsKey(voice: string, lang: string, text: string) {
+  const mood = voiceMood(text);
+  return createHash('sha1').update(`${voice}|${lang}|${mood === 'calm' ? '' : `${mood}|`}${text}`).digest('hex');
+}
 
 /** Raw request body up to `limit` bytes. */
 function readRaw(req: IncomingMessage, limit: number): Promise<Buffer> {
@@ -238,7 +265,7 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
       const upstream = await gemini(
         model,
         'streamGenerateContent?alt=sse',
-        { contents: [{ parts: [{ text }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } } },
+        { contents: [{ parts: [{ text: ttsPrompt(body.lang, text) }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } } },
         controller.signal,
       );
       if (upstream.status === 429) {

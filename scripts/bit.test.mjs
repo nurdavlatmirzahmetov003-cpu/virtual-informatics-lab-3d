@@ -325,3 +325,11 @@ test('server: Gemini\'s filter stops a kind word about a classmate: Bit answers 
     await s.close();
   }
 });
+
+test('Gemini prompt: every school subject, with feeling, and the child-safety rules stay', () => {
+  const p = bitSystemPrompt('kk', null);
+  assert.match(p, /SCOPE: any school subject.*mathematics.*history/);
+  assert.doesNotMatch(p, /steer back to informatics/);
+  assert.match(p, /EMOTION: .*joyful when you praise/);
+  assert.match(p, /SAFETY: the students are children aged 10–17/);
+});

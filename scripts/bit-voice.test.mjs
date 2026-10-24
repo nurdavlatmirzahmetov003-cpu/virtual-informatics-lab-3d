@@ -10,7 +10,8 @@ import { createServer } from 'node:http';
 import { understand } from '../src/services/bit/intent.ts';
 import { wordsToDigits } from '../src/services/bit/numbers.ts';
 import { fold, stripWakeWord } from '../src/services/bit/text.ts';
-import { createBitVoice, sttPrompt, audioOfEvent } from '../server/bitVoice.ts';
+import { createBitVoice, sttPrompt, audioOfEvent, voiceMood, ttsPrompt, ttsKey } from '../server/bitVoice.ts';
+import { createHash } from 'node:crypto';
 
 /** [what the recogniser wrote, expected kind, expected target (section / lesson / faq id)] */
 const KAZAKH_UTTERANCES = [
@@ -169,6 +170,7 @@ test('server TTS: streams PCM, caches a sentence, key in a header; STT: transcri
     assert.equal(gem.calls.length, 1, 'the second time comes from the cache');
     assert.ok(!gem.calls[0].url.includes(key) && gem.calls[0].headers['x-goog-api-key'] === key);
     assert.equal(gem.calls[0].body.generationConfig.responseModalities[0], 'AUDIO');
+    assert.equal(gem.calls[0].body.contents[0].parts[0].text, 'Say in a calm, clear and friendly voice, like a kind teacher explaining, clearly in Kazakh: Сәлем, мен Битпін.');
 
     assert.equal((await fetch(`${s.base}/api/ai/bit/tts`, { method: 'POST', body: JSON.stringify({ text: '', lang: 'kk' }) })).status, 400);
     assert.equal((await fetch(`${s.base}/api/ai/bit/tts`, { method: 'POST', headers: { origin: 'https://evil.example' }, body: JSON.stringify({ text: 'x', lang: 'kk' }) })).status, 403);
@@ -280,4 +282,18 @@ test('server STT: a model out of quota rests, the next one listens', async () =>
   } finally {
     await s.close();
   }
+});
+
+test('voice moods: joyful praise, gentle help after a mistake, wonder at a fact, calm explanation', () => {
+  assert.equal(voiceMood('Аружан, сен кереметсің!'), 'joyful');
+  assert.equal(voiceMood('Молодец, отличная работа!'), 'joyful');
+  assert.equal(voiceMood('Қателесуден қорықпа, қайта көр.'), 'supportive', 'a mistake comes before praise words');
+  assert.equal(voiceMood("Don't worry, try again."), 'supportive');
+  assert.equal(voiceMood('Білесің бе, алғашқы компьютер бір бөлмедей болған!'), 'curious');
+  assert.equal(voiceMood('Процессор — компьютердің миы.'), 'calm');
+  assert.match(ttsPrompt('kk', 'Жарайсың!'), /^Say in a joyful.*clearly in Kazakh: Жарайсың!$/);
+  // calm sentences keep their old cache key (the warmed recordings stay), a mood is a new recording
+  const old = (t) => createHash('sha1').update(`Kore|kk|${t}`).digest('hex');
+  assert.equal(ttsKey('Kore', 'kk', 'Процессор — компьютердің миы.'), old('Процессор — компьютердің миы.'));
+  assert.notEqual(ttsKey('Kore', 'kk', 'Жарайсың!'), old('Жарайсың!'));
 });
