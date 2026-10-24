@@ -7673,5 +7673,24 @@
       "title": "I am Bit, your helper",
       "text": "Press the robot button at the bottom and ask me anything, typed or spoken. I explain, run lessons and open the page you need."
     }
+  },
+  "a11y": {
+    "title": "Accessibility",
+    "captions": {
+      "name": "Captions",
+      "hint": "The sentence Bit is saying is shown at the bottom of the screen."
+    },
+    "contrast": {
+      "name": "High contrast",
+      "hint": "Darker text and clearer borders."
+    },
+    "readable": {
+      "name": "Easy-to-read font",
+      "hint": "More space between letters and lines, helpful for dyslexic readers."
+    },
+    "calm": {
+      "name": "No animations",
+      "hint": "All motion and animation is switched off; the camera moves at once."
+    }
   }
 }

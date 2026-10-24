@@ -4,6 +4,7 @@ import { useT } from '@/hooks/useT';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { QualitySelect } from '@/components/ui/QualitySelect';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { A11yMenu } from '@/components/ui/A11yMenu';
 import { BrandMark } from '@/components/brand/BrandMark';
 import { BRAND } from '@/config/brand';
 import { AccountButton } from './AccountButton';
@@ -47,6 +48,7 @@ export function TopBar() {
       <div className={styles.controls}>
         <QualitySelect />
         <ThemeToggle />
+        <A11yMenu />
         <LanguageSwitcher />
         <AccountButton />
       </div>

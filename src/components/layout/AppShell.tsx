@@ -7,6 +7,7 @@ import { applyTheme } from '@/lib/theme';
 import { useSceneStatus } from '@/store/sceneStatusStore';
 import { AchievementToaster } from '@/components/achievements/AchievementToaster';
 import { BitLauncher } from '@/components/bit/BitLauncher';
+import { Captions } from '@/components/bit/Captions';
 import { useAuthStore } from '@/store/authStore';
 import { setLiveEvents } from '@/services/live/events';
 import { useSiteStore } from '@/store/siteStore';
@@ -29,6 +30,15 @@ export function AppShell() {
   }, [language]);
 
   useEffect(() => applyTheme(theme), [theme]);
+
+  // accessibility options as attributes on <html>; global.css reads them (0.37)
+  const a11y = useSettingsStore((s) => s.a11y);
+  useEffect(() => {
+    const root = document.documentElement;
+    root.toggleAttribute('data-contrast', a11y.contrast);
+    root.toggleAttribute('data-readable', a11y.readable);
+    root.toggleAttribute('data-calm', a11y.calm);
+  }, [a11y]);
 
   // who is signed in (or guest mode when the server is not running)
   // and what the admin set for the whole site: banner, edited texts
@@ -56,6 +66,7 @@ export function AppShell() {
       {sceneExpected && <Suspense fallback={null}><LoaderOverlay /></Suspense>}
       <AchievementToaster />
       <BitLauncher />
+      {a11y.captions && <Captions />}
     </>
   );
 }

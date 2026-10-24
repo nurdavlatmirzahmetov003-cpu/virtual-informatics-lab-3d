@@ -1,0 +1,23 @@
+/* Captions of Bit's voice (0.37): high contrast in any theme, above the scene, below dialogs. */
+
+.captions {
+  position: fixed;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 60;
+  width: min(760px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.captions p {
+  margin: 0;
+  padding: 10px 18px;
+  border-radius: 14px;
+  background: rgb(8 10 18 / 0.86);
+  color: #fff;
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: center;
+}
