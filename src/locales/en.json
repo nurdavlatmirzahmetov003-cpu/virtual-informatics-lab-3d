@@ -7655,5 +7655,23 @@
     },
     "contact": "Questions? Write to us:",
     "updated": "Last updated: October 2026."
+  },
+  "onboarding": {
+    "step": "{n} / {total}",
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Enter the lab",
+    "lab": {
+      "title": "Welcome to BitLab!",
+      "text": "This is a 3D informatics lab. Walk through ten zones, click any device and look inside it: from a processor to a 3D printer."
+    },
+    "play": {
+      "title": "Do it with your own hands",
+      "text": "In the labs you build a computer, set up a network and explore algorithms and logic circuits. In the games arena you compete with friends and your whole class."
+    },
+    "bit": {
+      "title": "I am Bit, your helper",
+      "text": "Press the robot button at the bottom and ask me anything, typed or spoken. I explain, run lessons and open the page you need."
+    }
   }
 }
