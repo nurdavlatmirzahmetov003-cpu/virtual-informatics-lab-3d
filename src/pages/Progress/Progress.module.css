@@ -599,3 +599,28 @@ a.histRow:focus-visible {
     gap: 3px;
   }
 }
+
+/* quick links to the learning path and the parent report (0.37) */
+.quickLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.quickLinks a {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-weight: 700;
+}
+
+.quickLinks a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

@@ -13,7 +13,8 @@
     "primary": "Primary navigation",
     "explorer": "Anatomy",
     "lab": "3D lab",
-    "games": "Games"
+    "games": "Games",
+    "path": "My path"
   },
   "settings": {
     "language": "Language",
@@ -7691,6 +7692,39 @@
     "calm": {
       "name": "No animations",
       "hint": "All motion and animation is switched off; the camera moves at once."
+    }
+  },
+  "path": {
+    "eyebrow": "Personal learning path",
+    "title": "My path",
+    "subtitle": "Your next step, tasks to review and flash cards from Bit's questions — all built from your own results.",
+    "next": {
+      "title": "Next step",
+      "go": "Start",
+      "allDone": "Great! Every task is done. Move on to the review and the flash cards below."
+    },
+    "review": {
+      "title": "Review",
+      "why": "A task done with mistakes comes back the next day; well-done ones come back less and less often: after 1, 3, 7 and 21 days. That way you do not forget what you learnt.",
+      "weak": "Best result {n}% — have another look",
+      "refresh": "Result {n}% — refresh your memory",
+      "nothingNow": "Nothing to review right now.",
+      "empty": "Once you have done some tasks, they come back here for review.",
+      "later": "{n} more tasks come back later (the next in {days} days)."
+    },
+    "cards": {
+      "title": "Flash cards",
+      "intro": "Five short questions: think first, then show the answer. A card you knew comes back later; one you did not, tomorrow.",
+      "stats": "Cards seen: {seen}. Due today: {due}.",
+      "start": "Start",
+      "count": "Card {n} of {total}",
+      "show": "Show the answer",
+      "listen": "Read it, Bit",
+      "didYouKnow": "Did you know it?",
+      "knew": "I knew it",
+      "notYet": "Not yet",
+      "done": "Done! You knew {n} of {total}.",
+      "again": "Five more cards"
     }
   }
 }
