@@ -22,3 +22,18 @@ applyTheme(resolveTheme(useSettingsStore.getState().theme));
 
 // Russian/English are separate chunks: fetch the saved one before the first paint
 loadLanguage(useSettingsStore.getState().language).then(start, start);
+
+// offline (0.37): the service worker caches the app shell; only in a built site (in dev it would serve stale code)
+// (`vil3d:no-sw`: the headless measurements and checks, whose numbers the background caching would skew)
+const noWorker = (() => {
+  try {
+    return localStorage.getItem('vil3d:no-sw') === '1';
+  } catch {
+    return false;
+  }
+})();
+if (import.meta.env.PROD && 'serviceWorker' in navigator && !noWorker) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => undefined);
+  });
+}

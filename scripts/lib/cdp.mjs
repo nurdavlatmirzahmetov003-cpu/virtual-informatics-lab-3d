@@ -17,7 +17,8 @@ export const CHROME = [
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export async function openChrome({ port = 9335, width = 1440, height = 900 } = {}) {
+/** `serviceWorker`: let the site install its offline worker (off by default: its background caching would skew measurements). */
+export async function openChrome({ port = 9335, width = 1440, height = 900, serviceWorker = false } = {}) {
   if (!CHROME) throw new Error('Chrome/Edge not found');
   const profile = mkdtempSync(path.join(tmpdir(), 'vil3d-cdp-'));
   const proc = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, `--window-size=${width},${height}`, '--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11', 'about:blank'], { stdio: 'ignore' });
@@ -45,7 +46,7 @@ export async function openChrome({ port = 9335, width = 1440, height = 900 } = {
   const send = (method, params = {}) => new Promise((r) => { const n = ++id; pending.set(n, r); ws.send(JSON.stringify({ id: n, method, params })); });
   await send('Page.enable');
   // measurements and checks see the site as a returning visitor: no first-visit welcome over the scene
-  await send('Page.addScriptToEvaluateOnNewDocument', { source: "try { localStorage.setItem('vil3d:onboarded', '1') } catch {}" });
+  await send('Page.addScriptToEvaluateOnNewDocument', { source: `try { localStorage.setItem('vil3d:onboarded', '1'); ${serviceWorker ? '' : "localStorage.setItem('vil3d:no-sw', '1');"} } catch {}` });
   await send('Runtime.enable');
   await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
   return {

@@ -127,7 +127,8 @@ await send('Network.setCacheDisabled', { cacheDisabled: true });
 if (throttle) await send('Network.emulateNetworkConditions', { offline: false, latency: 40, downloadThroughput: (throttle * 1e6) / 8, uploadThroughput: (5 * 1e6) / 8 });
 await send('Page.enable');
 // measurements and checks see the site as a returning visitor: no first-visit welcome over the scene
-await send('Page.addScriptToEvaluateOnNewDocument', { source: "try { localStorage.setItem('vil3d:onboarded', '1') } catch {}" });
+// …and without the offline worker, whose background caching would count as page bytes
+await send('Page.addScriptToEvaluateOnNewDocument', { source: "try { localStorage.setItem('vil3d:onboarded', '1'); localStorage.setItem('vil3d:no-sw', '1') } catch {}" });
 await send('Runtime.enable');
 // browser-side errors too: CSP violations, failed loads (V2-12)
 await send('Log.enable');

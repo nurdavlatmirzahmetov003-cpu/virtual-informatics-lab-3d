@@ -1,9 +1,28 @@
-import { defineConfig, type ProxyOptions } from 'vite';
+import { defineConfig, type Plugin, type ProxyOptions } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 
 /** Matches a package directory inside node_modules on any OS path separator. */
 const pkg = (names: string) => new RegExp(`node_modules[/\\\\](${names})[/\\\\]`);
+
+/**
+ * Offline (0.37): the list of built scripts, styles and fonts the service
+ * worker (public/sw.js) caches when it installs — every route's code and
+ * Bit's built-in answers, without the 3D models.
+ */
+function precacheList(): Plugin {
+  return {
+    name: 'bitlab-precache',
+    apply: 'build',
+    generateBundle(_, bundle) {
+      const files = Object.keys(bundle)
+        // Kazakh, Russian and English need the latin and cyrillic font subsets only
+        .filter((f) => /\.(js|css|woff2)$/.test(f) && !/(vietnamese|math|symbols)-/.test(f))
+        .sort();
+      this.emitFile({ type: 'asset', fileName: 'precache.json', source: JSON.stringify(files) });
+    },
+  };
+}
 
 /**
  * The lab server (npm run server: accounts, progress sync, AI assistant).
@@ -30,7 +49,7 @@ const apiProxy: Record<string, ProxyOptions> = {
 };
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), precacheList()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
