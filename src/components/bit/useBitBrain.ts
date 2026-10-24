@@ -245,7 +245,7 @@ export function useBitBrain() {
       } catch (e) {
         const code = (e as { code?: string }).code;
         if (code === 'aborted') return useBitStore.getState().update(id, { pending: false });
-        useBitStore.getState().update(id, { text: c.say.error, pending: false, error: true, source: 'local' });
+        useBitStore.getState().update(id, { text: code === 'quota' ? c.say.quota : c.say.error, pending: false, error: true, source: 'local' });
         if (code === 'no-key' || code === 'offline' || code === 'ai-disabled') {
           resetBitHealth();
           setModel('offline');

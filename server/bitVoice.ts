@@ -16,7 +16,7 @@ import { existsSync, mkdirSync, readFileSync, writeFile } from 'node:fs';
 import { join } from 'node:path';
 import { gunzipSync, gzip } from 'node:zlib';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { isBitLang, type BitLang } from './bit';
+import { fallbackModelsFromEnv, isBitLang, type BitLang } from './bit';
 
 export interface BitVoiceOptions {
   apiKey?: string;
@@ -28,6 +28,8 @@ export interface BitVoiceOptions {
   voice?: string;
   /** Recognition model (default: the chat model). */
   sttModel?: string;
+  /** Recognition models tried in turn when it is out of quota (default: Bit's fallbacks). */
+  sttFallbacks?: readonly string[];
   fetchImpl?: typeof fetch;
   allowedOrigins?: readonly string[];
   now?: () => number;
@@ -58,8 +60,35 @@ export function sttPrompt(lang: BitLang) {
     .join(' ');
 }
 
-/** Cache key of a synthesised text (the same in the warm-up script). */
-export const ttsKey = (voice: string, lang: string, text: string) => createHash('sha1').update(`${voice}|${lang}|${text}`).digest('hex');
+/** How Bit sounds saying a sentence: praise, help after a mistake, a fun fact, or an explanation. */
+export type VoiceMood = 'joyful' | 'supportive' | 'curious' | 'calm';
+
+const MOOD_WORDS: Record<Exclude<VoiceMood, 'calm'>, RegExp> = {
+  supportive: /(қателес|қате емес|қорықпа|уайымдама|ештеңе етпейді|қайта көр|не бойся|не страшно|ошиб|попробуй ещё|don'?t worry|mistake|try again|it'?s okay)/i,
+  joyful: /(жарайсың|керемет|тамаша|құттықта|сенемін|сәттілік|молодец|отлично|поздравля|верю в тебя|удачи|well done|great job|congrat|believe in you|good luck|you are doing great)/i,
+  curious: /(қызық|білесің бе|таңғаларлық|елестетші|интересно|знаешь ли|представь|удивительно|did you know|fun fact|imagine|amazing)/i,
+};
+
+/** The mood of a sentence (the first match: a mistake first, then praise, then a fun fact). */
+export function voiceMood(text: string): VoiceMood {
+  for (const mood of ['supportive', 'joyful', 'curious'] as const) if (MOOD_WORDS[mood].test(text)) return mood;
+  return 'calm';
+}
+
+/** The director's note before the words (Gemini TTS reads only what follows the colon). */
+const MOOD_STYLE: Record<VoiceMood, string> = {
+  joyful: 'in a joyful, excited and warm voice, like a kind teacher proudly praising a student',
+  supportive: 'in a gentle, warm and encouraging voice, like a kind teacher helping after a mistake',
+  curious: 'in a curious, lively voice full of wonder, like sharing an amazing fact',
+  calm: 'in a calm, clear and friendly voice, like a kind teacher explaining',
+};
+export const ttsPrompt = (lang: BitLang, text: string) => `Say ${MOOD_STYLE[voiceMood(text)]}, clearly in ${LANG_NAME[lang]}: ${text}`;
+
+/** Cache key of a synthesised text (the same in the warm-up script); a non-calm mood is a different recording. */
+export function ttsKey(voice: string, lang: string, text: string) {
+  const mood = voiceMood(text);
+  return createHash('sha1').update(`${voice}|${lang}|${mood === 'calm' ? '' : `${mood}|`}${text}`).digest('hex');
+}
 
 /** Raw request body up to `limit` bytes. */
 function readRaw(req: IncomingMessage, limit: number): Promise<Buffer> {
@@ -174,6 +203,7 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
   };
   const voice = options.voice ?? (process.env.GEMINI_TTS_VOICE?.trim() || DEFAULT_TTS_VOICE);
   const sttModel = options.sttModel ?? (process.env.GEMINI_STT_MODEL?.trim() || process.env.GEMINI_MODEL?.trim() || 'gemini-3.5-flash');
+  const sttModels = [...new Set([sttModel, ...(options.sttFallbacks ?? fallbackModelsFromEnv())])];
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
   const origins = options.allowedOrigins ?? [];
   const now = options.now ?? Date.now;
@@ -235,7 +265,7 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
       const upstream = await gemini(
         model,
         'streamGenerateContent?alt=sse',
-        { contents: [{ parts: [{ text }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } } },
+        { contents: [{ parts: [{ text: ttsPrompt(body.lang, text) }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } } },
         controller.signal,
       );
       if (upstream.status === 429) {
@@ -306,18 +336,25 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 20_000);
     try {
-      const upstream = await gemini(
-        sttModel,
-        'generateContent',
-        {
-          contents: [{ parts: [{ inlineData: { mimeType: mime === 'audio/x-wav' ? 'audio/wav' : mime, data: audio.toString('base64') } }, { text: sttPrompt(lang) }] }],
-          generationConfig: { temperature: 0, maxOutputTokens: 300, thinkingConfig: { thinkingLevel: /3\.[89]|pro/.test(sttModel) ? 'low' : 'minimal' } },
-        },
-        controller.signal,
-      );
+      // a model out of quota rests (as for speech) and the next one listens
+      let upstream: Response | null = null;
+      for (const model of sttModels.filter((m) => (resting.get(m) ?? 0) <= now())) {
+        upstream = await gemini(
+          model,
+          'generateContent',
+          {
+            contents: [{ parts: [{ inlineData: { mimeType: mime === 'audio/x-wav' ? 'audio/wav' : mime, data: audio.toString('base64') } }, { text: sttPrompt(lang) }] }],
+            generationConfig: { temperature: 0, maxOutputTokens: 300, thinkingConfig: { thinkingLevel: /3\.[89]|pro/.test(model) ? 'low' : 'minimal' } },
+          },
+          controller.signal,
+        );
+        if (upstream.status !== 429) break;
+        resting.set(model, now() + quotaPause(await upstream.text()));
+      }
+      if (!upstream) return sendJson(res, 502, { error: 'quota' });
       if (!upstream.ok) {
         console.warn('[bit-voice] stt answered', upstream.status);
-        return sendJson(res, 502, { error: upstream.status === 429 ? 'busy' : 'upstream' });
+        return sendJson(res, 502, { error: upstream.status === 429 ? 'quota' : 'upstream' });
       }
       const data = (await upstream.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string; thought?: boolean }> } }> };
       const text = (data.candidates?.[0]?.content?.parts ?? [])

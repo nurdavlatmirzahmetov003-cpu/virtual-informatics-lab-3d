@@ -133,7 +133,7 @@ test('proxy: refusals are answered by Bit itself; an unsafe answer is stopped; s
 
     const stopped = await lines(await ask('процессор деген не, толығырақ'));
     assert.equal(gem.calls.length, 1);
-    assert.deepEqual(gem.calls[0].safetySettings.map((x) => x.threshold), ['BLOCK_LOW_AND_ABOVE', 'BLOCK_LOW_AND_ABOVE', 'BLOCK_LOW_AND_ABOVE', 'BLOCK_LOW_AND_ABOVE']);
+    assert.deepEqual(gem.calls[0].safetySettings.map((x) => x.threshold), ['BLOCK_MEDIUM_AND_ABOVE', 'BLOCK_MEDIUM_AND_ABOVE', 'BLOCK_LOW_AND_ABOVE', 'BLOCK_LOW_AND_ABOVE']);
     const text = stopped.map((l) => l.d ?? '').join('');
     assert.ok(text.startsWith('Процессор — компьютердің миы.'), 'the safe sentence went out');
     assert.ok(!text.includes('@'), 'the sentence with an e-mail did not');
