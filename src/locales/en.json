@@ -14,7 +14,8 @@
     "explorer": "Anatomy",
     "lab": "3D lab",
     "games": "Games",
-    "path": "My path"
+    "path": "My path",
+    "report": "Report for parents"
   },
   "settings": {
     "language": "Language",
@@ -7726,5 +7727,30 @@
       "done": "Done! You knew {n} of {total}.",
       "again": "Five more cards"
     }
+  },
+  "report": {
+    "eyebrow": "For parents",
+    "title": "Weekly report",
+    "subtitle": "Your child's week: what they did, what they finished and where they may need help. Print it or save it as a PDF.",
+    "prev": "Previous week",
+    "next": "Next week",
+    "print": "Print / PDF",
+    "sheetTitle": "{name}: the week in review",
+    "student": "Student",
+    "empty": "No tasks were done this week. 15–20 minutes a day in BitLab brings good results.",
+    "days": "Active days",
+    "attempts": "Checked attempts",
+    "average": "Average result",
+    "time": "Time on tasks",
+    "labs": "Labs worked in",
+    "attemptsN": "{n} attempts",
+    "completed": "Tasks finished for the first time ({n})",
+    "noneCompleted": "No new tasks were finished this week.",
+    "achievements": "New achievements",
+    "help": "May need some help",
+    "noStruggles": "No task was a struggle — well done!",
+    "nextStep": "Next step",
+    "note": "The report is built from the results on this device or in the student's account. Time counts checked tasks only.",
+    "back": "Back to my results"
   }
 }

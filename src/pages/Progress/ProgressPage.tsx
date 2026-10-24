@@ -68,6 +68,9 @@ export default function ProgressPage() {
         <Link to="/path">
           {t('nav.path')} <ArrowRight size={16} aria-hidden="true" />
         </Link>
+        <Link to="/progress/report">
+          {t('nav.report')} <ArrowRight size={16} aria-hidden="true" />
+        </Link>
       </nav>
       <GamePanel />
       <div className={styles.stats}>

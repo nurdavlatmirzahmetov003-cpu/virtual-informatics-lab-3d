@@ -37,6 +37,7 @@ const CertificateCheckPage = lazy(() => import('@/pages/Certificate/CheckPage'))
 const LivePage = lazy(() => import('@/pages/Live/LivePage'));
 const PrivacyPage = lazy(() => import('@/pages/Privacy/PrivacyPage'));
 const PathPage = lazy(() => import('@/pages/Path/PathPage'));
+const ReportPage = lazy(() => import('@/pages/Progress/ReportPage'));
 
 export const router = createBrowserRouter([
   {
@@ -69,6 +70,7 @@ export const router = createBrowserRouter([
       { path: 'credits', element: <CreditsPage /> },
       { path: 'privacy', element: <PrivacyPage /> },
       { path: 'path', element: <PathPage /> },
+      { path: 'progress/report', element: <ReportPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'teacher', element: <TeacherHome /> },
       { path: 'teacher/class/:id', element: <ClassPage /> },

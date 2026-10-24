@@ -59,3 +59,23 @@ test('flash cards: Leitner boxes, the weakest labs first, every topic is a real 
   assert.equal(s[0], 'cpu');
   assert.ok(!s.includes('ram'));
 });
+
+test('weekly report: one week of attempts, first completions, achievements and the tasks to help with', async () => {
+  const { weeklyReport, currentWeek } = await import('../src/services/progress/weeklyReport.ts');
+  const { weekStart } = await import('../src/services/progress/challenges.ts');
+  const week = currentWeek(NOW);
+  const from = weekStart(week);
+  const [a, b] = TASKS;
+  const attempt = (id, percent, at, seconds = 120) => ({ id: `${id}-${at}`, exerciseId: id, score: percent, maxScore: 100, percent, seconds, errors: 0, hints: 0, status: 'passed', at });
+  const attempts = [attempt(a.id, 100, from - DAY), attempt(a.id, 60, from + 3600_000), attempt(b.id, 40, from + DAY + 3600_000), attempt(b.id, 70, from + DAY + 7200_000)];
+  const exercises = { [a.id]: { ...result(a.id, 100, 2, from + 3600_000), completedAt: from - DAY }, [b.id]: { ...result(b.id, 70, 2, from + DAY), completedAt: from + DAY + 7200_000 } };
+  const r = weeklyReport({ attempts, exercises, achievements: { firstStep: from + 10, old: from - 5 * DAY } }, week);
+  assert.equal(r.attempts, 3, 'last week does not count');
+  assert.equal(r.activeDays, 2);
+  assert.equal(r.average, Math.round((60 + 40 + 70) / 3));
+  assert.equal(r.seconds, 360);
+  assert.deepEqual(r.completed, [b.id], 'the first task was finished the week before');
+  assert.deepEqual(r.achievements, ['firstStep']);
+  assert.deepEqual(r.struggling, [b.id]);
+  assert.equal(weeklyReport({ attempts, exercises, achievements: {} }, week + 1).attempts, 0);
+});
