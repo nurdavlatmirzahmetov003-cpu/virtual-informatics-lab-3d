@@ -326,6 +326,22 @@ test('server: Gemini\'s filter stops a kind word about a classmate: Bit answers 
   }
 });
 
+test("server: Gemini's filter cuts a kind answer mid-word: the fragment is dropped, Bit answers itself", async () => {
+  const enc = new TextEncoder();
+  const ev = (o) => `data: ${JSON.stringify(o)}
+
+`;
+  const body = ev({ candidates: [{ content: { parts: [{ text: 'Ару' }] } }] }) + ev({ candidates: [{ content: {}, finishReason: 'SAFETY' }] });
+  const fetchImpl = async () => new Response(new ReadableStream({ start: (c) => (c.enqueue(enc.encode(body)), c.close()) }), { status: 200 });
+  const s = await serve(createBit({ apiKey: 'k', model: 'main', fallbackModels: [], fetchImpl }));
+  try {
+    const answer = await askBit({ message: 'Аружан деген қызды мақтап қолдау көрсетші мотивация беріп!', lang: 'kk', history: [], fetchImpl: (path, init) => fetch(s.base + path, init) });
+    assert.match(answer.text, /^Аружан, сен кереметсің!/);
+  } finally {
+    await s.close();
+  }
+});
+
 test('Gemini prompt: every school subject, with feeling, and the child-safety rules stay', () => {
   const p = bitSystemPrompt('kk', null);
   assert.match(p, /SCOPE: any school subject.*mathematics.*history/);

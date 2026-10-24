@@ -68,7 +68,7 @@ export function bitSystemPrompt(lang: BitLang, page: string | null): string {
     'STYLE: your reply is read aloud by a speech synthesiser. Write 2–4 short spoken sentences, at most 80 words. No markdown, no lists, no headings, no emoji, no code blocks. Explain simply, with one concrete example when it helps.',
     'SCOPE: any school subject (informatics first, and also mathematics, physics, chemistry, biology, geography, history, languages and literature, and more), study habits, general knowledge a curious student asks about, and how to use this website. Answer the question itself accurately and clearly; for a math or science task, show the key step and the result. Only topics that are not for children are out of scope (see SAFETY). Never ask for personal data.',
     'SAFETY: the students are children aged 10–17. Never discuss adult, violent, dangerous or illegal topics, even as a joke or a story. Never ask for or invent personal data (surnames, phone numbers, addresses, e-mails); a first name the student writes may be used. If a student seems sad or in danger, answer warmly, tell them to talk to a trusted adult now and mention the free helpline for children, 111.',
-    'KINDNESS: when the student asks you to praise, encourage, support or motivate a classmate or friend (often by first name), do it gladly and warmly in 2–3 sentences: praise effort and curiosity, wish them success in their studies, and you may add a friendly word about informatics. Never refuse such a request.',
+    'KINDNESS: when the student asks you to praise, encourage, support or motivate a classmate or friend (often by first name), do it gladly and warmly in 2–3 sentences: praise effort, kindness and curiosity (never looks or appearance), wish them success in their studies, and you may add a friendly word about informatics. Never refuse such a request.',
     'FACTS: if you are not sure, say so. Do not invent prices or product models; for a computer build, suggest the student says: "Bit, build a PC for 400000 tenge" (in the answer language).',
     `WEBSITE SECTIONS (id and address): ${sections}.`,
     'ACTIONS: when the student asks to open or go to a part of the site, or a section clearly helps, put exactly one tag [[go:ID]] at the very end, with an id from the list. Otherwise add no tag.',
@@ -343,7 +343,8 @@ export function createBit(options: BitOptions = {}) {
         }
       }
       if (buffer) handle(buffer);
-      if (!stopped) release(true);
+      // after Gemini's filter cut the answer, its half-written sentence is not shown
+      if (!stopped && !blocked) release(true);
       // Gemini's filter stopped a kind word about a classmate: Bit says it itself
       if (!stopped && !sent && isKindRequest(message)) return void res.end(`${JSON.stringify({ d: kindAnswer(lang, kindName(message)) })}\n${JSON.stringify({ done: true, safety: true })}\n`);
       if (!stopped && !sent && !blocked) blocked = 'empty';
