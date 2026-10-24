@@ -1,9 +1,11 @@
 /**
  * Cinematic home scene: studio-lit desk setup driven by the scroll story.
+ * The opening shot is the living hero (hero/LivingSetup): setups assemble and
+ * swap until the story starts, then the story's devices take the desk.
  * All hardware models are interim procedural builds — see TODO.md
  * ([PLACEHOLDER] entries) for the GLB replacements.
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { EnvironmentLighting } from '@/components/3d/EnvironmentLighting';
 import { sceneFocus } from '@/lib/three/sceneFocus';
@@ -17,6 +19,10 @@ import { showcaseBuild } from '@/lib/studio/showcase';
 import { ExploreCamera } from './ExploreCamera';
 import { ShadowSync } from './ShadowSync';
 import { StoryCamera } from './StoryCamera';
+import { LivingSetup } from './hero/LivingSetup';
+import { HERO_LOOKS } from './hero/looks';
+import { StoryDevices } from './hero/StoryDevices';
+import { Decor } from './models/Decor';
 
 RectAreaLightUniformsLib.init();
 
@@ -25,6 +31,7 @@ const HDRI = `${import.meta.env.BASE_URL}assets/hdr/studio_small_09_1k.hdr`;
 
 export default function DeskScene() {
   const exploring = usePcStore((s) => s.mode === 'explore');
+  const [look, setLook] = useState(0);
 
   useEffect(() => {
     sceneFocus.enabled = true;
@@ -40,14 +47,18 @@ export default function DeskScene() {
       {exploring && <ExploreCamera />}
       <ShadowSync />
       <Room />
-      <Desk />
-      <DeskMat />
-      <Monitor />
-      <Keyboard />
-      <Mouse />
-      <Speakers />
-      <Headset />
-      <PCCase deferDetail build={showcaseBuild()} />
+      <Desk surface={HERO_LOOKS[look].desk} />
+      <Decor />
+      <LivingSetup onLook={setLook} />
+      <StoryDevices>
+        <DeskMat />
+        <Monitor />
+        <Keyboard />
+        <Mouse />
+        <Speakers />
+        <Headset />
+        <PCCase deferDetail build={showcaseBuild()} />
+      </StoryDevices>
     </>
   );
 }

@@ -13,6 +13,9 @@ import { useLive, type Feedback, type LivePlayer, type LiveRoom } from '@/servic
 import { deviceById, deviceKey } from '@/data/devices/devices';
 import { QrCode } from '../Classroom/parts';
 import auth from '../Auth/Auth.module.css';
+import { networkFrom } from '@/labs/LiveGames/networkGame';
+import type { RaceKind, RacerState } from '@/labs/LiveGames/races';
+import { HandsOnBoard } from '@/pages/Games/handsOn/HandsOnBoard';
 import { AssemblyBoard, ConnectBoard, FaultBoard } from './RaceBoards';
 import { feedbackText, k } from './text';
 import styles from './Live.module.css';
@@ -312,8 +315,12 @@ function Toast({ feedback }: { feedback: Feedback | null }) {
   );
 }
 
+/** The races that also have the simple tap board (V2-11b); the newer ones are 3D only, with their own tray. */
+const SIMPLE = new Set(['assembly', 'connect', 'fault']);
+
 function RaceView({ room, now, send, feedback }: { room: LiveRoom; now: number; send: Send; feedback: Feedback | null }) {
   const t = useT();
+  const [flat, setFlat] = useState(false);
   const race = room.race!;
   const before = race.startsAt - now;
   const me = race.me;
@@ -353,6 +360,17 @@ function RaceView({ room, now, send, feedback }: { room: LiveRoom; now: number; 
         <p className={styles.note}>{t('live.race.waitOthers')}</p>
       </section>
     );
+  } else if (!flat || !SIMPLE.has(room.kind)) {
+    // the 3D game (0.37); the server's snapshot is the racer's state
+    const state: RacerState = {
+      mistakes: me.mistakes,
+      progress: me.progress,
+      done: me.done,
+      round: me.round ?? undefined,
+      built: me.built ?? undefined,
+      net: me.links ? networkFrom(race.seed, me.links) : undefined,
+    };
+    board = <HandsOnBoard kind={room.kind as RaceKind} seed={race.seed} state={state} faults={[]} symptoms={me.symptoms} rounds={race.rounds} move={(m) => send(m as unknown as Record<string, unknown>)} />;
   } else if (room.kind === 'assembly') board = <AssemblyBoard installed={me.installed ?? []} send={send} />;
   else if (room.kind === 'connect') board = <ConnectBoard plugged={me.plugged ?? {}} send={send} />;
   else board = <FaultBoard round={me.round ?? 0} rounds={race.rounds} symptoms={me.symptoms} send={send} />;
@@ -366,6 +384,11 @@ function RaceView({ room, now, send, feedback }: { room: LiveRoom; now: number; 
         <span className={styles.badge} data-warn={me.mistakes > 0}>
           {t('live.race.mistakes', { n: me.mistakes, s: me.mistakes * 10 })}
         </span>
+        {SIMPLE.has(room.kind) && !me.done && (
+          <button type="button" className={auth.secondary} aria-pressed={flat} onClick={() => setFlat(!flat)}>
+            {flat ? t('live.board3d') : t('live.board2d')}
+          </button>
+        )}
       </header>
       <div className={styles.raceGrid}>
         <div>

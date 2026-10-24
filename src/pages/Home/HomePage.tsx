@@ -2,6 +2,7 @@ import { lazy, useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
 import { ButtonLink } from '@/components/ui/Button';
+import { Onboarding } from '@/components/onboarding/Onboarding';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import { STORY_SCREENS } from '@/scenes/DeskScene/chapters';
@@ -44,6 +45,7 @@ export default function HomePage() {
 
   return (
     <>
+      <Onboarding />
       {/* tall scroll track; the stage stays pinned while the timeline scrubs */}
       <div ref={story} className={styles.story} style={{ height: `${STORY_SCREENS * 100}vh` }}>
         <div className={styles.stage}>

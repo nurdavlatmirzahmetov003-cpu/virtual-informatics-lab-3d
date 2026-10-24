@@ -5,6 +5,7 @@
  */
 import { RoundedBox } from '@react-three/drei';
 import { useDisposable } from '@/hooks/useDisposable';
+import { cableGeometry, type CableKind } from './cables';
 import { labelTexture } from '@/lib/three/proceduralTextures';
 
 const dark = { color: '#1a1d23', metalness: 0.35, roughness: 0.45 } as const;
@@ -71,32 +72,27 @@ const READER_PORTS: readonly PortHole[] = [
 export const DockingStation = () => <Gadget size={[0.2, 0.03, 0.08]} glow="#38d6f5" ports={DOCK_PORTS} />;
 export const CardReader = () => <Gadget size={[0.06, 0.012, 0.04]} color="#1a1d23" glow="#38d6f5" ports={READER_PORTS} />;
 
-/** Cable colours / plug tints of the cable coils (HDMI, DisplayPort, USB-C, USB-A, audio). */
-const COILS = {
-  hdmi_cable: ['#15171c', '#2a2d33'],
-  displayport_cable: ['#15171c', '#3f4552'],
-  usb_c_cable: ['#e6e8ec', '#cfd3da'],
-  usb_a_cable: ['#2b2f37', '#5b6270'],
-  audio_cable: ['#22c55e', '#15803d'],
-  ethernet_cable: ['#3b82f6', '#cfe0ff'],
-} as const;
 
-/** A coiled cable hanging on a hook, with its plug. */
-export function CableCoil({ kind }: { kind: keyof typeof COILS }) {
-  const [color, plug] = COILS[kind];
+/**
+ * A cable hanging on its hook: a bundled hank with both plugs (0.37,
+ * devices/cables.ts — the connector shapes of the real cable, no more rings).
+ */
+export function CableCoil({ kind }: { kind: CableKind }) {
+  const geo = useDisposable(() => cableGeometry(kind), [kind]);
   return (
     <group>
       <mesh position={[0, 0, 0.04]}>
         <cylinderGeometry args={[0.006, 0.006, 0.06, 8]} />
         <meshStandardMaterial color="#9aa3b2" metalness={0.8} roughness={0.3} />
       </mesh>
-      <mesh position={[0, -0.12, 0.06]}>
-        <torusGeometry args={[0.1, 0.008, 8, 40]} />
-        <meshStandardMaterial color={color} roughness={0.55} />
-      </mesh>
-      <RoundedBox args={[0.03, 0.05, 0.016]} radius={0.004} position={[0.06, -0.26, 0.06]} castShadow>
-        <meshStandardMaterial color={plug} roughness={0.45} metalness={0.3} />
-      </RoundedBox>
+      <group position={[0, 0, 0.06]}>
+        <mesh geometry={geo.colored} castShadow>
+          <meshStandardMaterial vertexColors roughness={0.5} metalness={0.05} />
+        </mesh>
+        <mesh geometry={geo.metal}>
+          <meshStandardMaterial color="#c8ccd4" metalness={0.9} roughness={0.25} />
+        </mesh>
+      </group>
     </group>
   );
 }

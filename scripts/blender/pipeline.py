@@ -615,6 +615,8 @@ def render_preview(parts, path, exploded):
     radius = (mx - mn).length / 2
     cam_data = bpy.data.cameras.new("preview")
     cam_data.lens = 50
+    # the default 0.1 m near plane would clip a coin cell away entirely
+    cam_data.clip_start, cam_data.clip_end = radius * 0.01, radius * 30
     cam = bpy.data.objects.new("preview_camera", cam_data)
     scene.collection.objects.link(cam)
     direction = Vector((0.9, -1.3, 0.9)).normalized()

@@ -168,17 +168,16 @@ function ClippedMonitor({ product, paint, part, onScreen }: { product: HardwareI
 
 /** Screens dim to black until the assembly switches the monitor on. */
 function useScreenPower(animated: boolean) {
-  const screens = useRef<MeshStandardMaterial[]>([]);
+  const screens = useRef(new Set<MeshStandardMaterial>());
   const wallpaper = useMonitorWallpaper();
   const onScreen = useCallback(
     (root: Object3D) => {
       wallpaper(root);
-      screens.current = [];
       root.traverse((obj) => {
         const mesh = obj as Mesh;
         if (!mesh.isMesh) return;
         (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).forEach((m) => {
-          if (m.name === 'Screen') screens.current.push(m as MeshStandardMaterial);
+          if (m.name === 'Screen') screens.current.add(m as MeshStandardMaterial);
         });
       });
     },
@@ -195,8 +194,18 @@ function useScreenPower(animated: boolean) {
   return onScreen;
 }
 
+const landed = (p: number) => Math.abs(p - 1) < 0.001;
+
 function Monitor({ product, paint, animated }: { product: HardwareItem; paint: PaintFinish | null; animated: boolean }) {
   const onScreen = useScreenPower(animated);
+  const pair = useRef<Group>(null);
+  const whole = useRef<Group>(null);
+  useFrame(() => {
+    if (!animated || !pair.current || !whole.current) return;
+    const done = landed(assemblyRig.pieces.monitorStand) && landed(assemblyRig.pieces.monitor);
+    pair.current.visible = !done;
+    whole.current.visible = done;
+  });
   if (!animated) {
     return (
       <group position={[...MONITOR.position]}>
@@ -206,12 +215,18 @@ function Monitor({ product, paint, animated }: { product: HardwareItem; paint: P
   }
   return (
     <group position={[...MONITOR.position]}>
-      <Piece k="monitorStand" animated from={[0, 0.2, 0.05]}>
-        <ClippedMonitor product={product} paint={paint} part="stand" />
-      </Piece>
-      <Piece k="monitor" animated from={[0, 0.3, 0]}>
-        <ClippedMonitor product={product} paint={paint} part="panel" onScreen={onScreen} />
-      </Piece>
+      <group ref={pair}>
+        <Piece k="monitorStand" animated from={[0, 0.2, 0.05]}>
+          <ClippedMonitor product={product} paint={paint} part="stand" />
+        </Piece>
+        <Piece k="monitor" animated from={[0, 0.3, 0]}>
+          <ClippedMonitor product={product} paint={paint} part="panel" onScreen={onScreen} />
+        </Piece>
+      </group>
+      {/* once both halves have landed, one unclipped copy draws instead of two clipped ones */}
+      <group ref={whole} visible={false}>
+        <ProductModel product={product} axis={0} paint={paint} prepare={onScreen} stretchY={monitorStretch(product)} />
+      </group>
     </group>
   );
 }
@@ -219,7 +234,7 @@ function Monitor({ product, paint, animated }: { product: HardwareItem; paint: P
 /* ── PC ──────────────────────────────────────────────────── */
 
 /** Finish a catalog case model already has (V2-2b); other finishes are painted on. */
-const NATIVE_CASE_FINISH: Readonly<Record<string, CaseFinish>> = { 'case-lianli-o11d-evo': 'white', 'case-nzxt-h5-flow-2024': 'white' };
+const NATIVE_CASE_FINISH: Readonly<Record<string, CaseFinish>> = { 'case-lianli-o11d-evo': 'white', 'case-nzxt-h5-flow-2024': 'white', 'case-bitlab-aero': 'white' };
 
 /** System unit with case paint and RGB; parts missing from the build are hidden. */
 function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish; rig: PcRigMode }) {
@@ -229,8 +244,11 @@ function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish;
   const native = own ? (NATIVE_CASE_FINISH[own.id] ?? 'black') : 'black';
   const paint = finish.case === native ? null : CASE_FINISHES[finish.case];
   const hide = useMemo<PartId[]>(() => (['motherboard', 'cpu', 'cooler', 'ram', 'gpu', 'ssd', 'psu'] as const).filter(id => !build[id === 'cooler' ? 'cooling' : id]), [build]);
+  const found = useRef<Object3D | null>(null);
   useFrame(() => {
-    const chassis = group.current?.getObjectByName(own ? `asset:${own.id}.glb` : 'asset:chassis.glb');
+    // look the chassis up again only when it was replaced (detail level loaded)
+    if (!found.current?.parent) found.current = group.current?.getObjectByName(own ? `asset:${own.id}.glb` : 'asset:chassis.glb') ?? null;
+    const chassis = found.current;
     if (!chassis) return;
     const key = `${chassis.uuid}:${finish.case}`;
     if (applied.current === key) return;
@@ -251,7 +269,11 @@ const CHAIR_POSITION = [-1.12, 0, 0.4] as const;
 const HEADSET_OFFSET = [0, 0.045, 0] as const;
 const MAT_PIVOT = { pivotX: MAT.position[0] - MAT.size[0] / 2 };
 
-export function SetupItems({ build, finish, animated = false }: { build: ResolvedBuild; finish: Finish; animated?: boolean }) {
+/**
+ * `pcRig`: who drives the system unit (default: the assembly timeline when
+ * animated, else a fixed pose; the home hero leaves it to the scroll story).
+ */
+export function SetupItems({ build, finish, animated = false, pcRig }: { build: ResolvedBuild; finish: Finish; animated?: boolean; pcRig?: PcRigMode }) {
   const theme = finish.peripherals;
   const paints = useMemo(
     () => ({
@@ -317,7 +339,7 @@ export function SetupItems({ build, finish, animated = false }: { build: Resolve
       )}
       {build.case && (
         <Piece k="pcCase" animated={animated} from={[0.45, 0, 0.05]}>
-          <SetupPC build={build} finish={finish} rig={animated ? 'external' : 'fixed'} />
+          <SetupPC build={build} finish={finish} rig={pcRig ?? (animated ? 'external' : 'fixed')} />
         </Piece>
       )}
     </>

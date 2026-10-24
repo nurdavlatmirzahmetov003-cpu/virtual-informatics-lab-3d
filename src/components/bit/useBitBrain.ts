@@ -14,11 +14,13 @@ import { useSettingsStore } from '@/store/settingsStore';
 import { useBitStore, type BitSource } from '@/store/bitStore';
 import { loadBitContent, type BitContent } from '@/services/bit/content';
 import { understand, type Intent } from '@/services/bit/intent';
-import { LESSON_IDS, TOUR_STOPS, type LessonId } from '@/services/bit/lessons';
+import { LESSON_IDS, TOUR_STOPS, lessonPoint, type LessonId } from '@/services/bit/lessons';
+import { pointAt } from '@/services/bit/pointer';
 import { sectionById, sectionOfPath, type SectionId } from '@/services/bit/sections';
-import { askBit, bitHealth, resetBitHealth, type Turn } from '@/services/bit/client';
+import { askBit, bitCapabilities, resetBitHealth, type BitCapabilities, type Turn } from '@/services/bit/client';
 import { splitSentences } from '@/services/bit/text';
-import { Speaker, ttsSupported, voiceFor, voicesReady } from '@/services/bit/speech';
+import { ttsSupported, voiceFor, voicesReady } from '@/services/bit/speech';
+import { bitVoice } from '@/services/bit/voice';
 
 const fill = (text: string, vars: Record<string, string | number> = {}) => {
   const all: Record<string, string | number> = { brand: BRAND.name, ...vars };
@@ -38,8 +40,8 @@ export function useBitBrain() {
   const location = useLocation();
   const [content, setContent] = useState<BitContent | null>(null);
   const [model, setModel] = useState<ModelState>('checking');
-  const [voiceNote, setVoiceNote] = useState<'approx' | 'none' | null>(null);
-  const speaker = useRef<Speaker | null>(null);
+  const [browserVoice, setBrowserVoice] = useState<'ok' | 'approx' | 'none'>('ok');
+  const [caps, setCaps] = useState<BitCapabilities>({ model: false, tts: false, stt: false });
   const stream = useRef<AbortController | null>(null);
   const page = useRef<SectionId>('home');
   // react-router paths are already relative to the base (GitHub Pages)
@@ -58,29 +60,36 @@ export function useBitBrain() {
   }, [language]);
   useEffect(() => {
     let alive = true;
-    void bitHealth().then((ok) => alive && setModel(ok ? 'online' : 'offline'));
+    void bitCapabilities().then((c) => {
+      if (!alive) return;
+      setCaps(c);
+      setModel(c.model ? 'online' : 'offline');
+      // Gemini's voice when the server has it; the browser's own otherwise
+      bitVoice.server = c.tts;
+    });
     return () => {
       alive = false;
     };
   }, []);
 
-  // one speaker per language; a language switch silences the old one
+  // one voice for the site: a language switch silences it and changes the browser fallback voice
   useEffect(() => {
-    const s = new Speaker(language);
-    speaker.current = s;
+    bitVoice.stop();
+    bitVoice.language = language;
     let alive = true;
     void voicesReady().then(() => {
       if (!alive) return;
-      if (!ttsSupported()) return setVoiceNote('none');
+      if (!ttsSupported()) return setBrowserVoice('none');
       const v = voiceFor(language);
-      setVoiceNote(!v ? 'none' : v.approximate ? 'approx' : null);
+      setBrowserVoice(!v ? 'none' : v.approximate ? 'approx' : 'ok');
     });
     return () => {
       alive = false;
-      s.stop();
       stream.current?.abort();
     };
   }, [language]);
+  /** Only worth telling when Gemini's voice is not there to replace the browser's. */
+  const voiceNote = caps.tts || browserVoice === 'ok' ? null : browserVoice;
 
   const t = useCallback((key: string, vars?: Record<string, string | number>) => translate(language, key as TranslationKey, vars), [language]);
 
@@ -89,7 +98,7 @@ export function useBitBrain() {
     (text: string, source: BitSource = 'local') => {
       const { push, voice } = useBitStore.getState();
       push({ role: 'bit', text, source });
-      if (voice) speaker.current?.say(text);
+      if (voice) bitVoice.say(text);
     },
     [],
   );
@@ -124,6 +133,8 @@ export function useBitBrain() {
       }
       useBitStore.getState().setGuide({ kind: 'lesson', lesson, index });
       say(steps[index]);
+      // the object this step is about: the camera flies to it and it lights up (0.37)
+      pointAt(lessonPoint(lesson, index));
     },
     [say],
   );
@@ -132,7 +143,7 @@ export function useBitBrain() {
     const c = content;
     const guide = useBitStore.getState().guide;
     if (!c) return;
-    speaker.current?.stop();
+    bitVoice.stop();
     if (!guide) return say(c.say.nothingToContinue);
     if (guide.kind === 'tour') {
       if (guide.index + 1 < TOUR_STOPS.length) tourStop(c, guide.index + 1);
@@ -144,7 +155,7 @@ export function useBitBrain() {
   }, [content, lessonStep, say, tourStop]);
 
   const stopAll = useCallback(() => {
-    speaker.current?.stop();
+    bitVoice.stop();
     stream.current?.abort();
   }, []);
 
@@ -212,8 +223,8 @@ export function useBitBrain() {
       const speakNew = (visible: string, final: boolean) => {
         if (!useBitStore.getState().voice || visible.length <= spoken) return;
         const { done, rest } = splitSentences(visible.slice(spoken));
-        done.forEach((sentence) => speaker.current?.say(sentence));
-        if (final && rest.trim()) speaker.current?.say(rest);
+        done.forEach((sentence) => bitVoice.say(sentence));
+        if (final && rest.trim()) bitVoice.say(rest);
         spoken = final ? visible.length : visible.length - rest.length;
       };
       try {
@@ -291,11 +302,11 @@ export function useBitBrain() {
         .filter((m, i, all) => !m.pending && !m.error && m.text && !(m.role === 'user' && all[i + 1]?.error))
         .map((m) => ({ role: m.role, text: m.text }));
       store.push({ role: 'user', text: trimmed });
-      speaker.current?.stop();
-      act(c, understand(trimmed, { modelAvailable: model === 'online' }), history);
+      bitVoice.stop();
+      act(c, understand(trimmed, { modelAvailable: model === 'online', page: page.current }), history);
     },
     [act, content, model],
   );
 
-  return { content, model, voiceNote, handle, next, stopAll, speaker, language, isLesson: (id: string): id is LessonId => (LESSON_IDS as readonly string[]).includes(id) };
+  return { content, model, caps, voiceNote, handle, next, stopAll, language, isLesson: (id: string): id is LessonId => (LESSON_IDS as readonly string[]).includes(id) };
 }

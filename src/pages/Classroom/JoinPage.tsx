@@ -11,6 +11,7 @@ import { studentApi } from '@/services/classroom/api';
 import { useAuthStore } from '@/store/authStore';
 import { homeOf } from '../Auth/roles';
 import auth from '../Auth/Auth.module.css';
+import { AuthLogo, AuthShell } from '../Auth/AuthShell';
 import { useErrorText } from './hooks';
 import styles from './Classroom.module.css';
 
@@ -27,7 +28,7 @@ export default function JoinPage() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  if (status === 'loading') return <div className={auth.page} aria-busy="true" />;
+  if (status === 'loading') return <AuthShell busy />;
   if (!user) return <Navigate to={`/login?next=${encodeURIComponent(`/join?code=${code}`)}`} replace />;
 
   const join = async () => {
@@ -43,8 +44,9 @@ export default function JoinPage() {
   };
 
   return (
-    <div className={auth.page}>
+    <AuthShell>
       <div className={auth.card}>
+        <AuthLogo />
         <span className={auth.eyebrow}>{t('classroom.class.eyebrow')}</span>
         <h1>{t('classroom.student.join')}</h1>
         <p className={styles.bigCode}>{code || '—'}</p>
@@ -69,6 +71,6 @@ export default function JoinPage() {
           </>
         )}
       </div>
-    </div>
+    </AuthShell>
   );
 }

@@ -16,10 +16,12 @@ import { joinCode, normalizeJoinCode } from '../names';
 import type { WsConn } from './ws';
 import { QUIZ_TOPICS, buildQuiz, quizPoints, type LiveQuestion, type QuizTopic } from '@/labs/LiveGames/quiz';
 import { deviceQuiz } from '@/labs/Arcade';
-import { GAME_KINDS, applyMove, faultOrder, newRacer, raceSeconds, rankRacers, symptomsOf, type GameKind, type Move, type RaceKind, type RacerState } from '@/labs/LiveGames/races';
+import { GAME_KINDS, MOVE_TYPES, applyMove, asMove, faultOrder, newRacer, raceSeconds, rankRacers, symptomsOf, type GameKind, type Move, type RaceKind, type RacerState } from '@/labs/LiveGames/races';
 import type { FaultId } from '@/labs/SystemSim/faults';
 
 export const MAX_PLAYERS = 60;
+/** live_sessions.kind of each game (its CHECK allows quiz, assembly, connect, fault). */
+const STORED_KIND: Readonly<Record<GameKind, 'quiz' | 'assembly' | 'connect' | 'fault'>> = { quiz: 'quiz', device: 'quiz', assembly: 'assembly', connect: 'connect', fault: 'fault', phone: 'assembly', laptop: 'assembly', network: 'connect' };
 /** Answer slots of a question: four device names, or a, b, c. */
 const optionCount = (q: LiveQuestion | undefined) => q?.pick?.length ?? q?.order.length ?? 0;
 const COUNTDOWN_MS = 3000;
@@ -52,6 +54,8 @@ interface RaceState {
   startsAt: number;
   endsAt: number;
   faults: FaultId[];
+  /** The room's seed: the network race's router ports (0.37). */
+  seed: number;
 }
 
 export interface Room {
@@ -138,7 +142,7 @@ export class LiveHub {
     } else {
       const minutes = Number(input.minutes ?? 8);
       if (!Number.isInteger(minutes) || minutes < 1 || minutes > 30) throw new HttpError(400, 'badMinutes');
-      race = { startsAt: 0, endsAt: minutes * 60_000, faults: kind === 'fault' ? faultOrder(seed) : [] };
+      race = { startsAt: 0, endsAt: minutes * 60_000, faults: kind === 'fault' ? faultOrder(seed) : [], seed };
     }
     let code = joinCode();
     while ([...this.rooms.values()].some((r) => r.code === code)) code = joinCode();
@@ -223,7 +227,7 @@ export class LiveHub {
         score: 0,
         correct: 0,
         answers: new Map(),
-        racer: room.race ? newRacer(room.kind as RaceKind) : null,
+        racer: room.race ? newRacer(room.kind as RaceKind, room.race.seed) : null,
         finishedAt: null,
       };
       room.players.set(user.id, player);
@@ -275,7 +279,8 @@ export class LiveHub {
   private playerMessage(room: Room, p: Player, conn: WsConn, m: unknown) {
     const msg = m as Record<string, unknown>;
     if (msg.t === 'answer') return this.answer(room, p, Number(msg.slot), conn);
-    if (msg.t === 'place' || msg.t === 'plug' || msg.t === 'unplug' || msg.t === 'diagnose') return this.move(room, p, msg as unknown as Move, conn);
+    const move = room.race ? asMove(msg) : null;
+    if (move && MOVE_TYPES[room.kind as RaceKind].includes(move.t)) return this.move(room, p, move, conn);
   }
 
   private start(room: Room) {
@@ -341,7 +346,7 @@ export class LiveHub {
     const race = room.race;
     const now = this.now();
     if (!race || room.status !== 'running' || now < race.startsAt || !p.racer || p.racer.done) return conn.send({ t: 'error', code: 'notNow' });
-    const r = applyMove(room.kind as RaceKind, p.racer, move, race.faults);
+    const r = applyMove(room.kind as RaceKind, p.racer, move, race.faults, race.seed);
     p.racer = r.state;
     if (r.state.done && p.finishedAt === null) p.finishedAt = now;
     conn.send({ t: 'feedback', ok: r.ok, message: r.message ?? null });
@@ -380,11 +385,12 @@ export class LiveHub {
     if (!room.players.size) return;
     const id = randomUUID();
     room.sessionId = id;
-    // «What device is this?» is stored as a quiz (the table's CHECK predates it; its results read the same)
-    this.db.prepare('INSERT INTO live_sessions (id, kind, title, host_id, class_id, started_at, finished_at, players) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(id, room.kind === 'device' ? 'quiz' : room.kind, room.title, room.hostId, room.classId, room.startedAt, room.finishedAt, room.players.size);
+    // the table's CHECK predates the newer kinds: «What device is this?» is stored as a quiz, the 0.37 races
+    // as the race their results read like (build → assembly, network → connect); `detail.kind` keeps the real one
+    this.db.prepare('INSERT INTO live_sessions (id, kind, title, host_id, class_id, started_at, finished_at, players) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(id, STORED_KIND[room.kind], room.title, room.hostId, room.classId, room.startedAt, room.finishedAt, room.players.size);
     const put = this.db.prepare('INSERT INTO live_results (session_id, user_id, rank, score, detail) VALUES (?, ?, ?, ?, ?)');
     for (const s of this.standings(room)) {
-      const detail = room.quiz ? { correct: s.p.correct, of: room.quiz.questions.length } : { mistakes: s.p.racer?.mistakes ?? 0, progress: s.p.racer?.progress ?? 0 };
+      const detail = room.quiz ? { correct: s.p.correct, of: room.quiz.questions.length } : { mistakes: s.p.racer?.mistakes ?? 0, progress: s.p.racer?.progress ?? 0, kind: room.kind };
       put.run(id, s.p.id, s.rank, s.score, JSON.stringify(detail));
     }
     audit(this.db, 'live.finish', { actor: room.hostId, target: id, detail: `${room.kind} ${room.players.size}` }, this.now());
@@ -449,12 +455,15 @@ export class LiveHub {
           startsAt: race.startsAt,
           endsAt: race.endsAt,
           rounds: race.faults.length,
+          seed: race.seed,
           me: r && {
             progress: r.progress,
             mistakes: r.mistakes,
             done: r.done,
             installed: r.assembly?.installed ?? null,
             plugged: r.plugs?.plugged ?? null,
+            built: r.built ?? null,
+            links: r.net ? r.net.links.map((l) => [`${l.a.device}.${l.a.port}`, `${l.b.device}.${l.b.port}`]) : null,
             round: r.round ?? null,
             // the fault race shows the symptoms of the current round, never its cause
             symptoms: room.kind === 'fault' && room.status === 'running' && r.round !== undefined && r.round < race.faults.length ? symptomsOf(race.faults[r.round]) : null,

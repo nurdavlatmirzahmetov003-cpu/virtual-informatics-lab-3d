@@ -18,7 +18,9 @@ export function XRay({ after, children }: { after: number; children: ReactNode }
   useFrame(() => {
     const g = group.current;
     if (!g) return;
-    const opacity = 1 - (1 - FAINT) * ease(partProgress(rig.shown, after, rig.count));
+    // build games move each part on its own (rig.parts, keyed in teardown order)
+    const own = rig.parts && Object.values(rig.parts)[after];
+    const opacity = 1 - (1 - FAINT) * ease(own ? own.shown : partProgress(rig.shown, after, rig.count));
     if (Math.abs(opacity - last.current) < 0.002) return;
     last.current = opacity;
     g.traverse((o) => {

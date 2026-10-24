@@ -95,3 +95,76 @@ svg {
 .skip-link:focus {
   top: var(--space-4);
 }
+
+/* Bit's panel docked on desktop (0.37): the page makes room for it */
+:root {
+  --bit-panel-w: 380px;
+}
+
+@media (min-width: 900px) {
+  :root[data-bit-dock='right'] #main {
+    padding-right: calc(var(--bit-panel-w) + 16px);
+  }
+
+  :root[data-bit-dock='left'] #main {
+    padding-left: calc(var(--bit-panel-w) + 16px);
+  }
+}
+
+/* ── accessibility options (0.37), set on <html> by AppShell ── */
+
+/* high contrast: darker text, visible borders, solid surfaces */
+:root[data-contrast] {
+  --text-muted: var(--text);
+  --border: rgb(var(--ink-rgb) / 0.55);
+}
+
+:root[data-contrast][data-theme='light'] {
+  --text: #000;
+  --surface: #fff;
+  --accent: #0a4fb3;
+}
+
+:root[data-contrast][data-theme='dark'] {
+  --text: #fff;
+  --surface: #05070d;
+  --accent: #7cc8ff;
+}
+
+:root[data-contrast] a:not([class]) {
+  text-decoration: underline;
+}
+
+:root[data-contrast] :focus-visible {
+  outline: 3px solid var(--accent) !important;
+  outline-offset: 2px;
+}
+
+/* readable font: a plain sans-serif with more space between letters, words and lines */
+:root[data-readable] {
+  --font-sans: Verdana, Tahoma, 'Segoe UI', sans-serif;
+  --font-display: Verdana, Tahoma, 'Segoe UI', sans-serif;
+  --font-hero: Verdana, Tahoma, 'Segoe UI', sans-serif;
+}
+
+:root[data-readable] body {
+  letter-spacing: 0.03em;
+  word-spacing: 0.12em;
+  line-height: 1.7;
+}
+
+/* calm: no animations or transitions anywhere */
+:root[data-calm] {
+  --dur-fast: 0ms;
+  --dur-med: 0ms;
+  --dur-slow: 0ms;
+}
+
+:root[data-calm] *,
+:root[data-calm] *::before,
+:root[data-calm] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}

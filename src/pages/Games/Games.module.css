@@ -711,3 +711,176 @@
     animation: none;
   }
 }
+
+/* ── 0.37: hands-on 3D games, timer bar, stars, experience, badges ── */
+
+.page[data-wide] {
+  max-width: 1180px;
+}
+
+.timeBar {
+  height: 8px;
+  margin: calc(var(--space-3) * -1) 0 var(--space-4);
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(var(--ink-rgb) / 0.08);
+}
+
+.timeBar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--tone), color-mix(in srgb, var(--tone) 55%, #5470ff));
+  transition: width 1s linear;
+}
+
+.timeBar[data-low] i {
+  background: var(--danger);
+}
+
+.stars {
+  display: flex;
+  gap: 6px;
+}
+
+.stars svg {
+  color: rgb(var(--ink-rgb) / 0.18);
+  fill: rgb(var(--ink-rgb) / 0.08);
+}
+
+.stars svg[data-on] {
+  color: #f5b83d;
+  fill: #f5b83d;
+  animation: starIn 0.45s var(--ease-out) both;
+}
+
+@keyframes starIn {
+  from {
+    transform: scale(0.2) rotate(-40deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.25);
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.xp {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--tone) 16%, transparent);
+  font-weight: 700;
+}
+
+.section {
+  margin: var(--space-6) 0 var(--space-3);
+  font-size: var(--fs-lg);
+}
+
+.section:first-of-type {
+  margin-top: 0;
+}
+
+.sectionNote {
+  margin: 0 0 var(--space-4);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.badge3d {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--tone) 22%, transparent);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.levelCard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: center;
+  margin-bottom: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.level {
+  display: grid;
+  gap: 6px;
+  min-width: 220px;
+  flex: 1;
+}
+
+.level b {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: var(--fs-lg);
+}
+
+.levelBar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(var(--ink-rgb) / 0.08);
+}
+
+.levelBar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #f5b83d, #ff8a7a);
+}
+
+.level small {
+  color: var(--text-muted);
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.badges li {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.badges li[data-got] {
+  border-color: color-mix(in srgb, #f5b83d 60%, transparent);
+  background: color-mix(in srgb, #f5b83d 12%, transparent);
+  color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stars svg[data-on] {
+    animation: none;
+  }
+
+  .timeBar i {
+    transition: none;
+  }
+}

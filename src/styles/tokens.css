@@ -63,6 +63,8 @@
   /* typography */
   --font-sans: 'Onest Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-display: 'Montserrat Variable', 'Onest Variable', 'Segoe UI', sans-serif;
+  /* characterful face for the hero headline, the wordmark and sign-in titles (0.37) */
+  --font-hero: 'Tektur Variable', 'Montserrat Variable', 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
 
   --fs-xs: 0.75rem;

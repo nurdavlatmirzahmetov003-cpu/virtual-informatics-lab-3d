@@ -43,6 +43,17 @@ export const PRODUCT: Record<string, string> = {
   tablet: 'dev-tablet',
   smartwatch: 'dev-smartwatch',
   sbc: 'dev-sbc',
+  // the project's own models (0.37, scripts/blender/make-lab-devices.py)
+  scanner: 'dev-scanner',
+  access_point: 'dev-access-point',
+  // CC BY 4.0 downloads from Sketchfab (0.37, authors in ASSET_MANIFEST.md and on the Credits page)
+  cooler_liquid: 'dev-aio-cooler',
+  card_reader: 'dev-card-reader',
+  cmos_battery: 'dev-cmos-battery',
+  hdd_25: 'dev-hdd-25',
+  optical_drive: 'dev-optical-drive',
+  usb_a_cable: 'dev-usb-a-cable',
+  usb_c_cable: 'dev-usb-c-cable',
 };
 
 /** Product files a set of devices uses, for prefetching. */

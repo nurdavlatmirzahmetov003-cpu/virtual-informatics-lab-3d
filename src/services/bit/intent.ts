@@ -10,6 +10,7 @@ import { matchFaq, isShortQuestion, type FaqId } from './faq';
 import { SECTIONS, type SectionId } from './sections';
 import { LESSON_IDS, type LessonId } from './lessons';
 import { countStems, hasStem, normalize, stripWakeWord } from './text';
+import { wordsToDigits } from './numbers';
 
 export type Intent =
   | { kind: 'empty' }
@@ -47,8 +48,10 @@ export function findSection(normalized: string): SectionId | null {
 
 const lessonFor = (section: SectionId | null): LessonId | null => (section && (LESSON_IDS as readonly string[]).includes(section) ? (section as LessonId) : null);
 
-export function understand(raw: string, options: { modelAvailable?: boolean } = {}): Intent {
-  const text = stripWakeWord(raw);
+/** `page`: the section on screen — «сабақты баста» there starts its lesson (0.37). */
+export function understand(raw: string, options: { modelAvailable?: boolean; page?: SectionId } = {}): Intent {
+  // amounts said in words («бес жүз мың») become digits for the budget
+  const text = wordsToDigits(stripWakeWord(raw));
   const n = normalize(text);
   // just "Бит!": the student is calling, answer with a greeting
   if (!n) return normalize(raw) ? { kind: 'greet' } : { kind: 'empty' };
@@ -60,7 +63,7 @@ export function understand(raw: string, options: { modelAvailable?: boolean } = 
 
   const section = findSection(n);
   if (MONEY.test(text) && countStems(n, BUILD)) return { kind: 'build', message: text };
-  const lesson = lessonFor(section);
+  const lesson = lessonFor(section) ?? (section ? null : lessonFor(options.page ?? null));
   if (lesson && countStems(n, LESSON)) return { kind: 'lesson', lesson };
   const question = /\?/.test(raw) || countStems(n, QUESTION) > 0;
   if (section && (countStems(n, OPEN) || (wordCount <= 3 && !question))) return { kind: 'navigate', section };

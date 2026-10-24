@@ -111,7 +111,9 @@ export function LabRoom() {
     () =>
       LAB_ZONES.map((z) => {
         const yaw = Math.atan2(z.facing[0], z.facing[1]);
-        return new Matrix4().makeRotationY(yaw).setPosition(z.center[0], H - 0.5, z.center[1]);
+        // the stage's bar hangs over its front edge, like stage lights (over the middle it hid the stage's sign)
+        const ahead = z.id === 'stage' ? 1.0 : 0;
+        return new Matrix4().makeRotationY(yaw).setPosition(z.center[0] + z.facing[0] * ahead, H - 0.5, z.center[1] + z.facing[1] * ahead);
       }),
     [],
   );
@@ -153,13 +155,13 @@ export function LabRoom() {
         <boxGeometry args={[SLATS.count * SLATS.pitch + 0.06, SLATS.height + 0.04, 0.012]} />
         <meshStandardMaterial color={palette.wallPanel} roughness={1} />
       </mesh>
-      <instancedMesh ref={slats} args={[undefined, undefined, SLATS.count]} castShadow receiveShadow>
+      <instancedMesh ref={slats} name="lab-slats" args={[undefined, undefined, SLATS.count]} castShadow receiveShadow>
         <boxGeometry args={[SLATS.width, SLATS.height, SLATS.depth]} />
         <meshStandardMaterial color={palette.slats} roughness={0.7} envMapIntensity={0.4} />
       </instancedMesh>
 
       {/* pendant light bars */}
-      <instancedMesh ref={bars} args={[undefined, undefined, barMatrices.length]}>
+      <instancedMesh ref={bars} name="lab-light-bars" args={[undefined, undefined, barMatrices.length]}>
         <boxGeometry args={[2.4, 0.03, 0.12]} />
         <meshStandardMaterial color="#0d0f14" emissive={light ? '#ffffff' : '#e8f6ff'} emissiveIntensity={light ? 1.2 : 1.8} toneMapped={false} />
       </instancedMesh>

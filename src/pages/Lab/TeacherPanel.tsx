@@ -4,9 +4,9 @@
  * in view whose test is still open and the teardowns left, and gives a tip
  * for the zone. Everything comes from the local progress records.
  */
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bot, ClipboardCheck, Lightbulb, MessageCircle, Wrench, X } from 'lucide-react';
+import { ArrowRight, Bot, ClipboardCheck, Lightbulb, MessageCircle, Presentation, Wrench, X } from 'lucide-react';
 import { deviceById, deviceKey } from '@/data/devices/devices';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
@@ -15,9 +15,60 @@ import { useAuthStore } from '@/store/authStore';
 import { useLabStore } from '@/store/labStore';
 import { openBit } from '@/store/bitStore';
 import { useProgressStore } from '@/store/progressStore';
+import { BitSays } from '@/components/bit/BitSays';
+import { POSTER_IDS } from '@/data/lab/classroom';
+import { bitVoice, sentencesOf, useVoiceStore } from '@/services/bit/voice';
+import { useLessonBoard } from '@/store/lessonBoardStore';
 import styles from './TeacherPanel.module.css';
 
 const k = (s: string) => s as TranslationKey;
+
+const LESSON_OWNER = 'lab-lesson';
+
+/**
+ * "Lesson": the robot teacher reads one of the classroom topics with Bit's
+ * voice; the whiteboard beside it shows the topic and the sentence being
+ * spoken (useLessonBoard). Each lesson is the next topic.
+ */
+function LessonButton() {
+  const t = useT();
+  const active = useLessonBoard((s) => s.active);
+  const mine = useVoiceStore((s) => s.owner === LESSON_OWNER && s.speaking);
+  const [next, setNext] = useState(0);
+  const topic = POSTER_IDS[next % POSTER_IDS.length];
+  const title = t(k(`lab.classroom.posters.${topic}.title`));
+  useEffect(() => bitVoice.onIdle(() => useLessonBoard.setState({ active: false })), []);
+  // leaving the panel ends the lesson
+  useEffect(
+    () => () => {
+      if (useVoiceStore.getState().owner === LESSON_OWNER) bitVoice.stop();
+      useLessonBoard.setState({ active: false });
+    },
+    [],
+  );
+  const start = () => {
+    if (active && mine) {
+      bitVoice.stop();
+      useLessonBoard.setState({ active: false });
+      return;
+    }
+    const base = `lab.classroom.posters.${topic}`;
+    const lines = [t(k(`${base}.subtitle`)), ...sentencesOf(t(k(`${base}.explain`))), ...['f1', 'f2', 'f3', 'f4'].map((f) => t(k(`${base}.${f}`)))].filter((s) => s && !s.startsWith('lab.'));
+    bitVoice.stop();
+    useLessonBoard.setState({ active: true, title, lines, index: 0 });
+    useVoiceStore.setState({ owner: LESSON_OWNER });
+    bitVoice.sayEach([`${title}. ${lines[0]}`, ...lines.slice(1)], (i) => {
+      useLessonBoard.setState({ index: i });
+      useVoiceStore.setState({ owner: LESSON_OWNER });
+    });
+    setNext((n) => n + 1);
+  };
+  return (
+    <button type="button" className={styles.cta} onClick={start} aria-pressed={active && mine}>
+      <Presentation size={16} aria-hidden="true" /> {active && mine ? t('lab.teacher.lessonStop') : t('lab.teacher.lesson', { topic: title })}
+    </button>
+  );
+}
 
 export function TeacherPanel() {
   const t = useT();
@@ -45,10 +96,11 @@ export function TeacherPanel() {
         </button>
       </header>
 
-      <p className={styles.speech}>{t(k(`lab.teacher.mood.${check.mood}`), { name, percent: check.percent })}</p>
+      <BitSays text={t(k(`lab.teacher.mood.${check.mood}`), { name, percent: check.percent })} more={[t(k(`lab.teacher.tips.${focus ?? 'overview'}`))]} />
       <button type="button" className={styles.cta} onClick={() => openBit()}>
         <MessageCircle size={16} aria-hidden="true" /> {t('bit.ask')}
       </button>
+      <LessonButton />
 
       <section className={styles.card} aria-labelledby="teacher-check">
         <h3 id="teacher-check">

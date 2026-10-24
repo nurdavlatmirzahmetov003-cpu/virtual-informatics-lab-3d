@@ -103,3 +103,64 @@
     text-overflow: ellipsis;
   }
 }
+
+/* ── accessibility menu (0.37) ── */
+
+.menuBox {
+  position: relative;
+}
+
+.iconButton[data-on] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 70;
+  display: grid;
+  gap: 6px;
+  width: min(320px, calc(100vw - 32px));
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.menuTitle {
+  margin: 0 0 4px;
+  font-weight: 800;
+}
+
+.switchRow {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.switchRow:hover {
+  background: rgb(var(--ink-rgb) / 0.05);
+}
+
+.switchRow input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--accent);
+}
+
+.switchRow span {
+  display: grid;
+  gap: 2px;
+}
+
+.switchRow small {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}

@@ -12,24 +12,38 @@ export function normalize(text: string): string {
 
 /** Drops "Бит," / "Bit" / "Hey Bit" from the start: it is how students address the assistant. */
 export function stripWakeWord(text: string): string {
-  return text.replace(/^\s*(?:эй|hey|ok|окей|ей)?[\s,]*(?:бит|bit|биттт?|bitt)(?![\p{L}])[\s,!.:—-]*/iu, '').trim();
+  // recognisers also hear «біт», «бид», «бит-бит», «beat»
+  return text.replace(/^\s*(?:эй|hey|ok|окей|ей|сәлем)?[\s,]*(?:бит|біт|бид|bit|beat|биттт?|bitt)(?:[\s,-]+(?:бит|bit))?(?![\p{L}])[\s,!.:—-]*/iu, '').trim();
 }
+
+/**
+ * Kazakh letters → their plain look-alikes, for matching only: speech
+ * recognisers (and keyboards without Kazakh layout) often write «сабак»,
+ * «корсет», «желилер». Never used for what is shown.
+ */
+const FOLD: Record<string, string> = { ә: 'а', ғ: 'г', қ: 'к', ң: 'н', ө: 'о', ұ: 'у', ү: 'у', һ: 'х', і: 'и' };
+export const fold = (s: string) => s.replace(/[әғқңөұүһі]/g, (c) => FOLD[c]);
 
 export const words = (normalized: string): string[] => (normalized ? normalized.split(' ') : []);
 
 /**
  * True when `stem` occurs in the text: a one-word stem must start a word
- * ("желі" → "желілер"), a stem with spaces must start a word and may run on.
+ * ("желі" → "желілер"); in a stem with spaces every word starts one of
+ * consecutive words ("оптическ диск" → "оптический диск", 0.37).
  * A trailing "$" means the phrase ends the text: "what is a computer$" is not
  * "what is a computer virus".
  */
 export function hasStem(normalized: string, stem: string): boolean {
   const exact = stem.endsWith('$');
-  const s = normalize(exact ? stem.slice(0, -1) : stem);
+  const s = fold(normalize(exact ? stem.slice(0, -1) : stem));
   if (!s) return false;
-  if (exact) return ` ${normalized}`.endsWith(` ${s}`);
-  if (!s.includes(' ')) return words(normalized).some((w) => w.startsWith(s));
-  return ` ${normalized}`.includes(` ${s}`);
+  const n = fold(normalized);
+  if (exact) return ` ${n}`.endsWith(` ${s}`);
+  if (!s.includes(' ')) return words(n).some((w) => w.startsWith(s));
+  // several words: each one starts a word, in a row ("оптическ диск" finds "оптический диск")
+  const parts = s.split(' ');
+  const all = words(n);
+  return all.some((_, i) => parts.every((p, j) => all[i + j]?.startsWith(p)));
 }
 
 export const countStems = (normalized: string, stems: readonly string[]) => stems.reduce((n, s) => n + (hasStem(normalized, s) ? 1 : 0), 0);
@@ -52,4 +66,20 @@ export function splitSentences(text: string): { done: string[]; rest: string } {
     start = end;
   }
   return { done, rest: text.slice(start) };
+}
+
+/**
+ * Pieces a reply is spoken in (0.37): the first sentence alone — so the
+ * voice starts quickly — then the rest joined up to `max` characters, which
+ * spends far fewer speech requests than one per sentence. The warm-up script
+ * cuts the built-in texts the same way, so its cache hits.
+ */
+export function speechChunks(sentences: readonly string[], max = 280): string[] {
+  const out: string[] = [];
+  for (const s of sentences) {
+    const last = out.length > 1 ? out[out.length - 1] : null;
+    if (last !== null && last.length + 1 + s.length <= max) out[out.length - 1] = `${last} ${s}`;
+    else out.push(s);
+  }
+  return out;
 }

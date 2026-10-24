@@ -17,6 +17,7 @@ import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useT } from '@/hooks/useT';
 import { useTheme } from '@/hooks/useTheme';
 import { useLabStore } from '@/store/labStore';
+import { bitVoice } from '@/services/bit/voice';
 import { mergePieces, type Piece, type Place } from './mergeParts';
 import styles from './RobotTeacher.module.css';
 
@@ -114,6 +115,9 @@ export function RobotTeacher() {
   const head = useRef<Group>(null);
   const arm = useRef<Group>(null);
   const eyes = useRef<Mesh>(null);
+  // speaks with Bit's voice: the mouth opens with the loudness (0.37)
+  const mouth = useRef<Mesh>(null);
+  const mouthOpen = useRef(0);
   const tip = useRef<Material>(null);
   const level = useQualityPreset().level;
   const cheap = level === 'low' || level === 'medium';
@@ -130,6 +134,15 @@ export function RobotTeacher() {
     root.current.worldToLocal(tmp.copy(camera.position));
     const yaw = Math.max(-0.7, Math.min(0.7, Math.atan2(tmp.x, tmp.z)));
     h.rotation.y += (yaw - h.rotation.y) * 0.08;
+    // talking: a glowing mouth over the smile, opening with the voice, and a small nod
+    const lv = bitVoice.level();
+    mouthOpen.current += (lv - mouthOpen.current) * 0.35;
+    const mo = mouth.current;
+    if (mo) {
+      mo.visible = mouthOpen.current > 0.04;
+      mo.scale.set(1, 0.35 + mouthOpen.current * 2.4, 1);
+    }
+    h.rotation.x = reduced ? 0 : mouthOpen.current * 0.06 * Math.sin(time * 7);
     // blink every few seconds
     if (eyes.current) eyes.current.scale.y = !reduced && time % 4.2 < 0.12 ? 0.15 : 1;
     // wave on hover and now and then
@@ -194,6 +207,10 @@ export function RobotTeacher() {
             <Glow cheap={cheap} power={1.8} ref={tip} />
           </mesh>
           <mesh ref={eyes} geometry={geo.eyes} position={[0, 0.02, 0.178]}>
+            <Glow cheap={cheap} power={2.4} />
+          </mesh>
+          <mesh ref={mouth} position={[0, -0.04, 0.179]} visible={false}>
+            <circleGeometry args={[0.036, 20]} />
             <Glow cheap={cheap} power={2.4} />
           </mesh>
         </group>

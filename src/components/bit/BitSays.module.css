@@ -1,0 +1,98 @@
+.says {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.face {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: var(--gradient-accent);
+  box-shadow: 0 6px 16px rgb(var(--shadow-rgb) / 0.2);
+}
+
+.says[data-speaking] .face {
+  animation: says-talk 0.9s var(--ease-in-out) infinite;
+}
+
+@keyframes says-talk {
+  50% {
+    box-shadow: 0 0 0 6px var(--accent-soft);
+  }
+}
+
+.bubble {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: 4px var(--radius-md) var(--radius-md) var(--radius-md);
+  background: color-mix(in srgb, var(--accent) 9%, var(--bg-elevated));
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+/* the tail pointing at Bit's mouth */
+.bubble::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: -8px;
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  border-left: inherit;
+  border-bottom: inherit;
+  transform: rotate(45deg);
+}
+
+.who {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.bubble p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.bubble p span {
+  border-radius: 4px;
+  transition: background var(--dur-fast);
+}
+
+.bubble p span[data-on] {
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.play {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-2);
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-accent);
+  color: #fff;
+  font: inherit;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .says[data-speaking] .face {
+    animation: none;
+  }
+}

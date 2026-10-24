@@ -12,6 +12,7 @@ import type { TranslationKey } from '@/lib/i18n';
 import { ApiError } from '@/services/auth/api';
 import { resetApi } from '@/services/admin/api';
 import styles from './Auth.module.css';
+import { AuthLogo, AuthShell } from './AuthShell';
 
 export default function ResetPage() {
   const t = useT();
@@ -51,8 +52,9 @@ export default function ResetPage() {
 
   const bad = !token || state === 'bad';
   return (
-    <div className={styles.page}>
+    <AuthShell>
       <form className={styles.card} onSubmit={submit} noValidate>
+        <AuthLogo />
         <span className={styles.eyebrow}>{t('auth.eyebrow')}</span>
         <h1>{t('auth.reset.title')}</h1>
         {bad ? (
@@ -96,6 +98,6 @@ export default function ResetPage() {
           </>
         )}
       </form>
-    </div>
+    </AuthShell>
   );
 }

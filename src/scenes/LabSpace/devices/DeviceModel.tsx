@@ -11,6 +11,7 @@ import { HardwareFans } from '@/scenes/DeskScene/pc/HardwareParts';
 import { useMonitorWallpaper } from '@/scenes/DeskScene/models/useMonitorWallpaper';
 import { Product } from '../zones/common';
 import { CableSet, CmosBattery, Hdd25, LiquidCoolerDisplay, OpticalDrive, Projector, Scanner } from './procedural';
+import type { CableKind } from './cables';
 import { PRODUCT } from './deviceAssets';
 import { AccessPoint, CableCoil, CardReader, DockingStation } from './v24bDevices';
 
@@ -127,6 +128,20 @@ function InteractivePanel({ light }: { light: boolean }) {
   );
 }
 
+/** A cable's hank on a hook post (the procedural cables, and the downloaded ones until they load). */
+function HookedCable({ kind }: { kind: CableKind }) {
+  return (
+    <group>
+      <mesh position-y={0.17} castShadow>
+        <cylinderGeometry args={[0.005, 0.005, 0.34, 12]} />
+        <meshStandardMaterial color="#9aa3b2" metalness={0.8} roughness={0.3} />
+      </mesh>
+      <group position={[0, 0.33, -0.04]}>
+        <CableCoil kind={kind} />
+      </group>
+    </group>
+  );
+}
 function Model({ id, light }: { id: string; light: boolean }): ReactNode {
   const product = PRODUCT[id];
   switch (id) {
@@ -135,7 +150,7 @@ function Model({ id, light }: { id: string; light: boolean }): ReactNode {
     case 'headset':
       return <HeadsetOnStand light={light} />;
     case 'cooler_liquid':
-      return <LiquidCoolerDisplay />;
+      return <Product product={product} lightOnly={light} fallback={<LiquidCoolerDisplay />} />;
     case 'case_fan':
       return (
         <group position-y={0.06}>
@@ -145,40 +160,34 @@ function Model({ id, light }: { id: string; light: boolean }): ReactNode {
     case 'internal_cables':
       return <CableSet />;
     case 'cmos_battery':
-      return <CmosBattery />;
+      return <Product product={product} lightOnly={light} fallback={<CmosBattery />} />;
     case 'hdd_25':
-      return <Hdd25 />;
+      return <Product product={product} lightOnly={light} fallback={<Hdd25 />} />;
     case 'optical_drive':
-      return <OpticalDrive />;
+      return <Product product={product} lightOnly={light} fallback={<OpticalDrive />} />;
     case 'scanner':
-      return <Scanner />;
+      return <Product product={product} lightOnly={light} fallback={<Scanner />} />;
     case 'projector':
       return <Projector />;
     case 'interactive_panel':
       return <InteractivePanel light={light} />;
     case 'access_point':
-      return <AccessPoint />;
+      return <Product product={product} lightOnly={light} fallback={<AccessPoint />} />;
     case 'docking_station':
       return <DockingStation />;
     case 'card_reader':
-      return <CardReader />;
-    case 'hdmi_cable':
-    case 'displayport_cable':
+      return <Product product={product} lightOnly={light} fallback={<CardReader />} />;
     case 'usb_c_cable':
     case 'usb_a_cable':
+      // the downloaded cables lie coiled on the pad; until they load, the hank on its hook
+      return <Product product={product} lightOnly={light} fallback={<HookedCable kind={id} />} />;
+    case 'hdmi_cable':
+    case 'displayport_cable':
     case 'audio_cable':
     case 'ethernet_cable':
-      return (
-        <group>
-          <mesh position-y={0.17} castShadow>
-            <cylinderGeometry args={[0.005, 0.005, 0.34, 12]} />
-            <meshStandardMaterial color="#9aa3b2" metalness={0.8} roughness={0.3} />
-          </mesh>
-          <group position={[0, 0.33, -0.04]}>
-            <CableCoil kind={id} />
-          </group>
-        </group>
-      );
+      return <HookedCable kind={id} />;
+    case 'monitor':
+      return <ScreenProduct product={product} light={light} w={2048} h={1152} />;
     case 'laptop':
       return <ScreenProduct product={product} light={light} w={1536} h={864} />;
     case 'all_in_one':

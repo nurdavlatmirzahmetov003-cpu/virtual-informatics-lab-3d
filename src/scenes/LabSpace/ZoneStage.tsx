@@ -17,10 +17,12 @@ import { useTheme } from '@/hooks/useTheme';
 import { roundedSlab } from '@/lib/three/geometry';
 import { useLabStore } from '@/store/labStore';
 import { SIGN_ASPECT, signTexture } from './signTexture';
+import { signage } from './visibilityAudit';
 import { ShowcaseZone, WorkstationZone } from './zones/pcZones';
 import { AssemblyZone, PeripheralsZone, PrintMediaZone, StorageZone } from './zones/exhibitZones';
 import { MobileZone, NetworkZone, PowerZone } from './zones/techZones';
 import type { ZoneContentProps } from './zones/zoneData';
+import { StageZone } from './zones/StageZone';
 
 const CONTENT: Record<LabZoneId, ComponentType<ZoneContentProps>> = {
   workstation: WorkstationZone,
@@ -32,11 +34,16 @@ const CONTENT: Record<LabZoneId, ComponentType<ZoneContentProps>> = {
   power: PowerZone,
   mobile: MobileZone,
   showcase: ShowcaseZone,
+  stage: StageZone,
 };
 
 const PLATFORM_H = 0.05;
-/** Wall zones stand 1.8 m in front of their wall (zones.ts); signs hang just in front of it. */
-const SIGN_TO_WALL = 1.76;
+/**
+ * Wall zones stand 1.8 m in front of their wall (zones.ts); signs hang 8 cm
+ * off it — in front of the 5.2 cm oak slats behind the workstation, which hid
+ * that sign before 0.37 (scripts/lab-visibility.test.mjs).
+ */
+const SIGN_TO_WALL = 1.72;
 const key = (k: string) => k as TranslationKey;
 
 function ZoneSign({ zone, width }: { zone: LabZone; width: number }) {
@@ -53,7 +60,7 @@ function ZoneSign({ zone, width }: { zone: LabZone; width: number }) {
     [zone, t, light, fonts],
   );
   return (
-    <mesh>
+    <mesh userData={signage(`zone-sign:${zone.id}`)}>
       <planeGeometry args={[width, width / SIGN_ASPECT]} />
       <meshBasicMaterial map={tex} transparent toneMapped={false} />
     </mesh>
@@ -121,7 +128,11 @@ export function ZoneStage({ zone, focused }: { zone: LabZone; focused: boolean }
         <meshStandardMaterial color={light ? '#f6f8fb' : '#1b202b'} roughness={0.55} metalness={0.05} envMapIntensity={0.6} />
       </mesh>
       {/* sign: on the wall behind wall zones, on a totem for free-standing ones */}
-      {isShowcase || zone.id === 'mobile' ? (
+      {zone.id === 'stage' ? (
+        <group position={[0, 2.62, -0.8]}>
+          <ZoneSign zone={zone} width={1.5} />
+        </group>
+      ) : isShowcase || zone.id === 'mobile' ? (
         <group position={[0, 0, -d / 2 - 0.05]}>
           <mesh position-y={0.85}>
             <boxGeometry args={[0.05, 1.7, 0.05]} />

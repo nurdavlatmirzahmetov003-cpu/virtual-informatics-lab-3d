@@ -28,18 +28,18 @@ const FROM_LEFT = Math.PI / 2;
 const FROM_RIGHT = -Math.PI / 2;
 
 export const DECOR: readonly DecorItem[] = [
-  // tall plants in the four corners and between the back zones
+  // tall plants in the corners and between the back zones
   { kind: 'plant_tall', at: [minX + 0.55, minZ + 0.55], yaw: 0, radius: 0.4 },
   { kind: 'plant_tall', at: [maxX - 0.55, minZ + 0.55], yaw: 0.6, radius: 0.4 },
   { kind: 'plant_tall', at: [minX + 0.55, maxZ - 0.6], yaw: 1.2, radius: 0.4 },
-  { kind: 'plant_tall', at: [maxX - 0.55, maxZ - 0.6], yaw: 2.1, radius: 0.4 },
+  // (the front right corner is the presentation stage's, 0.37)
   { kind: 'plant_bush', at: [-3.15, minZ + 0.5], yaw: 0.3, radius: 0.35 },
   { kind: 'plant_bush', at: [3.15, minZ + 0.5], yaw: 1.4, radius: 0.35 },
   // low book cabinets under the back windows of both side walls
   { kind: 'cabinet', at: [minX + 0.25, -4.6], yaw: FROM_LEFT, radius: 1.0 },
   { kind: 'cabinet', at: [maxX - 0.25, -4.6], yaw: FROM_RIGHT, radius: 1.0 },
   // reading lounge by the entrance, right; bean bags, left
-  { kind: 'lounge', at: [5.9, 6.7], yaw: Math.PI, radius: 1.25 },
+  // (the reading lounge by the entrance gave its corner to the presentation stage, 0.37)
   { kind: 'beanbags', at: [-6.3, 6.9], yaw: Math.PI, radius: 1.0 },
   // a mobile whiteboard behind the robot teacher
   { kind: 'whiteboard', at: [4.9, 0.9], yaw: -0.35, radius: 0.65 },

@@ -137,7 +137,7 @@ export function ConnectBoard({ plugged, send }: { plugged: Readonly<Record<strin
   );
 }
 
-function SymptomList({ s }: { s: Symptoms }) {
+export function SymptomList({ s }: { s: Symptoms }) {
   const t = useT();
   const load = s.shutdown === 'overheat' ? t('live.symptoms.overheat', { c: s.peakC ?? '' }) : s.shutdown === 'psu' ? t('live.symptoms.psu') : s.throttled ? t('live.symptoms.throttled') : t('live.symptoms.normal');
   return (

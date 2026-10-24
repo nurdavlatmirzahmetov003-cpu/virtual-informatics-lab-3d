@@ -2,7 +2,7 @@
  * The system unit: chassis + eight separately animated components.
  * Interim procedural build — see TODO.md [PLACEHOLDER] entries.
  */
-import { useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { MeshStandardMaterial, Object3D, type SpotLight } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
@@ -24,6 +24,8 @@ import { Psu } from './Psu';
 import { RamKit } from './RamKit';
 import { usePcTextures } from './usePcTextures';
 import { HardwarePart } from './HardwareParts';
+import { caseInterior } from './fits';
+import { isTieredModel } from '@/lib/three/modelUrls';
 import type { ResolvedBuild } from '@/lib/studio/build';
 
 export type PcRigMode = 'auto' | 'fixed' | 'external';
@@ -96,6 +98,8 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
     };
   }, []);
   const fan = { frame: res.fanFrame, blades: res.fanBlades };
+  const caseId = build?.case && isTieredModel(build.case.modelPath) ? build.case.id : null;
+  const interior = useMemo(() => caseInterior(caseId), [caseId]);
 
   // soft key light that only wakes up for the exploded layout
   const [showcaseTarget] = useState(() => new Object3D());
@@ -136,7 +140,7 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
       <Chassis tex={tex} fan={fan} rgb={res.rgb} product={build?.case} />
       {PARTS.map((def) => (
         <PCPart key={def.id} def={def} enabled={interactive}>
-          <HardwarePart id={def.id} fallback={content[def.id]} rgbColor={rgbColor} deferDetail={deferDetail} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />
+          <HardwarePart id={def.id} fallback={content[def.id]} rgbColor={rgbColor} deferDetail={deferDetail} interior={interior} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />
         </PCPart>
       ))}
       <primitive object={showcaseTarget} position={[-0.2, 0.02, 0.15]} />

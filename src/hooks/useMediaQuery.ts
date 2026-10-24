@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'react';
+import { useSettingsStore } from '@/store/settingsStore';
 
 export function useMediaQuery(query: string): boolean {
   return useSyncExternalStore(
@@ -12,7 +13,9 @@ export function useMediaQuery(query: string): boolean {
   );
 }
 
-/** Honour `prefers-reduced-motion`: shorter camera moves, no auto-rotation. */
+/** Honour `prefers-reduced-motion` and the site's own «calm» option (0.37): shorter camera moves, no auto-rotation. */
 export function useReducedMotion(): boolean {
-  return useMediaQuery('(prefers-reduced-motion: reduce)');
+  const system = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const calm = useSettingsStore((s) => s.a11y.calm);
+  return system || calm;
 }

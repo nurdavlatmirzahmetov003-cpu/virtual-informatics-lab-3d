@@ -53,6 +53,17 @@ export const TEARDOWNS: Readonly<Record<TeardownId, Teardown>> = {
   },
 };
 
+/**
+ * Putting a device back together (0.37 "Build the phone / laptop" games):
+ * the parts in groups, first group first. Inside a group any order is right
+ * (the RAM and the SSD go in independently); a part of a later group is too
+ * early. It is the teardown order reversed, with the free choices grouped.
+ */
+export const BUILD_GROUPS: Readonly<Partial<Record<TeardownId, readonly (readonly string[])[]>>> = {
+  smartphone: [['speaker', 'vibration'], ['mainboard'], ['cameras'], ['battery'], ['display'], ['sim_tray']],
+  laptop: [['motherboard'], ['cooling', 'speakers', 'display_cable'], ['wifi', 'ram', 'ssd'], ['battery'], ['bottom_cover'], ['lid']],
+};
+
 /** Lab devices that open a teardown. */
 const BY_DEVICE: Readonly<Record<string, TeardownId>> = {
   case: 'system_unit',

@@ -29,11 +29,18 @@ interface AssemblyLabState {
   flash: { target: TargetId; ok: boolean; at: number } | null;
   /** When the PC was switched on. */
   bootAt: number | null;
+  /**
+   * A game plays the lab (0.37 «PC build race»): every drop is reported to
+   * it as a move, and a finished build is not graded as the lab's task.
+   */
+  onDrop: ((step: StepId, at: TargetId | null) => void) | null;
   startDrag: (step: StepId) => void;
   endDrag: () => void;
   drop: (step: StepId, at: TargetId | null) => void;
   hint: () => void;
   reset: () => void;
+  /** Starts a game session: a fresh bench whose drops go to `onDrop` (null ends it). */
+  playGame: (onDrop: ((step: StepId, at: TargetId | null) => void) | null) => void;
   /** Restart the clock (the scene finished loading; loading time is not the student's). */
   startClock: () => void;
 }
@@ -49,6 +56,7 @@ function initial() {
     installedAt: {},
     flash: null,
     bootAt: null,
+    onDrop: null,
   };
 }
 
@@ -68,6 +76,7 @@ export const useAssemblyLabStore = create<AssemblyLabState>()((set, get) => ({
     const s = get();
     if (s.report) return;
     const r = place(s.assembly, step, at);
+    s.onDrop?.(step, at);
     const now = performance.now();
     const outcome = r.event.outcome;
     const tone: MessageTone = outcome === 'installed' ? 'ok' : outcome === 'miss' || outcome === 'done' ? 'info' : 'warn';
@@ -82,7 +91,10 @@ export const useAssemblyLabStore = create<AssemblyLabState>()((set, get) => ({
       playSfx('error');
     }
     set(patch);
-    if (outcome === 'installed' && isComplete(r.state)) {
+    if (outcome === 'installed' && isComplete(r.state) && s.onDrop) {
+      set({ bootAt: now + 700, message: { key: 'pcLab.msg.boot', tone: 'ok' } });
+      window.setTimeout(() => playSfx('boot'), 700);
+    } else if (outcome === 'installed' && isComplete(r.state)) {
       const { report, attempt } = grade(ASSEMBLY_EXERCISE, r.state, s.attempt);
       useProgressStore.getState().record(report);
       set({ report, attempt, bootAt: now + 700, message: { key: 'pcLab.msg.boot', tone: 'ok' } });
@@ -99,6 +111,7 @@ export const useAssemblyLabStore = create<AssemblyLabState>()((set, get) => ({
     set({ attempt, hinted: step, message: { key: `pcLab.hint.${step}`, tone: 'hint' } });
   },
   reset: () => set(initial()),
+  playGame: (onDrop) => set({ ...initial(), onDrop }),
   startClock: () => {
     const s = get();
     if (s.assembly.log.length === 0 && !s.report) set({ attempt: { ...s.attempt, startedAt: Date.now() } });

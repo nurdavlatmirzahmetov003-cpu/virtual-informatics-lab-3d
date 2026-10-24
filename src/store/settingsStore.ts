@@ -6,12 +6,25 @@ import { detectQuality } from '@/lib/quality/detect';
 import { STORAGE_KEYS, STORAGE_VERSIONS, safeStorage } from '@/lib/storage';
 import { isThemeMode, type ThemeMode } from '@/lib/theme';
 
+/** Accessibility options (0.37). */
+export interface A11ySettings {
+  /** Bit's spoken sentence shown as a caption at the bottom of the screen. */
+  captions: boolean;
+  /** Stronger text and border contrast, solid surfaces. */
+  contrast: boolean;
+  /** A plainer, wider-spaced font that is easier for dyslexic readers. */
+  readable: boolean;
+  /** Animations off even when the system does not ask for it. */
+  calm: boolean;
+}
+
 interface PersistedSettings {
   language: Language;
   qualityMode: QualityMode;
   soundEnabled: boolean;
   soundVolume: number;
   theme: ThemeMode;
+  a11y: A11ySettings;
 }
 
 interface SettingsState extends PersistedSettings {
@@ -23,6 +36,7 @@ interface SettingsState extends PersistedSettings {
   degradeAutoQuality: () => void;
   setSoundEnabled: (enabled: boolean) => void;
   setTheme: (theme: ThemeMode) => void;
+  setA11y: (patch: Partial<A11ySettings>) => void;
 }
 
 const DEFAULTS: PersistedSettings = {
@@ -32,7 +46,11 @@ const DEFAULTS: PersistedSettings = {
   soundVolume: 0.25,
   // the bright day lab is the default since 0.35; dark and system are opt-in
   theme: 'light',
+  a11y: { captions: false, contrast: false, readable: false, calm: false },
 };
+
+const isA11y = (v: unknown): v is A11ySettings =>
+  !!v && typeof v === 'object' && (['captions', 'contrast', 'readable', 'calm'] as const).every((k) => typeof (v as Record<string, unknown>)[k] === 'boolean');
 
 const memoryStorage = new Map<string, string>();
 const storage = createJSONStorage<PersistedSettings>(
@@ -65,17 +83,19 @@ export const useSettingsStore = create<SettingsState>()(
       },
       setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
       setTheme: (theme) => set({ theme }),
+      setA11y: (patch) => set((s) => ({ a11y: { ...s.a11y, ...patch } })),
     }),
     {
       name: STORAGE_KEYS.settings,
       version: STORAGE_VERSIONS.settings,
       storage,
-      partialize: ({ language, qualityMode, soundEnabled, soundVolume, theme }) => ({
+      partialize: ({ language, qualityMode, soundEnabled, soundVolume, theme, a11y }) => ({
         language,
         qualityMode,
         soundEnabled,
         soundVolume,
         theme,
+        a11y,
       }),
       // Validate whatever is on disk instead of trusting it; future schema
       // bumps add their transforms here keyed on `version`.
@@ -90,6 +110,7 @@ export const useSettingsStore = create<SettingsState>()(
           soundVolume:
             typeof raw.soundVolume === 'number' ? Math.min(1, Math.max(0, raw.soundVolume)) : DEFAULTS.soundVolume,
           theme: isThemeMode(raw.theme) ? raw.theme : DEFAULTS.theme,
+          a11y: isA11y(raw.a11y) ? raw.a11y : DEFAULTS.a11y,
         };
       },
     },

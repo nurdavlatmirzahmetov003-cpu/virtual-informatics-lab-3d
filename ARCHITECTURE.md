@@ -318,6 +318,75 @@ legacy/                     ескі ES-module прототип (python http.ser
     - Парақ `pages/Certificate/CertificateSheet.tsx`: барлық өлшем container query бірлігінде (`cqw`), сондықтан экрандағы алдын ала көрініс пен қағаз бірдей; басып шығару үшін көшірме `body`-ге portal, `@page cert { size: A4 landscape }` атаулы бет (басқа беттерді басып шығаруға әсер етпейді). Мөр, қолтаңба, қол қоюшы — `config/brand.ts`.
     - Жаңа жетістік `honors` (XP V2-11a ережесімен әрекеттерден есептеледі, бөлек сақталмайды).
 
+55. **Биттің дауысы (0.37).**
+    - **Сервер** `server/bitVoice.ts` (`createBitVoice`, `main.ts`-тегі `extra` тізімінде Биттен бұрын): `/api/ai/bit/tts` (Gemini `streamGenerateContent`, `responseModalities: AUDIO`, PCM 24 кГц ағыны), `/api/ai/bit/stt` (аудио → Gemini, нұсқаулық `sttPrompt(lang)`: сайт тілі, қазақ әріптері, сандар сөзбен). Модельдер тізімі — 429-да `quotaPause()` бойынша демалады, келесісі сөйлейді, бәрі демалса — 503 `quota`. Кэш: жадта LRU (64 MB) + дискіде `data/voice-cache/<sha1(voice|lang|text)>.pcm.gz`.
+    - **Браузер** `services/bit/voice.ts` — бүкіл сайтқа бір `bitVoice`: кезек, `speechChunks` (бірінші сөйлем жеке, қалғаны ≤ 280 таңба), бір бөлік алдын ала жүктеледі, Web Audio арқылы үзіліссіз жоспарланады, `AnalyserNode` → `level()` (ауыз анимациясы). Сервер жауап бермесе — сол бөлікті браузердің дауысы оқиды (`speech.ts`), сервер 1–10 минутқа өшіріледі. `useVoiceStore` — сөйлеп тұр ма, қай сөйлем, қай панель (`owner`).
+    - **Тыңдау:** қазақша және браузер танымаса — `recorder.ts` (MediaRecorder + үзілісті анықтау) → `/stt`; орысша/ағылшынша — браузердің Web Speech-і (жылдам, тегін).
+    - **Түсіну:** `numbers.ts` (сөзбен айтылған сома → цифр, тек жүз/мың/миллионы бар тізбек), `text.ts` `fold()` (қазақ әріптері → орыс баламалары, тек салыстыру үшін), кеңейтілген `stripWakeWord`.
+    - **UI:** `BitLauncher` (сүйретілетін аватар, `bitStore.dock`, жиылған күйде субтитр мен «Әрі қарай»), `BitPanel` (бүйірге бекітілген панель, `:root[data-bit-dock]` → `#main` padding; жиылғанда mount күйінде жасырын қалады; canvas басылса — жиналады), `BitFace` (`live` — ауыз әр кадрда `bitVoice.level()` бойынша), `BitSays` (ақпарат панельдеріндегі Биттің көпіршігі мен караоке).
+
+56. **Тірі басты бет (0.37).**
+    - `scenes/DeskScene/hero/`: `looks.ts` (үш стиль — нақты каталог өнімдері, ішкі бөлшектер ортақ), `heroCycle.ts` (таза уақыт функциялары: `piecePresence`, `lookAt`; `heroPresence` — hero мен оқиға арасындағы ауысу 0…1), `LivingSetup.tsx` (`SetupItems animated`-ті `assemblyRig` арқылы басқарады; ағымдағы стиль + жасырын алдын ала жүктелген келесі стиль — `LookSlot`, жасырын кезде `initTexture` + `gl.compile`; бірінші стиль сахнаның Suspense-інде, кейінгілері өз шекарасында), `StoryDevices.tsx` (оқиға құрылғылары: hero дайын болғаннан кейін жасырын жүктеледі, ауысудың екінші жартысында түседі), `RgbAccents.tsx` (эмиссивті LED жолақтар, қосымша жарықсыз).
+    - Жасырын топтар `matrixWorldAutoUpdate = false` — жүздеген түйіннің матрицасы әр кадр есептелмейді.
+    - `ShadowSync`: hero бөлшектері ұшып жүргенде көлеңке картасы әр үшінші кадрда жаңарады, қонғанда дәл бір рет.
+    - `layout.ts` → `BACKDROP_ORDER`: үлкен фон беттері соңында салынады (three.js материал реті бойынша салады).
+    - `models/Decor.tsx` + `lib/three/mergeStatic.ts`: статикалық безендіру бір материалға бір mesh-ке біріктіріледі (React түпнұсқаларды ұстап қалады, олар жасырын).
+    - `pages/Auth/AuthShell.tsx`: кіру/қосылу/жаңарту беттерінің фоны мен логотипі.
+
+57. **Корпус ішіндегі орналасу (0.37).**
+    - `lib/three/fit.ts` — `fitModel` (ModelLoader мен тесттер ортақ қолданады, GPU керек емес).
+    - `scenes/DeskScene/pc/fits.ts` — бөлшек fit кестелері, `caseFit`, `CASE_INTERIORS` (әр корпустың едені, төбесі, алды, арты, PSU қаптамасы; Blender-де өлшенген), `psuFit`, `sataFitFor`, `frontFans`, `rearFanZ`, `driveBay`. `PCCase` корпустың interior-ын `HardwarePart`-қа береді.
+    - `data/hardware/house.ts` — BitLab-тың өз модельдері (каталогтан тыс): `BITLAB_AERO`.
+    - `scripts/lib/glbBounds.mjs` — GLB-дің accessor min/max-тарынан bounding box (тесттер үшін).
+
+58. **Зертхана, 0.37.**
+    - `devices/Impostors.tsx` + `impostorGrid.ts` + `data/lab/impostors.json`: шолудағы құрылғы суреттері (Y осі бойынша billboard шейдері, instancing). Атлас `scripts/make-impostors.mjs` арқылы dev-бетінен (`dev/impostors.html` → `src/dev/impostorSheet.tsx`) жасалады.
+    - `visibilityAudit.ts`: `auditSignage` (сәуле тастау) және `auditScreens` (UV бағыты). `?debug` немесе dev режимінде `window.__labAudit` / `__labScreens`. Тест: `scripts/lab-visibility.test.mjs`, ортақ CDP көмекшісі `scripts/lib/cdp.mjs`.
+    - `LabBranding.tsx` + `data/lab/branding.ts`: баннерлер, жалаушалар, қабырғадағы логотип.
+    - `robots/` (`robotKit.ts`: бес робот түрі merged-геометриямен; `Robot.tsx`; `LabRobots.tsx`; `route.ts`; `brandMark.ts`) + `data/lab/robots.ts` (жолдар мен орындар).
+    - `zones/StageZone.tsx` + `stageSlides.ts`: 10-аймақ. `store/lessonBoardStore.ts`: мұғалім сабағы мен тақта.
+
+59. **3D практикалық ойындар, 0.37 (6-бөлім).**
+    - Бір ереже қозғалтқышы: `labs/LiveGames/races.ts` (`applyMove`, `asMove`, `MOVE_TYPES`). Бұрынғы assembly, connect және fault жарыстарына phone, laptop және network қосылды. `networkGame.ts` NetworkLab-тың `connect` пен `ping` функцияларын пайдаланады, ал `data/teardown` ішіндегі `BUILD_GROUPS` бөлшектерді орнату ретін анықтайды.
+    - Алаң ойындары (`labs/Arcade`, `HANDS_ON_GAMES`): жүрістер — жауаптар. `scoreRun` оларды `replayHandsOn` арқылы қайта ойнатады, сондықтан сервер мен сынып бөлмесі бірдей бағалайды. Жұлдыздар, тәжірибе ұпайы, деңгей мен белгілер: `labs/Arcade/badges.ts`.
+    - Көріністер: `pages/Games/handsOn/*` (`HandsOnBoard` түрге қарай таңдайды).
+      - Бөлшектеу сахнасы құрастыру режимінде жұмыс істейді: `rig.parts` әр бөлшектің жеке прогресін ұстайды, `rig.game` нөмірлерді жасырады.
+      - Жинау мен жалғау зертханаларының store-ларында ойынға арналған тыңдаушылар бар: `playGame(onDrop / onMove)`.
+      - Ақаулық пен желі ойындары: `GameStage.tsx`.
+
+60. **Бит, 0.37 (7-бөлім).**
+    - 158 дайын жауап: `faqCurriculum.ts` (98 тақырып пен кілт сөздері) және `content/curriculum.<lang>.ts`.
+      - Сәйкестендіру тең ұпайда нақтырақ тақырыпты таңдайды (сәйкес келген түбірлердің ұзындығы бойынша).
+      - Бірнеше сөзден тұратын түбір әр сөздің басымен салыстырылады (`text.ts`).
+    - 14 сабақ. `LESSON_POINTS` және `services/bit/pointer.ts` сабақ кезінде 3D-де зерттеу аймағын, құрылғыны немесе анатомия бөлшегін көрсетеді.
+    - Балалар қауіпсіздігі: `server/bitSafety.ts`.
+      - Сұрақ модельге жіберілмес бұрын тексеріледі (`screenQuestion`): жеке деректер, балаларға арналмаған тақырыптар, өзіне зиян келтіру — соңғысына 111 телефоны айтылады.
+      - Жауап сөйлем-сөйлеммен тексеріледі (`answerIsSafe`).
+      - Gemini-ге `BLOCK_LOW_AND_ABOVE` деңгейі беріледі.
+      - Тәуліктік шек: `BIT_DAILY_LIMIT`.
+
+61. **8-бөлім, 0.37.**
+    - Сынып режимі.
+      - Сервер: `server/live/remote.ts` (`RemoteHub`, `WS /api/live/remote?role=screen|remote`, бір мұғалім аккаунтының ішінде ғана).
+      - Клиент: `services/live/remote.ts`, `pages/Lab/ClassMode.tsx` (`/lab?class=1`), `pages/Remote/RemotePage.tsx` (`/remote`).
+    - Оқу жолы мен апталық есеп: `services/progress/learningPath.ts` (келесі қадам, аралықты қайталау, Лейтнер карточкалары) және `weeklyReport.ts`. Беттер: `/path`, `/progress/report`.
+    - Камерамен тану: `server/bitVision.ts` (тек `DEVICES` id-лері, JSON-схема, сенімділік шегі) және `POST /api/ai/bit/identify`. Бет: `/identify`.
+    - Арнайы мүмкіндіктер.
+      - Баптаулар `settingsStore.a11y` ішінде сақталады.
+      - `AppShell` `<html>` элементіне `data-contrast`, `data-readable`, `data-calm` атрибуттарын қояды; оларға `global.css` ережелері жауап береді.
+      - `useReducedMotion` «анимациясыз» баптауын да ескереді.
+      - Субтитрлерді `components/bit/Captions.tsx` көрсетеді.
+    - Офлайн режим.
+      - `public/sw.js`: беттер желіден алынады, желі жоқ болса кэштегі қабық ашылады. Хэші бар файлдар бірден кэштен беріледі, ал басқалары кэштен беріліп, артынан жаңартылады. `/api` кэштелмейді.
+      - Vite плагині `precacheList` `dist/precache.json` файлын жасайды.
+      - Сайт `public/manifest.webmanifest` арқылы орнатылады.
+      - Headless тексерулер `vil3d:no-sw` арқылы Service Worker-ді өшіреді.
+    - Басқалары:
+      - `components/onboarding/Onboarding.tsx` — алғашқы таныстыру;
+      - `RouteError` (роутердің `errorElement`-і);
+      - `/privacy` беті;
+      - `scripts/make-og.mjs` және `scripts/make-icons.mjs`.
+
 ## Legacy → жаңа архитектураға көшу жоспары
 
 | Legacy (`legacy/js/…`) | Жаңа орын | Фаза |

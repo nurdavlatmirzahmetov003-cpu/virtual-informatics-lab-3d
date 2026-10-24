@@ -10,8 +10,11 @@ import { Bounds, Environment, Lightformer, OrbitControls } from '@react-three/dr
 import { NeutralToneMapping, SRGBColorSpace } from 'three';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { DeviceModel } from '@/scenes/LabSpace/devices/DeviceModel';
+import { Product } from '@/scenes/LabSpace/zones/common';
+import type { HardwareItem } from '@/data/hardware/types';
 
-export default function DeviceViewer3D({ id, autoRotate, label }: { id: string; autoRotate: boolean; label: string }) {
+/** `product`: show that catalog product's own model instead of the lab device ("Other models", 0.37). */
+export default function DeviceViewer3D({ id, product, autoRotate, label }: { id: string; product?: HardwareItem; autoRotate: boolean; label: string }) {
   const reduced = useReducedMotion();
   return (
     <Canvas
@@ -37,7 +40,7 @@ export default function DeviceViewer3D({ id, autoRotate, label }: { id: string; 
       </Environment>
       <Suspense fallback={null}>
         <Bounds fit clip observe margin={1.25} maxDuration={reduced ? 0 : 0.6}>
-          <DeviceModel id={id} />
+          {product ? <Product key={product.id} product={product.id} /> : <DeviceModel id={id} />}
         </Bounds>
       </Suspense>
       <OrbitControls makeDefault enablePan={false} enableDamping autoRotate={autoRotate && !reduced} autoRotateSpeed={1.4} minDistance={0.02} maxDistance={8} />

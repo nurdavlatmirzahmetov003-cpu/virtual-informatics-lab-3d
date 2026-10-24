@@ -1,5 +1,5 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { Pause, Play, Wrench, X } from 'lucide-react';
+import { Layers, Pause, Play, Wrench, X } from 'lucide-react';
 import { anatomyItem } from '@/data/hardware/anatomy';
 import { deviceById, deviceKey, deviceSpecs, type Device } from '@/data/devices/devices';
 import { deviceExercise } from '@/data/devices/deviceQuiz';
@@ -10,6 +10,10 @@ import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
 import { useLabStore } from '@/store/labStore';
 import { useProgressStore } from '@/store/progressStore';
+import { BitSays } from '@/components/bit/BitSays';
+import { comparisonRows, variantsOf } from '@/data/devices/variants';
+import type { HardwareItem } from '@/data/hardware/types';
+import { formatSpec, sk } from '@/pages/SetupStudio/studioText';
 import styles from './DevicePanel.module.css';
 
 const DeviceViewer3D = lazy(() => import('./DeviceViewer3D'));
@@ -23,7 +27,7 @@ function Info({ device, level }: { device: Device; level: Level }) {
   const base = deviceKey(device, 'specs');
   return (
     <div className={styles.info}>
-      <p className={styles.explain}>{t(key(deviceKey(device, level === 'student' ? 'student' : 'adult')))}</p>
+      <BitSays text={t(key(deviceKey(device, level === 'student' ? 'student' : 'adult')))} more={[t(key(deviceKey(device, 'purpose'))), t(key(`devices.${device.id}.use`))]} />
       <section>
         <h3>{t('deviceUi.sections.purpose')}</h3>
         <p>{t(key(deviceKey(device, 'purpose')))}</p>
@@ -60,6 +64,72 @@ function Info({ device, level }: { device: Device; level: Level }) {
 }
 
 /**
+ * "Other models" (0.37): every catalog model of the device's category — pick
+ * one to see it in the 3D viewer above — and a spec comparison table.
+ */
+function Variants({ products, selected, onSelect }: { products: readonly HardwareItem[]; selected: string | null; onSelect: (id: string | null) => void }) {
+  const t = useT();
+  const rows = useMemo(() => comparisonRows(products), [products]);
+  const short = (p: HardwareItem) => `${p.brand} ${p.model.replace(/\s*\(.*\)$/, '')}`;
+  return (
+    <section className={styles.variants} aria-labelledby="variants-title">
+      <h3 id="variants-title">
+        <Layers size={16} aria-hidden="true" /> {t('deviceUi.variants.title', { n: products.length })}
+      </h3>
+      <p className={styles.muted}>{t('deviceUi.variants.lead')}</p>
+      <div className={styles.chips} role="radiogroup" aria-label={t('deviceUi.variants.title', { n: products.length })}>
+        <button type="button" role="radio" aria-checked={selected === null} onClick={() => onSelect(null)}>
+          {t('deviceUi.variants.lab')}
+        </button>
+        {products.map((p) => (
+          <button key={p.id} type="button" role="radio" aria-checked={selected === p.id} onClick={() => onSelect(p.id)}>
+            {short(p)}
+          </button>
+        ))}
+      </div>
+      <div className={styles.compareWrap}>
+        <table className={styles.compare}>
+          <caption className={styles.srOnly}>{t('deviceUi.variants.compare')}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{t('deviceUi.variants.spec')}</th>
+              {products.map((p) => (
+                <th key={p.id} scope="col" data-on={selected === p.id || undefined}>
+                  <button type="button" onClick={() => onSelect(p.id)}>
+                    {short(p)}
+                  </button>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">{t('deviceUi.variants.price')}</th>
+              {products.map((p) => (
+                <td key={p.id} data-on={selected === p.id || undefined}>
+                  {p.priceKZT.toLocaleString('ru-RU').replace(/,/g, ' ')} ₸
+                </td>
+              ))}
+            </tr>
+            {rows.map((r) => (
+              <tr key={r.key}>
+                <th scope="row">{t(sk(`specs.${r.key}`))}</th>
+                {r.cells.map((c, i) => (
+                  <td key={products[i].id} data-on={selected === products[i].id || undefined}>
+                    {c ? formatSpec(t, c) : '—'}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className={styles.muted}>{t('studio.demoPrice')}</p>
+    </section>
+  );
+}
+
+/**
  * Info panel of the open device: 360° viewer, explanation at the student or
  * adult level, purpose, specs, ports, real-world use and a graded test.
  */
@@ -74,6 +144,15 @@ export function DevicePanel() {
   const [spin, setSpin] = useState(true);
   const exercise = useMemo(() => (device ? deviceExercise(device) : null), [device]);
   const best = useProgressStore((s) => (exercise ? s.exercises[exercise.id]?.best?.percent : undefined));
+  const variants = useMemo(() => (id ? variantsOf(id) : []), [id]);
+  const [variant, setVariant] = useState<string | null>(null);
+  const [shownFor, setShownFor] = useState(id);
+  // another device opened: back to its own model
+  if (shownFor !== id) {
+    setShownFor(id);
+    setVariant(null);
+  }
+  const product = variants.find((p) => p.id === variant);
   if (!device) return null;
   const zone = zoneById(device.zone);
   const teardown = teardownOfDevice(device.id);
@@ -94,7 +173,7 @@ export function DevicePanel() {
 
       <div className={styles.viewer}>
         <Suspense fallback={null}>
-          <DeviceViewer3D key={device.id} id={device.id} autoRotate={spin} label={t('deviceUi.viewerLabel', { name })} />
+          <DeviceViewer3D key={device.id} id={device.id} product={product} autoRotate={spin} label={t('deviceUi.viewerLabel', { name: product ? `${product.brand} ${product.model}` : name })} />
         </Suspense>
         <button type="button" className={styles.spin} onClick={() => setSpin((v) => !v)} aria-pressed={spin}>
           {spin ? <Pause size={14} aria-hidden="true" /> : <Play size={14} aria-hidden="true" />}
@@ -128,6 +207,7 @@ export function DevicePanel() {
             ))}
           </div>
           <Info device={device} level={level} />
+          {variants.length > 0 && <Variants products={variants} selected={variant} onSelect={setVariant} />}
         </>
       ) : (
         exercise &&

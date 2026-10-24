@@ -21,7 +21,10 @@ export function LoaderOverlay() {
   // Stay up from the moment a scene mounts until its Suspense boundary resolves,
   // so there is never a blank canvas while assets are requested.
   const waitingForScene = useSceneStatus((s) => s.expected && !s.ready);
-  const visible = active || waitingForScene;
+  const sceneReady = useSceneStatus((s) => s.ready);
+  // once the scene is up, assets it loads in the background (the home hero's
+  // next look, detail models) never cover it again
+  const visible = waitingForScene || (active && !sceneReady);
   const pct = Math.round(progress);
 
   return (

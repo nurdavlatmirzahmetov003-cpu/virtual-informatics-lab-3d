@@ -63,6 +63,15 @@ export default function ProgressPage() {
 
   return (
     <PageLayout eyebrow={t('progress.eyebrow')} title={t('progress.title')} subtitle={t('progress.subtitle')}>
+      {/* 0.37: the learning path built from these results */}
+      <nav className={styles.quickLinks} aria-label={t('path.title')}>
+        <Link to="/path">
+          {t('nav.path')} <ArrowRight size={16} aria-hidden="true" />
+        </Link>
+        <Link to="/progress/report">
+          {t('nav.report')} <ArrowRight size={16} aria-hidden="true" />
+        </Link>
+      </nav>
       <GamePanel />
       <div className={styles.stats}>
         <Stat label={t('progress.stats.labs')} value={totals.labsCompleted} unit={`/${summary.labs.length}`} hint={t('progress.stats.labsHint', { done: totals.labsCompleted, total: summary.labs.length })} />

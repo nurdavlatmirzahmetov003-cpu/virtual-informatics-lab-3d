@@ -6,7 +6,9 @@
 import { Euler, Quaternion, Vector3 } from 'three';
 import type { StepId, TargetId } from '@/labs/AssemblyLab';
 import { DESK_TOP } from '@/scenes/DeskScene/layout';
-import { CASE_ORIGIN, FRONT_FANS, H } from '@/scenes/DeskScene/pc/constants';
+import { CASE_ORIGIN, FRONT_FANS } from '@/scenes/DeskScene/pc/constants';
+import { caseInterior, driveBay } from '@/scenes/DeskScene/pc/fits';
+import { showcaseBuild } from '@/lib/studio/showcase';
 import { PARTS, type PartId } from '@/scenes/DeskScene/pc/parts';
 
 const part = (id: PartId) => PARTS.find((p) => p.id === id)!;
@@ -50,8 +52,8 @@ export const STEP_PART: Record<StepId, PartId | 'board' | 'storage' | 'cables'> 
   cables: 'cables',
 };
 
-/** Extra 3.5" drive: flat on the floor of the case, behind the front fans. */
-export const DRIVE_BAY = new Vector3(0, -H / 2 + 0.005, 0.098);
+/** Extra 3.5" drive: flat on the PSU shroud of the showcase case (it used to sink through the case floor). */
+export const DRIVE_BAY = new Vector3(...driveBay(caseInterior(showcaseBuild().case?.id)));
 
 /** Visual centre of each draggable, relative to its own origin (case orientation). */
 export const VISUAL_CENTER: Record<StepId, Vector3> = {

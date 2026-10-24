@@ -5,7 +5,8 @@
  */
 import { useSettingsStore } from '@/store/settingsStore';
 
-export type Sfx = 'pick' | 'snap' | 'error' | 'boot';
+/** combo, tick, win, star: the games' feel (0.37). */
+export type Sfx = 'pick' | 'snap' | 'error' | 'boot' | 'combo' | 'tick' | 'win' | 'star';
 
 let ctx: AudioContext | null = null;
 
@@ -50,6 +51,10 @@ export function playSfx(kind: Sfx) {
     tone(ac, out, 60, t, 1.4, 'sawtooth', 140); // fans spinning up
     [523, 659, 784, 1047].forEach((f, i) => tone(ac, out, f, t + 0.35 + i * 0.12, 0.35));
   }
+  if (kind === 'combo') [660, 880, 1175].forEach((f, i) => tone(ac, out, f, t + i * 0.06, 0.12, 'triangle'));
+  if (kind === 'tick') tone(ac, out, 1400, t, 0.04, 'square');
+  if (kind === 'win') [523, 659, 784, 1047, 784, 1047].forEach((f, i) => tone(ac, out, f, t + i * 0.11, i === 5 ? 0.5 : 0.16, 'triangle'));
+  if (kind === 'star') tone(ac, out, 1568, t, 0.25, 'sine', 2093);
 }
 
 /**

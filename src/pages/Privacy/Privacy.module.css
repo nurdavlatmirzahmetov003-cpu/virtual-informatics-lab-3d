@@ -1,0 +1,35 @@
+/* Privacy page (0.37): a readable column of short sections. */
+
+.doc {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 760px;
+}
+
+.section {
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.section h2 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-lg);
+}
+
+.section p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.contact a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.updated {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}

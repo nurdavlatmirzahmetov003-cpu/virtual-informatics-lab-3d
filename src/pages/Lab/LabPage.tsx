@@ -1,10 +1,11 @@
 import { lazy, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useProgress } from '@react-three/drei';
-import { ArrowLeft, ArrowRight, Keyboard, LayoutGrid, List, Minus, Plus, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Keyboard, LayoutGrid, List, Minus, Plus, Presentation, RotateCcw } from 'lucide-react';
+import { useAuthStore } from '@/store/authStore';
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
 import { ButtonLink } from '@/components/ui/Button';
-import { zoneById, type LabZoneId } from '@/data/lab/zones';
+import { LAB_ZONES, zoneById, type LabZoneId } from '@/data/lab/zones';
 import { POSTERS } from '@/data/lab/classroom';
 import { keyAction, zoneNumber } from '@/lib/lab/navigation';
 import type { TranslationKey } from '@/lib/i18n';
@@ -20,6 +21,8 @@ import { deviceById } from '@/data/devices/devices';
 import { isTeardownId } from '@/data/teardown/teardowns';
 import { TeardownView } from './TeardownView';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { BitSays } from '@/components/bit/BitSays';
+import { ClassMode } from './ClassMode';
 import styles from './LabPage.module.css';
 
 const LabScene = lazy(() => import('@/scenes/LabSpace/LabScene'));
@@ -74,7 +77,7 @@ function ZonePanel() {
       <h1 id="lab-zone-title" className={styles.title}>
         {zone ? t(key(`lab.zones.${zone.id}.name`)) : t('lab.title')}
       </h1>
-      <p className={styles.lead}>{zone ? t(key(`lab.zones.${zone.id}.description`)) : t('lab.lead')}</p>
+      <BitSays className={styles.lead} text={zone ? t(key(`lab.zones.${zone.id}.description`)) : t('lab.lead')} />
       {zone && zone.devices.length > 0 && <p className={styles.clickHint}>{t('deviceUi.clickHint')}</p>}
       <div className={styles.actions}>
         <button type="button" className={styles.iconBtn} onClick={() => step(-1)} aria-label={t('lab.prev')} title={t('lab.prev')}>
@@ -99,8 +102,11 @@ function ZonePanel() {
   );
 }
 
-function ViewTools({ catalog, onCatalog }: { catalog: boolean; onCatalog: () => void }) {
+function ViewTools({ catalog, onCatalog, onClassMode }: { catalog: boolean; onCatalog: () => void; onClassMode: () => void }) {
   const t = useT();
+  // class mode (0.37) is for teachers: the projector and their phone
+  const role = useAuthStore((s) => s.user?.role);
+  const teacher = role === 'teacher' || role === 'admin';
   const [showKeys, setShowKeys] = useState(false);
   const { zoom, resetView } = useLabStore.getState();
   return (
@@ -121,6 +127,11 @@ function ViewTools({ catalog, onCatalog }: { catalog: boolean; onCatalog: () => 
       <button type="button" className={styles.iconBtn} aria-expanded={showKeys} aria-controls="lab-keys" onClick={() => setShowKeys((v) => !v)} aria-label={t('lab.keys')} title={t('lab.keys')}>
         <Keyboard size={18} aria-hidden="true" />
       </button>
+      {teacher && (
+        <button type="button" className={styles.iconBtn} onClick={onClassMode} aria-label={t('classMode.start')} title={t('classMode.start')}>
+          <Presentation size={18} aria-hidden="true" />
+        </button>
+      )}
       {showKeys && (
         <ul id="lab-keys" className={styles.keys}>
           {(['digits', 'overview', 'step', 'zoom', 'orbit'] as const).map((k) => (
@@ -151,7 +162,7 @@ function Status() {
   );
 }
 
-/** `/lab?device=<id>` (links from the task list) opens that device; `&teardown=<id>` its teardown; `poster` / `teacher` the classroom panels. */
+/** `/lab?zone=<id>` flies to a zone; `?device=<id>` (links from the task list) opens that device; `&teardown=<id>` its teardown; `poster` / `teacher` the classroom panels. */
 function useDeviceParam() {
   const [params] = useSearchParams();
   const requested = params.get('device');
@@ -162,6 +173,11 @@ function useDeviceParam() {
   useEffect(() => {
     if (isTeardownId(teardown)) useLabStore.getState().openTeardown(teardown);
   }, [teardown]);
+  // `?zone=<id>` flies straight to a zone (0.37: links, checks)
+  const zone = params.get('zone');
+  useEffect(() => {
+    if (zone && LAB_ZONES.some((z) => z.id === zone)) useLabStore.getState().focusZone(zone as LabZoneId);
+  }, [zone]);
   // `&poster=<id>` opens a classroom poster, `&teacher=1` the robot teacher
   const poster = params.get('poster');
   const teacher = params.get('teacher');
@@ -186,6 +202,9 @@ export default function LabPage() {
   const closeTeardown = useLabStore((s) => s.closeTeardown);
   const [catalog, setCatalog] = useState(false);
   const phone = useMediaQuery('(max-width: 760px)');
+  // `?class=1`: class mode on the projector, steered from the teacher's phone (0.37)
+  const [params, setParams] = useSearchParams();
+  const classMode = params.get('class') === '1';
   // leaving the page resets the tour. Done here, not inside the canvas: the
   // canvas root unmounts late and would close a device opened by ?device=.
   useEffect(() => () => useLabStore.getState().focusZone(null), []);
@@ -200,11 +219,26 @@ export default function LabPage() {
       <div className={styles.overlay}>
         <ZonePanel />
         {side ? <div className={styles.side}>{side}</div> : <LabMinimap />}
-        <ViewTools catalog={catalog} onCatalog={() => setCatalog((v) => !v)} />
+        <ViewTools
+          catalog={catalog}
+          onCatalog={() => setCatalog((v) => !v)}
+          onClassMode={() => {
+            params.set('class', '1');
+            setParams(params, { replace: true });
+          }}
+        />
         <Status />
         <p className={styles.hint}>{t('lab.hint')}</p>
       </div>
       {teardown && <TeardownView key={teardown} id={teardown} onClose={closeTeardown} />}
+      {classMode && (
+        <ClassMode
+          onExit={() => {
+            params.delete('class');
+            setParams(params, { replace: true });
+          }}
+        />
+      )}
     </div>
   );
 }

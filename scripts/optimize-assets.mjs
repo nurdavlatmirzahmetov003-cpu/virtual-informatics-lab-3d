@@ -286,8 +286,13 @@ const PRODUCT_LEVELS = [
   { suffix: '_lod1', ratio: 0.55, budget: 30000, error: 0.002, maxError: 0.018, texture: 1024, textureMB: 16, adaptive: true, quantize: 14 },
   { suffix: '_lod2', ratio: 0.25, budget: 8000, error: 0.004, maxError: 0.036, texture: 512, textureMB: 4, adaptive: true, quantize: 14 },
 ];
-/** Teardown models seen up close (many small parts): a larger triangle budget per level. */
-const BUDGET_SCALE = { 'td-phone': [2.5, 2.5, 3] };
+/**
+ * Teardown models seen up close (many small parts): a larger triangle budget per level.
+ * The AIO radiator is a display piece: ~30k triangles even at the full level (0.37 brief).
+ */
+const BUDGET_SCALE = { 'td-phone': [2.5, 2.5, 3], 'dev-aio-cooler': [0.4, 1, 1] };
+/** Its thousands of fins stall at the usual error: let the full level go as far as the Medium one. */
+const MAX_ERROR = { 'dev-aio-cooler': 0.018 };
 /**
  * Last resort for the lighter levels: simplify with meshoptimizer's `Prune`
  * flag, which also drops small disconnected pieces (screws, fins, tiny
@@ -327,7 +332,7 @@ if (existsSync(productSrc)) {
     await source.transform(prune({ keepExtras: true, keepAttributes: true }), dedup(), weld(), join({ keepNamed: true, cleanup: false }), prune({ keepExtras: true, keepAttributes: true }));
     const entry = { id, source: `assets-src/blender/products/${name}`, sourceBytes: (await stat(input)).size, levels: [] };
     for (const [li, base] of PRODUCT_LEVELS.entries()) {
-      const level = { ...base, budget: base.budget * (BUDGET_SCALE[id]?.[li] ?? 1) };
+      const level = { ...base, budget: base.budget * (BUDGET_SCALE[id]?.[li] ?? 1), maxError: Math.max(base.maxError, MAX_ERROR[id] ?? 0) };
       let doc;
       for (let error = level.error; ; error *= 3) {
         doc = cloneDocument(source);

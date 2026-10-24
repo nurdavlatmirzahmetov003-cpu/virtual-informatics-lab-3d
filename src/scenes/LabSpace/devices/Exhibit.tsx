@@ -3,7 +3,7 @@
  * with a name plate in front; a click opens the device's info panel and 360°
  * viewer. The back row sits on a riser so nothing hides behind the front.
  */
-import { useMemo, useRef, type ReactNode } from 'react';
+import { Suspense, useMemo, useRef, type ReactNode } from 'react';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
 import { CanvasTexture, SRGBColorSpace, type MeshStandardMaterial } from 'three';
@@ -11,14 +11,13 @@ import { deviceById, deviceKey } from '@/data/devices/devices';
 import type { TranslationKey } from '@/lib/i18n';
 import { useDisposable } from '@/hooks/useDisposable';
 import { useCanvasFonts } from '@/hooks/useCanvasFonts';
-import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useT } from '@/hooks/useT';
 import { useTheme } from '@/hooks/useTheme';
 import { useLabStore } from '@/store/labStore';
 import { Table } from '../furniture';
 import { useFurnitureColors } from '../furnitureColors';
-import { inOverview } from './deviceAssets';
 import { DeviceModel } from './DeviceModel';
+import { Impostors, type ImpostorItem } from './Impostors';
 import { FONT_SANS } from '@/lib/fonts';
 
 function plateTexture(text: string, light: boolean, accent: string) {
@@ -153,9 +152,11 @@ export interface ExhibitRow {
 
 /**
  * A lab table with one or two exhibit rows. In the overview (`detail`
- * preview) only `hero` devices show, at their lightest level.
+ * preview) every device shows as its impostor picture — one draw call for the
+ * whole table, on every quality preset (0.37); the models load when the zone
+ * opens. `hero` is kept for callers and no longer changes the overview.
  */
-export function ExhibitTable({ width, depth, rows, accent, detail, hero = [] }: {
+export function ExhibitTable({ width, depth, rows, accent, detail }: {
   width: number;
   depth: number;
   rows: readonly ExhibitRow[];
@@ -165,14 +166,29 @@ export function ExhibitTable({ width, depth, rows, accent, detail, hero = [] }: 
 }) {
   const c = useFurnitureColors();
   const full = detail === 'full';
-  const level = useQualityPreset().level;
+  const layout = useMemo(
+    () =>
+      rows.map((row) => {
+        const total = row.items.reduce((s, it) => s + (it.w ?? 1), 0);
+        const usable = width - 0.12;
+        let x = -usable / 2;
+        return row.items.map((it) => {
+          const slot = (usable * (it.w ?? 1)) / total;
+          const cx = x + slot / 2;
+          x += slot;
+          return { it, slot, cx };
+        });
+      }),
+    [rows, width],
+  );
+  const impostors = useMemo<ImpostorItem[]>(
+    () => (full ? [] : layout.flatMap((cells, ri) => cells.map(({ it, cx, slot }) => ({ id: it.id, at: [cx, (rows[ri].riser ?? 0) + 0.01, rows[ri].z] as const, slot })))),
+    [full, layout, rows],
+  );
   return (
     <Table width={width} depth={depth}>
       {rows.map((row, ri) => {
-        const total = row.items.reduce((s, it) => s + (it.w ?? 1), 0);
-        const usable = width - 0.12;
         const pd = row.depth ?? 0.24;
-        let x = -usable / 2;
         return (
           <group key={ri} position={[0, 0, row.z]}>
             {row.riser ? (
@@ -180,22 +196,20 @@ export function ExhibitTable({ width, depth, rows, accent, detail, hero = [] }: 
                 <meshStandardMaterial color={c.body} roughness={0.5} />
               </RoundedBox>
             ) : null}
-            {row.items.map((it) => {
-              const slot = (usable * (it.w ?? 1)) / total;
-              const cx = x + slot / 2;
-              x += slot;
-              const show = full || (hero.includes(it.id) && inOverview(it.id, level));
-              if (!show) return null;
-              return (
+            {full &&
+              layout[ri].map(({ it, slot, cx }) => (
                 <group key={it.id} position={[cx, row.riser ?? 0, 0]}>
-                  {/* the overview shows the hero device alone (no pad, no plate): fewer draw calls */}
-                  <DeviceSpot id={it.id} accent={accent} padSize={[slot - 0.05, pd]} plate={full} bare={!full} light={!full} />
+                  <DeviceSpot id={it.id} accent={accent} padSize={[slot - 0.05, pd]} />
                 </group>
-              );
-            })}
+              ))}
           </group>
         );
       })}
+      {!full && (
+        <Suspense fallback={null}>
+          <Impostors items={impostors} />
+        </Suspense>
+      )}
     </Table>
   );
 }

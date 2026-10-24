@@ -208,7 +208,7 @@ test('server: without a key Bit reports "not configured" and refuses questions',
   const bit = createBit({ apiKey: '' });
   const s = await serve(bit);
   try {
-    assert.deepEqual(await (await fetch(`${s.base}/api/ai/bit/health`)).json(), { configured: false, model: null });
+    assert.deepEqual(await (await fetch(`${s.base}/api/ai/bit/health`)).json(), { configured: false, model: null, tts: false, stt: false });
     const r = await fetch(`${s.base}/api/ai/bit/ask`, { method: 'POST', body: JSON.stringify({ message: 'hi', lang: 'kk' }) });
     assert.equal(r.status, 503);
     assert.equal((await r.json()).error, 'no-key');
