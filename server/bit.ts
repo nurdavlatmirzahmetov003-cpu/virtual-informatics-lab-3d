@@ -157,8 +157,16 @@ export function geminiThinking(model: string, override = process.env.GEMINI_THIN
   return null;
 }
 
-/** The fallback when the main model is out of quota: a lighter model with its own free quota (2026-10). */
-export const DEFAULT_FALLBACK_MODELS: readonly string[] = ['gemini-3.5-flash-lite'];
+/**
+ * The fallbacks when the main model is out of quota, each with its own free
+ * daily quota (2026-10): clean Kazakh and a first word in ~1 s. Not
+ * gemini-3.8-flash: ~20 s per answer, past the timeout.
+ */
+export const DEFAULT_FALLBACK_MODELS: readonly string[] = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'];
+
+/** GEMINI_FALLBACK_MODELS (comma-separated), else the defaults. */
+export const fallbackModelsFromEnv = (): readonly string[] =>
+  process.env.GEMINI_FALLBACK_MODELS?.split(',').map((m) => m.trim()).filter(Boolean) ?? DEFAULT_FALLBACK_MODELS;
 
 /** Asking Bit to praise, support or motivate someone (a classmate, a friend). */
 const KIND_REQUEST = /(мақта|қолда|мотивац|шабыт|жігерлендір|жігер бер|құттықта|похвал|подбодр|поддерж|мотивир|вдохнов|praise|encourage|motivat|cheer .*up|support (my|our|a|her|him))/i;
@@ -190,8 +198,7 @@ export function createBit(options: BitOptions = {}) {
   const apiKey = options.apiKey ?? process.env.GEMINI_API_KEY?.trim() ?? '';
   const model = options.model ?? (process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODEL);
   const thinking = options.thinking !== undefined ? options.thinking : geminiThinking(model);
-  const envFallbacks = process.env.GEMINI_FALLBACK_MODELS?.split(',').map((m) => m.trim()).filter(Boolean);
-  const models = [...new Set([model, ...(options.fallbackModels ?? envFallbacks ?? DEFAULT_FALLBACK_MODELS)])];
+  const models = [...new Set([model, ...(options.fallbackModels ?? fallbackModelsFromEnv())])];
   const thinkingOf = (m: string) => (options.thinking !== undefined ? options.thinking : geminiThinking(m));
   const retryDelayMs = options.retryDelayMs ?? 700;
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;

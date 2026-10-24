@@ -263,3 +263,21 @@ test('the disk cache keeps a sentence across server restarts', async () => {
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('server STT: a model out of quota rests, the next one listens', async () => {
+  const calls = [];
+  const fetchImpl = async (url) => {
+    calls.push(url.match(/models\/([\w.-]+):/)[1]);
+    if (url.includes('/main:')) return Response.json({ error: { details: [{ '@type': 'type.googleapis.com/google.rpc.RetryInfo', retryDelay: '3600s' }] } }, { status: 429 });
+    return Response.json({ candidates: [{ content: { parts: [{ text: 'Процессор деген не' }] } }] });
+  };
+  const s = await serve(createBitVoice({ apiKey: 'k', fetchImpl, sttModel: 'main', sttFallbacks: ['lite'], cacheDir: null }));
+  try {
+    const hear = () => fetch(`${s.base}/api/ai/bit/stt?lang=kk`, { method: 'POST', headers: { 'content-type': 'audio/webm' }, body: new Uint8Array(4000) }).then((r) => r.json());
+    assert.deepEqual(await hear(), { text: 'Процессор деген не' });
+    assert.deepEqual(await hear(), { text: 'Процессор деген не' });
+    assert.deepEqual(calls, ['main', 'lite', 'lite'], 'the tired model is not asked again');
+  } finally {
+    await s.close();
+  }
+});

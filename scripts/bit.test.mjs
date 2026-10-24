@@ -264,7 +264,7 @@ test('server: Gemini errors become short codes; the rate limit holds', async () 
     const r1 = await ask();
     assert.equal(r1.status, 502);
     assert.equal((await r1.json()).error, 'quota', 'every model out of quota');
-    assert.equal(gem.calls.length, 2, 'the main model, then the fallback');
+    assert.equal(gem.calls.length, 3, 'the main model, then both fallbacks');
     await ask();
     assert.equal((await ask()).status, 429);
     t += 61_000;

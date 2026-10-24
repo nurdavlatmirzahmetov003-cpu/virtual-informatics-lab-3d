@@ -16,7 +16,7 @@ import { existsSync, mkdirSync, readFileSync, writeFile } from 'node:fs';
 import { join } from 'node:path';
 import { gunzipSync, gzip } from 'node:zlib';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { isBitLang, type BitLang } from './bit';
+import { fallbackModelsFromEnv, isBitLang, type BitLang } from './bit';
 
 export interface BitVoiceOptions {
   apiKey?: string;
@@ -28,6 +28,8 @@ export interface BitVoiceOptions {
   voice?: string;
   /** Recognition model (default: the chat model). */
   sttModel?: string;
+  /** Recognition models tried in turn when it is out of quota (default: Bit's fallbacks). */
+  sttFallbacks?: readonly string[];
   fetchImpl?: typeof fetch;
   allowedOrigins?: readonly string[];
   now?: () => number;
@@ -174,6 +176,7 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
   };
   const voice = options.voice ?? (process.env.GEMINI_TTS_VOICE?.trim() || DEFAULT_TTS_VOICE);
   const sttModel = options.sttModel ?? (process.env.GEMINI_STT_MODEL?.trim() || process.env.GEMINI_MODEL?.trim() || 'gemini-3.5-flash');
+  const sttModels = [...new Set([sttModel, ...(options.sttFallbacks ?? fallbackModelsFromEnv())])];
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
   const origins = options.allowedOrigins ?? [];
   const now = options.now ?? Date.now;
@@ -306,18 +309,25 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 20_000);
     try {
-      const upstream = await gemini(
-        sttModel,
-        'generateContent',
-        {
-          contents: [{ parts: [{ inlineData: { mimeType: mime === 'audio/x-wav' ? 'audio/wav' : mime, data: audio.toString('base64') } }, { text: sttPrompt(lang) }] }],
-          generationConfig: { temperature: 0, maxOutputTokens: 300, thinkingConfig: { thinkingLevel: /3\.[89]|pro/.test(sttModel) ? 'low' : 'minimal' } },
-        },
-        controller.signal,
-      );
+      // a model out of quota rests (as for speech) and the next one listens
+      let upstream: Response | null = null;
+      for (const model of sttModels.filter((m) => (resting.get(m) ?? 0) <= now())) {
+        upstream = await gemini(
+          model,
+          'generateContent',
+          {
+            contents: [{ parts: [{ inlineData: { mimeType: mime === 'audio/x-wav' ? 'audio/wav' : mime, data: audio.toString('base64') } }, { text: sttPrompt(lang) }] }],
+            generationConfig: { temperature: 0, maxOutputTokens: 300, thinkingConfig: { thinkingLevel: /3\.[89]|pro/.test(model) ? 'low' : 'minimal' } },
+          },
+          controller.signal,
+        );
+        if (upstream.status !== 429) break;
+        resting.set(model, now() + quotaPause(await upstream.text()));
+      }
+      if (!upstream) return sendJson(res, 502, { error: 'quota' });
       if (!upstream.ok) {
         console.warn('[bit-voice] stt answered', upstream.status);
-        return sendJson(res, 502, { error: upstream.status === 429 ? 'busy' : 'upstream' });
+        return sendJson(res, 502, { error: upstream.status === 429 ? 'quota' : 'upstream' });
       }
       const data = (await upstream.json()) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string; thought?: boolean }> } }> };
       const text = (data.candidates?.[0]?.content?.parts ?? [])
