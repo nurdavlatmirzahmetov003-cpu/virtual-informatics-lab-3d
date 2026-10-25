@@ -12,8 +12,8 @@ import { isSata, ON_BOARD, type FanMount, type Installed, type Vec3 } from './mo
 import { pcRig } from './pcRig';
 import { LiquidCooler } from './LiquidCooler';
 import { DESIGN_BY_ID } from './caseDesigns';
-import { FanArray, fanModelOf } from './ShowcaseCase';
-import { applyShowcaseMaterials, RgbFxContext } from './showcaseFx';
+import { FanArray } from './ShowcaseCase';
+import { applyShowcaseMaterials, fanModelOf, RgbFxContext } from './showcaseFx';
 
 const url = (name: string) => `${import.meta.env.BASE_URL}assets/models/hardware/${name}.glb`;
 const productUrl = (product: HardwareItem) => `${import.meta.env.BASE_URL}assets/models/${product.modelPath}`;

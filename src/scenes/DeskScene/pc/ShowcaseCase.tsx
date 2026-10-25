@@ -16,16 +16,14 @@ import { useDisposable } from '@/hooks/useDisposable';
 import { useModelFile } from '@/lib/three/modelAssets';
 import { modelLevels } from '@/lib/three/modelUrls';
 import type { HardwareItem } from '@/data/hardware/types';
-import { DESIGN_BY_ID, SLOTS, type CaseDesign } from './caseDesigns';
+import { DESIGN_BY_ID, SLOTS } from './caseDesigns';
 import type { CaseMounts, FanMount } from './caseMounts';
 import type { Installed, Vec3 } from './mounts';
 import { pcRig } from './pcRig';
 import { ShowcaseCables } from './ShowcaseCables';
-import { applyShowcaseMaterials, bakeCopies, glassMaterial, paletteAt, RgbFxContext, spinningMaterial, spinUniform } from './showcaseFx';
+import { applyShowcaseMaterials, bakeCopies, fanModelOf, glassMaterial, paletteAt, RgbFxContext, spinningMaterial, spinUniform } from './showcaseFx';
 
 const MODELS = `${import.meta.env.BASE_URL}assets/models/`;
-/** Fan model of a case design (white or black frames). */
-export const fanModelOf = (design: CaseDesign) => `${MODELS}products/${design.fanModel}.glb`;
 const FAN_AIR = new Vector3(0, 0, -1);
 const smooth = (x: number) => x * x * (3 - 2 * x);
 

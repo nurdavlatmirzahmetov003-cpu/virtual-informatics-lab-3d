@@ -221,3 +221,6 @@ export function spinningMaterial(material: Material, fx: RgbFx): Material {
   m.userData.fx = fx;
   return m;
 }
+
+/** Fan model of a case design (white or black frames). */
+export const fanModelOf = (design: { fanModel: string }) => `${import.meta.env.BASE_URL}assets/models/products/${design.fanModel}.glb`;
