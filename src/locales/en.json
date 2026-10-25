@@ -246,7 +246,8 @@
       "rgb": "RGB lighting",
       "desk": "Desk top",
       "peripherals": "Peripherals",
-      "customPick": "Custom colour"
+      "customPick": "Custom colour",
+      "caseFromModel": "The colour comes with the case model. For another colour, pick another case on the Products step."
     },
     "finish": {
       "black": "Black",

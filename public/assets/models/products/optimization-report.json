@@ -25,25 +25,200 @@
     ]
   },
   {
+    "id": "case-bitlab-blossom",
+    "source": "assets-src/blender/products/case-bitlab-blossom.glb",
+    "sourceBytes": 372432,
+    "levels": [
+      {
+        "file": "case-bitlab-blossom.glb",
+        "bytes": 74656,
+        "triangles": 5158,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-blossom_lod1.glb",
+        "bytes": 74420,
+        "triangles": 5152,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-blossom_lod2.glb",
+        "bytes": 74420,
+        "triangles": 5152,
+        "textureMB": 0.3
+      }
+    ]
+  },
+  {
+    "id": "case-bitlab-core",
+    "source": "assets-src/blender/products/case-bitlab-core.glb",
+    "sourceBytes": 266460,
+    "levels": [
+      {
+        "file": "case-bitlab-core.glb",
+        "bytes": 58120,
+        "triangles": 3514,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-core_lod1.glb",
+        "bytes": 58072,
+        "triangles": 3508,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-core_lod2.glb",
+        "bytes": 58072,
+        "triangles": 3508,
+        "textureMB": 0.3
+      }
+    ]
+  },
+  {
+    "id": "case-bitlab-cube",
+    "source": "assets-src/blender/products/case-bitlab-cube.glb",
+    "sourceBytes": 372340,
+    "levels": [
+      {
+        "file": "case-bitlab-cube.glb",
+        "bytes": 74772,
+        "triangles": 5156,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-cube_lod1.glb",
+        "bytes": 74636,
+        "triangles": 5152,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-cube_lod2.glb",
+        "bytes": 74636,
+        "triangles": 5152,
+        "textureMB": 0.3
+      }
+    ]
+  },
+  {
+    "id": "case-bitlab-flow",
+    "source": "assets-src/blender/products/case-bitlab-flow.glb",
+    "sourceBytes": 257536,
+    "levels": [
+      {
+        "file": "case-bitlab-flow.glb",
+        "bytes": 55184,
+        "triangles": 3402,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-flow_lod1.glb",
+        "bytes": 55220,
+        "triangles": 3400,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-flow_lod2.glb",
+        "bytes": 55220,
+        "triangles": 3400,
+        "textureMB": 0.3
+      }
+    ]
+  },
+  {
+    "id": "case-bitlab-grove",
+    "source": "assets-src/blender/products/case-bitlab-grove.glb",
+    "sourceBytes": 325100,
+    "levels": [
+      {
+        "file": "case-bitlab-grove.glb",
+        "bytes": 64300,
+        "triangles": 4270,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-grove_lod1.glb",
+        "bytes": 64164,
+        "triangles": 4264,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-grove_lod2.glb",
+        "bytes": 64164,
+        "triangles": 4264,
+        "textureMB": 0.3
+      }
+    ]
+  },
+  {
     "id": "case-bitlab-panorama",
     "source": "assets-src/blender/products/case-bitlab-panorama.glb",
-    "sourceBytes": 278280,
+    "sourceBytes": 372432,
     "levels": [
       {
         "file": "case-bitlab-panorama.glb",
-        "bytes": 78656,
+        "bytes": 74660,
         "triangles": 5158,
         "textureMB": 0.3
       },
       {
         "file": "case-bitlab-panorama_lod1.glb",
-        "bytes": 78612,
+        "bytes": 74424,
         "triangles": 5152,
         "textureMB": 0.3
       },
       {
         "file": "case-bitlab-panorama_lod2.glb",
-        "bytes": 78612,
+        "bytes": 74424,
+        "triangles": 5152,
+        "textureMB": 0.3
+      }
+    ]
+  },
+  {
+    "id": "case-bitlab-panorama-black",
+    "source": "assets-src/blender/products/case-bitlab-panorama-black.glb",
+    "sourceBytes": 372448,
+    "levels": [
+      {
+        "file": "case-bitlab-panorama-black.glb",
+        "bytes": 74656,
+        "triangles": 5158,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-panorama-black_lod1.glb",
+        "bytes": 74420,
+        "triangles": 5152,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-panorama-black_lod2.glb",
+        "bytes": 74420,
+        "triangles": 5152,
+        "textureMB": 0.3
+      }
+    ]
+  },
+  {
+    "id": "case-bitlab-tower",
+    "source": "assets-src/blender/products/case-bitlab-tower.glb",
+    "sourceBytes": 372392,
+    "levels": [
+      {
+        "file": "case-bitlab-tower.glb",
+        "bytes": 74028,
+        "triangles": 5158,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-tower_lod1.glb",
+        "bytes": 73940,
+        "triangles": 5152,
+        "textureMB": 0.3
+      },
+      {
+        "file": "case-bitlab-tower_lod2.glb",
+        "bytes": 73940,
         "triangles": 5152,
         "textureMB": 0.3
       }
@@ -1444,6 +1619,31 @@
       {
         "file": "fan-bitlab-120_lod2.glb",
         "bytes": 81832,
+        "triangles": 6472,
+        "textureMB": 0
+      }
+    ]
+  },
+  {
+    "id": "fan-bitlab-120-black",
+    "source": "assets-src/blender/products/fan-bitlab-120-black.glb",
+    "sourceBytes": 343988,
+    "levels": [
+      {
+        "file": "fan-bitlab-120-black.glb",
+        "bytes": 81852,
+        "triangles": 6472,
+        "textureMB": 0
+      },
+      {
+        "file": "fan-bitlab-120-black_lod1.glb",
+        "bytes": 81868,
+        "triangles": 6472,
+        "textureMB": 0
+      },
+      {
+        "file": "fan-bitlab-120-black_lod2.glb",
+        "bytes": 81868,
         "triangles": 6472,
         "textureMB": 0
       }

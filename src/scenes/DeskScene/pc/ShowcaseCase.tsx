@@ -129,6 +129,16 @@ export function DesignedCase({ product, mounts, inst }: { product: HardwareItem;
       applyShowcaseMaterials(root, fx, () => glassMaterial(design.colors.glassTint, preset.transmission));
       const list: Object3D[] = [];
       root.traverse((o) => {
+        // perforated steel in the case's own colour: the grey hole pattern cuts the holes (alpha test, no sorting)
+        const m = (o as Mesh).material as MeshStandardMaterial | undefined;
+        if (m?.name === 'Perforated' && m.map) {
+          m.alphaMap = m.map;
+          m.map = null;
+          m.color.set(design.colors.body);
+          m.alphaTest = 0.5;
+          m.transparent = false;
+          m.needsUpdate = true;
+        }
         if (o.name === 'glass_side') list.push(o);
         if (o.name === 'glass_side') o.userData.home = o.position.clone();
       });

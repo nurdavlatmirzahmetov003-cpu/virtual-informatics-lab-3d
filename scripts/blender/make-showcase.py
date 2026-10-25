@@ -638,6 +638,108 @@ def make_radiator():
 
 # ── cases (from the shared design data) ──────────────────────────────────
 
+def classic_body(design, f, m, objs, body, trim, accent, glass, perf, rgb, dark):
+    """Single-chamber case: four pillars, a glass side, the PSU shroud, and a solid / mesh / oak-slat front."""
+    W, D = f["W"], f["D"]
+    yb, yt = f["bottom"], f["top"]
+    T = 0.004
+    pw = 0.012
+    for x0, z0 in ((-W / 2, -D / 2), (W / 2 - pw, -D / 2), (-W / 2, D / 2 - pw), (W / 2 - pw, D / 2 - pw)):
+        objs.append(sbox(x0, x0 + pw, yb, yt, z0, z0 + pw, trim, "pillar", bev=0.0015))
+    g = 0.0005
+    # left out of `objs`: the pane stays its own node (glass_side) so the scene can slide it off
+    sbox(-W / 2, -W / 2 + T, yb + T + g, yt - T - g, -D / 2 + pw + g, D / 2 - pw - g, glass, "glass_side", bev=0.0008)
+    for y0, y1 in ((yb + T, yb + T + 0.006), (yt - T - 0.006, yt - T)):
+        objs.append(sbox(-W / 2 + 0.0002, -W / 2 + 0.0012, y0, y1, -D / 2 + pw, D / 2 - pw, dark, "frit", bev=0.0))
+    # PSU shroud: closed box over the PSU with a vent window by the front and a cut for the cables by the tray
+    st, sf = f["shroudTop"], f["shroudFront"]
+    gi, tf = f["glassIn"], f["trayFace"]
+    shroud_top = sbox(gi, tf, st - T, st, f["rearIn"], sf, trim, "shroud", bev=0.001)
+    cut(shroud_top, sbox(tf - 0.035, tf + 0.01, st - 0.01, st + 0.01, f["rearIn"] + 0.18, f["rearIn"] + 0.26, trim, "cutter", bev=0.0))
+    objs.append(shroud_top)
+    face = sbox(gi, gi + T, f["floor"], st, f["rearIn"], sf, trim, "shroud_side", bev=0.001)
+    cut(face, sbox(gi - 0.01, gi + 0.01, f["floor"] + 0.02, st - 0.02, sf - 0.11, sf - 0.02, trim, "cutter", bev=0.0))
+    objs.append(face)
+    objs.append(sbox(gi + 0.0012, gi + 0.002, f["floor"] + 0.02, st - 0.02, sf - 0.11, sf - 0.02, perf, "shroud_vent", bev=0.0))
+    objs.append(sbox(gi, tf, f["floor"], st, sf - T, sf, trim, "shroud_front", bev=0.001))
+    # the BitLab wordmark plate on the shroud side
+    objs.append(sbox(gi - 0.0006, gi, st - 0.04, st - 0.028, f["rearIn"] + 0.04, f["rearIn"] + 0.13, accent, "shroud_badge", bev=0.0))
+    # front panel
+    x0, x1 = -W / 2 + pw, W / 2 - pw
+    z0, z1 = D / 2 - T, D / 2
+    kind = design["front"]
+    if kind == "solid":
+        panel = sbox(-W / 2, W / 2, yb, yt, z0, z1, body, "front", bev=0.002)
+        objs.append(panel)
+        # vertical ARGB light bar, and intake slits down both sides
+        objs.append(sbox(-W / 2 + 0.045, -W / 2 + 0.051, yb + 0.05, yt - 0.05, z1, z1 + 0.0015, rgb, "light_bar", bev=0.0004))
+        led = objs[-1]
+        uvl = led.data.uv_layers.new(name="UVMap")
+        for li, loop in enumerate(led.data.loops):
+            co = led.data.vertices[loop.vertex_index].co
+            uvl.data[li].uv = ((co.z - yb) / (yt - yb), 0.5)
+        for xs in (-W / 2 - 0.0006, W / 2 - 0.0004):
+            for k in range(14):
+                y = yb + 0.06 + k * 0.024
+                objs.append(sbox(xs, xs + 0.001, y, y + 0.012, z0 - 0.03, z0 - 0.006, dark, "slit", bev=0.0))
+    else:
+        # frame around a perforated mesh
+        objs.append(sbox(-W / 2, W / 2, yb, yb + 0.02, z0, z1, body, "front_frame", bev=0.0015))
+        objs.append(sbox(-W / 2, W / 2, yt - 0.02, yt, z0, z1, body, "front_frame", bev=0.0015))
+        objs.append(sbox(-W / 2, x0, yb + 0.02, yt - 0.02, z0, z1, body, "front_frame", bev=0.0015))
+        objs.append(sbox(x1, W / 2, yb + 0.02, yt - 0.02, z0, z1, body, "front_frame", bev=0.0015))
+        objs.append(sbox(x0, x1, yb + 0.02, yt - 0.02, z0 + 0.0012, z0 + 0.002, perf, "front_mesh", bev=0.0))
+        if kind == "wood":
+            oak = mat("Oak", design["colors"]["accent"], 0.62, 0.0)
+            oak2 = mat("OakDark", "#a3754a", 0.66, 0.0)
+            n = 8
+            sw = (x1 - x0) / (n * 1.6 - 0.6)
+            for k in range(n):
+                xa = x0 + k * sw * 1.6
+                objs.append(sbox(xa, xa + sw, yb + 0.022, yt - 0.022, z1 - 0.0004, z1 + 0.011, oak if k % 2 == 0 else oak2, "slat", bev=0.0012))
+    # feet: two rails instead of pucks
+    for sz in (-1, 1):
+        z = sz * (D / 2 - 0.05)
+        objs.append(sbox(-W / 2 + 0.02, W / 2 - 0.02, yb - design["feet"] + 0.003, yb, z - 0.012, z + 0.012, dark, "foot_rail", bev=0.003))
+
+
+# solid finishes of a case, baked into vertex colours so the whole shell is one draw call
+SOLID = ("CaseBody", "CaseTrim", "CaseAccent", "CaseDark", "Rubber", "FootPad", "Oak", "OakDark")
+
+
+def planar_uv(o, tile=0.03):
+    """UVs in metres on the panel's own plane (one texture tile = `tile`), so perforations keep their real pitch."""
+    vs = o.data.vertices
+    ext = [max(v.co[k] for v in vs) - min(v.co[k] for v in vs) for k in range(3)]
+    a, b = sorted(range(3), key=lambda k: -ext[k])[:2]
+    uvl = o.data.uv_layers.new(name="UVMap")
+    for li, loop in enumerate(o.data.loops):
+        co = vs[loop.vertex_index].co
+        uvl.data[li].uv = (co[a] / tile, co[b] / tile)
+
+
+def bake_solid(objs):
+    """Every object with a solid finish gets its colour as a vertex colour and one shared material (CaseSolid)."""
+    solid = bpy.data.materials.new("CaseSolid")
+    solid.use_nodes = True
+    nt = solid.node_tree
+    p = nt.nodes["Principled BSDF"]
+    p.inputs["Roughness"].default_value = 0.48
+    p.inputs["Metallic"].default_value = 0.06
+    attr = nt.nodes.new("ShaderNodeVertexColor")
+    attr.layer_name = "Col"
+    nt.links.new(attr.outputs["Color"], p.inputs["Base Color"])
+    for o in objs:
+        m = o.data.materials[0]
+        if m.name not in SOLID:
+            continue
+        c = m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value
+        col = o.data.color_attributes.new("Col", "FLOAT_COLOR", "CORNER")
+        for d in col.data:
+            d.color = (c[0], c[1], c[2], 1.0)
+        o.data.materials[0] = solid
+
+
 def make_case(design, info):
     reset()
     f = design["frame"]
@@ -715,18 +817,22 @@ def make_case(design, info):
         for zz in (z0 - 0.004, z1 + 0.002):
             objs.append(sbox(W / 2 - T - 0.006, W / 2 - T, y0 - 0.004, y1 + 0.004, zz, zz + 0.002, trim, "side_rail", bev=0.0004))
     objs.append(right)
-    # pillars: rear corners and the front-right edge; the front-left glass corner stays open (panoramic)
-    pw = 0.011
-    objs.append(sbox(-W / 2, -W / 2 + pw, yb, yt, -D / 2, -D / 2 + pw, trim, "pillar_rl", bev=0.0015))
-    objs.append(sbox(W / 2 - pw, W / 2, yb, yt, -D / 2, -D / 2 + pw, trim, "pillar_rr", bev=0.0015))
-    objs.append(sbox(W / 2 - pw, W / 2, yb, yt, D / 2 - pw, D / 2, trim, "pillar_fr", bev=0.0015))
-    # glass: side and front panes meeting at a bare corner, thin white edge strips
-    g = 0.0005
-    side_glass = sbox(-W / 2, -W / 2 + T, yb + T + g, yt - T - g, -D / 2 + pw + g, D / 2, glass, "glass_side", bev=0.0008)
-    front_glass = sbox(-W / 2 + T + g, W / 2 - pw - g, yb + T + g, yt - T - g, D / 2 - T, D / 2, glass, "glass_front", bev=0.0008)
-    for y0, y1 in ((yb + T, yb + T + 0.006), (yt - T - 0.006, yt - T)):
-        objs.append(sbox(-W / 2 + 0.0002, -W / 2 + 0.0012, y0, y1, -D / 2 + pw, D / 2 - 0.0002, trim, "frit", bev=0.0))
-        objs.append(sbox(-W / 2 + T, W / 2 - pw, y0, y1, D / 2 - 0.0012, D / 2 - 0.0002, trim, "frit", bev=0.0))
+    classic = design["layout"] == "classic"
+    if classic:
+        classic_body(design, f, m, objs, body, trim, accent, glass, perf, rgb, dark)
+    else:
+        # pillars: rear corners and the front-right edge; the front-left glass corner stays open (panoramic)
+        pw = 0.011
+        objs.append(sbox(-W / 2, -W / 2 + pw, yb, yt, -D / 2, -D / 2 + pw, trim, "pillar_rl", bev=0.0015))
+        objs.append(sbox(W / 2 - pw, W / 2, yb, yt, -D / 2, -D / 2 + pw, trim, "pillar_rr", bev=0.0015))
+        objs.append(sbox(W / 2 - pw, W / 2, yb, yt, D / 2 - pw, D / 2, trim, "pillar_fr", bev=0.0015))
+        # glass: side and front panes meeting at a bare corner, thin white edge strips
+        g = 0.0005
+        side_glass = sbox(-W / 2, -W / 2 + T, yb + T + g, yt - T - g, -D / 2 + pw + g, D / 2, glass, "glass_side", bev=0.0008)
+        front_glass = sbox(-W / 2 + T + g, W / 2 - pw - g, yb + T + g, yt - T - g, D / 2 - T, D / 2, glass, "glass_front", bev=0.0008)
+        for y0, y1 in ((yb + T, yb + T + 0.006), (yt - T - 0.006, yt - T)):
+            objs.append(sbox(-W / 2 + 0.0002, -W / 2 + 0.0012, y0, y1, -D / 2 + pw, D / 2 - 0.0002, trim, "frit", bev=0.0))
+            objs.append(sbox(-W / 2 + T, W / 2 - pw, y0, y1, D / 2 - 0.0012, D / 2 - 0.0002, trim, "frit", bev=0.0))
     # motherboard tray with cable grommets, and a CPU cut-out
     tray_z1 = corner[2] + 0.244 + 0.045
     tray = sbox(f["trayFace"], f["trayFace"] + 0.002, f["floor"], f["ceiling"], f["rearIn"], tray_z1, trim, "tray", bev=0.0006)
@@ -734,25 +840,30 @@ def make_case(design, info):
         cut(tray, sbox(hole[0] - 0.01, hole[0] + 0.01, hole[1] - 0.03, hole[1] + 0.03, hole[2] - 0.009, hole[2] + 0.009, trim, "cutter", bev=0.0))
         objs.append(sbox(hole[0] - 0.0005, hole[0] + 0.0025, hole[1] - 0.031, hole[1] + 0.031, hole[2] - 0.010, hole[2] + 0.010, rubber, "grommet", bev=0.003))
     objs.append(tray)
-    # PSU / drive chamber floor rail and the ARGB strip behind the front glass
-    objs.append(sbox(W / 2 - pw - 0.004, W / 2 - pw, yb + T + 0.02, yt - T - 0.02, D / 2 - pw - 0.004, D / 2 - pw, rgb, "led_strip", bev=0.0006))
-    led = objs[-1]
-    uvl = led.data.uv_layers.new(name="UVMap")
-    for li, loop in enumerate(led.data.loops):
-        co = led.data.vertices[loop.vertex_index].co
-        uvl.data[li].uv = ((co.z - yb) / H, 0.5)
+    if not classic:
+        # PSU / drive chamber floor rail and the ARGB strip behind the front glass
+        objs.append(sbox(W / 2 - pw - 0.004, W / 2 - pw, yb + T + 0.02, yt - T - 0.02, D / 2 - pw - 0.004, D / 2 - pw, rgb, "led_strip", bev=0.0006))
+        led = objs[-1]
+        uvl = led.data.uv_layers.new(name="UVMap")
+        for li, loop in enumerate(led.data.loops):
+            co = led.data.vertices[loop.vertex_index].co
+            uvl.data[li].uv = ((co.z - yb) / H, 0.5)
     # front-top I/O: power button with a light ring, USB, audio
     ix, iz = W / 2 - 0.05, D / 2 - 0.03
     objs.append(cylinder(0.006, 0.0015, (ix, -iz, yt + 0.0004), "Z", accent, "power", verts=32))
-    objs.append(ring(0.0062, 0.0072, 0.0012, (ix, -iz, yt + 0.0004), "Z", rgb, "power_ring", verts=40))
+    objs.append(ring(0.0062, 0.0072, 0.0012, (ix, -iz, yt + 0.0004), "Z", accent if classic else rgb, "power_ring", verts=40))
     for k, dx in enumerate((-0.022, -0.034, -0.044)):
         objs.append(sbox(ix + dx - 0.0045 + 0.003 * (k == 2), ix + dx + 0.0045 - 0.003 * (k == 2), yt - 0.0004, yt + 0.0002, iz - 0.0012, iz + 0.0012, dark, "usb", bev=0.0))
-    # feet
-    for sx in (-1, 1):
+    # feet (the classic layout has rails, see classic_body)
+    for sx in ((-1, 1) if not classic else ()):
         for sz in (-1, 1):
             x, z = sx * (W / 2 - 0.035), sz * (D / 2 - 0.045)
             objs.append(cylinder(0.019, design["feet"] - 0.003, (x, -z, yb - (design["feet"] - 0.003) / 2), "Z", accent, "foot", verts=40, bev=0.002))
             objs.append(cylinder(0.017, 0.003, (x, -z, yb - design["feet"] + 0.0015), "Z", feet_pad, "foot_pad", verts=32))
+    for o in objs:
+        if o is not None and o.data.materials[0].name == "Perforated":
+            planar_uv(o)
+    bake_solid([o for o in objs if o is not None])
     join_by_material(objs, "case")
     root = empty("case", (0, 0, 0))
     for o in bpy.data.objects:

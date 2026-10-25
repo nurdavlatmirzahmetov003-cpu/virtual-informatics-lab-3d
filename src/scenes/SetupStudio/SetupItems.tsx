@@ -17,6 +17,7 @@ import { DeskMat } from '@/scenes/DeskScene/models/DeskMat';
 import { useMonitorWallpaper } from '@/scenes/DeskScene/models/useMonitorWallpaper';
 import { HEADSET, KEYBOARD, MONITOR, MOUSE, SPEAKERS } from '@/scenes/DeskScene/layout';
 import { PCCase, type PcRigMode } from '@/scenes/DeskScene/pc/PCCase';
+import { DESIGN_BY_ID } from '@/scenes/DeskScene/pc/caseDesigns';
 import { caseMountsFor } from '@/scenes/DeskScene/pc/mounts';
 import { deskTopOf, matOn, pcShiftOn } from '@/scenes/DeskScene/deskFit';
 import type { PartId } from '@/scenes/DeskScene/pc/parts';
@@ -244,7 +245,8 @@ function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish;
   const applied = useRef('');
   const own = build.case && isTieredModel(build.case.modelPath) ? build.case : null;
   const native = own ? (NATIVE_CASE_FINISH[own.id] ?? 'black') : 'black';
-  const paint = finish.case === native ? null : CASE_FINISHES[finish.case];
+  // BitLab's designed cases keep their own colours (each colourway is its own product)
+  const paint = finish.case === native || (own && own.id in DESIGN_BY_ID) ? null : CASE_FINISHES[finish.case];
   const hide = useMemo<PartId[]>(() => (['motherboard', 'cpu', 'cooler', 'ram', 'gpu', 'ssd', 'psu'] as const).filter(id => !build[id === 'cooler' ? 'cooling' : id]), [build]);
   const found = useRef<Object3D | null>(null);
   useFrame(() => {
