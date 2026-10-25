@@ -678,10 +678,9 @@ def classic_body(design, f, m, objs, body, trim, accent, glass, perf, rgb, dark)
         for li, loop in enumerate(led.data.loops):
             co = led.data.vertices[loop.vertex_index].co
             uvl.data[li].uv = ((co.z - yb) / (yt - yb), 0.5)
-        for xs in (-W / 2 - 0.0006, W / 2 - 0.0004):
-            for k in range(14):
-                y = yb + 0.06 + k * 0.024
-                objs.append(sbox(xs, xs + 0.001, y, y + 0.012, z0 - 0.03, z0 - 0.006, dark, "slit", bev=0.0))
+        # intake: a dark groove down each edge of the front face
+        for xs in (-W / 2 + 0.008, W / 2 - 0.011):
+            objs.append(sbox(xs, xs + 0.003, yb + 0.03, yt - 0.03, z1 - 0.0006, z1 + 0.0004, dark, "groove", bev=0.0))
     else:
         # frame around a perforated mesh
         objs.append(sbox(-W / 2, W / 2, yb, yb + 0.02, z0, z1, body, "front_frame", bev=0.0015))

@@ -52,24 +52,24 @@
   {
     "id": "case-bitlab-core",
     "source": "assets-src/blender/products/case-bitlab-core.glb",
-    "sourceBytes": 266460,
+    "sourceBytes": 242124,
     "levels": [
       {
         "file": "case-bitlab-core.glb",
-        "bytes": 58120,
-        "triangles": 3514,
+        "bytes": 55424,
+        "triangles": 3202,
         "textureMB": 0.3
       },
       {
         "file": "case-bitlab-core_lod1.glb",
-        "bytes": 58072,
-        "triangles": 3508,
+        "bytes": 55384,
+        "triangles": 3196,
         "textureMB": 0.3
       },
       {
         "file": "case-bitlab-core_lod2.glb",
-        "bytes": 58072,
-        "triangles": 3508,
+        "bytes": 55384,
+        "triangles": 3196,
         "textureMB": 0.3
       }
     ]
