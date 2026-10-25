@@ -888,7 +888,8 @@
     "license": "License",
     "edits": "Adaptations: merged geometry, Meshopt compression, 1K WebP textures, scale and orientation. Removed loose cables, extracted chassis and speakers, used the headphone rest pose. Screen wallpaper is an original project design. Trademarks belong to their owners; this is an educational demonstration.",
     "environment": "Environment and materials — Poly Haven, CC0:",
-    "specs": "Verified specification sources:"
+    "specs": "Verified specification sources:",
+    "own": "BitLab's own models (eight cases: Panorama, Panorama Black, Panorama Blossom, Tower Showcase, Cube, Core, Flow RGB, Grove; fans; the AERO motherboard, graphics card, memory, AIO and power supply) are the project's own work, CC0, built by scripts/blender/make-showcase.py."
   },
   "anatomy": {
     "title": "Computer anatomy",

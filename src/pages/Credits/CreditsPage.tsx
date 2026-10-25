@@ -20,6 +20,7 @@ export default function CreditsPage() {
       </div>
     </article>)}</div>
     <p className={styles.note}>{t('credits.edits')}</p>
+    <p className={styles.note}>{t('credits.own')}</p>
     <p className={styles.note}>{t('credits.environment')} <a href="https://polyhaven.com/a/studio_small_09" target="_blank" rel="noreferrer">Studio Small 09 · Sergej Majboroda</a>; <a href="https://polyhaven.com/a/wood_table_001" target="_blank" rel="noreferrer">Wood Table 001</a>; <a href="https://polyhaven.com/a/concrete_floor_painted" target="_blank" rel="noreferrer">Concrete Floor Painted</a>.</p>
     <p className={styles.note}>{t('credits.specs')} <a href={specSources.motherboard.url} target="_blank" rel="noreferrer">ASUS PRIME X570-P</a> · <a href={specSources.gpu.url} target="_blank" rel="noreferrer">MSI RTX 3080 Gaming X Trio 10G</a> · {specSources.verifiedOn}.</p>
   </PageLayout>;

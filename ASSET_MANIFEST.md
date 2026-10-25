@@ -119,7 +119,12 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | Product | Source model | Author | Licence | Changes |
 |---|---|---|---|---|
 | `case-bitlab-aero` (0.37) | — жобаның өз моделі, `scripts/blender/make-bitlab-aero.py` примитивтерден құрады | BitLab | CC0 (өз жұмысымыз) | ақ корпус, 230×470×450 мм, ішкі орналасу сахна якорьлеріне дәл сай; 4 материал (4 draw call); 19 port/slot маркері; әйнегі сахнаның процедуралық панелі |
-| `case-bitlab-panorama` (V4) | — жобаның өз моделі, `scripts/blender/make-showcase.py` (`src/scenes/DeskScene/pc/caseDesigns.ts` деректерінен) | BitLab | CC0 (өз жұмысымыз) | ақ екі камералы панорамалық корпус, 310×464×460 мм; алды мен сол жағы шыны (бұрышында тірек жоқ); 10 желдеткіш орны; 5,2k △ |
+| `case-bitlab-panorama` (V4) | — жобаның өз моделі, `scripts/blender/make-showcase.py` (`src/scenes/DeskScene/pc/caseDesigns.ts` деректерінен) | BitLab | CC0 (өз жұмысымыз) | ақ екі камералы панорамалық корпус, 310×464×460 мм; алды мен сол жағы шыны (бұрышында тірек жоқ); 10 желдеткіш орны; түстері vertex colour-ға пісірілген (5 draw call); 5,2k △ |
+| `case-bitlab-panorama-black`, `case-bitlab-blossom` (V4 §1.4) | — өз моделі, `make-showcase.py` (сол дизайн жазбасы) | BitLab | CC0 | Panorama корпусының қара (күңгірт шыны) және пастель-қызғылт нұсқалары; 5,2k △ |
+| `case-bitlab-tower` (V4 §1.4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | күміс-сұр толық мұнара, 335×575×500 мм, E-ATX, бүйірде 4 желдеткіш; 5,2k △ |
+| `case-bitlab-cube` (V4 §1.4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | mATX / ITX шыны куб, 290×400×440 мм; 5,2k △ |
+| `case-bitlab-core`, `case-bitlab-flow`, `case-bitlab-grove` (V4 §1.4) | — өз моделі, `make-showcase.py` (классикалық бір камералы схема) | BitLab | CC0 | қуат блогы қаптамасы бар, бүйірі шыны mid-tower корпустар: Core — тұтас алдыңғы панель мен жарық жолағы, Flow — қара торлы алдыңғы панель, Grove — тордың үстінде емен тақталар; 3,2–4,3k △, 3–4 draw call |
+| `fan-bitlab-120-black` (V4 §1.4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | қара рамалы 120 мм ARGB желдеткіш; 6,5k △ |
 | `fan-bitlab-120` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | 120×120×25 мм ARGB желдеткіш: рама, жарық сақинасы, айналатын қалақтар (`rotor`); 6,5k △ |
 | `mb-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` + `showcase-textures.mjs` | BitLab | CC0 | ақ ATX аналық плата 305×244 мм, AM5 сокет, 4 DIMM, PCIe x16, M.2; дәл слот маркерлері және артқы I/O порттары; 6,3k △ |
 | `gpu-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | ақ үш желдеткішті видеокарта 322×128×58 мм, «BITLAB AERO» жазуы, ARGB жолағы, 3 айналатын желдеткіш; 7,8k △ |
