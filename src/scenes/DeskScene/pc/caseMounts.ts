@@ -76,7 +76,8 @@ function fromInterior(id: string, inside: CaseInterior): CaseMounts {
       // beside the board's tallest parts (VRM heatsinks, 47 mm) and above its first expansion slot
       { p: [MB.x - 0.047 - FAN / 2 - 0.002, MB.y + MB.h / 2 - 0.065, rearFanZ(inside)], n: [0, 0, -1], group: 'rear', size: FAN },
     ],
-    radiator: { p: [BOARD_FACE - 0.073, H / 2 - 0.04, 0], along: [0, 0, 1], normal: [0, 1, 0], maxMm: 360, replaces: null },
+    // by the glass, clear of the RAM; 280 mm long so its end tanks clear the front and rear fans
+    radiator: { p: [-W / 2 + 0.004 + 0.064, H / 2 - 0.04, 0], along: [0, 0, 1], normal: [0, 1, 0], maxMm: 280, replaces: null },
     cableHoles: { atx24: [BOARD_FACE + 0.004, MB.y, MB.z + MB.d / 2 + 0.035] },
   };
 }

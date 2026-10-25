@@ -14,7 +14,8 @@ import { Box3, Group, Vector3 } from 'three';
 import { loadGlbBounds } from './lib/glbBounds.mjs';
 import { fitModel } from '../src/lib/three/fit.ts';
 import { CASE_MOUNTS, hddBay } from '../src/scenes/DeskScene/pc/caseMounts.ts';
-import { boxOf, caseMountsFor, geometryOf, installBuild, installedBoxes, ON_BOARD, SEAT, stickCount } from '../src/scenes/DeskScene/pc/mounts.ts';
+import { boxOf, caseMountsFor, entryPaths, geometryOf, installBuild, installedBoxes, isIntakeFan, ON_BOARD, pathOffset, SEAT, stickCount } from '../src/scenes/DeskScene/pc/mounts.ts';
+import { INSTALL_ORDER } from '../src/scenes/SetupStudio/assembly/assemblyRig.ts';
 import { CATALOG } from '../src/data/hardware/catalog.ts';
 import { HOUSE_PARTS } from '../src/data/hardware/house.ts';
 
@@ -69,15 +70,51 @@ test('measured sizes match the GLB bounds the scene fits (ModelLoader centres th
   }
 });
 
-/** One build per (case, board) with each other category varied on its own: every part meets every case and board. */
+/**
+ * Every case × board × cooler × card × PSU combination (V4 §1.5); CPU, RAM and
+ * SSD rotate through the catalog alongside, so each of them meets every case
+ * and board too.
+ */
 function* builds(c) {
-  for (const motherboard of boards) {
-    const n = Math.max(cpus.length, coolers.length, rams.length, gpus.length, ssds.length, psus.length);
-    for (let i = 0; i < n; i++) {
-      yield { case: c, motherboard, cpu: cpus[i % cpus.length], cooling: coolers[i % coolers.length], ram: rams[i % rams.length], gpu: gpus[i % gpus.length], ssd: ssds[i % ssds.length], psu: psus[i % psus.length] };
-    }
-  }
+  let i = 0;
+  for (const motherboard of boards)
+    for (const cooling of coolers)
+      for (const gpu of gpus)
+        for (const psu of psus) {
+          yield { case: c, motherboard, cpu: cpus[i % cpus.length], cooling, ram: rams[i % rams.length], gpu, ssd: ssds[i % ssds.length], psu };
+          i++;
+        }
 }
+
+/** The AIO radiator with its fans as a box: core centred on the mount, fans on the inner side, end tanks beyond the fans. */
+function radiatorBox(inst) {
+  const r = inst.cooler?.liquid ? inst.cooler.radiator : null;
+  if (!r) return null;
+  const a = v(r.along).normalize();
+  const n = v(r.normal).normalize();
+  const w = new Vector3().crossVectors(n, a).normalize();
+  const p = v(r.p);
+  const half = (d, lo, hi) => [p.clone().addScaledVector(d, lo), p.clone().addScaledVector(d, hi)];
+  const pts = [...half(a, -(r.mm / 1000) / 2 - 0.017, r.mm / 1000 / 2 + 0.017), ...half(w, -0.06, 0.06), ...half(n, -(0.0135 + 0.025), 0.0135)];
+  // the three extents are along orthogonal axes: combine them around the centre
+  const box = new Box3(p.clone(), p.clone());
+  for (const q of pts) box.expandByPoint(q);
+  return box;
+}
+
+/** Board-mounted parts sit on the board; the CPU is under the cooler, the M.2 drive under the card; tower coolers overhang the RAM by design. */
+function allowed(a, b) {
+  const onBoard = new Set(['cpu', 'cooler', 'radiator', 'gpu', 'ssd', 'ram1', 'ram2', 'ram3', 'ram4']);
+  if ([a, b].includes('motherboard') && (onBoard.has(a) || onBoard.has(b))) return true;
+  const pair = [a, b].sort().join('×');
+  if (pair === 'cooler×cpu' || pair === 'gpu×ssd' || /^cooler×ram\d$/.test(pair)) return true;
+  return a.startsWith('ram') && b.startsWith('ram');
+}
+
+const fanBox = (f) => {
+  const half = f.n.map((n) => (Math.abs(n) > 0.5 ? 0.0125 : f.size / 2));
+  return new Box3(v(f.p).sub(v(half)), v(f.p).add(v(half)));
+};
 
 for (const c of cases) {
   const mounts = caseMountsFor(c.id);
@@ -184,6 +221,89 @@ for (const c of cases) {
         }
     }
     assert.deepEqual([...errors], []);
+  });
+
+  test(`${c.id}: nothing is tilted (every turn a whole quarter, within 0.5°)`, () => {
+    const errors = new Set();
+    const quarter = (a) => Math.abs(a - Math.round(a / (Math.PI / 2)) * (Math.PI / 2)) <= (0.5 * Math.PI) / 180;
+    for (const f of mounts.fans) {
+      const n = v(f.n);
+      if (Math.abs(n.length() - 1) > 1e-6 || ![0, 1, 2].some((k) => Math.abs(Math.abs(n.getComponent(k)) - 1) < 1e-4)) errors.add(`${f.group} fan normal ${f.n} is not a case axis`);
+    }
+    if (mounts.radiator) for (const d of [mounts.radiator.along, mounts.radiator.normal]) if (!d.some((x) => Math.abs(Math.abs(x) - 1) < 1e-4)) errors.add(`radiator axis ${d}`);
+    for (const build of builds(c)) {
+      const inst = installBuild(mounts, build);
+      for (const id of ['motherboard', 'cpu', 'cooler', 'gpu', 'ssd', 'psu']) {
+        const r = inst[id]?.r;
+        if (r && !r.every(quarter)) errors.add(`${build[id === 'cooler' ? 'cooling' : id].id}: turned ${r.map((x) => ((x * 180) / Math.PI).toFixed(2))}°`);
+      }
+    }
+    assert.deepEqual([...errors], []);
+  });
+
+  test(`${c.id}: the AIO radiator stays inside the case and clears every part and fan`, () => {
+    const errors = new Set();
+    for (const build of builds(c)) {
+      const inst = installBuild(mounts, build);
+      const rad = radiatorBox(inst);
+      if (!rad) continue;
+      if (!inside(rad)) errors.add(`${build.cooling.id}: radiator ${fmt(rad)} leaves the case`);
+      for (const { id, box } of installedBoxes(inst)) {
+        if (id === 'cooler' || allowed('radiator', id)) continue;
+        const o = overlap(rad, B(box));
+        if (o > MM) errors.add(`${build.cooling.id} radiator × ${id}: ${(o * 1000).toFixed(1)} mm`);
+      }
+      for (const f of inst.fans) {
+        const o = overlap(rad, fanBox(f));
+        if (o > MM) errors.add(`${build.cooling.id} radiator × ${f.group} fan: ${(o * 1000).toFixed(1)} mm`);
+      }
+    }
+    assert.deepEqual([...errors], []);
+  });
+
+  test(`${c.id}: in the assembly every part slides in from outside without passing through another (V4 §1.3)`, () => {
+    const errors = new Set();
+    for (const build of builds(c)) {
+      const inst = installBuild(mounts, build);
+      const paths = entryPaths(inst);
+      const boxes = installedBoxes(inst).map(({ id, box }) => ({ id, group: id.startsWith('ram') ? 'ram' : id, box: B(box) }));
+      const rad = radiatorBox(inst);
+      if (rad) boxes.push({ id: 'radiator', group: 'cooler', box: rad });
+      // the fans that ship with the case are there from the start; the intake fans are the last group in
+      const exhaust = inst.fans.filter((f) => !isIntakeFan(f)).map((f) => ({ id: `${f.group} fan`, group: 'case', box: fanBox(f) }));
+      const intake = inst.fans.filter(isIntakeFan).map((f) => ({ id: `${f.group} fan`, group: 'fans', box: fanBox(f) }));
+      const all = [...boxes, ...intake];
+      const placed = [...exhaust];
+      for (const group of INSTALL_ORDER) {
+        const moving = all.filter((b) => b.group === group);
+        const path = paths[group];
+        if (!moving.length) continue;
+        if (!path) {
+          errors.add(`${group}: no entry path`);
+          continue;
+        }
+        const d = v(pathOffset(path, 1));
+        // the entry point is outside the case: beyond the glass, or behind the rear panel (PSU)
+        for (const m of moving) {
+          const at = m.box.clone().translate(d);
+          const out = at.max.x < mounts.main.min[0] + MM || at.max.z < mounts.shell.min[2] + MM;
+          if (!out) errors.add(`${build[group === 'cooler' ? 'cooling' : group]?.id ?? group} (${m.id}) starts inside the case ${fmt(at)}`);
+        }
+        for (let k = 0; k <= 60; k++) {
+          const off = v(pathOffset(path, k / 60));
+          for (const m of moving) {
+            const b = m.box.clone().translate(off);
+            for (const s of placed) {
+              if (allowed(m.id, s.id)) continue;
+              const o = overlap(b, s.box);
+              if (o > MM) errors.add(`${build.motherboard.id}: ${m.id} (${build[group === 'cooler' ? 'cooling' : group]?.id ?? group}) passes through ${s.id} (${(o * 1000).toFixed(1)} mm)`);
+            }
+          }
+        }
+        placed.push(...moving);
+      }
+    }
+    assert.deepEqual([...errors].slice(0, 20), []);
   });
 }
 

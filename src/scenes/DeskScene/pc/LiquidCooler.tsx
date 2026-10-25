@@ -23,7 +23,8 @@ const WHITE_AIO: Record<string, { radiator: string; fan: string }> = {
 const ON_BOARD_POSE = { axis: 1 as const, rotation: ON_BOARD };
 
 export function LiquidCooler({ pump, rgbColor, product }: { pump: CoolerPlacement; rgbColor?: string | null; product?: HardwareItem }) {
-  const white = product ? WHITE_AIO[product.id] : undefined;
+  // BitLab's own radiator model is 360 mm: a shorter mount gets the parametric radiator at its real length
+  const white = product && (pump.radiator?.mm ?? 360) >= 360 ? WHITE_AIO[product.id] : undefined;
   const light = useRef<MeshStandardMaterial>(null);
   const rad = pump.radiator;
   const frame = useMemo(() => {

@@ -21,7 +21,7 @@ export const BITLAB_AERO: HardwareItem = {
   ],
   specSourceUrl: '',
   specCheckedAt: '2026-10-19',
-  compatibility: { supportsFormFactors: ['ATX', 'mATX', 'ITX'], maxGpuLengthMm: 360, maxCoolerHeightMm: 168, maxRadiatorMm: 360 },
+  compatibility: { supportsFormFactors: ['ATX', 'mATX', 'ITX'], maxGpuLengthMm: 360, maxCoolerHeightMm: 168, maxRadiatorMm: 280 },
   modelPath: 'products/case-bitlab-aero.glb',
   colors: ['white'],
   rgb: true,

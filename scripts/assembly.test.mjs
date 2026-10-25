@@ -9,10 +9,10 @@ test('full setup follows installation dependencies and power-on order', () => {
   for (const [before,after] of [['monitorStand','monitor'],['pcCase','sidePanel'],['sidePanel','motherboard'],['motherboard','cpu'],['cpu','cooler'],['psu','cables'],['gpu','cables'],['cables','fans'],['fans','glassClose'],['glassClose','rgb'],['rgb','monitorOn'],['monitorOn','lights']]) assert.ok(ids.indexOf(before) < ids.indexOf(after), `${before} before ${after}`);
   assert.equal(new Set(ids).size,ids.length);
 });
-test('V4 §1.3: the CPU drops into an open socket, the lever locks it, paste goes on before the cooler', () => {
+test('V4 §1.3: the CPU drops into an open socket, the lever locks it, RAM and M.2 go in, paste, then the cooler', () => {
   const build = Object.fromEntries(['case','motherboard','cpu','ram','ssd','cooling','psu','gpu'].map(k => [k,{id:k}]));
   const ids = assemblySteps(build).map(s => s.id);
-  const order = ['sidePanel','motherboard','socket','cpu','socketLock','paste','cooler','ram','ssd','gpu','psu','cables','fans','glassClose','rgb'];
+  const order = ['sidePanel','motherboard','socket','cpu','socketLock','ram','ssd','paste','cooler','gpu','psu','cables','fans','glassClose','rgb'];
   assert.deepEqual(ids.filter(id => order.includes(id)), order);
   const steps = assemblySteps(build);
   const lever = steps.filter(s => s.targets.some(t => t.kind === 'value' && t.key === 'socketLever'));

@@ -275,3 +275,58 @@ export function installedBoxes(inst: Installed): Array<{ id: string; box: Box3Li
   if (inst.ram) for (const [i, s] of inst.ram.sticks.entries()) list.push({ id: `ram${inst.ram.slots[i]}`, box: boxOf({ p: add(inst.ram.p, s), size: inst.ram.stick }) });
   return list;
 }
+
+/** Part groups that fly in during the assembly (parts.ts PartId). */
+export type EntryPart = 'motherboard' | 'cpu' | 'cooler' | 'ram' | 'gpu' | 'ssd' | 'psu' | 'fans';
+
+/** Fan groups the builder installs in the assembly; the others (exhaust, and a dual chamber's side fans) ship with the case. */
+export const isIntakeFan = (f: FanMount) => f.group === 'bottom' || f.group === 'front';
+
+/** A part's approach: the long straight move from `entry` (offset from its seat), then, if given, a short last slide from `last`. */
+export interface EntryPath {
+  entry: Vec3;
+  last?: Vec3;
+}
+
+/**
+ * Where each part waits before its straight move into place (V4 §1.3): just
+ * outside the open glass side at its own height and depth, so the slide along
+ * the mount normal (−X → +X) crosses nothing installed before it; the PSU
+ * comes in from the back through the rear-panel opening. The board travels
+ * 16 mm towards the front, past the rear fan, and its I/O then slides back
+ * into the rear panel, the way a board goes in.
+ */
+export function entryPaths(inst: Installed): Partial<Record<EntryPart, EntryPath>> {
+  const glass = inst.mounts.main.min[0] - 0.02;
+  const rear = inst.mounts.shell.min[2] - 0.02;
+  const out: Partial<Record<EntryPart, EntryPath>> = {};
+  for (const id of ['motherboard', 'cpu', 'cooler', 'ram', 'gpu', 'ssd'] as const) {
+    const pl = inst[id];
+    if (pl) out[id] = { entry: [Math.min(-0.04, glass - (pl.p[0] + pl.size[0] / 2)), 0, 0] };
+  }
+  if (out.motherboard) out.motherboard.last = [0, 0, BOARD_SLIDE];
+  if (inst.psu) out.psu = { entry: [0, 0, Math.min(-0.05, rear - (inst.psu.p[2] + inst.psu.size[2] / 2))] };
+  const intake = inst.fans.filter(isIntakeFan);
+  if (intake.length) out.fans = { entry: [Math.min(-0.05, glass - Math.max(...intake.map((f) => f.p[0] + f.size / 2))), 0, 0] };
+  return out;
+}
+
+/** The board's last slide towards the rear panel (m). */
+const BOARD_SLIDE = 0.016;
+/** Share of the approach taken by the last slide. */
+const LAST_SHARE = 0.3;
+
+/** Offset along a part's approach at `t` (0 seated … 1 at the entry point). */
+export function pathOffset(path: EntryPath, t: number, out: [number, number, number] = [0, 0, 0]): [number, number, number] {
+  const { entry, last } = path;
+  if (!last) {
+    out[0] = entry[0] * t;
+    out[1] = entry[1] * t;
+    out[2] = entry[2] * t;
+    return out;
+  }
+  const a = Math.min(1, t / LAST_SHARE);
+  const b = Math.max(0, (t - LAST_SHARE) / (1 - LAST_SHARE));
+  for (let k = 0; k < 3; k++) out[k] = last[k] * a + entry[k] * b;
+  return out;
+}

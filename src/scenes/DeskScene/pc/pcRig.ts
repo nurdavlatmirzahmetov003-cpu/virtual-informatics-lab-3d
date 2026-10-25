@@ -1,4 +1,5 @@
 import type { PartId } from './parts';
+import type { EntryPath } from './mounts';
 import { CASE_ORIGIN } from './constants';
 
 /**
@@ -28,8 +29,8 @@ export const pcRig = {
   socketLever: 0,
   /** Thermal paste on the CPU: 0 none … 1 applied. */
   paste: 0,
-  /** Assembly entry path of each part (case-local offset just outside the case, before it slides straight in); written by <PCCase>. */
-  entry: {} as Partial<Record<PartId, readonly [number, number, number]>>,
+  /** Assembly approach of each part (mounts.ts entryPaths: from just outside the case, straight in); written by <PCCase>. */
+  entry: {} as Partial<Record<PartId, EntryPath>>,
   /** Exploded-layout offsets that replace a part's screen slot in this build (an AIO lifts out as one piece). */
   explodeAs: {} as Partial<Record<PartId, readonly [number, number, number]>>,
   /** World position of the case origin on screen. */

@@ -10,14 +10,15 @@ import { useStoryStore } from '@/store/storyStore';
 import { CHAPTER_INDEX } from '../chapters';
 import { explodeOffset, PART_INDEX, type PartDef } from './parts';
 import { pcRig } from './pcRig';
+import { pathOffset, type EntryPath } from './mounts';
 import { playSfx } from '@/lib/audio/sfx';
 import styles from '@/components/3d/Hotspot.module.css';
 
 const HIGHLIGHT = new Color('#38d6f5');
 const tint = new Color();
 const DIM = 0.72; // how much non-active parts darken
-/** Fallback entry when the mounting system gave none (case-local offset). */
-const INSTALL_FROM = [-0.22, 0, 0] as const;
+/** Fallback approach when the mounting system gave none (case-local offset). */
+const INSTALL_FROM: EntryPath = { entry: [-0.22, 0, 0] };
 /** Extra drift while the part is still outside the case: it arrives from above and towards the viewer. */
 const DRIFT_X = [-0.12, 0.07, 0.05] as const;
 const DRIFT_Z = [0, 0.05, -0.14] as const;
@@ -25,22 +26,17 @@ const smooth = (x: number) => x * x * (3 - 2 * x);
 
 /**
  * Installing offset for progress `e` (1 waiting … 0 seated): from a drifting
- * start outside the case to the entry point, then a straight slide along the
- * mount normal onto the anchor (the last half of the move).
+ * start outside the case to the entry point, then the straight approach onto
+ * the anchor (mounts.ts pathOffset; the last half of the move).
  */
-function installOffset(entry: readonly [number, number, number], e: number, out: [number, number, number]) {
-  if (e <= 0.5) {
-    const t = e / 0.5;
-    out[0] = entry[0] * t;
-    out[1] = entry[1] * t;
-    out[2] = entry[2] * t;
-    return out;
-  }
+function installOffset(path: EntryPath, e: number, out: [number, number, number]) {
+  if (e <= 0.5) return pathOffset(path, e / 0.5, out);
+  pathOffset(path, 1, out);
   const t = smooth((e - 0.5) / 0.5);
-  const d = entry[2] !== 0 && entry[0] === 0 ? DRIFT_Z : DRIFT_X;
-  out[0] = entry[0] + d[0] * t;
-  out[1] = entry[1] + d[1] * t;
-  out[2] = entry[2] + d[2] * t;
+  const d = path.entry[2] !== 0 && path.entry[0] === 0 ? DRIFT_Z : DRIFT_X;
+  out[0] += d[0] * t;
+  out[1] += d[1] * t;
+  out[2] += d[2] * t;
   return out;
 }
 

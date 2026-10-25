@@ -19,7 +19,7 @@ import { DesignedCase, ShowcaseClock } from './ShowcaseCase';
 import { DESIGN_MOUNTS } from './caseDesigns';
 import { createRgbFx, RgbFxContext } from './showcaseFx';
 import { CASE_ORIGIN, FAN } from './constants';
-import { caseMountsFor, installBuild, type Installed, type Vec3 } from './mounts';
+import { caseMountsFor, entryPaths, installBuild, isIntakeFan, type Installed, type Vec3 } from './mounts';
 import { isTieredModel } from '@/lib/three/modelUrls';
 import type { ResolvedBuild } from '@/lib/studio/build';
 
@@ -64,30 +64,10 @@ function PcRigController({ mode, hide }: { mode: PcRigMode; hide: readonly PartI
 
 const NO_PARTS: readonly PartId[] = [];
 
-/**
- * Where each part waits before its last straight move into place (V4 §1.3):
- * just outside the open glass side at its own height and depth, so the final
- * slide along the mount normal (−X → +X) crosses nothing; the PSU comes in
- * from the back through the rear-panel opening.
- */
-function entryOffsets(inst: Installed): Partial<Record<PartId, readonly [number, number, number]>> {
-  const glass = inst.mounts.main.min[0] - 0.02;
-  const rear = inst.mounts.shell.min[2] - 0.02;
-  const out: Partial<Record<PartId, readonly [number, number, number]>> = {};
-  for (const id of ['motherboard', 'cpu', 'cooler', 'ram', 'gpu', 'ssd'] as const) {
-    const pl = inst[id];
-    if (pl) out[id] = [Math.min(-0.04, glass - (pl.p[0] + pl.size[0] / 2)), 0, 0];
-  }
-  if (inst.psu) out.psu = [0, 0, Math.min(-0.05, rear - (inst.psu.p[2] + inst.psu.size[2] / 2))];
-  const intake = inst.fans.filter((f) => f.group !== 'rear' && f.group !== 'top');
-  if (intake.length) out.fans = [Math.min(-0.05, glass - Math.max(...intake.map((f) => f.p[0] + 0.06))), 0, 0];
-  return out;
-}
-
 /** Where each part group sits: the centre of its installed box (fans: the middle of the intake fans). */
 function installedCentres(inst: Installed): Record<PartId, Vec3> {
   const centre = (pl: { p: Vec3 } | null): Vec3 => pl?.p ?? [0, 0, 0];
-  const intake = inst.fans.filter((f) => f.group !== 'rear');
+  const intake = inst.fans.filter(isIntakeFan);
   const mid = (k: 0 | 1 | 2) => (intake.length ? intake.reduce((s, f) => s + f.p[k], 0) / intake.length : 0);
   return {
     motherboard: centre(inst.motherboard),
@@ -142,7 +122,7 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
     pcRig.at = at;
     // an AIO is pump, hoses and radiator in one piece: in the exploded layout it rises above the case instead of joining the grid
     pcRig.explodeAs = inst.cooler?.liquid ? { cooler: [-0.16, 0.17, 0.05] } : {};
-    pcRig.entry = entryOffsets(inst);
+    pcRig.entry = entryPaths(inst);
   }, [at, inst]);
 
   // soft key light that only wakes up for the exploded layout

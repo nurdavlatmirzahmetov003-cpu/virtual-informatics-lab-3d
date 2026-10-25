@@ -15,8 +15,13 @@ export type PieceKey =
 
 export const PIECES: readonly PieceKey[] = ['monitorStand', 'monitor', 'mat', 'keyboard', 'mouse', 'speakers', 'headsetStand', 'headset', 'chair', 'pcCase'];
 
-/** PC internals in install order (V4 §1.3: board, CPU, cooler, RAM, M.2, card, PSU, fans). */
-export const INSTALL_ORDER: readonly PartId[] = ['motherboard', 'cpu', 'cooler', 'ram', 'ssd', 'gpu', 'psu', 'fans'];
+/**
+ * PC internals in install order (V4 §1.3): board, CPU, then the memory and the
+ * M.2 drive before the cooler, because a tower cooler overhangs the M.2 slot
+ * and a top radiator hangs over the RAM (pc-fit checks every approach); then
+ * the card, the PSU, and the intake fans.
+ */
+export const INSTALL_ORDER: readonly PartId[] = ['motherboard', 'cpu', 'ram', 'ssd', 'cooler', 'gpu', 'psu', 'fans'];
 
 const emptyPieces = () => Object.fromEntries(PIECES.map((k) => [k, 0])) as Record<PieceKey, number>;
 const emptyParts = () => Object.fromEntries(INSTALL_ORDER.map((k) => [k, 0])) as Record<PartId, number>;

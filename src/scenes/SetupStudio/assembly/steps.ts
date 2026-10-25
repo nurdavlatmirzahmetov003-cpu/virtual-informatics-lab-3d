@@ -43,14 +43,15 @@ export function assemblySteps(build: ResolvedBuild): AssemblyStep[] {
     !!build.case && { id: 'pcCase', shot: 'ASSEMBLY_PC', targets: [piece('pcCase')], duration: 1.4, ease: settle },
     !!build.case && { id: 'sidePanel', shot: 'ASSEMBLY_PC', targets: [{ kind: 'value', key: 'glassOpen', to: 1 }], duration: 1.5, ease: glide },
     !!build.motherboard && { id: 'motherboard', shot: 'PC_INTERIOR', targets: [part('motherboard')], duration: 1.3, ease: settle },
-    // the CPU goes into an open socket, the lever locks it, paste, then the cooler on top
+    // the CPU goes into an open socket and the lever locks it; memory and the M.2 drive go in before the cooler covers their slots
     !!build.cpu && { id: 'socket', shot: 'ASSEMBLY_CPU', targets: [{ kind: 'value', key: 'socketLever', to: 1 }], duration: 0.6, ease: glide },
     !!build.cpu && { id: 'cpu', shot: 'ASSEMBLY_CPU', targets: [part('cpu')], duration: 1.1, ease: settle },
     !!build.cpu && { id: 'socketLock', shot: 'ASSEMBLY_CPU', targets: [{ kind: 'value', key: 'socketLever', to: 0 }], duration: 0.6, ease: glide },
-    !!build.cpu && !!build.cooling && { id: 'paste', shot: 'ASSEMBLY_CPU', targets: [{ kind: 'value', key: 'paste', to: 1 }], duration: 0.7, ease: 'power2.out' },
-    !!build.cooling && { id: 'cooler', shot: 'PC_INTERIOR', targets: [part('cooler')], duration: 1.2, ease: settle },
     !!build.ram && { id: 'ram', shot: 'PC_INTERIOR', targets: [part('ram')], duration: 1.0, ease: settle },
     !!build.ssd && { id: 'ssd', shot: 'PC_INTERIOR', targets: [part('ssd')], duration: 0.9, ease: settle },
+    // a dot of paste, then the cooler on top
+    !!build.cpu && !!build.cooling && { id: 'paste', shot: 'ASSEMBLY_CPU', targets: [{ kind: 'value', key: 'paste', to: 1 }], duration: 0.7, ease: 'power2.out' },
+    !!build.cooling && { id: 'cooler', shot: 'PC_INTERIOR', targets: [part('cooler')], duration: 1.2, ease: settle },
     !!build.gpu && { id: 'gpu', shot: 'PC_INTERIOR', targets: [part('gpu')], duration: 1.3, ease: settle },
     !!build.psu && { id: 'psu', shot: 'ASSEMBLY_PSU', targets: [part('psu')], duration: 1.1, ease: settle },
     !!build.case && { id: 'cables', shot: 'PC_INTERIOR', targets: [{ kind: 'value', key: 'cables', to: 1 }], duration: 0.7, ease: 'power1.inOut' },

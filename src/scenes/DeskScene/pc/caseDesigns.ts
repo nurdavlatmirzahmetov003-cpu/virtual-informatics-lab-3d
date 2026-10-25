@@ -96,12 +96,12 @@ export const CASE_DESIGNS: readonly CaseDesign[] = [
     colors: { body: '#d5d8dd', trim: '#bcc1c9', accent: '#8b919b', glassTint: '#eef3fa' },
     fans: { side: 4, bottom: 3, top: 3, rear: 1, front: 0 }, radiator: 'top', formFactors: ATX_ALL, boardTop: 0.04, fanModel: WHITE_FAN,
   },
-  // compact glass cube for micro-ATX and mini-ITX boards
+  // compact glass cube for micro-ATX and mini-ITX boards; the board sits lower, so its RAM clears the radiator fans
   {
     id: 'case-bitlab-cube', name: 'Cube', priceKZT: 58_000, finish: 'white', layout: 'dual',
     size: [0.29, 0.4, 0.44], feet: 0.018, rear: 0.1, glass: { side: true, front: true }, front: 'glass',
     colors: { body: '#e3eaf2', trim: '#d0d9e4', accent: '#a7b4c4', glassTint: '#f2f7ff' },
-    fans: { side: 2, bottom: 2, top: 3, rear: 1, front: 0 }, radiator: 'top', formFactors: ['mATX', 'ITX'], boardTop: 0.035, fanModel: WHITE_FAN,
+    fans: { side: 2, bottom: 2, top: 3, rear: 1, front: 0 }, radiator: 'top', formFactors: ['mATX', 'ITX'], boardTop: 0.046, fanModel: WHITE_FAN,
   },
   // compact mid-tower: glass side, solid front with a light bar
   {

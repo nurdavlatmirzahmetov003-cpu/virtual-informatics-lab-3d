@@ -18,7 +18,7 @@ import { modelLevels } from '@/lib/three/modelUrls';
 import type { HardwareItem } from '@/data/hardware/types';
 import { DESIGN_BY_ID, SLOTS } from './caseDesigns';
 import type { CaseMounts, FanMount } from './caseMounts';
-import type { Installed, Vec3 } from './mounts';
+import { isIntakeFan, type Installed, type Vec3 } from './mounts';
 import { pcRig } from './pcRig';
 import { ShowcaseCables } from './ShowcaseCables';
 import { applyShowcaseMaterials, bakeCopies, fanModelOf, glassMaterial, paletteAt, RgbFxContext, spinningMaterial, spinUniform } from './showcaseFx';
@@ -157,8 +157,8 @@ export function DesignedCase({ product, mounts, inst }: { product: HardwareItem;
       p.visible = g < 0.995;
     }
   });
-  // exhaust fans belong to the case; the radiator takes the top ones when the build has an AIO
-  const exhaust = useMemo(() => inst.fans.filter((f) => f.group === 'rear' || f.group === 'top'), [inst.fans]);
+  // exhaust fans and a dual chamber's side fans ship with the case; the radiator takes the top ones when the build has an AIO
+  const exhaust = useMemo(() => inst.fans.filter((f) => !isIntakeFan(f)), [inst.fans]);
   return (
     <group>
       <ModelLoader key={product.id} url={`${MODELS}${product.modelPath}`} onLoaded={onLoaded} />

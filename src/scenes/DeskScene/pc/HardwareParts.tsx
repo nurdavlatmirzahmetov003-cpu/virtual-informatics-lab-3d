@@ -8,7 +8,7 @@ import type { HardwareItem } from '@/data/hardware/types';
 import { isTieredModel } from '@/lib/three/modelUrls';
 import type { PartId } from './parts';
 import { fanFit, rotorFit } from './fits';
-import { isSata, ON_BOARD, type FanMount, type Installed, type Vec3 } from './mounts';
+import { isIntakeFan, isSata, ON_BOARD, type FanMount, type Installed, type Vec3 } from './mounts';
 import { pcRig } from './pcRig';
 import { LiquidCooler } from './LiquidCooler';
 import { DESIGN_BY_ID } from './caseDesigns';
@@ -108,7 +108,7 @@ const BUILD_KEY: Record<Exclude<PartId, 'fans'>, 'motherboard' | 'cpu' | 'cooler
 export function HardwarePart({ id, inst, at, product, rgbColor, deferDetail = false }: { id: PartId; inst: Installed; at: Vec3; product?: HardwareItem; rgbColor?: string | null; deferDetail?: boolean }) {
   if (id === 'fans') {
     const design = DESIGN_BY_ID[inst.mounts.id];
-    if (design) return <FanArray fans={inst.fans.filter((f) => f.group === 'side' || f.group === 'bottom' || f.group === 'front')} origin={at} model={fanModelOf(design)} />;
+    if (design) return <FanArray fans={inst.fans.filter(isIntakeFan)} origin={at} model={fanModelOf(design)} />;
     return <HardwareFans fans={inst.fans.filter((f) => f.group !== 'rear')} origin={at} />;
   }
   const placed = inst[BUILD_KEY[id]];
