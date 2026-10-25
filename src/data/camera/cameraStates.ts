@@ -18,6 +18,8 @@ export interface CameraState {
   /** Optional orbit limits applied while this state is active. */
   minDistance?: number;
   maxDistance?: number;
+  /** A point the camera passes on its way to or from this state, so the glide never cuts through the scene. */
+  via?: Vec3;
 }
 
 export const CAMERA_STATE_NAMES = [
@@ -44,6 +46,8 @@ export const CAMERA_STATE_NAMES = [
   'ASSEMBLY_DESK',
   'ASSEMBLY_AUDIO',
   'ASSEMBLY_PC',
+  'ASSEMBLY_CPU',
+  'ASSEMBLY_PSU',
   'LAB_OVERVIEW',
 ] as const;
 
@@ -77,6 +81,10 @@ export const CAMERA_STATES: Record<CameraStateName, CameraState> = {
   ASSEMBLY_DESK: { position: [-0.38, 1.34, 1.02], target: [0.06, 0.78, 0.14], fov: 36 },
   ASSEMBLY_AUDIO: { position: [-0.95, 1.26, 1.22], target: [-0.42, 0.88, -0.08], fov: 36 },
   ASSEMBLY_PC: { position: [0.02, 1.3, 1.18], target: [0.62, 0.99, -0.06], fov: 36 },
+  // socket, lever and paste: wide enough that the open glass and the case frame stay out of the way
+  ASSEMBLY_CPU: { position: [0.36, 1.22, 0.1], target: [0.74, 1.11, -0.15], fov: 32 },
+  // the PSU chamber sits behind the board tray: seen from the back, reached around the front-right of the case
+  ASSEMBLY_PSU: { position: [1.18, 1.08, -0.72], target: [0.76, 0.86, -0.2], fov: 36, via: [1.55, 1.3, 0.75] },
   ANATOMY_INTERNAL: { position: [0, 2.0, 1.32], target: [0, 0.76, -0.01], fov: 36, minDistance: 0.18, maxDistance: 3 },
   // The large 3D lab (V2-3): the whole hall; the shot itself lives with the zones (data/lab/zones.ts)
   LAB_OVERVIEW: { position: LAB_OVERVIEW.position, target: LAB_OVERVIEW.target, fov: LAB_OVERVIEW.fov },
