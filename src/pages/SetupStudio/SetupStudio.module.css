@@ -533,6 +533,7 @@
 .colorDot[data-color='silver'] { background: #b9bdc4; }
 .colorDot[data-color='grey'] { background: #8a8f98; }
 .colorDot[data-color='wood'] { background: #8b5e3c; }
+.colorDot[data-color='pink'] { background: #f2bfd2; }
 
 .cardFoot {
   display: flex;

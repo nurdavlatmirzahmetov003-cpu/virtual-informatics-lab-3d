@@ -101,7 +101,7 @@ export interface SpecEntry {
   translate?: boolean;
 }
 
-export type FinishId = 'black' | 'white' | 'graphite' | 'silver' | 'grey' | 'wood';
+export type FinishId = 'black' | 'white' | 'graphite' | 'silver' | 'grey' | 'wood' | 'pink';
 
 export interface HardwareItem {
   id: string;

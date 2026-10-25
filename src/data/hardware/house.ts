@@ -1,3 +1,4 @@
+import { BITLAB_CASES } from './cases';
 import type { HardwareItem } from './types';
 
 /**
@@ -36,23 +37,8 @@ export const BITLAB_AERO: HardwareItem = {
  */
 const HOUSE = { priceKZT: 0, priceUpdatedAt: '2026-10-25', priceSource: { kind: 'demo' }, specSourceUrl: '', specCheckedAt: '2026-10-25', performanceTier: 'enthusiast', recommendedUse: ['gaming', 'study', 'programming', 'design3d', 'streaming', 'universal'] } as const;
 
-export const BITLAB_PANORAMA: HardwareItem = {
-  ...HOUSE,
-  id: 'case-bitlab-panorama',
-  category: 'case',
-  brand: 'BitLab',
-  model: 'Panorama',
-  specifications: [
-    { key: 'boards', value: 'E-ATX / ATX / mATX / ITX' },
-    { key: 'maxGpu', value: 440, unit: 'mm' },
-    { key: 'maxCooler', value: 175, unit: 'mm' },
-    { key: 'fans', value: '10 × 120 mm ARGB' },
-  ],
-  compatibility: { supportsFormFactors: ['E-ATX', 'ATX', 'mATX', 'ITX'], maxGpuLengthMm: 440, maxCoolerHeightMm: 175, maxRadiatorMm: 360 },
-  modelPath: 'products/case-bitlab-panorama.glb',
-  colors: ['white'],
-  rgb: true,
-};
+/** The hero case: the white panoramic design of the Setup Studio catalog (cases.ts). */
+export const BITLAB_PANORAMA: HardwareItem = BITLAB_CASES.find((c) => c.id === 'case-bitlab-panorama')!;
 
 export const MB_BITLAB_AERO: HardwareItem = {
   ...HOUSE,
@@ -141,4 +127,5 @@ export const PSU_BITLAB_AERO: HardwareItem = {
   colors: ['white'],
 };
 
-export const HOUSE_PARTS: readonly HardwareItem[] = [BITLAB_AERO, BITLAB_PANORAMA, MB_BITLAB_AERO, GPU_BITLAB_AERO, RAM_BITLAB_AERO, COOL_BITLAB_AERO, PSU_BITLAB_AERO];
+/** Not in the Studio catalog (the panoramic case is: see cases.ts). */
+export const HOUSE_PARTS: readonly HardwareItem[] = [BITLAB_AERO, MB_BITLAB_AERO, GPU_BITLAB_AERO, RAM_BITLAB_AERO, COOL_BITLAB_AERO, PSU_BITLAB_AERO];

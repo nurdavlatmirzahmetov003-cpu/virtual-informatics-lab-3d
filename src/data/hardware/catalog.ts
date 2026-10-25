@@ -7,6 +7,7 @@
  * PRICES: no live Kazakhstan store price could be verified for this build,
  * so every price is an illustrative "Demo price" (priceSource.kind = 'demo').
  */
+import { BITLAB_CASES } from './cases';
 import { HOUSE_PARTS } from './house';
 import type { HardwareCategory, HardwareItem } from './types';
 
@@ -399,69 +400,8 @@ export const CATALOG: readonly HardwareItem[] = [
     compatibility: {},
   }),
 
-  // ───────────── Cases ─────────────
-  item({
-    id: 'case-deepcool-cc560-v2', category: 'case', brand: 'DeepCool', model: 'CC560 V2',
-    priceKZT: 30_000, modelPath: P('case-deepcool-cc560-v2'), colors: ['black', 'white'], rgb: true,
-    performanceTier: 'entry', recommendedUse: ['study', 'gaming', 'universal'],
-    specSourceUrl: 'https://www.deepcool.com/products/Cases/CC560-V2/',
-    specifications: [
-      { key: 'boards', value: 'ATX / mATX / ITX' },
-      { key: 'maxGpu', value: 370, unit: 'mm' },
-      { key: 'maxCooler', value: 165, unit: 'mm' },
-      { key: 'fans', value: '4 × 120 mm LED' },
-    ],
-    compatibility: { supportsFormFactors: ['ATX', 'mATX', 'ITX'], maxGpuLengthMm: 370, maxCoolerHeightMm: 165, maxRadiatorMm: 360 },
-  }),
-  item({
-    id: 'case-corsair-4000d-airflow', category: 'case', brand: 'Corsair', model: '4000D AIRFLOW',
-    priceKZT: 45_000, modelPath: P('case-corsair-4000d-airflow'), colors: ['black', 'white'],
-    performanceTier: 'mainstream', recommendedUse: ['gaming', 'programming', 'universal', 'streaming'],
-    specSourceUrl: 'https://www.corsair.com/us/en/p/pc-cases/cc-9011200-ww/4000d-airflow-tempered-glass-mid-tower-atx-case-black-cc-9011200-ww',
-    specifications: [
-      { key: 'boards', value: 'E-ATX / ATX / mATX / ITX' },
-      { key: 'maxGpu', value: 360, unit: 'mm' },
-      { key: 'maxCooler', value: 170, unit: 'mm' },
-      { key: 'fans', value: '2 × 120 mm' },
-    ],
-    compatibility: { supportsFormFactors: ['E-ATX', 'ATX', 'mATX', 'ITX'], maxGpuLengthMm: 360, maxCoolerHeightMm: 170, maxRadiatorMm: 360 },
-  }),
-  item({
-    id: 'case-nzxt-h5-flow-2024', category: 'case', brand: 'NZXT', model: 'H5 Flow (2024)',
-    priceKZT: 45_000, modelPath: P('case-nzxt-h5-flow-2024'), colors: ['black', 'white'],
-    performanceTier: 'mainstream', recommendedUse: ['gaming', 'streaming', 'universal'],
-    specSourceUrl: 'https://support.nzxt.com/hc/en-us/articles/40225168535451-H5-Flow-2024-Specs',
-    specifications: [
-      { key: 'boards', value: 'E-ATX / ATX / mATX / ITX' },
-      { key: 'maxGpu', value: 410, unit: 'mm' },
-      { key: 'maxCooler', value: 170, unit: 'mm' },
-    ],
-    compatibility: { supportsFormFactors: ['E-ATX', 'ATX', 'mATX', 'ITX'], maxGpuLengthMm: 410, maxCoolerHeightMm: 170, maxRadiatorMm: 360 },
-  }),
-  item({
-    id: 'case-fractal-north', category: 'case', brand: 'Fractal Design', model: 'North',
-    priceKZT: 70_000, modelPath: P('case-fractal-north'), colors: ['black', 'white', 'wood'],
-    performanceTier: 'performance', recommendedUse: ['design3d', 'programming', 'universal'],
-    specSourceUrl: 'https://www.fractal-design.com/products/cases/north/north/',
-    specifications: [
-      { key: 'boards', value: 'ATX / mATX / ITX' },
-      { key: 'maxGpu', value: 355, unit: 'mm' },
-      { key: 'maxCooler', value: 170, unit: 'mm' },
-    ],
-    compatibility: { supportsFormFactors: ['ATX', 'mATX', 'ITX'], maxGpuLengthMm: 355, maxCoolerHeightMm: 170, maxRadiatorMm: 360 },
-  }),
-  item({
-    id: 'case-lianli-o11d-evo', category: 'case', brand: 'Lian Li', model: 'O11 Dynamic EVO',
-    priceKZT: 75_000, modelPath: P('case-lianli-o11d-evo'), colors: ['black', 'white', 'grey'],
-    performanceTier: 'enthusiast', recommendedUse: ['gaming', 'streaming', 'design3d'],
-    specSourceUrl: 'https://lian-li.com/product/o11-dynamic-evo/',
-    specifications: [
-      { key: 'boards', value: 'E-ATX / ATX / mATX / ITX' },
-      { key: 'maxGpu', value: 426, unit: 'mm' },
-      { key: 'maxCooler', value: 167, unit: 'mm' },
-    ],
-    compatibility: { supportsFormFactors: ['E-ATX', 'ATX', 'mATX', 'ITX'], maxGpuLengthMm: 426, maxCoolerHeightMm: 167, maxRadiatorMm: 420 },
-  }),
+  // ───────────── Cases: BitLab's own designs (cases.ts) ─────────────
+  ...BITLAB_CASES,
 
   // ───────────── CPUs ─────────────
   item({
@@ -905,6 +845,77 @@ export const CATALOG: readonly HardwareItem[] = [
  * shared build with the showcase hardware resolves too. Product lists keep
  * using CATALOG, which has only retail products.
  */
-export const CATALOG_BY_ID: ReadonlyMap<string, HardwareItem> = new Map([...HOUSE_PARTS, ...CATALOG].map((p) => [p.id, p]));
+/**
+ * The retail cases of 0.37, retired from the Studio catalog in V4 §1.4 (their
+ * striped models did not hold up next to the new designs). The 3D lab still
+ * shows some of them, so they stay addressable by id.
+ */
+export const RETIRED_CASES: readonly HardwareItem[] = [
+  item({
+    id: 'case-deepcool-cc560-v2', category: 'case', brand: 'DeepCool', model: 'CC560 V2',
+    priceKZT: 30_000, modelPath: P('case-deepcool-cc560-v2'), colors: ['black', 'white'], rgb: true,
+    performanceTier: 'entry', recommendedUse: ['study', 'gaming', 'universal'],
+    specSourceUrl: 'https://www.deepcool.com/products/Cases/CC560-V2/',
+    specifications: [
+      { key: 'boards', value: 'ATX / mATX / ITX' },
+      { key: 'maxGpu', value: 370, unit: 'mm' },
+      { key: 'maxCooler', value: 165, unit: 'mm' },
+      { key: 'fans', value: '4 × 120 mm LED' },
+    ],
+    compatibility: { supportsFormFactors: ['ATX', 'mATX', 'ITX'], maxGpuLengthMm: 370, maxCoolerHeightMm: 165, maxRadiatorMm: 360 },
+  }),
+  item({
+    id: 'case-corsair-4000d-airflow', category: 'case', brand: 'Corsair', model: '4000D AIRFLOW',
+    priceKZT: 45_000, modelPath: P('case-corsair-4000d-airflow'), colors: ['black', 'white'],
+    performanceTier: 'mainstream', recommendedUse: ['gaming', 'programming', 'universal', 'streaming'],
+    specSourceUrl: 'https://www.corsair.com/us/en/p/pc-cases/cc-9011200-ww/4000d-airflow-tempered-glass-mid-tower-atx-case-black-cc-9011200-ww',
+    specifications: [
+      { key: 'boards', value: 'E-ATX / ATX / mATX / ITX' },
+      { key: 'maxGpu', value: 360, unit: 'mm' },
+      { key: 'maxCooler', value: 170, unit: 'mm' },
+      { key: 'fans', value: '2 × 120 mm' },
+    ],
+    compatibility: { supportsFormFactors: ['E-ATX', 'ATX', 'mATX', 'ITX'], maxGpuLengthMm: 360, maxCoolerHeightMm: 170, maxRadiatorMm: 360 },
+  }),
+  item({
+    id: 'case-nzxt-h5-flow-2024', category: 'case', brand: 'NZXT', model: 'H5 Flow (2024)',
+    priceKZT: 45_000, modelPath: P('case-nzxt-h5-flow-2024'), colors: ['black', 'white'],
+    performanceTier: 'mainstream', recommendedUse: ['gaming', 'streaming', 'universal'],
+    specSourceUrl: 'https://support.nzxt.com/hc/en-us/articles/40225168535451-H5-Flow-2024-Specs',
+    specifications: [
+      { key: 'boards', value: 'E-ATX / ATX / mATX / ITX' },
+      { key: 'maxGpu', value: 410, unit: 'mm' },
+      { key: 'maxCooler', value: 170, unit: 'mm' },
+    ],
+    compatibility: { supportsFormFactors: ['E-ATX', 'ATX', 'mATX', 'ITX'], maxGpuLengthMm: 410, maxCoolerHeightMm: 170, maxRadiatorMm: 360 },
+  }),
+  item({
+    id: 'case-fractal-north', category: 'case', brand: 'Fractal Design', model: 'North',
+    priceKZT: 70_000, modelPath: P('case-fractal-north'), colors: ['black', 'white', 'wood'],
+    performanceTier: 'performance', recommendedUse: ['design3d', 'programming', 'universal'],
+    specSourceUrl: 'https://www.fractal-design.com/products/cases/north/north/',
+    specifications: [
+      { key: 'boards', value: 'ATX / mATX / ITX' },
+      { key: 'maxGpu', value: 355, unit: 'mm' },
+      { key: 'maxCooler', value: 170, unit: 'mm' },
+    ],
+    compatibility: { supportsFormFactors: ['ATX', 'mATX', 'ITX'], maxGpuLengthMm: 355, maxCoolerHeightMm: 170, maxRadiatorMm: 360 },
+  }),
+  item({
+    id: 'case-lianli-o11d-evo', category: 'case', brand: 'Lian Li', model: 'O11 Dynamic EVO',
+    priceKZT: 75_000, modelPath: P('case-lianli-o11d-evo'), colors: ['black', 'white', 'grey'],
+    performanceTier: 'enthusiast', recommendedUse: ['gaming', 'streaming', 'design3d'],
+    specSourceUrl: 'https://lian-li.com/product/o11-dynamic-evo/',
+    specifications: [
+      { key: 'boards', value: 'E-ATX / ATX / mATX / ITX' },
+      { key: 'maxGpu', value: 426, unit: 'mm' },
+      { key: 'maxCooler', value: 167, unit: 'mm' },
+    ],
+    compatibility: { supportsFormFactors: ['E-ATX', 'ATX', 'mATX', 'ITX'], maxGpuLengthMm: 426, maxCoolerHeightMm: 167, maxRadiatorMm: 420 },
+  }),
+
+];
+
+export const CATALOG_BY_ID: ReadonlyMap<string, HardwareItem> = new Map([...HOUSE_PARTS, ...RETIRED_CASES, ...CATALOG].map((p) => [p.id, p]));
 
 export const productsIn = (category: HardwareCategory) => CATALOG.filter((p) => p.category === category);

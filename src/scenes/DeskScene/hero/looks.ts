@@ -42,7 +42,7 @@ export const HERO_LOOKS: readonly HeroLook[] = [
     speakers: 'spk-creative-pebble-v3',
   }),
   look('black', 'darkWood', { case: 'black', rgb: 'off', peripherals: 'black' }, {
-    case: 'case-fractal-north',
+    case: 'case-bitlab-grove',
     monitor: 'mon-lg-27gr93u',
     keyboard: 'kb-keychron-k8-pro',
     mouse: 'mouse-logitech-g305',
@@ -50,7 +50,7 @@ export const HERO_LOOKS: readonly HeroLook[] = [
     speakers: 'spk-logitech-z407',
   }),
   look('rgb', 'black', { case: 'black', rgb: 'purple', peripherals: 'black' }, {
-    case: 'case-nzxt-h5-flow-2024',
+    case: 'case-bitlab-flow',
     monitor: 'mon-asus-xg27aqmr',
     keyboard: 'kb-razer-huntsman-v3-pro-tkl',
     mouse: 'mouse-razer-viper-v3-pro',
