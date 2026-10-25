@@ -210,12 +210,19 @@
   background: var(--accent-soft);
 }
 
+/* centred just above the toolbar: at the side it ran into the toolbar's longer (kk/ru) labels */
 .hint {
   position: absolute;
-  right: var(--gutter);
-  bottom: calc(var(--space-5) + 10px);
+  left: 50%;
+  bottom: calc(var(--space-5) + 60px);
+  margin: 0;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: rgb(var(--panel-rgb) / 0.6);
   font-size: var(--fs-xs);
-  color: var(--text-dim);
+  color: var(--text-muted);
+  white-space: nowrap;
+  transform: translateX(-50%);
 }
 
 @media (max-width: 960px) {
