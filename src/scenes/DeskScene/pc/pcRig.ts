@@ -24,6 +24,8 @@ export const pcRig = {
   rgbPower: 1,
   /** Installed centre of every part in the build on screen (case-local, from mounts.ts); written by <PCCase>. */
   at: {} as Partial<Record<PartId, readonly [number, number, number]>>,
+  /** Exploded-layout offsets that replace a part's screen slot in this build (an AIO lifts out as one piece). */
+  explodeAs: {} as Partial<Record<PartId, readonly [number, number, number]>>,
   /** World position of the case origin on screen. */
   origin: CASE_ORIGIN as readonly [number, number, number],
 };

@@ -61,6 +61,8 @@ export const PART_INDEX = Object.fromEntries(PARTS.map((p, i) => [p.id, i])) as 
 
 /** Case-local offset of a part placed at `at` in the exploded layout. */
 export function explodeOffset(part: PartDef, at: readonly [number, number, number]): [number, number, number] {
+  const as = pcRig.explodeAs[part.id];
+  if (as) return [...as] as [number, number, number];
   if (!part.slot) return [...(part.nudge ?? [0, 0, 0])] as [number, number, number];
   const w = slotWorld(part.slot[0], part.slot[1]);
   return [w.x - CASE_ORIGIN[0] - at[0], w.y - CASE_ORIGIN[1] - at[1], w.z - CASE_ORIGIN[2] - at[2]];

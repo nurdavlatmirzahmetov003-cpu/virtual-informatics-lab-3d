@@ -152,9 +152,12 @@ for (const rel of files.sort()) {
   const entry = { kind, size: vec(max.clone().sub(min)), anchors: {} };
   for (const [name, v] of Object.entries(markers)) entry.anchors[name] = rel3(v);
   for (const [name, [y, z]] of Object.entries(MEASURED[rel] ?? {})) entry.anchors[name] = [entry.anchors[name]?.[0] ?? 0, y, z];
-  if (kind === 'board' && rel.startsWith('products/') && !MEASURED[rel]) throw new Error(`${rel}: measure its slot anchors (MEASURED)`);
+  // BitLab's own models (scripts/blender/make-showcase.py) carry exact markers
+  const own = /\/(mb|gpu|ram|cool)-bitlab-/.test(rel);
+  if (kind === 'board' && !own && !MEASURED[rel]) throw new Error(`${rel}: measure its slot anchors (MEASURED)`);
+  if (own && (kind === 'board' || kind === 'gpu') && !entry.anchors[kind === 'board' ? 'socket_cpu_1' : 'slot_pcie_x16_1']) throw new Error(`${rel}: its markers are missing (export them with extras)`);
   // the PCB (and its fingers) lies just under the backplate; the cooler and fans hang below it
-  if (kind === 'gpu' && rel.startsWith('products/')) entry.anchors.slot_pcie_x16_1 = [r4(entry.size[0] / 2), r4(entry.size[1] / 2 - PCB_BELOW_BACKPLATE), r4(-entry.size[2] / 2 + FINGERS_FROM_BRACKET)];
+  if (kind === 'gpu' && !own) entry.anchors.slot_pcie_x16_1 = [r4(entry.size[0] / 2), r4(entry.size[1] / 2 - PCB_BELOW_BACKPLATE), r4(-entry.size[2] / 2 + FINGERS_FROM_BRACKET)];
   if (kind === 'cooler') entry.anchors.base = rel3(contactFace(points, max.x, 0.0015));
   if (kind === 'cpu') entry.anchors.base = rel3(new Vector3(max.x, centre.y, centre.z));
   out[rel] = entry;

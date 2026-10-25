@@ -40,7 +40,8 @@ export type SetupStyle = 'black' | 'white' | 'rgb' | 'noRgb';
 export const STYLES: readonly SetupStyle[] = ['black', 'white', 'rgb', 'noRgb'];
 
 export type CaseFinish = 'black' | 'white' | 'graphite' | 'silver';
-export type RgbMode = 'off' | 'white' | 'cyan' | 'blue' | 'purple' | 'red' | 'custom';
+/** `flow`: the pink → blue → violet palette that flows around every fan (the showcase build). */
+export type RgbMode = 'off' | 'flow' | 'white' | 'cyan' | 'blue' | 'purple' | 'red' | 'custom';
 export type DeskSurface = 'darkWood' | 'lightWood' | 'black' | 'white';
 export type PeripheralTheme = 'black' | 'white' | 'mixed';
 
@@ -61,6 +62,7 @@ export const CASE_FINISHES: Record<CaseFinish, { color: string; metalness: numbe
 };
 
 export const RGB_COLORS: Record<Exclude<RgbMode, 'off' | 'custom'>, string> = {
+  flow: '#9b5cff',
   white: '#f2f6ff',
   cyan: '#38d6f5',
   blue: '#3b6bff',
@@ -68,7 +70,7 @@ export const RGB_COLORS: Record<Exclude<RgbMode, 'off' | 'custom'>, string> = {
   red: '#ff3b4f',
 };
 
-export const RGB_MODES: readonly RgbMode[] = ['off', 'white', 'cyan', 'blue', 'purple', 'red', 'custom'];
+export const RGB_MODES: readonly RgbMode[] = ['off', 'flow', 'white', 'cyan', 'blue', 'purple', 'red', 'custom'];
 export const CASE_FINISH_IDS: readonly CaseFinish[] = ['black', 'white', 'graphite', 'silver'];
 export const DESK_SURFACES: readonly DeskSurface[] = ['darkWood', 'lightWood', 'black', 'white'];
 export const PERIPHERAL_THEMES: readonly PeripheralTheme[] = ['black', 'white', 'mixed'];
@@ -76,7 +78,7 @@ export const PERIPHERAL_THEMES: readonly PeripheralTheme[] = ['black', 'white', 
 /** Finish a visual style starts from; the colour step can override every part. */
 export const STYLE_FINISH: Record<SetupStyle, Omit<Finish, 'rgbCustom'>> = {
   black: { case: 'black', rgb: 'off', desk: 'darkWood', peripherals: 'black' },
-  white: { case: 'white', rgb: 'white', desk: 'white', peripherals: 'white' },
+  white: { case: 'white', rgb: 'flow', desk: 'white', peripherals: 'white' },
   rgb: { case: 'black', rgb: 'cyan', desk: 'black', peripherals: 'black' },
   noRgb: { case: 'graphite', rgb: 'off', desk: 'lightWood', peripherals: 'mixed' },
 };

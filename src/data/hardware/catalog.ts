@@ -7,6 +7,7 @@
  * PRICES: no live Kazakhstan store price could be verified for this build,
  * so every price is an illustrative "Demo price" (priceSource.kind = 'demo').
  */
+import { HOUSE_PARTS } from './house';
 import type { HardwareCategory, HardwareItem } from './types';
 
 const CHECKED = '2026-10-03';
@@ -899,6 +900,11 @@ export const CATALOG: readonly HardwareItem[] = [
   }),
 ];
 
-export const CATALOG_BY_ID: ReadonlyMap<string, HardwareItem> = new Map(CATALOG.map((p) => [p.id, p]));
+/**
+ * Lookup by id: the catalog plus BitLab's own parts (house.ts), so a saved or
+ * shared build with the showcase hardware resolves too. Product lists keep
+ * using CATALOG, which has only retail products.
+ */
+export const CATALOG_BY_ID: ReadonlyMap<string, HardwareItem> = new Map([...HOUSE_PARTS, ...CATALOG].map((p) => [p.id, p]));
 
 export const productsIn = (category: HardwareCategory) => CATALOG.filter((p) => p.category === category);

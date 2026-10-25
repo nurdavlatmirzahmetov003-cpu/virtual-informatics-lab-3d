@@ -16,17 +16,18 @@ import { fitModel } from '../src/lib/three/fit.ts';
 import { CASE_MOUNTS, hddBay } from '../src/scenes/DeskScene/pc/caseMounts.ts';
 import { boxOf, caseMountsFor, geometryOf, installBuild, installedBoxes, ON_BOARD, SEAT, stickCount } from '../src/scenes/DeskScene/pc/mounts.ts';
 import { CATALOG } from '../src/data/hardware/catalog.ts';
-import { BITLAB_AERO } from '../src/data/hardware/house.ts';
+import { HOUSE_PARTS } from '../src/data/hardware/house.ts';
 
 const root = path.resolve(import.meta.dirname, '..');
 const MODELS = new URL('../public/assets/models/', import.meta.url);
 const MM = 0.001;
 const own = (p) => /^products\/[^/]+\.glb$/.test(p.modelPath);
-const in_ = (cat) => CATALOG.filter((p) => p.category === cat && own(p));
-const cases = [...in_('case'), BITLAB_AERO];
+/** Catalog products plus BitLab's own parts (the showcase build): every one meets every other. */
+const in_ = (cat) => [...CATALOG, ...HOUSE_PARTS].filter((p) => p.category === cat && own(p));
+const cases = in_('case');
 const boards = in_('motherboard');
 const cpus = in_('cpu');
-const coolers = CATALOG.filter((p) => p.category === 'cooling');
+const coolers = [...CATALOG, ...HOUSE_PARTS].filter((p) => p.category === 'cooling');
 const rams = in_('ram');
 const gpus = in_('gpu');
 const ssds = in_('ssd');
@@ -48,7 +49,7 @@ test('every catalog case has its own mounts', () => {
 });
 
 test('every part model has measured mount geometry', () => {
-  for (const p of [...boards, ...cpus, ...rams, ...gpus, ...ssds, ...psus, ...coolers.filter((c) => !c.compatibility.radiatorMm)]) assert.ok(geometryOf(p.modelPath), `${p.id}: run node scripts/extract-mounts.mjs`);
+  for (const p of [...boards, ...cpus, ...rams, ...gpus, ...ssds, ...psus, ...coolers.filter((c) => own(c))]) assert.ok(geometryOf(p.modelPath), `${p.id}: run node scripts/extract-mounts.mjs`);
   for (const b of boards) {
     const a = geometryOf(b.modelPath).anchors;
     for (const k of ['socket_cpu_1', 'slot_dimm_1', 'slot_dimm_2', 'slot_dimm_3', 'slot_dimm_4', 'slot_pcie_x16_1', 'slot_m2_1', 'header_24pin_1', 'header_eps_8pin_1']) assert.ok(a[k], `${b.id}: anchor ${k}`);
@@ -56,7 +57,7 @@ test('every part model has measured mount geometry', () => {
 });
 
 test('measured sizes match the GLB bounds the scene fits (ModelLoader centres the rotated box)', () => {
-  for (const p of [...boards, ...cpus, ...rams, ...gpus, ...psus, ...coolers.filter((c) => !c.compatibility.radiatorMm)]) {
+  for (const p of [...boards, ...cpus, ...rams, ...gpus, ...psus, ...coolers.filter((c) => own(c))]) {
     const g = geometryOf(p.modelPath);
     const flat = p.category === 'psu';
     const fitted = fitModel([loadGlbBounds(new URL(p.modelPath, MODELS))], flat ? { axis: 0 } : { axis: 1, rotation: ON_BOARD }, p.id);
@@ -109,7 +110,7 @@ for (const c of cases) {
       if (inst.gpu) {
         const bracket = inst.gpu.p[2] - inst.gpu.size[2] / 2;
         if (Math.abs(bracket - mounts.slots.z) > 12 * MM) errors.push(`${tag}/${build.gpu.id}: bracket at z ${bracket.toFixed(3)}, slots at ${mounts.slots.z}`);
-        const fingersHeight = inst.gpu.p[0] + inst.gpu.size[0] / 2;
+        const fingersHeight = inst.gpu.p[0] + (geometryOf(build.gpu.modelPath).anchors.slot_pcie_x16_1?.[0] ?? inst.gpu.size[0] / 2);
         const pcb = inst.motherboard.p[0] + inst.motherboard.size[0] / 2;
         if (Math.abs(pcb - fingersHeight - SEAT.pcie) > MM) errors.push(`${tag}/${build.gpu.id}: fingers not seated`);
       }

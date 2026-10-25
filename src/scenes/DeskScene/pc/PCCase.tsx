@@ -15,6 +15,9 @@ import { PCPart } from './PCPart';
 import { pcRig } from './pcRig';
 import { usePcTextures } from './usePcTextures';
 import { HardwarePart } from './HardwareParts';
+import { DesignedCase, ShowcaseClock } from './ShowcaseCase';
+import { DESIGN_MOUNTS } from './caseDesigns';
+import { createRgbFx, RgbFxContext } from './showcaseFx';
 import { CASE_ORIGIN, FAN } from './constants';
 import { caseMountsFor, installBuild, type Installed, type Vec3 } from './mounts';
 import { isTieredModel } from '@/lib/three/modelUrls';
@@ -110,9 +113,16 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
   const caseId = build?.case && isTieredModel(build.case.modelPath) ? build.case.id : null;
   const inst = useMemo(() => installBuild(caseMountsFor(caseId), { ...build, cooling: build?.cooling }), [caseId, build]);
   const at = useMemo(() => installedCentres(inst), [inst]);
+  const designed = !!DESIGN_MOUNTS[inst.mounts.id];
+
+  // this unit's own ARGB state (another PC on screen may have its lights off)
+  const fx = useMemo(() => createRgbFx(), []);
+  useEffect(() => () => fx.material.dispose(), [fx]);
   useEffect(() => {
     pcRig.at = at;
-  }, [at]);
+    // an AIO is pump, hoses and radiator in one piece: in the exploded layout it rises above the case instead of joining the grid
+    pcRig.explodeAs = inst.cooler?.liquid ? { cooler: [-0.16, 0.17, 0.05] } : {};
+  }, [at, inst]);
 
   // soft key light that only wakes up for the exploded layout
   const [showcaseTarget] = useState(() => new Object3D());
@@ -123,6 +133,11 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
     if (rgbColor) res.rgb.emissive.set(rgbColor);
     res.rgb.emissiveIntensity = lit ? (0.7 + pcRig.glow * 1.6) * pcRig.rgbPower : 0;
     res.ramLight.emissiveIntensity = lit ? (0.6 + pcRig.glow * 1.2) * pcRig.rgbPower : 0;
+    // the showcase hardware's ARGB: off, one colour (Setup Studio choice) or the flowing palette
+    const u = fx.uniforms;
+    u.uPower.value = lit ? (0.3 + 0.7 * pcRig.glow) * pcRig.rgbPower : 0;
+    u.uSolid.value = rgbColor ? 1 : 0;
+    if (rgbColor) u.uColor.value.set(rgbColor);
     if (showcase) {
       showcase.intensity = pcRig.explode * 4;
       // invisible lights drop out of every shader's light loop
@@ -131,26 +146,29 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
   });
 
   return (
-    <group position={[...CASE_ORIGIN]}>
-      <PcRigController mode={rig} hide={hide} />
-      <Chassis tex={tex} fan={fan} rgb={res.rgb} product={build?.case} mounts={inst.mounts} />
-      {PARTS.map((def) => (
-        <PCPart key={def.id} def={def} at={at[def.id]} enabled={interactive}>
-          <HardwarePart id={def.id} inst={inst} at={at[def.id]} rgbColor={rgbColor} deferDetail={deferDetail} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />
-        </PCPart>
-      ))}
-      <primitive object={showcaseTarget} position={[-0.2, 0.02, 0.15]} />
-      <spotLight
-        ref={setShowcase}
-        target={showcaseTarget}
-        position={[-0.6, 0.9, 0.9]}
-        angle={0.55}
-        penumbra={0.9}
-        intensity={0}
-        distance={3}
-        decay={2}
-        color="#f2f6ff"
-      />
-    </group>
+    <RgbFxContext.Provider value={fx}>
+      <group position={[...CASE_ORIGIN]}>
+        <PcRigController mode={rig} hide={hide} />
+        <ShowcaseClock />
+        {designed && build?.case ? <DesignedCase product={build.case} mounts={inst.mounts} inst={inst} /> : <Chassis tex={tex} fan={fan} rgb={res.rgb} product={build?.case} mounts={inst.mounts} />}
+        {PARTS.map((def) => (
+          <PCPart key={def.id} def={def} at={at[def.id]} enabled={interactive}>
+            <HardwarePart id={def.id} inst={inst} at={at[def.id]} rgbColor={rgbColor} deferDetail={deferDetail} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />
+          </PCPart>
+        ))}
+        <primitive object={showcaseTarget} position={[-0.2, 0.02, 0.15]} />
+        <spotLight
+          ref={setShowcase}
+          target={showcaseTarget}
+          position={[-0.6, 0.9, 0.9]}
+          angle={0.55}
+          penumbra={0.9}
+          intensity={0}
+          distance={3}
+          decay={2}
+          color="#f2f6ff"
+        />
+      </group>
+    </RgbFxContext.Provider>
   );
 }

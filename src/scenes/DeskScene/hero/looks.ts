@@ -1,7 +1,7 @@
 import type { DeskSurface, Finish } from '@/data/studio/options';
 import { resolveBuild, type Build, type ResolvedBuild } from '@/lib/studio/build';
 import { recommendBuild } from '@/lib/studio/recommend';
-import { BITLAB_AERO } from '@/data/hardware/house';
+import { showcaseBuild } from '@/lib/studio/showcase';
 
 /**
  * The setups the home hero cycles through (0.37 "living lab"): each look is a
@@ -20,15 +20,21 @@ export interface HeroLook {
 const INSIDE = recommendBuild('gaming', 1_200_000, 'black');
 const inside: Build = { cpu: INSIDE.cpu, motherboard: INSIDE.motherboard, ram: INSIDE.ram, gpu: INSIDE.gpu, cooling: INSIDE.cooling, psu: INSIDE.psu, ssd: INSIDE.ssd };
 
+const showcaseInside = () => {
+  const s = showcaseBuild();
+  return { case: s.case, cpu: s.cpu, motherboard: s.motherboard, ram: s.ram, gpu: s.gpu, cooling: s.cooling, psu: s.psu, ssd: s.ssd };
+};
+
 const look = (id: HeroLook['id'], desk: DeskSurface, finish: Omit<Finish, 'rgbCustom' | 'desk'>, devices: Build): HeroLook => ({
   id,
   desk,
   finish: { ...finish, desk, rgbCustom: '#38d6f5' },
-  build: { ...resolveBuild({ ...inside, ...devices }), ...(id === 'white' ? { case: BITLAB_AERO } : {}) },
+  // the white look is the V4 showcase build: its own white case and internals
+  build: id === 'white' ? { ...resolveBuild(devices), ...showcaseInside() } : resolveBuild({ ...inside, ...devices }),
 });
 
 export const HERO_LOOKS: readonly HeroLook[] = [
-  look('white', 'white', { case: 'white', rgb: 'white', peripherals: 'white' }, {
+  look('white', 'white', { case: 'white', rgb: 'flow', peripherals: 'white' }, {
     monitor: 'mon-asus-xg27acs',
     keyboard: 'kb-logitech-pro-x-tkl',
     mouse: 'mouse-logitech-superlight2',

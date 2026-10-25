@@ -2,6 +2,13 @@
 import type { DeskTop, PartGeometry } from './mountTypes';
 
 export const PART_GEOMETRY: Readonly<Record<string, PartGeometry>> = {
+ "products/cool-bitlab-aero-360.glb": {
+  "kind": "cooler",
+  "size": [ 0.0436, 0.074, 0.068],
+  "anchors": {
+   "base": [ 0.0218, -0.003, 0]
+  }
+ },
  "products/cool-deepcool-ak400.glb": {
   "kind": "cooler",
   "size": [ 0.155, 0.127, 0.097],
@@ -49,6 +56,14 @@ export const PART_GEOMETRY: Readonly<Record<string, PartGeometry>> = {
   "size": [ 0.149, 0.076, 0.358],
   "anchors": {
    "slot_pcie_x16_1": [ 0.0745, 0.032, -0.0775]
+  }
+ },
+ "products/gpu-bitlab-aero.glb": {
+  "kind": "gpu",
+  "size": [ 0.1412, 0.0622, 0.3218],
+  "anchors": {
+   "slot_pcie_x16_1": [ 0.0666, 0.0257, -0.0576],
+   "header_gpu_power_1": [ -0.0694, 0.0179, 0.1289]
   }
  },
  "products/gpu-nvidia-5070-fe.glb": {
@@ -114,6 +129,21 @@ export const PART_GEOMETRY: Readonly<Record<string, PartGeometry>> = {
    "socket_cpu_1": [ 0.01175, 0.0596, 0.01388]
   }
  },
+ "products/mb-bitlab-aero.glb": {
+  "kind": "board",
+  "size": [ 0.0436, 0.305, 0.2442],
+  "anchors": {
+   "slot_dimm_1": [ 0.019, 0.0775, 0.0461],
+   "slot_dimm_2": [ 0.019, 0.0775, 0.0556],
+   "slot_dimm_3": [ 0.019, 0.0775, 0.0651],
+   "slot_dimm_4": [ 0.019, 0.0775, 0.0746],
+   "socket_cpu_1": [ 0.017, 0.0725, -0.0019],
+   "slot_pcie_x16_1": [ 0.017, -0.0325, -0.0339],
+   "slot_m2_1": [ 0.02, 0.0075, -0.0279],
+   "header_24pin_1": [ 0.0048, 0.0075, 0.1131],
+   "header_eps_8pin_1": [ 0.0068, 0.1445, -0.0839]
+  }
+ },
  "products/mb-msi-b650-gaming-plus.glb": {
   "kind": "board",
   "size": [ 0.0306, 0.305, 0.244],
@@ -161,6 +191,11 @@ export const PART_GEOMETRY: Readonly<Record<string, PartGeometry>> = {
   "size": [ 0.15, 0.086, 0.16],
   "anchors": {}
  },
+ "products/psu-bitlab-aero.glb": {
+  "kind": "psu",
+  "size": [ 0.1508, 0.086, 0.1616],
+  "anchors": {}
+ },
  "products/psu-corsair-rm750e.glb": {
   "kind": "psu",
   "size": [ 0.15, 0.086, 0.14],
@@ -179,6 +214,11 @@ export const PART_GEOMETRY: Readonly<Record<string, PartGeometry>> = {
  "products/psu-seasonic-focus-gx-1000.glb": {
   "kind": "psu",
   "size": [ 0.15, 0.086, 0.14],
+  "anchors": {}
+ },
+ "products/ram-bitlab-aero.glb": {
+  "kind": "ram",
+  "size": [ 0.0442, 0.1334, 0.00765],
   "anchors": {}
  },
  "products/ram-corsair-vengeance-rgb-32.glb": {

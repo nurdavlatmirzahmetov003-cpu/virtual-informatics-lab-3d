@@ -66,7 +66,7 @@ export function ColorsStep() {
         value={finish.rgb}
         onPick={(rgb) => setFinish({ rgb })}
         swatch={(m) =>
-          m === 'off' ? 'repeating-linear-gradient(45deg, #2a2d34 0 4px, #15171c 4px 8px)' : m === 'custom' ? finish.rgbCustom : RGB_COLORS[m]
+          m === 'off' ? 'repeating-linear-gradient(45deg, #2a2d34 0 4px, #15171c 4px 8px)' : m === 'flow' ? 'conic-gradient(#ff5fd2, #4f86ff, #9b5cff, #ff5fd2)' : m === 'custom' ? finish.rgbCustom : RGB_COLORS[m]
         }
         labelOf={(m) => t(sk(`rgb.${m}`))}
       />

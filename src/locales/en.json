@@ -258,6 +258,7 @@
     },
     "rgb": {
       "off": "Off",
+      "flow": "Flow",
       "white": "White",
       "cyan": "Cyan",
       "blue": "Blue",

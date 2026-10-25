@@ -33,7 +33,7 @@ export function PCPart({ def, at = ORIGIN, children, enabled = true }: { def: Pa
   const assetVersion = useRef(-1);
   const metadata = useMemo(() => ({ pcPart: true, assetVersion: 0 }), []);
   const fx = useRef({ hi: 0, dim: 0 });
-  const explode = useMemo(() => explodeOffset(def, at), [def, at]);
+  const explode = useRef<[number, number, number]>([0, 0, 0]);
   const mode = usePcStore((s) => s.mode);
   const device = usePcStore((s) => s.selectedDevice);
   const chapter = useStoryStore((s) => s.chapter);
@@ -62,7 +62,8 @@ export function PCPart({ def, at = ORIGIN, children, enabled = true }: { def: Pa
     const installing = pcRig.parts !== null;
     // magnified around its own centre (the group origin), so the hotspot and fly-to target stay aligned
     g.scale.setScalar(installing ? 1 : 1 + ((def.magnify ?? 1) - 1) * e);
-    const move = installing ? INSTALL_FROM : explode;
+    // read each frame: the layout depends on the build on screen (pcRig.explodeAs)
+    const move = installing ? INSTALL_FROM : (explode.current = explodeOffset(def, at));
     g.position.set(at[0] + move[0] * e, at[1] + move[1] * e, at[2] + move[2] * e);
     // GLBs resolve asynchronously after this wrapper mounts.
     const newlyLoaded = records.current.length === 0 || assetVersion.current !== g.userData.assetVersion;

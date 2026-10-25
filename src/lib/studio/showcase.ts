@@ -1,15 +1,22 @@
-import { BITLAB_AERO } from '@/data/hardware/house';
+import { BITLAB_PANORAMA, COOL_BITLAB_AERO, GPU_BITLAB_AERO, MB_BITLAB_AERO, PSU_BITLAB_AERO, RAM_BITLAB_AERO } from '@/data/hardware/house';
 import { resolveBuild, type ResolvedBuild } from './build';
-import { recommendBuild } from './recommend';
 
 let cached: ResolvedBuild | null = null;
 
 /**
- * The PC shown where the student has not chosen one (home exploded view,
- * PC Assembly Lab): the gaming recommendation for 1.2 M ₸ in black, so both
- * pages show the same catalog components with their own models (V2-2b).
+ * The PC shown where the student has not chosen one (home hero and exploded
+ * view, PC Assembly Lab, Connect Lab, teardown): the V4 white showcase build
+ * (BitLab Panorama with the white AERO board, card, RAM and 360 mm AIO) with
+ * a real catalog CPU and SSD.
  */
 export function showcaseBuild(): ResolvedBuild {
-  // the parts of the gaming recommendation in BitLab's own white case (0.37)
-  return (cached ??= { ...resolveBuild(recommendBuild('gaming', 1_200_000, 'black')), case: BITLAB_AERO });
+  return (cached ??= {
+    ...resolveBuild({ cpu: 'cpu-amd-r7-7800x3d', ssd: 'ssd-samsung-990-pro-2tb' }),
+    case: BITLAB_PANORAMA,
+    motherboard: MB_BITLAB_AERO,
+    gpu: GPU_BITLAB_AERO,
+    ram: RAM_BITLAB_AERO,
+    cooling: COOL_BITLAB_AERO,
+    psu: PSU_BITLAB_AERO,
+  });
 }

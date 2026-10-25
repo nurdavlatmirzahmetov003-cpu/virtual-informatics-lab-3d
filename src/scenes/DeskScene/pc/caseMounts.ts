@@ -39,6 +39,8 @@ export interface CaseMounts {
   slots: { z: number; count: number };
   /** PSU bay: the PSU stands on min.y with its back on min.z, centred across x. */
   psu: Box;
+  /** Euler turn of the PSU in its bay (dual chamber: on its side, fan towards the side panel). */
+  psuRotation?: Vec3;
   /** A 2.5″ / 3.5″ drive's resting point (centre of its bottom face). */
   drive: Vec3;
   /** A graphics card must end before this z (front fans or front panel). */
@@ -46,8 +48,8 @@ export interface CaseMounts {
   fans: readonly FanMount[];
   /** AIO radiator: centre of the radiator's fan side, long axis, airflow, max length (mm), and which fan group it takes. */
   radiator: { p: Vec3; along: Vec3; normal: Vec3; maxMm: number; replaces: FanMount['group'] | null } | null;
-  /** Where cables pass from the main chamber to the back (grommets). */
-  cableHoles: readonly Vec3[];
+  /** Grommets where cables pass from the main chamber to the back: by the 24-pin, above the board for the CPU power, under the board for the card. */
+  cableHoles: { atx24?: Vec3; eps?: Vec3; gpu?: Vec3 };
   /** Interior glow: small lights in the case (Medium and up), case-local positions. */
   lights?: readonly Vec3[];
 }
@@ -75,7 +77,7 @@ function fromInterior(id: string, inside: CaseInterior): CaseMounts {
       { p: [MB.x - 0.047 - FAN / 2 - 0.002, MB.y + MB.h / 2 - 0.065, rearFanZ(inside)], n: [0, 0, -1], group: 'rear', size: FAN },
     ],
     radiator: { p: [BOARD_FACE - 0.073, H / 2 - 0.04, 0], along: [0, 0, 1], normal: [0, 1, 0], maxMm: 360, replaces: null },
-    cableHoles: [[BOARD_FACE + 0.004, MB.y, MB.z + MB.d / 2 + 0.035]],
+    cableHoles: { atx24: [BOARD_FACE + 0.004, MB.y, MB.z + MB.d / 2 + 0.035] },
   };
 }
 

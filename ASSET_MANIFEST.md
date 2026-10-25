@@ -119,6 +119,13 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | Product | Source model | Author | Licence | Changes |
 |---|---|---|---|---|
 | `case-bitlab-aero` (0.37) | — жобаның өз моделі, `scripts/blender/make-bitlab-aero.py` примитивтерден құрады | BitLab | CC0 (өз жұмысымыз) | ақ корпус, 230×470×450 мм, ішкі орналасу сахна якорьлеріне дәл сай; 4 материал (4 draw call); 19 port/slot маркері; әйнегі сахнаның процедуралық панелі |
+| `case-bitlab-panorama` (V4) | — жобаның өз моделі, `scripts/blender/make-showcase.py` (`src/scenes/DeskScene/pc/caseDesigns.ts` деректерінен) | BitLab | CC0 (өз жұмысымыз) | ақ екі камералы панорамалық корпус, 310×464×460 мм; алды мен сол жағы шыны (бұрышында тірек жоқ); 10 желдеткіш орны; 5,2k △ |
+| `fan-bitlab-120` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | 120×120×25 мм ARGB желдеткіш: рама, жарық сақинасы, айналатын қалақтар (`rotor`); 6,5k △ |
+| `mb-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` + `showcase-textures.mjs` | BitLab | CC0 | ақ ATX аналық плата 305×244 мм, AM5 сокет, 4 DIMM, PCIe x16, M.2; дәл слот маркерлері және артқы I/O порттары; 6,3k △ |
+| `gpu-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | ақ үш желдеткішті видеокарта 322×128×58 мм, «BITLAB AERO» жазуы, ARGB жолағы, 3 айналатын желдеткіш; 7,8k △ |
+| `ram-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | ақ DDR5 RGB жад 133×44 мм; 0,6k △ |
+| `cool-bitlab-aero-360`, `rad-bitlab-360` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | ақ AIO помпасы (айна қақпақ, ARGB сақина) және 360 мм радиатор; 2,7k + 0,8k △ |
+| `psu-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | ақ ATX қоректендіру блогы 150×86×160 мм, модульді коннекторлар; 3,5k △ |
 | `case-corsair-4000d-airflow` | [Corsair 4000D PC Case](https://sketchfab.com/3d-models/corsair-4000d-pc-case-bc15e007d6634579bc0e8ffdf238e665) | SzaBa | CC BY 4.0 | canonical pose, real size 230×450×470 mm, 1 logo/helper/hidden meshes removed, 19 port/slot markers |
 | `case-deepcool-cc560-v2` | [Corsair 4000D PC Case](https://sketchfab.com/3d-models/corsair-4000d-pc-case-bc15e007d6634579bc0e8ffdf238e665) | SzaBa | CC BY 4.0 | canonical pose, real size 230×450×470 mm, 1 logo/helper/hidden meshes removed, finish recoloured, 19 port/slot markers |
 | `case-fractal-north` | [Corsair 4000D x Fractal North](https://sketchfab.com/3d-models/crosair-4000d-x-fractal-north-8366a780be1e4ef2bd9098ac4dd7a02d) | tavanth | CC BY 4.0 | canonical pose, real size 230×450×470 mm, 2 logo/helper/hidden meshes removed, 19 port/slot markers |

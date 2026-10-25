@@ -5,14 +5,25 @@ import { RoundedBox } from '@react-three/drei';
 import { Matrix4, Quaternion, Vector3, type BufferGeometry, type MeshStandardMaterial } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
 import { finnedHeatsink, tubeAlong } from '@/lib/three/geometry';
-import { HardwareFans } from './HardwareParts';
+import { HardwareFans, OwnModel } from './HardwareParts';
+import { ModelLoader } from '@/components/3d/ModelLoader';
+import type { HardwareItem } from '@/data/hardware/types';
+import { FanArray } from './ShowcaseCase';
+import { ON_BOARD } from './mounts';
 import type { CoolerPlacement, FanMount, Vec3 } from './mounts';
 import { pcRig } from './pcRig';
 
 /** Radiator core thickness and width (120 mm class). */
 const CORE = { thick: 0.027, width: 0.12 };
 
-export function LiquidCooler({ pump, rgbColor }: { pump: CoolerPlacement; rgbColor?: string | null }) {
+/** BitLab's white AIO (make-showcase.py): its own pump and radiator models, white sleeved hoses, ARGB fans. */
+const WHITE_AIO: Record<string, { radiator: string; fan: string }> = {
+  'cool-bitlab-aero-360': { radiator: 'products/rad-bitlab-360.glb', fan: 'fan-bitlab-120' },
+};
+const ON_BOARD_POSE = { axis: 1 as const, rotation: ON_BOARD };
+
+export function LiquidCooler({ pump, rgbColor, product }: { pump: CoolerPlacement; rgbColor?: string | null; product?: HardwareItem }) {
+  const white = product ? WHITE_AIO[product.id] : undefined;
   const light = useRef<MeshStandardMaterial>(null);
   const rad = pump.radiator;
   const frame = useMemo(() => {
@@ -52,6 +63,30 @@ export function LiquidCooler({ pump, rgbColor }: { pump: CoolerPlacement; rgbCol
   useFrame(() => {
     if (light.current) light.current.emissiveIntensity = rgbColor === null ? 0 : pcRig.rgbPower * 1.3;
   });
+
+  if (white && product) {
+    return (
+      <group>
+        <OwnModel product={product} fit={ON_BOARD_POSE} />
+        {[geo.hoseA, geo.hoseB].map(
+          (g, i) =>
+            g && (
+              <mesh key={i} geometry={g} castShadow>
+                <meshStandardMaterial color="#eceef2" roughness={0.78} metalness={0} />
+              </mesh>
+            ),
+        )}
+        {frame && (
+          <>
+            <group position={frame.centre} quaternion={frame.q}>
+              <ModelLoader url={`${import.meta.env.BASE_URL}assets/models/${white.radiator}`} />
+            </group>
+            <FanArray fans={frame.fans} model={`${import.meta.env.BASE_URL}assets/models/products/${white.fan}.glb`} />
+          </>
+        )}
+      </group>
+    );
+  }
 
   return (
     <group>
