@@ -10,13 +10,39 @@ import { useStoryStore } from '@/store/storyStore';
 import { CHAPTER_INDEX } from '../chapters';
 import { explodeOffset, PART_INDEX, type PartDef } from './parts';
 import { pcRig } from './pcRig';
+import { playSfx } from '@/lib/audio/sfx';
 import styles from '@/components/3d/Hotspot.module.css';
 
 const HIGHLIGHT = new Color('#38d6f5');
 const tint = new Color();
 const DIM = 0.72; // how much non-active parts darken
-/** Where a part waits before the setup assembly brings it in (case-local offset). */
-const INSTALL_FROM = [-0.22, 0.035, 0.025] as const;
+/** Fallback entry when the mounting system gave none (case-local offset). */
+const INSTALL_FROM = [-0.22, 0, 0] as const;
+/** Extra drift while the part is still outside the case: it arrives from above and towards the viewer. */
+const DRIFT_X = [-0.12, 0.07, 0.05] as const;
+const DRIFT_Z = [0, 0.05, -0.14] as const;
+const smooth = (x: number) => x * x * (3 - 2 * x);
+
+/**
+ * Installing offset for progress `e` (1 waiting … 0 seated): from a drifting
+ * start outside the case to the entry point, then a straight slide along the
+ * mount normal onto the anchor (the last half of the move).
+ */
+function installOffset(entry: readonly [number, number, number], e: number, out: [number, number, number]) {
+  if (e <= 0.5) {
+    const t = e / 0.5;
+    out[0] = entry[0] * t;
+    out[1] = entry[1] * t;
+    out[2] = entry[2] * t;
+    return out;
+  }
+  const t = smooth((e - 0.5) / 0.5);
+  const d = entry[2] !== 0 && entry[0] === 0 ? DRIFT_Z : DRIFT_X;
+  out[0] = entry[0] + d[0] * t;
+  out[1] = entry[1] + d[1] * t;
+  out[2] = entry[2] + d[2] * t;
+  return out;
+}
 
 type V3 = readonly [number, number, number];
 const ORIGIN: V3 = [0, 0, 0];
@@ -32,7 +58,8 @@ export function PCPart({ def, at = ORIGIN, children, enabled = true }: { def: Pa
   const records = useRef<MatRecord[]>([]);
   const assetVersion = useRef(-1);
   const metadata = useMemo(() => ({ pcPart: true, assetVersion: 0 }), []);
-  const fx = useRef({ hi: 0, dim: 0 });
+  const fx = useRef({ hi: 0, dim: 0, flash: 0, last: 1 });
+  const path = useRef<[number, number, number]>([0, 0, 0]);
   const explode = useRef<[number, number, number]>([0, 0, 0]);
   const mode = usePcStore((s) => s.mode);
   const device = usePcStore((s) => s.selectedDevice);
@@ -62,15 +89,28 @@ export function PCPart({ def, at = ORIGIN, children, enabled = true }: { def: Pa
     const installing = pcRig.parts !== null;
     // magnified around its own centre (the group origin), so the hotspot and fly-to target stay aligned
     g.scale.setScalar(installing ? 1 : 1 + ((def.magnify ?? 1) - 1) * e);
-    // read each frame: the layout depends on the build on screen (pcRig.explodeAs)
-    const move = installing ? INSTALL_FROM : (explode.current = explodeOffset(def, at));
-    g.position.set(at[0] + move[0] * e, at[1] + move[1] * e, at[2] + move[2] * e);
+    // read each frame: the layout depends on the build on screen (pcRig.explodeAs, pcRig.entry)
+    if (installing) {
+      const o = installOffset(pcRig.entry[def.id] ?? INSTALL_FROM, e, path.current);
+      g.position.set(at[0] + o[0], at[1] + o[1], at[2] + o[2]);
+      // seated: a click and a short glow
+      if (fx.current.last > 0.004 && e <= 0.004 && g.visible) {
+        fx.current.flash = 1;
+        playSfx('snap');
+      }
+      fx.current.last = e;
+    } else {
+      const move = (explode.current = explodeOffset(def, at));
+      g.position.set(at[0] + move[0] * e, at[1] + move[1] * e, at[2] + move[2] * e);
+      fx.current.last = 0;
+    }
     // GLBs resolve asynchronously after this wrapper mounts.
     const newlyLoaded = records.current.length === 0 || assetVersion.current !== g.userData.assetVersion;
     if (newlyLoaded) { records.current = captureMaterials(g); assetVersion.current = g.userData.assetVersion; }
 
     const active = enabled ? activePart() : null;
-    const goalHi = active === def.id ? 1 : 0;
+    fx.current.flash = Math.max(0, fx.current.flash - Math.min(delta, 0.1) * 2.2);
+    const goalHi = Math.max(active === def.id ? 1 : 0, fx.current.flash * 3);
     const goalDim = active && active !== def.id ? 1 : 0;
     const s = fx.current;
     const k = 1 - Math.exp(-Math.min(delta, 0.1) * 8);

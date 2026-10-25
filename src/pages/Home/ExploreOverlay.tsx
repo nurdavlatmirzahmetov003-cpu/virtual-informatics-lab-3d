@@ -3,6 +3,7 @@ import { ArrowLeft, Boxes, RotateCcw, Rotate3d, X } from 'lucide-react';
 import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
 import { PARTS } from '@/scenes/DeskScene/pc/parts';
+import { PartSpecs } from './PartSpecs';
 import { CHAPTERS } from '@/scenes/DeskScene/chapters';
 import { DEVICES } from '@/scenes/DeskScene/devices';
 import { usePcStore } from '@/store/pcStore';
@@ -80,14 +81,7 @@ export function ExploreOverlay() {
             </div>
             <h2 className={styles.title}>{t(key(`${base}.name`))}</h2>
             <p className={styles.body}>{t(key(`${base}.body`))}</p>
-            <dl className={styles.specs}>
-              {def.specs.map((s) => (
-                <div key={s}>
-                  <dt>{t(key(`${base}.specs.${s}.label`))}</dt>
-                  <dd>{t(key(`${base}.specs.${s}.value`))}</dd>
-                </div>
-              ))}
-            </dl>
+            <PartSpecs part={def} classes={{ product: styles.product, specs: styles.specs }} />
             <p className={styles.caption}>{t('story.specsCaption')}</p>
           </>
         ) : (

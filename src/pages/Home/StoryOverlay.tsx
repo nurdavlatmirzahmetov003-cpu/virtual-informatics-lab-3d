@@ -6,6 +6,7 @@ import { useT } from '@/hooks/useT';
 import { CHAPTERS } from '@/scenes/DeskScene/chapters';
 import { PARTS } from '@/scenes/DeskScene/pc/parts';
 import { usePcStore } from '@/store/pcStore';
+import { PartSpecs } from './PartSpecs';
 import { useStoryStore } from '@/store/storyStore';
 import styles from './StoryOverlay.module.css';
 
@@ -115,14 +116,7 @@ export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
             </span>
             <h2 className={styles.panelTitle}>{t(key(`${base}.name`))}</h2>
             <p className={styles.body}>{t(key(`${base}.short`))}</p>
-            <dl className={styles.specs}>
-              {def.specs.map((s) => (
-                <div key={s} className={styles.spec}>
-                  <dt>{t(key(`${base}.specs.${s}.label`))}</dt>
-                  <dd>{t(key(`${base}.specs.${s}.value`))}</dd>
-                </div>
-              ))}
-            </dl>
+            <PartSpecs part={def} classes={{ product: styles.product, specs: styles.specs, spec: styles.spec }} />
             <ol className={styles.partList} aria-label={t('explore.partsLabel')}>
               {PARTS.map((p, k) => (
                 <li key={p.id}>

@@ -117,23 +117,74 @@ export function HardwarePart({ id, inst, at, product, rgbColor, deferDetail = fa
   if (!isTieredModel(product.modelPath)) return null;
   if (id === 'ram' && inst.ram) return <RamSticks sticks={inst.ram.sticks} product={product} />;
   const pose = id === 'psu' ? turnedPose(placed.r) : id === 'ssd' && isSata(product) ? OWN_POSE : BOARD_POSE;
+  if (id === 'cpu') {
+    return (
+      <>
+        <ModelLoader key={product.id} url={productUrl(product)} fit={pose} fallback={null} deferDetail={deferDetail} />
+        <PasteDot cpu={placed} />
+      </>
+    );
+  }
   if (OWN.test(product.modelPath)) return <OwnModel product={product} fit={pose} deferDetail={deferDetail} />;
   return <ModelLoader key={product.id} url={productUrl(product)} fit={pose} fallback={null} deferDetail={deferDetail} />;
 }
 
-/** BitLab's own models (make-showcase.py): their `RGB` materials animate and their `rotor_*` nodes spin. */
+/** A latch that is open while its part is on the way and snaps shut as it lands (`e`: 1 away … 0 seated). */
+const latchOpen = (id: PartId) => {
+  const e = pcRig.parts?.[id];
+  if (e === undefined || pcRig.hidden.has(id)) return 0;
+  return e > 0.02 ? 1 : e / 0.02;
+};
+/** Hinged details of the AERO board (node origin on the hinge; axes in the node's frame, i.e. glTF board axes). */
+const HINGES: Record<string, { axis: Vector3; angle: () => number }> = {
+  socket_lever: { axis: new Vector3(0, 0, -1), angle: () => pcRig.socketLever * 1.75 },
+  dimm_latch_top: { axis: new Vector3(0, 0, -1), angle: () => latchOpen('ram') * 0.45 },
+  dimm_latch_bottom: { axis: new Vector3(0, 0, -1), angle: () => -latchOpen('ram') * 0.45 },
+  pcie_latch: { axis: new Vector3(1, 0, 0), angle: () => latchOpen('gpu') * 0.5 },
+};
+
+/** Thermal paste: a grey dot on the CPU's lid during assembly (hidden under the cooler afterwards, and in the exploded view). */
+function PasteDot({ cpu }: { cpu: { size: Vec3 } }) {
+  const dot = useRef<Group>(null);
+  useFrame(() => {
+    const d = dot.current;
+    if (!d) return;
+    const p = pcRig.paste;
+    d.visible = p > 0.01 && pcRig.explode < 0.01;
+    d.scale.set(1, Math.max(0.05, p), Math.max(0.05, p));
+  });
+  return (
+    <group ref={dot} position-x={-cpu.size[0] / 2 - 0.0004} visible={false}>
+      <mesh rotation-z={Math.PI / 2}>
+        <cylinderGeometry args={[0.009, 0.0105, 0.0012, 32]} />
+        <meshStandardMaterial color="#9aa0a8" roughness={0.35} metalness={0.4} />
+      </mesh>
+    </group>
+  );
+}
+
+/** BitLab's own models (make-showcase.py): their `RGB` materials animate, `rotor_*` nodes spin, hinged details open and close. */
 const OWN = /\/(mb|gpu|ram|cool)-bitlab-/;
 export function OwnModel({ product, fit, deferDetail = false, position }: { product: HardwareItem; fit?: ModelFit; deferDetail?: boolean; position?: Vec3 }) {
   const rotors = useRef<Object3D[]>([]);
+  const hinges = useRef<Array<{ node: Object3D; rest: Quaternion; axis: Vector3; angle: () => number }>>([]);
   const reduced = useReducedMotion();
   const fx = useContext(RgbFxContext);
   const onLoaded = useCallback(
     (root: Object3D) => {
       rotors.current = applyShowcaseMaterials(root, fx, (m) => m);
+      const list: typeof hinges.current = [];
+      root.traverse((o) => {
+        const h = HINGES[o.name];
+        if (h) list.push({ node: o, rest: o.quaternion.clone(), axis: h.axis, angle: h.angle });
+      });
+      hinges.current = list;
     },
     [fx],
   );
+  const q = useMemo(() => new Quaternion(), []);
   useFrame((_, delta) => {
+    for (const h of hinges.current) h.node.quaternion.copy(h.rest).multiply(q.setFromAxisAngle(h.axis, h.angle()));
     if (reduced) return;
     for (const r of rotors.current) r.rotation.x -= Math.min(delta, 0.05) * 11 * pcRig.fanSpeed;
   });

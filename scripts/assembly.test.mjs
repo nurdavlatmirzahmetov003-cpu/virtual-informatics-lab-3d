@@ -6,8 +6,21 @@ import { assemblyRig, resetAssemblyRig, PIECES, INSTALL_ORDER } from '../src/sce
 test('full setup follows installation dependencies and power-on order', () => {
   const build = Object.fromEntries(['monitor','keyboard','mouse','speakers','headset','chair','case','motherboard','cpu','ram','ssd','cooling','psu','gpu'].map(k => [k,{id:k}]));
   const ids = assemblySteps(build).map(s => s.id);
-  for (const [before,after] of [['monitorStand','monitor'],['pcCase','sidePanel'],['sidePanel','motherboard'],['motherboard','cpu'],['cpu','cooler'],['psu','cables'],['gpu','cables'],['cables','fans'],['fans','rgb'],['rgb','glassClose'],['glassClose','monitorOn'],['monitorOn','lights']]) assert.ok(ids.indexOf(before) < ids.indexOf(after), `${before} before ${after}`);
+  for (const [before,after] of [['monitorStand','monitor'],['pcCase','sidePanel'],['sidePanel','motherboard'],['motherboard','cpu'],['cpu','cooler'],['psu','cables'],['gpu','cables'],['cables','fans'],['fans','glassClose'],['glassClose','rgb'],['rgb','monitorOn'],['monitorOn','lights']]) assert.ok(ids.indexOf(before) < ids.indexOf(after), `${before} before ${after}`);
   assert.equal(new Set(ids).size,ids.length);
+});
+test('V4 §1.3: the CPU drops into an open socket, the lever locks it, paste goes on before the cooler', () => {
+  const build = Object.fromEntries(['case','motherboard','cpu','ram','ssd','cooling','psu','gpu'].map(k => [k,{id:k}]));
+  const ids = assemblySteps(build).map(s => s.id);
+  const order = ['sidePanel','motherboard','socket','cpu','socketLock','paste','cooler','ram','ssd','gpu','psu','cables','fans','glassClose','rgb'];
+  assert.deepEqual(ids.filter(id => order.includes(id)), order);
+  const steps = assemblySteps(build);
+  const lever = steps.filter(s => s.targets.some(t => t.kind === 'value' && t.key === 'socketLever'));
+  assert.deepEqual(lever.map(s => s.targets[0].to), [1, 0], 'lever opens, then locks');
+  const power = steps.find(s => s.id === 'rgb');
+  assert.ok(power.targets.some(t => t.key === 'fanSpeed'), 'fans spin up at power-on');
+  // no cooler: no paste step
+  assert.ok(!assemblySteps({case:{id:'c'},motherboard:{id:'m'},cpu:{id:'p'}}).some(s => s.id === 'paste'));
 });
 test('optional products never appear in the animation when left out', () => {
   const steps = assemblySteps({monitor:{id:'screen'},case:{id:'case'},cpu:{id:'cpu'}});
@@ -23,5 +36,5 @@ test('replay clears all installed products and power channels', () => {
   resetAssemblyRig(false);
   assert.ok(PIECES.every(k => assemblyRig.pieces[k] === 0));
   assert.ok(INSTALL_ORDER.every(k => assemblyRig.parts[k] === 0));
-  for (const k of ['monitorOn','fanSpeed','rgb','cables','glassOpen']) assert.equal(assemblyRig[k],0);
+  for (const k of ['monitorOn','fanSpeed','rgb','cables','glassOpen','socketLever','paste']) assert.equal(assemblyRig[k],0);
 });

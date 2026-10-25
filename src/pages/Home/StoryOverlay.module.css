@@ -264,6 +264,14 @@
   font-size: var(--fs-sm);
 }
 
+/* the real part behind the label (V4) */
+.product {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--accent, var(--text));
+}
+
 .specs {
   display: grid;
   grid-template-columns: 1fr 1fr;

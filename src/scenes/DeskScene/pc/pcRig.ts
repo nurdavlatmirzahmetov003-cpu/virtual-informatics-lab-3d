@@ -24,6 +24,12 @@ export const pcRig = {
   rgbPower: 1,
   /** Installed centre of every part in the build on screen (case-local, from mounts.ts); written by <PCCase>. */
   at: {} as Partial<Record<PartId, readonly [number, number, number]>>,
+  /** AM5 socket lever: 0 down (locked) … 1 up (open). */
+  socketLever: 0,
+  /** Thermal paste on the CPU: 0 none … 1 applied. */
+  paste: 0,
+  /** Assembly entry path of each part (case-local offset just outside the case, before it slides straight in); written by <PCCase>. */
+  entry: {} as Partial<Record<PartId, readonly [number, number, number]>>,
   /** Exploded-layout offsets that replace a part's screen slot in this build (an AIO lifts out as one piece). */
   explodeAs: {} as Partial<Record<PartId, readonly [number, number, number]>>,
   /** World position of the case origin on screen. */

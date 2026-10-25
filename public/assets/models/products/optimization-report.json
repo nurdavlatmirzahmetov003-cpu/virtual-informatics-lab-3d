@@ -1877,23 +1877,23 @@
   {
     "id": "mb-bitlab-aero",
     "source": "assets-src/blender/products/mb-bitlab-aero.glb",
-    "sourceBytes": 761960,
+    "sourceBytes": 761704,
     "levels": [
       {
         "file": "mb-bitlab-aero.glb",
-        "bytes": 202716,
+        "bytes": 203576,
         "triangles": 6334,
         "textureMB": 12.1
       },
       {
         "file": "mb-bitlab-aero_lod1.glb",
-        "bytes": 166624,
+        "bytes": 167504,
         "triangles": 6334,
         "textureMB": 6.9
       },
       {
         "file": "mb-bitlab-aero_lod2.glb",
-        "bytes": 118320,
+        "bytes": 119204,
         "triangles": 6334,
         "textureMB": 1.7
       }

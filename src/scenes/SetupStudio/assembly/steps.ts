@@ -7,7 +7,7 @@ import type { PieceKey } from './assemblyRig';
 export type StepTarget =
   | { kind: 'piece'; key: PieceKey }
   | { kind: 'part'; key: PartId }
-  | { kind: 'value'; key: 'glassOpen' | 'cables' | 'fanSpeed' | 'rgb' | 'monitorOn' | 'light'; to: number };
+  | { kind: 'value'; key: 'glassOpen' | 'cables' | 'fanSpeed' | 'rgb' | 'monitorOn' | 'light' | 'socketLever' | 'paste'; to: number };
 
 export interface AssemblyStep {
   /** Caption key under `assembly.steps`. */
@@ -43,16 +43,21 @@ export function assemblySteps(build: ResolvedBuild): AssemblyStep[] {
     !!build.case && { id: 'pcCase', shot: 'ASSEMBLY_PC', targets: [piece('pcCase')], duration: 1.4, ease: settle },
     !!build.case && { id: 'sidePanel', shot: 'ASSEMBLY_PC', targets: [{ kind: 'value', key: 'glassOpen', to: 1 }], duration: 1.5, ease: glide },
     !!build.motherboard && { id: 'motherboard', shot: 'PC_INTERIOR', targets: [part('motherboard')], duration: 1.3, ease: settle },
-    !!build.cpu && { id: 'cpu', shot: 'PC_INTERIOR', targets: [part('cpu')], duration: 1.1, ease: settle },
+    // the CPU goes into an open socket, the lever locks it, paste, then the cooler on top
+    !!build.cpu && { id: 'socket', shot: 'CPU', targets: [{ kind: 'value', key: 'socketLever', to: 1 }], duration: 0.6, ease: glide },
+    !!build.cpu && { id: 'cpu', shot: 'CPU', targets: [part('cpu')], duration: 1.1, ease: settle },
+    !!build.cpu && { id: 'socketLock', shot: 'CPU', targets: [{ kind: 'value', key: 'socketLever', to: 0 }], duration: 0.6, ease: glide },
+    !!build.cpu && !!build.cooling && { id: 'paste', shot: 'CPU', targets: [{ kind: 'value', key: 'paste', to: 1 }], duration: 0.7, ease: 'power2.out' },
+    !!build.cooling && { id: 'cooler', shot: 'PC_INTERIOR', targets: [part('cooler')], duration: 1.2, ease: settle },
     !!build.ram && { id: 'ram', shot: 'PC_INTERIOR', targets: [part('ram')], duration: 1.0, ease: settle },
     !!build.ssd && { id: 'ssd', shot: 'PC_INTERIOR', targets: [part('ssd')], duration: 0.9, ease: settle },
-    !!build.cooling && { id: 'cooler', shot: 'PC_INTERIOR', targets: [part('cooler')], duration: 1.1, ease: settle },
-    !!build.psu && { id: 'psu', shot: 'PC_INTERIOR', targets: [part('psu')], duration: 1.1, ease: settle },
     !!build.gpu && { id: 'gpu', shot: 'PC_INTERIOR', targets: [part('gpu')], duration: 1.3, ease: settle },
+    !!build.psu && { id: 'psu', shot: 'PC_INTERIOR', targets: [part('psu')], duration: 1.1, ease: settle },
     !!build.case && { id: 'cables', shot: 'PC_INTERIOR', targets: [{ kind: 'value', key: 'cables', to: 1 }], duration: 0.7, ease: 'power1.inOut' },
-    !!build.case && { id: 'fans', shot: 'PC_INTERIOR', targets: [{ kind: 'value', key: 'fanSpeed', to: 1 }], duration: 1.4, ease: 'power2.in' },
-    !!build.case && { id: 'rgb', shot: 'ASSEMBLY_PC', targets: [{ kind: 'value', key: 'rgb', to: 1 }], duration: 1.0, ease: 'power1.inOut' },
+    !!build.case && { id: 'fans', shot: 'PC_INTERIOR', targets: [part('fans')], duration: 1.1, ease: settle },
     !!build.case && { id: 'glassClose', shot: 'ASSEMBLY_PC', targets: [{ kind: 'value', key: 'glassOpen', to: 0 }], duration: 1.5, ease: glide },
+    // power on: fans spin up and the RGB lights
+    !!build.case && { id: 'rgb', shot: 'ASSEMBLY_PC', targets: [{ kind: 'value', key: 'rgb', to: 1 }, { kind: 'value', key: 'fanSpeed', to: 1 }], duration: 1.4, ease: 'power2.inOut' },
     !!build.monitor && { id: 'monitorOn', shot: 'ASSEMBLY_MONITOR', targets: [{ kind: 'value', key: 'monitorOn', to: 1 }], duration: 1.0, ease: 'power2.out' },
     { id: 'lights', shot: 'ASSEMBLY_START', targets: [{ kind: 'value', key: 'light', to: 1 }], duration: 1.4, ease: 'power2.inOut' },
   ];

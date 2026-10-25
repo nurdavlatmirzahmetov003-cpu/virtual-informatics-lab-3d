@@ -133,6 +133,8 @@ export const PART_GEOMETRY: Readonly<Record<string, PartGeometry>> = {
   "kind": "board",
   "size": [ 0.0436, 0.305, 0.2442],
   "anchors": {
+   "socket_lever_mesh": [ 0.0183, 0.0725, -0.03015],
+   "socket_lever": [ 0.0183, 0.0965, -0.0301],
    "slot_dimm_1": [ 0.019, 0.0775, 0.0461],
    "slot_dimm_2": [ 0.019, 0.0775, 0.0556],
    "slot_dimm_3": [ 0.019, 0.0775, 0.0651],

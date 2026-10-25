@@ -384,6 +384,7 @@ def make_board():
         objs.append(ab(a - 3.6, a + 3.6, b0, b0 + n, 1.6, 12.4, steel if s["x16"] else plastic, "pcie", bev=0.6))
         pl = ab(a - 3.9, a + 3.9, b0 - 7, b0, 1.6, 13, latch, "pcie_latch", bev=0.8)
         if s is L["pcie"][0]:
+            pl.name = "tmp_pcie_latch"
             pcie_latch, pcie_hinge = pl, P(a, b0, 1.6)
         else:
             objs.append(pl)
@@ -422,11 +423,12 @@ def make_board():
     # moving parts: each its own node with its origin on the hinge (latches of one end share a hinge line)
     lt, lb = L["dimm"]["a"] + 70, L["dimm"]["a"] - 70
     mid_b = sum(L["dimm"]["b"]) / 4
-    for name, o, hinge in (("socket_lever", lever, lever_hinge), ("dimm_latch_top", join(latch_top, "dimm_latch_top"), P(lt, mid_b, 1.6)), ("dimm_latch_bottom", join(latch_bottom, "dimm_latch_bottom"), P(lb, mid_b, 1.6)), ("pcie_latch", pcie_latch, pcie_hinge)):
+    for name, o, hinge in (("socket_lever", lever, lever_hinge), ("dimm_latch_top", join(latch_top, "tmp_latch_top"), P(lt, mid_b, 1.6)), ("dimm_latch_bottom", join(latch_bottom, "tmp_latch_bottom"), P(lb, mid_b, 1.6)), ("pcie_latch", pcie_latch, pcie_hinge)):
+        # an empty on the hinge carries the mesh: the optimiser's quantisation re-centres meshes, not empties
+        pivot = empty(name, hinge)
         move(o, (-hinge[0], -hinge[1], -hinge[2]))
-        o.location = hinge
-        o.name = name
-        o["moving"] = name
+        o.name = name + "_mesh"
+        o.parent = pivot
     for i, b in enumerate(L["dimm"]["b"], start=1):
         empty(f"slot_dimm_{i}", P(L["dimm"]["a"], b, 2.8))
     empty("socket_cpu_1", P(sa, sb, 4.8))
