@@ -1,88 +1,105 @@
 import { useMemo, useRef, type ReactNode } from 'react';
 import { useFrame } from '@react-three/fiber';
-import type { Group } from 'three';
+import { Quaternion, Vector3, type Group } from 'three';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { ModelLoader } from '@/components/3d/ModelLoader';
+import type { ModelFit } from '@/lib/three/fit';
+import type { HardwareItem } from '@/data/hardware/types';
+import { isTieredModel } from '@/lib/three/modelUrls';
 import type { PartId } from './parts';
-import { FRONT_FANS, PSU, RAM } from './constants';
-import { caseInterior, fanFit, files, fits, frontFans, productFits, psuFit, rotorFit, sataFitFor, type CaseInterior } from './fits';
+import { fanFit, rotorFit } from './fits';
+import { isSata, ON_BOARD, type FanMount, type Installed, type Vec3 } from './mounts';
+import { pcRig } from './pcRig';
+import { LiquidCooler } from './LiquidCooler';
 
 const url = (name: string) => `${import.meta.env.BASE_URL}assets/models/hardware/${name}.glb`;
 const productUrl = (product: HardwareItem) => `${import.meta.env.BASE_URL}assets/models/${product.modelPath}`;
-import { pcRig } from './pcRig';
-import type { HardwareItem } from '@/data/hardware/types';
-import { LiquidCooler } from './LiquidCooler';
-import { isTieredModel } from '@/lib/three/modelUrls';
 
 /**
- * A row of 120 mm fans along Y. Deliberately not instanced (measured in
- * Phase 9 on Intel UHD / D3D11): instanced copies need their own shader
- * variants (+7 programs, ≈ 0.7 s more compiling at load) and spinning
- * rotors would rewrite the instance buffer every frame, which stalled the
- * GPU (74 → 54 FPS) — all to save 13 draw calls for 3 fans and 2–4 RAM sticks.
+ * Installed pose of the part models: a quarter turn about Z lays a board,
+ * card or stick against the tray (component side −X, top edge +Y, I/O /
+ * bracket at −Z); PSUs and SATA drives keep their own pose. No pin, no offset:
+ * ModelLoader centres the model, and the mounting system (mounts.ts) puts the
+ * centre where its anchors say.
  */
-export function HardwareFans({ ys, z = 0, fallback }: { ys: readonly number[]; z?: number; fallback: ReactNode }) {
-  const frames = useMemo(() => ys.map((y) => [0, y, z] as const), [ys, z]);
+const BOARD_POSE: ModelFit = { axis: 1, rotation: ON_BOARD };
+const OWN_POSE: ModelFit = { axis: 0 };
+
+/** The fan models face +Z (air leaves towards −Z); a mount's `n` is the airflow. */
+const FAN_AIR = new Vector3(0, 0, -1);
+function fanQuaternion(n: Vec3) {
+  return new Quaternion().setFromUnitVectors(FAN_AIR, new Vector3(...n).normalize());
+}
+
+/**
+ * 120/140 mm fans at their mounts. Deliberately not instanced (measured in
+ * Phase 9 on Intel UHD / D3D11): instanced copies need their own shader
+ * variants and spinning rotors would rewrite the instance buffer every frame,
+ * which stalled the GPU — all to save a few draw calls.
+ * `origin`: the case-local point the parent group sits at.
+ */
+export function HardwareFans({ fans, origin = [0, 0, 0], fallback = null }: { fans: readonly FanMount[]; origin?: Vec3; fallback?: ReactNode }) {
+  const poses = useMemo(
+    () => fans.map((f) => ({ key: `${f.group}:${f.p.join(',')}`, position: [f.p[0] - origin[0], f.p[1] - origin[1], f.p[2] - origin[2]] as const, quaternion: fanQuaternion(f.n), scale: f.size / 0.12 })),
+    [fans, origin],
+  );
   return (
     <>
-      {frames.map((p, i) => <ModelLoader key={i} url={url('fan_frame')} fit={fanFit} position={[...p]} fallback={i === 0 ? fallback : null} />)}
-      {ys.map((y) => (
-        <Rotor key={y} y={y} z={z} />
+      {poses.map((p, i) => (
+        <group key={p.key} position={[...p.position]} quaternion={p.quaternion} scale={p.scale}>
+          <ModelLoader url={url('fan_frame')} fit={fanFit} fallback={i === 0 ? fallback : null} />
+          <Rotor />
+        </group>
       ))}
     </>
   );
 }
 
-function Rotor({ y, z }: { y: number; z: number }) {
+function Rotor() {
   const rotor = useRef<Group>(null);
   const reduced = useReducedMotion();
   useFrame((_, delta) => {
     if (rotor.current && !reduced) rotor.current.rotation.z -= Math.min(delta, 0.05) * 8 * pcRig.fanSpeed;
   });
   return (
-    <group ref={rotor} position={[0, y, z + 0.0018]}>
+    <group ref={rotor} position-z={0.0018}>
       <ModelLoader url={url('fan_rotor')} fit={rotorFit} castShadow={false} fallback={null} />
     </group>
   );
 }
 
-/** 2 or 4 identical modules in the DIMM slots (one cached file, see HardwareFans on instancing). */
-function RamSticks({ count, fallback, product }: { count: number; fallback: ReactNode; product?: HardwareItem }) {
-  const positions = useMemo(() => Array.from({ length: Math.min(4, count) }, (_, i) => [0, 0, RAM.pitch * (count === 2 ? i * 2 + 1 : i)] as const), [count]);
-  const own = product && isTieredModel(product.modelPath);
+/** The sticks of a kit in their DIMM slots (one cached file, see HardwareFans on instancing). */
+function RamSticks({ sticks, product }: { sticks: readonly Vec3[]; product: HardwareItem }) {
   return (
     <>
-      {positions.map((p, i) => (
-        <ModelLoader key={i} url={own ? productUrl(product) : url(files.ram)} fit={own ? productFits.ram : fits.ram} position={[...p]} fallback={i === 0 ? fallback : null} />
+      {sticks.map((p, i) => (
+        <ModelLoader key={i} url={productUrl(product)} fit={BOARD_POSE} position={[...p]} fallback={null} />
       ))}
     </>
   );
 }
 
-/** Licensed PBR components; PCPart retains ownership of all choreography. */
-const PROCEDURAL_INTERIOR = caseInterior();
+const BUILD_KEY: Record<Exclude<PartId, 'fans'>, 'motherboard' | 'cpu' | 'cooler' | 'ram' | 'gpu' | 'ssd' | 'psu'> = {
+  motherboard: 'motherboard',
+  cpu: 'cpu',
+  cooler: 'cooler',
+  ram: 'ram',
+  gpu: 'gpu',
+  ssd: 'ssd',
+  psu: 'psu',
+};
 
-/** `interior`: the case the part is installed in (its floor, shroud and front panel, see fits.ts). */
-export function HardwarePart({ id, fallback, product, rgbColor, deferDetail = false, interior = PROCEDURAL_INTERIOR }: { id: PartId; fallback: ReactNode; product?: HardwareItem; rgbColor?: string | null; deferDetail?: boolean; interior?: CaseInterior }) {
-  const own = !!product && isTieredModel(product.modelPath);
-  const fit = useMemo(() => {
-    if (id === 'fans') return null;
-    if (id === 'psu') return psuFit(interior, PSU.y, own);
-    if (own) return id === 'ssd' && /SATA/.test(product?.model ?? '') ? sataFitFor(interior) : productFits[id];
-    const base = fits[id];
-    if (id === 'gpu' && product?.modelSize) return { ...base, size: product.modelSize, offset: [-0.07, 0, product.modelSize / 2] as const };
-    if (id === 'cooler' && product?.compatibility.coolerHeightMm) {
-      const height = product.compatibility.coolerHeightMm / 1000;
-      return { ...base, size: height, offset: [-height / 2, 0, 0.01] as const };
-    }
-    return base;
-  }, [id, product, own, interior]);
-  const fans = useMemo(() => frontFans(interior), [interior]);
-  if (id === 'fans') return <HardwareFans ys={fans.ys} z={fans.z - FRONT_FANS.z} fallback={fallback} />;
-  if (id === 'cooler' && product?.compatibility.radiatorMm) return <LiquidCooler radiatorMm={product.compatibility.radiatorMm} rgbColor={rgbColor} />;
-  if (id === 'ram') {
-    const count = product ? Number(product.model.match(/\((\d+)\s*[×x]/)?.[1] ?? 2) : RAM.count;
-    return <RamSticks count={count} fallback={fallback} product={product} />;
-  }
-  return <ModelLoader key={own ? product!.id : id} url={own ? productUrl(product!) : url(files[id])} fit={fit!} fallback={fallback} deferDetail={deferDetail} />;
+/**
+ * One installed component, drawn centred on its group (PCPart puts the group
+ * where the mounting system installed it). `at`: that position, case-local.
+ */
+export function HardwarePart({ id, inst, at, product, rgbColor, deferDetail = false }: { id: PartId; inst: Installed; at: Vec3; product?: HardwareItem; rgbColor?: string | null; deferDetail?: boolean }) {
+  if (id === 'fans') return <HardwareFans fans={inst.fans.filter((f) => f.group !== 'rear')} origin={at} />;
+  const placed = inst[BUILD_KEY[id]];
+  if (!placed || !product) return null;
+  if (id === 'cooler' && inst.cooler?.liquid) return <LiquidCooler pump={inst.cooler} rgbColor={rgbColor} />;
+  if (!isTieredModel(product.modelPath)) return null;
+  if (id === 'ram' && inst.ram) return <RamSticks sticks={inst.ram.sticks} product={product} />;
+  const pose = id === 'psu' || (id === 'ssd' && isSata(product)) ? OWN_POSE : BOARD_POSE;
+  return <ModelLoader key={product.id} url={productUrl(product)} fit={pose} fallback={null} deferDetail={deferDetail} />;
 }

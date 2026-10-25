@@ -308,6 +308,7 @@
       "coolerSocket": "The {cooler} mounting kit does not support the {socket} socket.",
       "coolerTooTall": "The cooler will not fit: {cooler} is {height} mm tall, but {case} allows at most {max} mm.",
       "radiatorTooBig": "The {cooler} radiator ({radiator} mm) does not fit {case} (max {max} mm).",
+      "coolerBlocksGpu": "{cooler} is too wide for {board}: it would cover the first PCIe slot and touch {gpu}. The 3D view shows a liquid cooler (AIO) in its place. Choose a narrower cooler or an AIO.",
       "coolerWeak": "{cooler} is rated for about {capacity} W, but {cpu} can put out up to {heat} W under load. It may overheat and slow down.",
       "error": "Error",
       "warning": "Warning"

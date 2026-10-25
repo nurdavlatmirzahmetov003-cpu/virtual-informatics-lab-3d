@@ -9,6 +9,7 @@ import { useDisposable } from '@/hooks/useDisposable';
 import { finnedHeatsink, tubeAlong } from '@/lib/three/geometry';
 import { labelTexture } from '@/lib/three/proceduralTextures';
 import { HardwareFans } from '@/scenes/DeskScene/pc/HardwareParts';
+import { fanColumn } from '@/scenes/DeskScene/pc/mounts';
 
 const dark = { color: '#1a1d23', metalness: 0.35, roughness: 0.45 } as const;
 const black = { color: '#121418', metalness: 0.2, roughness: 0.5 } as const;
@@ -38,7 +39,7 @@ export function LiquidCoolerDisplay() {
         </mesh>
         {/* the fans' Y row runs along the radiator (Z), their axis points up */}
         <group position-y={0.028} rotation-x={-Math.PI / 2}>
-          <HardwareFans ys={fanYs} fallback={null} />
+          <HardwareFans fans={fanColumn(fanYs)} />
         </group>
       </group>
       {[geo.hoseA, geo.hoseB].map((g, i) => (

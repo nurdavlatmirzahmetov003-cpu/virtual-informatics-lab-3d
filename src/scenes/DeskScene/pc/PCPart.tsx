@@ -8,25 +8,32 @@ import type { TranslationKey } from '@/lib/i18n';
 import { activePart, usePcStore } from '@/store/pcStore';
 import { useStoryStore } from '@/store/storyStore';
 import { CHAPTER_INDEX } from '../chapters';
-import { PART_INDEX, type PartDef } from './parts';
+import { explodeOffset, PART_INDEX, type PartDef } from './parts';
 import { pcRig } from './pcRig';
 import styles from '@/components/3d/Hotspot.module.css';
 
 const HIGHLIGHT = new Color('#38d6f5');
 const tint = new Color();
 const DIM = 0.72; // how much non-active parts darken
+/** Where a part waits before the setup assembly brings it in (case-local offset). */
+const INSTALL_FROM = [-0.22, 0.035, 0.025] as const;
+
+type V3 = readonly [number, number, number];
+const ORIGIN: V3 = [0, 0, 0];
 
 /**
  * Wraps one PC component: drives its exploded position, highlights it when
  * active (others dim), and makes it clickable with a numbered hotspot.
+ * `at`: where the mounting system installed it (centre of its box, case-local).
  */
-export function PCPart({ def, children, enabled = true }: { def: PartDef; children: ReactNode; enabled?: boolean }) {
+export function PCPart({ def, at = ORIGIN, children, enabled = true }: { def: PartDef; at?: V3; children: ReactNode; enabled?: boolean }) {
   const t = useT();
   const group = useRef<Group>(null);
   const records = useRef<MatRecord[]>([]);
   const assetVersion = useRef(-1);
   const metadata = useMemo(() => ({ pcPart: true, assetVersion: 0 }), []);
   const fx = useRef({ hi: 0, dim: 0 });
+  const explode = useMemo(() => explodeOffset(def, at), [def, at]);
   const mode = usePcStore((s) => s.mode);
   const device = usePcStore((s) => s.selectedDevice);
   const chapter = useStoryStore((s) => s.chapter);
@@ -53,11 +60,10 @@ export function PCPart({ def, children, enabled = true }: { def: PartDef; childr
     g.visible = !pcRig.hidden.has(def.id);
     const e = pcRig.parts?.[def.id] ?? pcRig.explode;
     const installing = pcRig.parts !== null;
-    const scale = installing ? 1 : 1 + ((def.magnify ?? 1) - 1) * e;
-    g.scale.setScalar(scale);
-    // Magnify around the visual centre, keeping the hotspot and fly-to target aligned.
-    const move = installing ? [-0.22, 0.035, 0.025] : def.explode;
-    g.position.set(def.anchor[0] + move[0] * e + def.center[0] * (1 - scale), def.anchor[1] + move[1] * e + def.center[1] * (1 - scale), def.anchor[2] + move[2] * e + def.center[2] * (1 - scale));
+    // magnified around its own centre (the group origin), so the hotspot and fly-to target stay aligned
+    g.scale.setScalar(installing ? 1 : 1 + ((def.magnify ?? 1) - 1) * e);
+    const move = installing ? INSTALL_FROM : explode;
+    g.position.set(at[0] + move[0] * e, at[1] + move[1] * e, at[2] + move[2] * e);
     // GLBs resolve asynchronously after this wrapper mounts.
     const newlyLoaded = records.current.length === 0 || assetVersion.current !== g.userData.assetVersion;
     if (newlyLoaded) { records.current = captureMaterials(g); assetVersion.current = g.userData.assetVersion; }
@@ -113,7 +119,7 @@ export function PCPart({ def, children, enabled = true }: { def: PartDef; childr
     >
       {children}
       {interactive && (
-        <Html position={[...def.center]} center zIndexRange={[5, 0]} className={styles.anchor}>
+        <Html position={[0, 0, 0]} center zIndexRange={[5, 0]} className={styles.anchor}>
           <button
             type="button"
             className={styles.hotspot}

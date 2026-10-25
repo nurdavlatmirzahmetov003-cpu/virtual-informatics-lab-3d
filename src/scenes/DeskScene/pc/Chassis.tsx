@@ -7,14 +7,15 @@
 import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
-import type { Group, Material, MeshStandardMaterial, PointLight } from 'three';
+import { Quaternion, Vector3, type Group, type Material, type MeshStandardMaterial, type PointLight } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { ModelLoader } from '@/components/3d/ModelLoader';
 import { extrudeFront, frameShape, roundedRectShape, tubeAlong } from '@/lib/three/geometry';
 import { Fan, type FanGeometries } from '../models/Fan';
 import { BOARD_FACE, D, FAN, GPU, H, MB, T, W } from './constants';
-import { caseFit, caseInterior, rearFanZ } from './fits';
+import { caseFit } from './fits';
+import { LEGACY_MOUNTS, type CaseMounts } from './caseMounts';
 import { pcRig } from './pcRig';
 import type { PcTextures } from './usePcTextures';
 import type { HardwareItem } from '@/data/hardware/types';
@@ -23,7 +24,11 @@ import { isTieredModel } from '@/lib/three/modelUrls';
 const powderCoat = { color: '#1a1c21', metalness: 0.45, roughness: 0.48 } as const;
 const smooth = (x: number) => x * x * (3 - 2 * x);
 const chassisFit = { axis: 1 as const, size: H, rotation: [0, Math.PI / 2, 0] as const };
-export function Chassis({ tex, fan, rgb, product }: { tex: PcTextures; fan: FanGeometries; rgb: Material; product?: HardwareItem }) {
+const AIR = new Vector3(0, 0, -1);
+
+/** `mounts`: the case's mounts (its rear exhaust fans); default: the reference mid-tower. */
+export function Chassis({ tex, fan, rgb, product, mounts = LEGACY_MOUNTS }: { tex: PcTextures; fan: FanGeometries; rgb: Material; product?: HardwareItem; mounts?: CaseMounts }) {
+  const rear = useMemo(() => mounts.fans.filter((f) => f.group === 'rear').map((f) => ({ key: f.p.join(','), p: f.p, q: new Quaternion().setFromUnitVectors(AIR, new Vector3(...f.n).normalize()) })), [mounts]);
   const own = !!product && isTieredModel(product.modelPath);
   const caseId = own ? product.id : null;
   // stable object: ModelLoader re-fits when `fit` changes
@@ -163,7 +168,9 @@ export function Chassis({ tex, fan, rgb, product }: { tex: PcTextures; fan: FanG
 
       {/* rear exhaust fan */}
       </group>} />
-      <Fan size={FAN} geometries={fan} rgb={rgb} position={[0, MB.y + 0.06, rearFanZ(caseInterior(caseId))]} speed={6} />
+      {rear.map((f) => (
+        <Fan key={f.key} size={FAN} geometries={fan} rgb={rgb} position={[...f.p]} quaternion={f.q} speed={6} />
+      ))}
 
       <group ref={cables}>
         <mesh geometry={geo.cable24}>

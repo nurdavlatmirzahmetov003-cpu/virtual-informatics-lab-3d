@@ -8,6 +8,7 @@
  */
 import type { ReactNode } from 'react';
 import { HardwareFans } from '@/scenes/DeskScene/pc/HardwareParts';
+import { fanColumn } from '@/scenes/DeskScene/pc/mounts';
 import { useMonitorWallpaper } from '@/scenes/DeskScene/models/useMonitorWallpaper';
 import { Product } from '../zones/common';
 import { CableSet, CmosBattery, Hdd25, LiquidCoolerDisplay, OpticalDrive, Projector, Scanner } from './procedural';
@@ -25,6 +26,7 @@ interface Pose {
 }
 
 /** Exhibit poses; devices not listed stand as modelled at real size. */
+const ONE_FAN = fanColumn([0]);
 const POSE: Record<string, Pose> = {
   cpu: { scale: 4, tilt: 0.85, half: 0.02 },
   motherboard: { tilt: 1.05, half: 0.122 },
@@ -154,7 +156,7 @@ function Model({ id, light }: { id: string; light: boolean }): ReactNode {
     case 'case_fan':
       return (
         <group position-y={0.06}>
-          <HardwareFans ys={[0]} fallback={null} />
+          <HardwareFans fans={ONE_FAN} />
         </group>
       );
     case 'internal_cables':

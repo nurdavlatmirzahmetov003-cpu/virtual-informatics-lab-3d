@@ -2,29 +2,21 @@
  * The system unit: chassis + eight separately animated components.
  * Interim procedural build — see TODO.md [PLACEHOLDER] entries.
  */
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { MeshStandardMaterial, Object3D, type SpotLight } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
 import { extrudeFront, fanBladesGeometry, fanFrameShape } from '@/lib/three/geometry';
 import { usePcStore } from '@/store/pcStore';
-import { Fan } from '../models/Fan';
 import { storyRig } from '../storyRig';
 import { Chassis } from './Chassis';
-import { CASE_ORIGIN, FAN, FRONT_FANS } from './constants';
-import { Cpu } from './Cpu';
-import { CpuCooler } from './CpuCooler';
-import { Gpu } from './Gpu';
-import { Motherboard } from './Motherboard';
-import { NvmeSsd } from './NvmeSsd';
 import { PARTS, type PartId } from './parts';
 import { PCPart } from './PCPart';
 import { pcRig } from './pcRig';
-import { Psu } from './Psu';
-import { RamKit } from './RamKit';
 import { usePcTextures } from './usePcTextures';
 import { HardwarePart } from './HardwareParts';
-import { caseInterior } from './fits';
+import { CASE_ORIGIN, FAN } from './constants';
+import { caseMountsFor, installBuild, type Installed, type Vec3 } from './mounts';
 import { isTieredModel } from '@/lib/three/modelUrls';
 import type { ResolvedBuild } from '@/lib/studio/build';
 
@@ -69,6 +61,23 @@ function PcRigController({ mode, hide }: { mode: PcRigMode; hide: readonly PartI
 
 const NO_PARTS: readonly PartId[] = [];
 
+/** Where each part group sits: the centre of its installed box (fans: the middle of the intake fans). */
+function installedCentres(inst: Installed): Record<PartId, Vec3> {
+  const centre = (pl: { p: Vec3 } | null): Vec3 => pl?.p ?? [0, 0, 0];
+  const intake = inst.fans.filter((f) => f.group !== 'rear');
+  const mid = (k: 0 | 1 | 2) => (intake.length ? intake.reduce((s, f) => s + f.p[k], 0) / intake.length : 0);
+  return {
+    motherboard: centre(inst.motherboard),
+    cpu: centre(inst.cpu),
+    cooler: centre(inst.cooler),
+    ram: centre(inst.ram),
+    gpu: centre(inst.gpu),
+    ssd: centre(inst.ssd),
+    psu: centre(inst.psu),
+    fans: [mid(0), mid(1), mid(2)],
+  };
+}
+
 interface PCCaseProps {
   /** Who drives pcRig (default: scroll story / 360° mode). */
   rig?: PcRigMode;
@@ -99,7 +108,11 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
   }, []);
   const fan = { frame: res.fanFrame, blades: res.fanBlades };
   const caseId = build?.case && isTieredModel(build.case.modelPath) ? build.case.id : null;
-  const interior = useMemo(() => caseInterior(caseId), [caseId]);
+  const inst = useMemo(() => installBuild(caseMountsFor(caseId), { ...build, cooling: build?.cooling }), [caseId, build]);
+  const at = useMemo(() => installedCentres(inst), [inst]);
+  useEffect(() => {
+    pcRig.at = at;
+  }, [at]);
 
   // soft key light that only wakes up for the exploded layout
   const [showcaseTarget] = useState(() => new Object3D());
@@ -117,30 +130,13 @@ export function PCCase({ rig = 'auto', hide = NO_PARTS, interactive = true, rgbC
     }
   });
 
-  const content: Record<PartId, ReactNode> = {
-    motherboard: <Motherboard tex={tex} />,
-    cpu: <Cpu tex={tex} />,
-    cooler: <CpuCooler tex={tex} fan={fan} />,
-    ram: <RamKit tex={tex} light={res.ramLight} />,
-    gpu: <Gpu tex={tex} fan={fan} light={res.rgb} />,
-    ssd: <NvmeSsd tex={tex} />,
-    psu: <Psu tex={tex} />,
-    fans: (
-      <>
-        {FRONT_FANS.ys.map((y) => (
-          <Fan key={y} size={FAN} geometries={fan} rgb={res.rgb} position-y={y} speed={6.5} />
-        ))}
-      </>
-    ),
-  };
-
   return (
     <group position={[...CASE_ORIGIN]}>
       <PcRigController mode={rig} hide={hide} />
-      <Chassis tex={tex} fan={fan} rgb={res.rgb} product={build?.case} />
+      <Chassis tex={tex} fan={fan} rgb={res.rgb} product={build?.case} mounts={inst.mounts} />
       {PARTS.map((def) => (
-        <PCPart key={def.id} def={def} enabled={interactive}>
-          <HardwarePart id={def.id} fallback={content[def.id]} rgbColor={rgbColor} deferDetail={deferDetail} interior={interior} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />
+        <PCPart key={def.id} def={def} at={at[def.id]} enabled={interactive}>
+          <HardwarePart id={def.id} inst={inst} at={at[def.id]} rgbColor={rgbColor} deferDetail={deferDetail} product={build?.[def.id === 'cooler' ? 'cooling' : def.id === 'fans' ? 'case' : def.id]} />
         </PCPart>
       ))}
       <primitive object={showcaseTarget} position={[-0.2, 0.02, 0.15]} />

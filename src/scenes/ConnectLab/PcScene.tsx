@@ -17,7 +17,9 @@ import { PC_SCENARIO } from '@/labs/ConnectLab';
 import { Desk } from '@/scenes/DeskScene/models/Desk';
 import { DESK_TOP, KEYBOARD, MONITOR, MOUSE, PC, PC_CENTER, SPEAKERS } from '@/scenes/DeskScene/layout';
 import { Chassis } from '@/scenes/DeskScene/pc/Chassis';
-import { BOARD_FACE, CPU, FAN, GPU, MB, PSU, RAM, SSD } from '@/scenes/DeskScene/pc/constants';
+import { FAN } from '@/scenes/DeskScene/pc/constants';
+import type { Vec3 } from '@/scenes/DeskScene/pc/mounts';
+import { showcaseInstalled } from '@/lib/studio/showcaseInstall';
 import { HardwarePart } from '@/scenes/DeskScene/pc/HardwareParts';
 import { pcRig } from '@/scenes/DeskScene/pc/pcRig';
 import { usePcTextures } from '@/scenes/DeskScene/pc/usePcTextures';
@@ -31,17 +33,19 @@ const BACK = new Vector3(0, 0, -1);
 /** Point the dragged plug moves around: the middle of the rear panel. */
 const PC_WORK: [number, number, number] = [PC_CENTER[0], PC_CENTER[1], PC_CENTER[2] - PC.size[2] / 2 - 0.05];
 
-/** The PC's parts that carry sockets, at their installed places (case-local). */
+const INST = showcaseInstalled();
+const at = (pl: { p: Vec3 } | null): Vec3 => pl?.p ?? [0, 0, 0];
+/** The PC's parts that carry sockets, where the mounting system installed them (case-local). */
 const OWNERS = [
-  { owner: 'motherboard', part: 'motherboard', at: [MB.x, MB.y, MB.z] },
-  { owner: 'gpu', part: 'gpu', at: [BOARD_FACE, GPU.y, GPU.z0] },
-  { owner: 'psu', part: 'psu', at: [PSU.x, PSU.y, PSU.z] },
+  { owner: 'motherboard', part: 'motherboard', at: at(INST.motherboard) },
+  { owner: 'gpu', part: 'gpu', at: at(INST.gpu) },
+  { owner: 'psu', part: 'psu', at: at(INST.psu) },
 ] as const;
 const OTHER = [
-  { part: 'cpu', at: [BOARD_FACE, CPU.y, CPU.z] },
-  { part: 'cooler', at: [BOARD_FACE, CPU.y, CPU.z] },
-  { part: 'ram', at: [BOARD_FACE, RAM.y, RAM.z] },
-  { part: 'ssd', at: [BOARD_FACE, SSD.y, SSD.z] },
+  { part: 'cpu', at: at(INST.cpu) },
+  { part: 'cooler', at: at(INST.cooler) },
+  { part: 'ram', at: at(INST.ram) },
+  { part: 'ssd', at: at(INST.ssd) },
 ] as const;
 
 /** Reads the port markers inside each socket-carrying part and keeps the anchors current. */
@@ -91,7 +95,7 @@ function SystemUnit({ onFound }: { onFound: (n: number) => void }) {
   });
   return (
     <group position={[...PC_CENTER]}>
-      <Chassis tex={tex} fan={{ frame: res.fanFrame, blades: res.fanBlades }} rgb={res.rgb} product={build.case} />
+      <Chassis tex={tex} fan={{ frame: res.fanFrame, blades: res.fanBlades }} rgb={res.rgb} product={build.case} mounts={INST.mounts} />
       {OWNERS.map(({ owner, part, at }) => (
         <group
           key={owner}
@@ -100,12 +104,12 @@ function SystemUnit({ onFound }: { onFound: (n: number) => void }) {
             groups.current[owner] = g;
           }}
         >
-          <HardwarePart id={part} fallback={null} product={build[part]} />
+          <HardwarePart id={part} inst={INST} at={at} product={build[part]} />
         </group>
       ))}
       {OTHER.map(({ part, at }) => (
         <group key={part} position={[...at]}>
-          <HardwarePart id={part} fallback={null} product={build[part === 'cooler' ? 'cooling' : part]} />
+          <HardwarePart id={part} inst={INST} at={at} product={build[part === 'cooler' ? 'cooling' : part]} />
         </group>
       ))}
       <MarkerScan groups={groups} onFound={onFound} />
