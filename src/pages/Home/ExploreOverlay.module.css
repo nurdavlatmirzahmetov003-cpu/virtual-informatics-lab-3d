@@ -268,3 +268,21 @@
   .parts li { flex: 0 0 auto; }
   .parts button { white-space: nowrap; width: auto; padding: 8px; }
 }
+
+/* V4 §6: folding (components/panel/Foldable) */
+.panelFold {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.panel > .eyebrow,
+.panel > .panelHead {
+  padding-right: 40px;
+}
+
+.panelTab {
+  position: absolute;
+  left: var(--gutter);
+  top: calc(var(--topbar-h) + var(--space-5));
+}

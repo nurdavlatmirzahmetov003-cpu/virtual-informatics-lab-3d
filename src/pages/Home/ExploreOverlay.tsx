@@ -3,6 +3,8 @@ import { ArrowLeft, Boxes, RotateCcw, Rotate3d, X } from 'lucide-react';
 import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
 import { PARTS } from '@/scenes/DeskScene/pc/parts';
+import { FoldButton, FoldTab } from '@/components/panel/Foldable';
+import { useFold } from '@/components/panel/foldState';
 import { PartSpecs } from './PartSpecs';
 import { CHAPTERS } from '@/scenes/DeskScene/chapters';
 import { DEVICES } from '@/scenes/DeskScene/devices';
@@ -22,6 +24,8 @@ export function ExploreOverlay() {
   const device = usePcStore((s) => s.selectedDevice);
   const autoRotate = usePcStore((s) => s.autoRotate);
   const exploded = usePcStore((s) => s.exploded);
+  // V4 §6: the info panel folds to a tab, so the setup is seen whole (Alt+I)
+  const fold = useFold('home:explore', { primary: true, contentKey: device ?? selected });
   const { exitExplore, resetCamera, toggleAutoRotate, toggleExploded, selectPart, enterDevice, enterExplore } = usePcStore.getState();
 
   useEffect(() => {
@@ -61,7 +65,8 @@ export function ExploreOverlay() {
         </button>}
       </div>
 
-      <aside className={styles.panel} aria-live="polite">
+      {fold.folded ? <FoldTab fold={fold} title={t('panels.info')} className={styles.panelTab} /> : <aside className={styles.panel} aria-live="polite">
+        <FoldButton fold={fold} className={styles.panelFold} />
         {device ? <>
           <span className={styles.eyebrow}>{t('explore.deviceLabel')} · 360°</span>
           <h2 className={styles.title}>{device === 'setup' ? t('explore.viewSetup') : t(key(`${deviceBase}.title`))}</h2>
@@ -100,7 +105,7 @@ export function ExploreOverlay() {
             </li>
           ))}
         </ol>}
-      </aside>
+      </aside>}
 
       <p className={styles.hint}>{t('explore.hint')}</p>
     </div>
