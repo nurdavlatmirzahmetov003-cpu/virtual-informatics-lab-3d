@@ -230,6 +230,18 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | `dev-usb-a-cable` | [USB cable](https://sketchfab.com/3d-models/usb-cable-e2d9a8d59e7245f99ffa14e5f9784c3e) | ABSTRACT_DUCK | CC BY 4.0 | pose as downloaded, coiled, 300 mm across |
 | `dev-usb-c-cable` | [USB-C Charging Cable (Type-C – Type-C)](https://sketchfab.com/3d-models/usb-c-charging-cable-type-c-type-c-39cb1374a9c24cfa815f8efe86a14f61) | alessandroparca | CC BY 4.0 | pose as downloaded, 250 mm across |
 
+### Басты бет бөлмесі (V4 §2, 2026-10-26) — файл емес, кодпен құрылады
+Барлығы — жобаның өз жұмысы, CC0. Сыртқы модель немесе текстура қосылған жоқ.
+
+| Нәрсе | Қайда | Лицензия | Ескерту |
+|---|---|---|---|
+| Сәлем беретін Бит (үстелде) | `src/scenes/LabSpace/robots/robotKit.ts` (`bit` түрі), `src/scenes/DeskScene/hero/HeroCompanions.tsx` | CC0 (өз жұмысымыз) | робот жинағынан, 1 м өлшемде құрылып 0,17 есе кішірейтілген; 5 draw call |
+| Жүргізуші робот (BitLab футболкасы) | `robotKit.ts` (`presenter` түрі, 0.37), `HeroCompanions.tsx` | CC0 | сөз көпіршігі — canvas текстура, kk/ru/en |
+| Монстера (үстелде және еденде) | `src/scenes/DeskScene/models/Plants.tsx` | CC0 | тесігі бар жапырақ пішіні (ShapeGeometry), instanced; глазурьлі керамика құмыра (LatheGeometry); 4 draw call |
+| Ойын үстелі, RGB жолақ, кресло | `src/scenes/DeskScene/models/GamingCorner.tsx`, `src/scenes/SetupStudio/Chair.tsx` | CC0 | материал бойынша біріктірілген |
+| Монитор кронштейні | `src/scenes/DeskScene/models/MonitorArm.tsx` | CC0 | мониторлардың өз тұғыры clipping plane-мен жасырылады |
+| Үстел шамы, LED жолақтар, жақтаулы плакаттар, кубок, кабель науасы | `src/scenes/DeskScene/models/Decor.tsx`, `Desk.tsx` | CC0 | плакаттар 768×1086 canvas |
+
 ### Тікелей ойындар (V2-11b, 2026-10-17)
 Жаңа ассет жоқ. QR — өз кодтауышымыз (`src/lib/qr`), иконалар — бар `lucide-react` (ISC). WebSocket тәуелділіксіз (`node:http`, `node:crypto`).
 
