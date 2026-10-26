@@ -65,7 +65,9 @@ const CHECK = `(() => {
     if (el.closest('[data-chrome="topbar"], [data-chrome="bit"], [data-overlay], [hidden]') || hosts.some((h) => h?.contains(el)) || !visible(el)) continue;
     const r = el.getBoundingClientRect();
     if (r.width < 8 || r.height < 8 || r.top < topbar + 1 || r.bottom > vh - 1 || r.left < 0 || r.right > vw) continue;
-    const pts = [[r.left + r.width / 2, r.top + r.height / 2], [r.left + 4, r.top + 4], [r.right - 4, r.top + 4], [r.left + 4, r.bottom - 4], [r.right - 4, r.bottom - 4]];
+    // centre and the four edge midpoints, inset past rounded corners (a pill's corners are not the button)
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2, ix = Math.min(r.height / 2, r.width / 2 - 1);
+    const pts = [[cx, cy], [r.left + ix, cy], [r.right - ix, cy], [cx, r.top + 3], [cx, r.bottom - 3]];
     for (const [x, y] of pts) {
       const top = document.elementsFromPoint(x, y)[0];
       if (!top || el.contains(top) || top.contains(el)) continue;
@@ -105,8 +107,8 @@ async function main() {
           await c.evaluate(`localStorage.setItem('vil3d:panel-folds', ${JSON.stringify(folds)}); localStorage.removeItem('vil3d:lab-layout')`);
           await c.navigate(SITE + p);
           await sleep(500);
-          // every page here is 3D: the scene ready and the loading screen gone
-          const ready = await c.waitFor('document.readyState === "complete" && !!window.__vil3d?.ready?.() && !document.querySelector("[data-visible=true]")', 120000).catch(() => false);
+          // every page here is 3D: a canvas up and the loading screen gone (it stays until the scene is ready)
+          const ready = await c.waitFor('document.readyState === "complete" && !!document.querySelector("canvas") && !document.querySelector("[data-visible=true]")', 120000).catch(() => false);
           if (!ready) console.log(`
   ${name} @ ${w}px: the scene did not finish loading`);
           if (step) {

@@ -555,3 +555,16 @@
 .panelHead > :first-child {
   flex: 1;
 }
+
+/* V4 §6: on narrow screens the part sheet sits above the device chips, not over them,
+   and the chips start right of the Bit button (bottom left) */
+@media (max-width: 959px) {
+  .itemList {
+    left: calc(var(--space-3) + 62px);
+  }
+
+  .panel {
+    bottom: calc(var(--space-3) + 60px);
+  }
+}
+
