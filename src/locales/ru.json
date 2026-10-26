@@ -59,7 +59,12 @@
       "posterBrand": "Открой компьютер в 3D",
       "posterBrandSub": "Собирай детали, строй сети, программируй — всё в одной лаборатории.",
       "posterBits": "Всё из битов и байтов",
-      "posterBitsSub": "Каждая картинка, песня и игра — цепочка нулей и единиц."
+      "posterBitsSub": "Каждая картинка, песня и игра — цепочка нулей и единиц.",
+      "presenterWhite": "Это белый сетап",
+      "presenterBlack": "Это чёрный сетап",
+      "presenterRgb": "Это RGB-сетап",
+      "presenterLine": "{look}: {gpu}, {ram} ГБ памяти, {cpu}.",
+      "presenterName": "Бит-ведущий"
     }
   },
   "labs": {

@@ -59,7 +59,12 @@
       "posterBrand": "Компьютерді 3D-де аш",
       "posterBrandSub": "Бөлшектерін жина, желі құр, бағдарламала — бәрі бір зертханада.",
       "posterBits": "Бәрі бит пен байттан",
-      "posterBitsSub": "Әр сурет, әр ән, әр ойын — нөл мен бірдің тізбегі."
+      "posterBitsSub": "Әр сурет, әр ән, әр ойын — нөл мен бірдің тізбегі.",
+      "presenterWhite": "Бұл — ақ сетап",
+      "presenterBlack": "Бұл — қара сетап",
+      "presenterRgb": "Бұл — RGB сетап",
+      "presenterLine": "{look}: {gpu}, {ram} ГБ жад, {cpu}.",
+      "presenterName": "Бит-жүргізуші"
     }
   },
   "labs": {

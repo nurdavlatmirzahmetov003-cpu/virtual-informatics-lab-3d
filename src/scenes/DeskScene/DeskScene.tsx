@@ -20,6 +20,7 @@ import { showcaseBuild } from '@/lib/studio/showcase';
 import { ExploreCamera } from './ExploreCamera';
 import { ShadowSync } from './ShadowSync';
 import { StoryCamera } from './StoryCamera';
+import { HeroCompanions } from './hero/HeroCompanions';
 import { LivingSetup } from './hero/LivingSetup';
 import { HERO_LOOKS } from './hero/looks';
 import { StoryDevices } from './hero/StoryDevices';
@@ -52,6 +53,7 @@ export default function DeskScene() {
       <Desk surface={HERO_LOOKS[look].desk} />
       <Decor />
       <LivingSetup onLook={setLook} />
+      <HeroCompanions look={look} />
       <StoryDevices>
         <DeskMat />
         <Monitor />

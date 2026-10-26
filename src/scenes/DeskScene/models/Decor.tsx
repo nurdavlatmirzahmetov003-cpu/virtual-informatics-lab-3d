@@ -15,7 +15,8 @@ import { BRAND } from '@/config/brand';
 import { canvasFontsReady, FONT_HERO } from '@/lib/fonts';
 import { roundedRectShape, roundedSlab } from '@/lib/three/geometry';
 import { mergeStatic } from '@/lib/three/mergeStatic';
-import { BACKDROP_ORDER, LAMP } from '../layout';
+import { BACKDROP_ORDER, DESK_PLANT, LAMP } from '../layout';
+import { Monstera } from './Plants';
 
 const WALL = -0.92;
 const LOGO_URL = `${import.meta.env.BASE_URL}${BRAND.logo}`;
@@ -235,7 +236,6 @@ function Pot({ radius, height, color }: { radius: number; height: number; color:
   );
 }
 
-const FLOOR_LEAVES: [number, number] = [0.45, 1.25];
 const SHELF_LEAVES: [number, number] = [-0.06, 0.12];
 const TRAIL_LEAVES: [number, number] = [-0.22, 0.08];
 
@@ -412,6 +412,7 @@ export function Decor() {
   // ~40 small meshes would cost as many draw calls a frame: one per material instead
   useLayoutEffect(() => (root.current ? mergeStatic(root.current) : undefined), []);
   return (
+    <>
     <group ref={root}>
       <Rug />
       <NeonSign />
@@ -446,17 +447,11 @@ export function Decor() {
         <meshStandardMaterial color="#5f7bff" roughness={0.35} metalness={0.1} />
       </mesh>
 
-      {/* tall floor plant on the right of the desk (the left is the headline's) */}
-      <group position={[1.25, 0, -0.55]}>
-        <Pot radius={0.15} height={0.34} color="#eeece6" />
-        <mesh position-y={0.62} castShadow>
-          <cylinderGeometry args={[0.012, 0.016, 0.6, 8]} />
-          <meshStandardMaterial color="#5b4a33" roughness={0.9} />
-        </mesh>
-        <Leaves count={26} seed={3} spread={0.32} height={FLOOR_LEAVES} size={0.17} droop={0.2} color="#3a7f4c" />
-      </group>
-
       <DeskLamp light={preset.areaLights} />
     </group>
+    {/* instanced plants stay out of the merged group: their own two draw calls each */}
+    <Monstera height={1.0} pot={[0.15, 0.32]} potColor="#eeece6" leaves={10} seed={3} position={[1.08, 0, -0.66]} yaw={0.4} />
+    <Monstera height={0.3} pot={[0.05, 0.085]} potColor="#d9dde6" leaves={7} seed={11} position={DESK_PLANT} yaw={-0.6} />
+    </>
   );
 }

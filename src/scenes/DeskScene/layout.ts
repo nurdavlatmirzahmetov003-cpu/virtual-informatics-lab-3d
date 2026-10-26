@@ -32,6 +32,13 @@ export const HEADSET = { position: [-0.74, DESK_TOP, 0.06], yaw: 0.5 } as const;
 /** Desk lamp at the back left corner; its arm reaches forward (+Z) over the desk. */
 export const LAMP = { position: [-0.8, DESK_TOP, -0.3], yaw: 0.75 } as const;
 
+/** The little monstera on the desk, front right, clear of the PC and the mouse (V4 §2.3). */
+export const DESK_PLANT = [0.78, DESK_TOP, 0.31] as const;
+/** Bit on the desk, front left, turned to the viewer; a 1 m kit robot shown at this scale. */
+export const DESK_BIT = { position: [-0.56, DESK_TOP, 0.24], yaw: -0.3, scale: 0.17 } as const;
+/** The presenter robot at the desk's front-left corner, half turned to the desk so its right arm points at it. */
+export const PRESENTER = { position: [-1.04, 0, 0.32], yaw: 0.45, scale: 0.8 } as const;
+
 /** Yaw (radians about +Y) that turns a model's +Z front from `position` towards the seat. */
 export function yawToSeat(position: readonly [number, number, number]) {
   return Math.atan2(SEAT.position[0] - position[0], SEAT.position[2] - position[2]);

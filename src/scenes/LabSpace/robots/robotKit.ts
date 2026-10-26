@@ -20,7 +20,7 @@ export const JOINT = '#2a3142';
 export const VISOR = '#070c18';
 export const TYRE = '#1b1e24';
 
-export type RobotKind = 'advisor' | 'cleaner' | 'courier' | 'builder' | 'presenter';
+export type RobotKind = 'advisor' | 'cleaner' | 'courier' | 'builder' | 'presenter' | 'bit';
 
 export interface RobotLogo {
   at: Vec3;
@@ -223,6 +223,31 @@ function presenter(): RobotGeometry {
   };
 }
 
+/**
+ * Bit as a desk figure (V4 §2.3): a round body in the accent colour, a big
+ * friendly head, stubby feet, the left arm down and the right arm free to
+ * wave. Built about 1 m tall in kit units; the home desk shows it scaled down.
+ */
+function bit(): RobotGeometry {
+  const head = headPieces(0.44, 0.34, [0, 0, 0]);
+  return {
+    solid: mergePieces(
+      [
+        ...[-1, 1].map((s) => ({ geo: new SphereGeometry(0.075, 16, 10), at: [s * 0.1, 0.045, 0.03] as Vec3, scale: [1, 0.6, 1.35] as Vec3, color: JOINT })),
+        { geo: new CylinderGeometry(0.05, 0.065, 0.09, 14), at: [0, 0.6, 0], color: JOINT },
+        ...armPieces(0.15, [{ at: [-0.21, 0.48, 0], rot: [0, 0, -0.3] }]),
+      ],
+      true,
+    ),
+    accent: mergePieces([{ geo: new SphereGeometry(0.21, 28, 20), at: [0, 0.34, 0], scale: [1, 1.1, 0.9] }]),
+    glow: mergePieces([{ geo: new TorusGeometry(0.075, 0.008, 6, 28), at: [0, 0.34, 0.186] }]),
+    head: { geo: mergePieces(head.solid, true), glow: mergePieces(head.glow), pivot: [0, 0.82, 0] },
+    arm: { geo: mergePieces(armPieces(0.15), true), pivot: [0.21, 0.48, 0] },
+    logo: { at: [0, 0.34, 0.19], size: 0.1 },
+    height: 1.08,
+  };
+}
+
 export function robotGeometry(kind: RobotKind): RobotGeometry {
   switch (kind) {
     case 'advisor':
@@ -235,6 +260,8 @@ export function robotGeometry(kind: RobotKind): RobotGeometry {
       return builder();
     case 'presenter':
       return presenter();
+    case 'bit':
+      return bit();
   }
 }
 

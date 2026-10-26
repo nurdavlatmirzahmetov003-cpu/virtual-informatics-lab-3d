@@ -27,13 +27,15 @@ export interface RobotProps {
   position?: readonly [number, number, number];
   yaw?: number;
   animate?: (parts: RobotParts, time: number, delta: number) => void;
+  /** With reduced motion, `animate` still runs, frozen at this time (a still pose instead of none). */
+  stillAt?: number;
   speaking?: () => boolean;
   onClick?: (e: ThreeEvent<MouseEvent>) => void;
   children?: ReactNode;
   name?: string;
 }
 
-export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent, glow = '#38d6f5', position, yaw = 0, animate, speaking, onClick, children, name }, ref) {
+export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent, glow = '#38d6f5', position, yaw = 0, animate, stillAt, speaking, onClick, children, name }, ref) {
   const geo = useMemo(() => robotGeometry(kind), [kind]);
   // shell and accent in one draw call (the accent never changes on these robots)
   const body = useMemo(() => withAccent(geo.solid, geo.accent, accent), [geo, accent]);
@@ -57,6 +59,7 @@ export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent
     const r = root.current;
     if (!r) return;
     if (!reduced) animate?.({ root: r, arm: arm.current, head: head.current, geo }, clock.elapsedTime, Math.min(delta, 0.1));
+    else if (stillAt !== undefined) animate?.({ root: r, arm: arm.current, head: head.current, geo }, stillAt, 0);
     // a talking robot nods a little with Bit's voice
     if (head.current && speaking?.()) head.current.rotation.x = Math.min(0.12, bitVoice.level() * 0.25);
   });

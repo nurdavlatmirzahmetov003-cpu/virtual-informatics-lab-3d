@@ -59,7 +59,12 @@
       "posterBrand": "Open the computer in 3D",
       "posterBrandSub": "Build parts, wire networks, write code — all in one lab.",
       "posterBits": "It's all bits and bytes",
-      "posterBitsSub": "Every picture, song and game is a chain of zeros and ones."
+      "posterBitsSub": "Every picture, song and game is a chain of zeros and ones.",
+      "presenterWhite": "This is the white setup",
+      "presenterBlack": "This is the black setup",
+      "presenterRgb": "This is the RGB setup",
+      "presenterLine": "{look}: {gpu}, {ram} GB of memory, {cpu}.",
+      "presenterName": "Bit the presenter"
     }
   },
   "labs": {
