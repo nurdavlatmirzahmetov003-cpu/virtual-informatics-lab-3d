@@ -123,13 +123,6 @@
 
 /* ------------------------------------------------------------ layout */
 
-.lab {
-  display: grid;
-  grid-template-columns: 176px minmax(0, 1fr) 350px;
-  gap: var(--space-4);
-  align-items: start;
-}
-
 .stage {
   display: grid;
   gap: var(--space-3);
@@ -137,13 +130,8 @@
 }
 
 .side {
-  position: sticky;
-  top: calc(var(--topbar-h) + var(--space-3));
   display: grid;
   gap: var(--space-3);
-  max-height: calc(100dvh - var(--topbar-h) - var(--space-5));
-  overflow-y: auto;
-  overscroll-behavior: contain;
 }
 
 .hint,
@@ -166,21 +154,11 @@
 /* ------------------------------------------------------------ palette */
 
 .palette {
-  position: sticky;
-  top: calc(var(--topbar-h) + var(--space-3));
   display: grid;
   gap: var(--space-3);
-  padding: var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
 }
 
-.palette h2 {
-  font-size: var(--fs-sm);
-}
-
-.palette header p {
+.paletteHint {
   font-size: var(--fs-xs);
   color: var(--text-dim);
 }
@@ -950,15 +928,8 @@
 
 /* ------------------------------------------------------------ responsive */
 
-@media (max-width: 1280px) {
-  .lab {
-    grid-template-columns: 160px minmax(0, 1fr);
-  }
-
+@media (max-width: 1279px) and (min-width: 900px) {
   .side {
-    grid-column: 1 / -1;
-    position: static;
-    max-height: none;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     align-items: start;
   }
@@ -969,14 +940,6 @@
     grid-template-columns: repeat(5, minmax(170px, 1fr));
     overflow-x: auto;
     padding-bottom: 4px;
-  }
-
-  .lab {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .palette {
-    position: static;
   }
 
   .palette ul {

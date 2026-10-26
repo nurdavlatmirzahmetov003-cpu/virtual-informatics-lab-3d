@@ -5,8 +5,9 @@
  * with elementsFromPoint — a block whose points are covered by something
  * outside its own element tree is an overlap (the site's top bar and the
  * floating Bit button, marked data-chrome, are expected to float over the
- * page and do not count). A text block cut by its box (overflow or an
- * ellipsis) is clipped text.
+ * page and do not count, nor do labels pinned in a 3D scene, marked
+ * data-overlay). A text block cut by its box (overflow or an ellipsis) is
+ * clipped text.
  *
  *   npm run test:lab-overlap                 # needs the dev site on :5173 (npm run dev)
  *   npm run test:lab-overlap -- network      # only the labs whose path contains "network"
@@ -46,6 +47,10 @@ export const LAB_PAGES = [
 
 /** Runs in the page: overlaps and clipped text in the current viewport. */
 const CHECK = `(() => {
+  // hit-testing skips pointer-events: none — switch it on everywhere so the paint order decides
+  const pe = document.createElement('style');
+  pe.textContent = '* { pointer-events: auto !important }';
+  document.head.append(pe);
   const vw = innerWidth, vh = innerHeight;
   const chrome = (el) => !!el.closest('[data-chrome]');
   const visible = (el) => {
@@ -84,6 +89,9 @@ const CHECK = `(() => {
   };
   for (const el of blocks) {
     if (!visible(el)) continue;
+    // screen-reader-only text: a 1 px clipped box on purpose
+    const box = el.getBoundingClientRect();
+    if (box.width <= 2 || box.height <= 2) continue;
     // the content of a closed <details> has boxes but is not shown
     if (el.closest('details:not([open])') && !el.closest('summary')) continue;
     const clip = clipOf(el);
@@ -123,6 +131,7 @@ const CHECK = `(() => {
       break;
     }
   }
+  pe.remove();
   return JSON.stringify(out);
 })()`;
 
@@ -147,6 +156,8 @@ async function main() {
       for (const p of pages) {
         await c.navigate(SITE + p);
         await c.waitFor('document.readyState === "complete" && !!document.querySelector("main h1")', 30000).catch(() => {});
+        // a lab with a 3D scene: its loading screen first has to go
+        await c.waitFor('!document.querySelector("canvas") || !!window.__vil3d?.ready?.()', 60000).catch(() => {});
         await sleep(1800);
         const total = await c.evaluate('document.documentElement.scrollHeight');
         const found = { overlaps: new Set(), clipped: new Set() };

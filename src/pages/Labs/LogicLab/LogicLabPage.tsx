@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { CircleCheck, Info, X } from 'lucide-react';
+import { CircleCheck, ClipboardList, Cpu, Info, TriangleAlert, X } from 'lucide-react';
+import { LabLayout } from '@/components/lab/LabLayout';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
@@ -38,8 +39,20 @@ function Lab({ mode }: { mode: Mode }) {
   }, [notice, actions]);
 
   return (
-    <div className={styles.lab}>
-      <Palette circuit={circuit} allowed={exercise?.allowed ?? GATE_TYPES} actions={actions} svgRef={svgRef} />
+    <LabLayout
+      id="logic"
+      palette={{ title: t('logic.ui.palette'), icon: <Cpu size={16} aria-hidden="true" />, content: <Palette circuit={circuit} allowed={exercise?.allowed ?? GATE_TYPES} actions={actions} svgRef={svgRef} /> }}
+      panel={{
+        title: task ? t(tk(`logic.tasks.${task}.title`)) : t('logic.ui.warnings'),
+        icon: task ? <ClipboardList size={16} aria-hidden="true" /> : <TriangleAlert size={16} aria-hidden="true" />,
+        content: (
+          <div className={styles.side}>
+            {exercise && attempt && <TaskPanel task={exercise} attempt={attempt} report={report} actions={actions} />}
+            <Warnings issues={issues} formula={formula} />
+          </div>
+        ),
+      }}
+    >
       <div className={styles.stage}>
         {exercise && exercise.allowed.length < GATE_TYPES.length && <p className={styles.restriction}>{t('logic.ui.onlyAllowed', { gates: exercise.allowed.join(', ') })}</p>}
         <div className={styles.boardWrap}>
@@ -58,11 +71,7 @@ function Lab({ mode }: { mode: Mode }) {
         <TruthTable circuit={circuit} labels={labels} bits={bits} task={exercise} onPick={actions.setBits} />
         <p className={styles.footnote}>{t('logic.ui.note')}</p>
       </div>
-      <aside className={styles.side}>
-        {exercise && attempt && <TaskPanel task={exercise} attempt={attempt} report={report} actions={actions} />}
-        <Warnings issues={issues} formula={formula} />
-      </aside>
-    </div>
+    </LabLayout>
   );
 }
 

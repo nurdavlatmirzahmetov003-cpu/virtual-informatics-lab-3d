@@ -63,11 +63,9 @@ export function Palette({ circuit, allowed, actions, svgRef }: { circuit: Circui
   const dragging = ghost && Math.hypot(ghost.x - ghost.startX, ghost.y - ghost.startY) > 6;
 
   return (
-    <aside className={styles.palette} aria-label={t('logic.ui.palette')}>
-      <header>
-        <h2>{t('logic.ui.palette')}</h2>
-        <p>{full ? t('logic.ui.paletteFull', { max: MAX_GATES }) : t('logic.ui.paletteHint')}</p>
-      </header>
+    // the frame, title and folding come from LabLayout (V4 §5.1)
+    <div className={styles.palette}>
+      <p className={styles.paletteHint}>{full ? t('logic.ui.paletteFull', { max: MAX_GATES }) : t('logic.ui.paletteHint')}</p>
       <ul>
         {allowed.map((gate) => (
           <li key={gate}>
@@ -103,6 +101,6 @@ export function Palette({ circuit, allowed, actions, svgRef }: { circuit: Circui
           </div>,
           document.body,
         )}
-    </aside>
+    </div>
   );
 }

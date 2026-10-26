@@ -98,12 +98,20 @@ export default function Latency() {
         <Stat label={t('experiments.latency.rtt')} value={fmt(r.rttMs, 0)} unit="ms" tone={r.rttMs < 30 ? 'ok' : r.rttMs < 100 ? 'warn' : 'bad'} />
         <Stat label={t('experiments.latency.hops')} value={r.hops} />
       </div>
-      <div className={styles.stack} aria-label={t('experiments.latency.breakdown')}>
-        {parts.map((x) => (
-          <span key={x.id} data-part={x.id} style={{ flexGrow: Math.max(x.ms, 0.4) }}>
-            {t(`experiments.latency.parts.${x.id}`)} · {fmt(x.ms, 1)} ms
-          </span>
-        ))}
+      {/* the bar shows the proportions, the legend under it the full names and times (no label is ever cut) */}
+      <div className={styles.stackWrap} aria-label={t('experiments.latency.breakdown')}>
+        <div className={styles.stack} aria-hidden="true">
+          {parts.map((x) => (
+            <span key={x.id} data-part={x.id} style={{ flexGrow: Math.max(x.ms, 0.4) }} />
+          ))}
+        </div>
+        <ul className={styles.stackLegend}>
+          {parts.map((x) => (
+            <li key={x.id} data-part={x.id}>
+              {t(`experiments.latency.parts.${x.id}`)} · <b>{fmt(x.ms, 1)} ms</b>
+            </li>
+          ))}
+        </ul>
       </div>
     </ExperimentFrame>
   );
