@@ -50,6 +50,7 @@
     "test:orientation": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/orientation.test.mjs",
     "test:hero-scene": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/hero-scene.test.mjs",
     "models:sides": "node scripts/model-sides.mjs",
+    "test:lab-overlap": "node --experimental-strip-types --import ./scripts/test-resolve.mjs scripts/lab-overlap.mjs",
     "test:pc-fit": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/pc-fit.test.mjs",
     "test:hero": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/hero.test.mjs",
     "test:bit": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/bit.test.mjs",

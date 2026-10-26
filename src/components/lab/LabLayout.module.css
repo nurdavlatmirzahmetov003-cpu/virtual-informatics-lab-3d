@@ -1,0 +1,283 @@
+/* V4 §5.1: palette | workspace | task panel — see LabLayout.tsx */
+
+.layout {
+  --palette-w: 210px;
+  --panel-w: 360px;
+  --tab-w: 46px;
+  --sticky-top: calc(var(--topbar-h) + var(--space-3));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--panel-w);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.layout[data-panel='closed'] {
+  grid-template-columns: minmax(0, 1fr) var(--tab-w);
+}
+
+.layout[data-panel='none'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* palette and workspace: a row of their own, so a sticky palette stops at its end */
+.row {
+  display: grid;
+  grid-template-columns: var(--palette-w) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+  min-width: 0;
+}
+
+.layout[data-palette='closed'] .row {
+  grid-template-columns: var(--tab-w) minmax(0, 1fr);
+}
+
+.layout[data-palette='none'] .row {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.work {
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------------- regions */
+
+.palette,
+.panel {
+  position: sticky;
+  top: var(--sticky-top);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  max-height: calc(100dvh - var(--sticky-top) - var(--space-4));
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.regionHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.regionHead h2 {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.regionHead small {
+  max-width: 40%;
+  color: var(--text-dim);
+  font-size: var(--fs-xs);
+  overflow-wrap: anywhere;
+}
+
+.regionIcon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  color: var(--accent, var(--primary));
+}
+
+/* long content scrolls inside its region */
+.regionBody {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-3);
+}
+
+.fold {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.fold:hover,
+.fold:focus-visible {
+  color: var(--text);
+  border-color: var(--primary);
+}
+
+/* a folded region: a slim tab on its edge, its name written down the side */
+.edgeTab {
+  position: sticky;
+  top: var(--sticky-top);
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--space-2);
+  width: var(--tab-w);
+  min-height: 160px;
+  padding: var(--space-3) 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.edgeTab:hover,
+.edgeTab:focus-visible {
+  border-color: var(--primary);
+}
+
+.edgeLabel {
+  writing-mode: vertical-rl;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.edgeTab[data-edge='left'] .edgeLabel {
+  transform: rotate(180deg);
+}
+
+/* ---------------------------------------------------------------- middle: panel under the row */
+
+@media (max-width: 1279px) {
+  .layout,
+  .layout[data-panel='closed'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .layout {
+    --palette-w: 180px;
+  }
+
+  .panel {
+    position: static;
+    max-height: none;
+  }
+
+  .panel .regionBody {
+    overflow: visible;
+  }
+
+  /* folded under the row: a full-width bar, not a side tab */
+  .edgeTab[data-edge='right'] {
+    position: static;
+    grid-auto-flow: column;
+    justify-content: start;
+    width: 100%;
+    min-height: 0;
+    padding: var(--space-3);
+  }
+
+  .edgeTab[data-edge='right'] .edgeLabel {
+    writing-mode: horizontal-tb;
+  }
+}
+
+/* ---------------------------------------------------------------- narrow: strip and bottom sheet */
+
+@media (max-width: 899px) {
+  .row,
+  .layout[data-palette='closed'] .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .palette {
+    position: static;
+    max-height: none;
+  }
+
+  .palette .regionBody {
+    overflow: visible;
+  }
+
+  .edgeTab[data-edge='left'] {
+    position: static;
+    grid-auto-flow: column;
+    justify-content: start;
+    width: 100%;
+    min-height: 0;
+    padding: var(--space-3);
+  }
+
+  .edgeTab[data-edge='left'] .edgeLabel {
+    writing-mode: horizontal-tb;
+    transform: none;
+  }
+}
+
+.sheetSpacer {
+  height: 72px;
+}
+
+.sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 40;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  max-height: 72dvh;
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  background: var(--surface);
+  box-shadow: 0 -12px 32px rgba(15, 23, 42, 0.18);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.sheetHead {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 56px;
+  padding: var(--space-3) var(--space-4) var(--space-3) 84px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sheetHead b {
+  flex: 1;
+  min-width: 0;
+}
+
+.sheetHead small {
+  color: var(--text-dim);
+  font-size: var(--fs-xs);
+}
+
+.sheetGrip {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 40px;
+  height: 4px;
+  margin-left: -20px;
+  border-radius: 2px;
+  background: var(--border);
+}
+
+.sheetBody {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sheet {
+    transition: box-shadow 0.2s;
+  }
+}

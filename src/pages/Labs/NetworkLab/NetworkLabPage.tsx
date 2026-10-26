@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { CircleCheck, Info, Settings2, ClipboardList, X } from 'lucide-react';
+import { Boxes, CircleCheck, Info, Settings2, ClipboardList, X } from 'lucide-react';
+import { LabLayout } from '@/components/lab/LabLayout';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
@@ -68,10 +69,34 @@ function Lab({ mode }: { mode: Mode }) {
 
   const selectedName = selection?.kind === 'device' ? deviceById(network, selection.id)?.name : undefined;
 
-  return (
-    <div className={styles.lab}>
-      <Palette network={network} actions={wired} svgRef={svgRef} />
+  const sideContent = exercise && attempt ? (
+    <div className={styles.side}>
+      <div className={styles.sideTabs} role="tablist">
+        <button type="button" role="tab" aria-selected={side === 'task'} onClick={() => setSide('task')}>
+          <ClipboardList size={15} aria-hidden="true" /> {t('network.task.label')}
+        </button>
+        <button type="button" role="tab" aria-selected={side === 'config'} onClick={() => setSide('config')}>
+          <Settings2 size={15} aria-hidden="true" /> {t('network.config.title')}
+          {selectedName && <small>{selectedName}</small>}
+        </button>
+      </div>
+      <div role="tabpanel" className={styles.sideBody}>
+        {side === 'task' ? <TaskPanel task={exercise} attempt={attempt} report={report} actions={actions} /> : <ConfigPanel network={network} selection={selection} actions={wired} />}
+      </div>
+    </div>
+  ) : (
+    <div className={styles.side}>
+      <p className={styles.note}>{t('network.mode.freeDesc')}</p>
+      <ConfigPanel network={network} selection={selection} actions={wired} />
+    </div>
+  );
 
+  return (
+    <LabLayout
+      id="network"
+      palette={{ title: t('network.palette.title'), icon: <Boxes size={16} aria-hidden="true" />, content: <Palette network={network} actions={wired} svgRef={svgRef} /> }}
+      panel={{ title: task ? t(tk(`network.tasks.${task}.title`)) : t('network.config.title'), icon: exercise ? <ClipboardList size={16} aria-hidden="true" /> : <Settings2 size={16} aria-hidden="true" />, badge: selectedName, content: sideContent }}
+    >
       <div className={styles.stage}>
         {notice && (
           <p className={styles.notice} role="alert">
@@ -95,31 +120,7 @@ function Lab({ mode }: { mode: Mode }) {
         />
         <p className={styles.footnote}>{t('network.note')}</p>
       </div>
-
-      <aside className={styles.side}>
-        {exercise && attempt ? (
-          <>
-            <div className={styles.sideTabs} role="tablist">
-              <button type="button" role="tab" aria-selected={side === 'task'} onClick={() => setSide('task')}>
-                <ClipboardList size={15} aria-hidden="true" /> {t('network.task.label')}
-              </button>
-              <button type="button" role="tab" aria-selected={side === 'config'} onClick={() => setSide('config')}>
-                <Settings2 size={15} aria-hidden="true" /> {t('network.config.title')}
-                {selectedName && <small>{selectedName}</small>}
-              </button>
-            </div>
-            <div role="tabpanel" className={styles.sideBody}>
-              {side === 'task' ? <TaskPanel task={exercise} attempt={attempt} report={report} actions={actions} /> : <ConfigPanel network={network} selection={selection} actions={wired} />}
-            </div>
-          </>
-        ) : (
-          <div className={styles.sideBody}>
-            <p className={styles.note}>{t('network.mode.freeDesc')}</p>
-            <ConfigPanel network={network} selection={selection} actions={wired} />
-          </div>
-        )}
-      </aside>
-    </div>
+    </LabLayout>
   );
 }
 

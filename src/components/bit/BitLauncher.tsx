@@ -98,6 +98,7 @@ export function BitLauncher() {
       {!open && (
         <div
           className={styles.dock}
+          data-chrome="bit"
           data-side={dock.side}
           data-low={dock.y > 0.5 || undefined}
           data-dragging={drag ? true : undefined}

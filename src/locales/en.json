@@ -7829,5 +7829,9 @@
       "network": "What is a computer network?",
       "safety": "How do I stay safe online?"
     }
+  },
+  "labLayout": {
+    "hide": "Hide the {name} panel",
+    "show": "Open the {name} panel"
   }
 }

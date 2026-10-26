@@ -23,7 +23,7 @@ const NAV: ReadonlyArray<{ to: string; label: TranslationKey; end?: boolean }> =
 export function TopBar() {
   const t = useT();
   return (
-    <header className={styles.root}>
+    <header className={styles.root} data-chrome="topbar">
       <NavLink to="/" className={styles.brand} aria-label={t('app.title')}>
         <BrandMark size={32} className={styles.mark} />
         <span className={styles.brandText}>
