@@ -674,3 +674,10 @@
   right: var(--space-3);
   z-index: 2;
 }
+
+/* phones: the top bar adds a second row (its links) over the stage — the tab goes below it */
+@media (max-width: 720px) {
+  .sideTab {
+    top: calc(52px + var(--space-2));
+  }
+}
