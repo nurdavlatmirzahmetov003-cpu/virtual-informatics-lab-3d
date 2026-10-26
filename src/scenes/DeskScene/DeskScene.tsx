@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { EnvironmentLighting } from '@/components/3d/EnvironmentLighting';
+import { useVividGrade } from '@/lib/three/grade';
 import { sceneFocus } from '@/lib/three/sceneFocus';
 import { Desk } from './models/Desk';
 import { DeskMat } from './models/DeskMat';
@@ -32,6 +33,7 @@ const HDRI = `${import.meta.env.BASE_URL}assets/hdr/studio_small_09_1k.hdr`;
 export default function DeskScene() {
   const exploring = usePcStore((s) => s.mode === 'explore');
   const [look, setLook] = useState(0);
+  useVividGrade();
 
   useEffect(() => {
     sceneFocus.enabled = true;
@@ -42,7 +44,7 @@ export default function DeskScene() {
 
   return (
     <>
-      <EnvironmentLighting hdri={HDRI} environmentIntensity={0.55} intensity={1} shadowExtent={1.25} fog={[3.5, 11]} />
+      <EnvironmentLighting hdri={HDRI} environmentIntensity={0.55} intensity={1} shadowExtent={1.25} shadowSoftness={4} fog={[3.5, 11]} />
       <StoryCamera />
       {exploring && <ExploreCamera />}
       <ShadowSync />
