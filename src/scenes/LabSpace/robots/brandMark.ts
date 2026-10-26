@@ -1,13 +1,13 @@
 import { CanvasTexture, SRGBColorSpace } from 'three';
 
 let logoTexture: CanvasTexture | null = null;
-/** The BitLab mark (components/brand/BrandMark.tsx) on a shared 256 px canvas: one texture for every robot. */
+/** The BitLab mark (components/brand/BrandMark.tsx) on a shared 512 px canvas (crisp on a shirt close up): one texture for every robot. */
 export function brandMarkTexture() {
   if (logoTexture) return logoTexture;
   const c = document.createElement('canvas');
-  c.width = c.height = 256;
+  c.width = c.height = 512;
   const ctx = c.getContext('2d')!;
-  ctx.scale(4, 4);
+  ctx.scale(8, 8);
   const g = ctx.createLinearGradient(6, 4, 60, 62);
   g.addColorStop(0, '#2fc8f2');
   g.addColorStop(0.55, '#5f7bff');
@@ -35,6 +35,6 @@ export function brandMarkTexture() {
   ctx.fill();
   logoTexture = new CanvasTexture(c);
   logoTexture.colorSpace = SRGBColorSpace;
-  logoTexture.anisotropy = 4;
+  logoTexture.anisotropy = 8;
   return logoTexture;
 }

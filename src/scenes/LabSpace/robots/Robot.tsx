@@ -36,12 +36,12 @@ export interface RobotProps {
 }
 
 export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent, glow = '#38d6f5', position, yaw = 0, animate, stillAt, speaking, onClick, children, name }, ref) {
-  const geo = useMemo(() => robotGeometry(kind), [kind]);
+  const geo = useMemo(() => robotGeometry(kind, accent), [kind, accent]);
   // shell and accent in one draw call (the accent never changes on these robots)
   const body = useMemo(() => withAccent(geo.solid, geo.accent, accent), [geo, accent]);
   useEffect(
     () => () => {
-      for (const g of [geo.solid, geo.accent, geo.glow, geo.arm?.geo, geo.head?.geo, geo.head?.glow]) g?.dispose();
+      for (const g of [geo.solid, geo.accent, geo.glow, geo.arm?.geo, geo.head?.geo, geo.head?.glow, geo.logo.geo]) g?.dispose();
     },
     [geo],
   );
@@ -83,10 +83,17 @@ export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent
       <mesh geometry={geo.glow}>
         <meshBasicMaterial color={glowColor} toneMapped={false} />
       </mesh>
-      <mesh position={[...geo.logo.at]} rotation={geo.logo.rot ? [...geo.logo.rot] : undefined}>
-        <planeGeometry args={[geo.logo.size, geo.logo.size]} />
-        <meshBasicMaterial map={logo} transparent toneMapped={false} />
-      </mesh>
+      {geo.logo.geo ? (
+        // printed on the shirt: a patch of the chest's own surface
+        <mesh geometry={geo.logo.geo} position={[...geo.logo.at]} scale={geo.logo.scale ? [...geo.logo.scale] : undefined}>
+          <meshBasicMaterial map={logo} transparent alphaTest={0.05} toneMapped={false} />
+        </mesh>
+      ) : (
+        <mesh position={[...geo.logo.at]} rotation={geo.logo.rot ? [...geo.logo.rot] : undefined}>
+          <planeGeometry args={[geo.logo.size, geo.logo.size]} />
+          <meshBasicMaterial map={logo} transparent toneMapped={false} />
+        </mesh>
+      )}
       {geo.arm && (
         <group ref={arm} position={[...geo.arm.pivot]}>
           <mesh geometry={geo.arm.geo} castShadow>
