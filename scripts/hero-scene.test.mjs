@@ -75,20 +75,17 @@ for (const look of HERO_LOOKS) {
   });
 }
 
-test('the presenter stands behind the desk, clear of it, the wall and the shelf above', () => {
+test("the presenter stands beside the desk's left front corner, clear of the desk, the lamp and the headset", () => {
   const s = PRESENTER.scale;
   const [x, , z] = PRESENTER.position;
-  // presenter body: a capsule of radius 0.2 (depth squashed to 0.78) — robots/robotKit.ts
-  const back = z - 0.2 * 0.78 * s;
-  const front = z + 0.2 * 0.78 * s;
-  assert.ok(front <= -DESK.depth / 2 - 0.02, `the presenter's front is ${((front + DESK.depth / 2) * 100).toFixed(1)} cm into the desk`);
-  const slats = -0.95 + 0.012 + 0.018;
-  assert.ok(back >= slats + 0.02, 'the presenter backs into the slat wall');
-  // its head (0.3 wide, 0.78 deep) stays in front of the left shelf (front edge at z −0.74, 1.427 m up)
-  const headBack = z - 0.3 * 0.78 * 0.5 * s;
-  const headTop = (1.3 + 0.12) * s;
-  assert.ok(headBack > -0.74 || headTop < 1.427, 'the presenter\'s head is in the shelf');
-  assert.ok(Math.abs(x) < 0.9, 'the presenter stands within the desk\'s width');
+  // presenter body: a sphere of radius 0.2 scaled [1, 1.2, 0.86], arms reach 0.3 out (robots/robotKit.ts)
+  const reach = 0.3 * s;
+  assert.ok(x + reach <= -DESK.width / 2 - 0.02, `its right side is ${((x + reach + DESK.width / 2) * 100).toFixed(1)} cm into the desk`);
+  assert.ok(Math.abs(z) <= DESK.depth / 2 + 0.2, 'beside the desk, not in front of it');
+  assert.ok(z > 0, 'at the front half of the desk');
+  assert.ok(Math.hypot(x - LAMP.position[0], z - LAMP.position[2]) > reach + 0.1, 'clear of the lamp');
+  assert.ok(Math.hypot(x - HEADSET.position[0], z - HEADSET.position[2]) > reach + 0.1, 'clear of the headset stand');
+  assert.ok(PRESENTER.yaw > 0, 'half turned to the desk');
 });
 
 test('the gaming corner stands right of the main desk with room between them', () => {
