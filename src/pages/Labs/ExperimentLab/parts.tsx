@@ -1,3 +1,4 @@
+import { LabLayout } from '@/components/lab/LabLayout';
 import { useId, type ReactNode } from 'react';
 import { Info, Lightbulb, Target } from 'lucide-react';
 import { useT } from '@/hooks/useT';
@@ -138,29 +139,39 @@ export function ExperimentFrame({ id, children, conclusion, questions, exercise 
 }) {
   const t = useT();
   return (
-    <article className={styles.frame}>
-      <section className={styles.intro}>
-        <Target size={18} aria-hidden="true" />
-        <div>
-          <h2>{t('experiments.ui.what')}</h2>
-          <p>{t(tk(`experiments.${id}.intro`))}</p>
-        </div>
-      </section>
-
-      <section className={styles.lab}>{children}</section>
-
-      <section className={styles.conclusion} aria-live="polite">
+    // V4 §6: the experiment in the workspace, what it shows and the questions in the shared lab panel
+    <LabLayout
+      id="experiments"
+      panel={{
+        title: t('panels.expSide'),
+        icon: <Lightbulb size={16} aria-hidden="true" />,
+        content: (
+          <div className={styles.frame}>
+            <section className={styles.conclusion} aria-live="polite">
         <Lightbulb size={18} aria-hidden="true" />
         <div>
-          <h2>{t('experiments.ui.observed')}</h2>
-          <p>{t(tk(conclusion.key), conclusion.params)}</p>
-        </div>
-      </section>
-      <p className={styles.simNote}>
-        <Info size={14} aria-hidden="true" /> {t('experiments.ui.simNote')}
-      </p>
-
-      <Quiz experiment={id} questions={questions} exercise={exercise} />
-    </article>
+                <h2>{t('experiments.ui.observed')}</h2>
+                <p>{t(tk(conclusion.key), conclusion.params)}</p>
+              </div>
+            </section>
+            <Quiz experiment={id} questions={questions} exercise={exercise} />
+          </div>
+        ),
+      }}
+    >
+      <article className={styles.frame}>
+        <section className={styles.intro}>
+          <Target size={18} aria-hidden="true" />
+          <div>
+            <h2>{t('experiments.ui.what')}</h2>
+            <p>{t(tk(`experiments.${id}.intro`))}</p>
+          </div>
+        </section>
+        <section className={styles.lab}>{children}</section>
+        <p className={styles.simNote}>
+          <Info size={14} aria-hidden="true" /> {t('experiments.ui.simNote')}
+        </p>
+      </article>
+    </LabLayout>
   );
 }
