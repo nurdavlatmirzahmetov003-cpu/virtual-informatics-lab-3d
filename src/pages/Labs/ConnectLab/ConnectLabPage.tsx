@@ -3,6 +3,7 @@
  * the laptop by Ethernet (DHCP), join Wi-Fi securely. The 3D stage on the
  * left; the task, cables, messages, DHCP / Wi-Fi panels and grading on the right.
  */
+import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, CheckCircle2, Lightbulb, Lock, LockOpen, RotateCcw, ShieldAlert, Wifi, XCircle } from 'lucide-react';
@@ -245,6 +246,26 @@ export default function ConnectLabPage() {
   const exercises = useProgressStore((s) => s.exercises);
   const names = usePortNames();
 
+  // V4 §5.3: the first task, plugged in cable by cable through the lab's own store
+  const connectDemo = (): DemoStep[] => {
+    const portOf = (owner: string, kind: string, nth = 0) => PC_SCENARIO.ports.filter((p) => p.owner === owner && p.kind === kind)[nth]?.id ?? '';
+    const plug = useConnectLabStore.getState().plug;
+    const canvas = () => document.querySelector('canvas');
+    return [
+      { say: t('labGuide.connect.s1'), target: canvas },
+      { say: t('labGuide.connect.s2'), target: canvas, run: () => plug('monitor', portOf('gpu', 'hdmi')) },
+      {
+        say: t('labGuide.connect.s3'),
+        run: () => {
+          plug('keyboard', portOf('motherboard', 'usb_a', 0));
+          window.setTimeout(() => useConnectLabStore.getState().plug('mouse', portOf('motherboard', 'usb_a', 1)), 600);
+        },
+      },
+      { say: t('labGuide.connect.s4'), run: () => plug('speakers', portOf('motherboard', 'audio_3_5')) },
+      { say: t('labGuide.connect.s5'), run: () => plug('power', portOf('psu', 'power_ac')), hold: 2200 },
+    ];
+  };
+
   const requested = params.get('task');
   useEffect(() => {
     setTask(isTask(requested) ? requested : 'pc');
@@ -293,6 +314,7 @@ export default function ConnectLabPage() {
           ))}
         </div>
 
+        <TaskGuide id={`connect:${task}`} title={title} text={t(key(`connect.tasks.${task}.instructions`))} demo={task === 'pc' ? connectDemo : undefined} onDemoEnd={reset} />
         <section className={styles.taskCard}>
           <h2>{title}</h2>
           <p>{t(key(`connect.tasks.${task}.instructions`))}</p>

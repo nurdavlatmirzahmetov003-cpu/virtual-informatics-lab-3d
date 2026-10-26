@@ -23,7 +23,7 @@ export function Slider({ label, value, min, max, step = 1, unit, onChange, forma
   const id = useId();
   const shown = format ? format(value) : String(value);
   return (
-    <div className={styles.slider}>
+    <div className={styles.slider} data-guide="slider">
       <label htmlFor={id}>
         <span>{label}</span>
         <b>
@@ -53,7 +53,7 @@ export function Segmented<T extends string | number>({ label, options, value, on
   onChange: (v: T) => void;
 }) {
   return (
-    <div className={styles.segmented} role="radiogroup" aria-label={label}>
+    <div className={styles.segmented} role="radiogroup" aria-label={label} data-guide="segmented">
       <span>{label}</span>
       <div>
         {options.map((o) => (

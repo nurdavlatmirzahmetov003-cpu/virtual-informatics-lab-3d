@@ -2,6 +2,8 @@
  * Cause & Effect Lab (V2-7): build a PC, power it on and watch what a
  * missing or wrong part does; in the task, find and fix a broken PC.
  */
+import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
+import { guideEl, pressGuide } from '@/components/lab/guideDom';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Flame, Info, Lightbulb, Play, Power, RotateCcw, Shuffle, Volume2, VolumeX } from 'lucide-react';
@@ -135,6 +137,22 @@ export default function SystemSimPage() {
   const running = view.phase !== 'off';
   const canLoad = view.phase === 'desktop' || (view.phase === 'load' && !!view.run && view.shown >= view.run.samples.length);
 
+  // V4 §5.3: the sandbox shown through its own buttons (power, "Game" load, run)
+  const simDemo = (): DemoStep[] => [
+    { say: t('labGuide.sim.s1'), target: () => document.querySelector('[data-guide="power"]')?.closest('section, div') ?? null },
+    { say: t('labGuide.sim.s2'), target: guideEl('power'), run: pressGuide('power'), hold: 4200 },
+    {
+      say: t('labGuide.sim.s3'),
+      target: guideEl('load-game'),
+      run: () => {
+        pressGuide('load-game')();
+        window.setTimeout(pressGuide('run'), 500);
+      },
+      hold: 4500,
+    },
+    { say: t('labGuide.sim.s4'), target: () => document.querySelector('[role="radiogroup"]') },
+  ];
+
   return (
     <div className={styles.page}>
       <header className={styles.head}>
@@ -193,19 +211,26 @@ export default function SystemSimPage() {
               {t('sim.task.short')}
             </p>
           )}
+          <TaskGuide
+            id={`sim:${mode}`}
+            title={t('sim.title')}
+            text={mode === 'fix' ? t('sim.task.short') : t('labGuide.simText')}
+            demo={mode === 'fix' ? undefined : simDemo}
+            onDemoEnd={() => running && powerOff()}
+          />
           <Monitor build={build} view={view} />
           <div className={styles.controls}>
-            <button type="button" className={styles.powerBtn} data-on={running} onClick={running ? powerOff : powerOn}>
+            <button type="button" className={styles.powerBtn} data-on={running} onClick={running ? powerOff : powerOn} data-guide="power">
               <Power size={18} aria-hidden="true" /> {running ? t('sim.controls.off') : t('sim.controls.power')}
             </button>
             <div className={styles.seg} role="radiogroup" aria-label={t('sim.controls.workload')}>
               {WORKLOADS.map((w) => (
-                <button key={w} type="button" role="radio" aria-checked={view.workload === w} onClick={() => setWorkload(w)}>
+                <button key={w} type="button" role="radio" aria-checked={view.workload === w} onClick={() => setWorkload(w)} data-guide={`load-${w}`}>
                   {t(`sim.workloads.${w}`)}
                 </button>
               ))}
             </div>
-            <button type="button" className={styles.primary} disabled={!canLoad} onClick={startLoad}>
+            <button type="button" className={styles.primary} disabled={!canLoad} onClick={startLoad} data-guide="run">
               {view.workload === 'game' ? <Flame size={16} aria-hidden="true" /> : <Play size={16} aria-hidden="true" />} {t('sim.controls.run')}
             </button>
             <button type="button" className={styles.icon} aria-pressed={sound} onClick={() => setSound(!sound)} title={t('sim.controls.sound')} aria-label={t('sim.controls.sound')}>

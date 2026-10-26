@@ -1,3 +1,4 @@
+import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
 import { lazy, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Check, Clock3, Lightbulb, MousePointer2, Power, RotateCcw, TriangleAlert, Volume2, VolumeX } from 'lucide-react';
@@ -58,6 +59,26 @@ export default function AssemblyLabPage() {
     if (ready) useAssemblyLabStore.getState().startClock();
   }, [ready]);
 
+  // V4 §5.3: the first steps of the build, placed through the lab's own store
+  const assemblyDemo = (): DemoStep[] => {
+    const drop = useAssemblyLabStore.getState().drop;
+    const canvas = () => document.querySelector('canvas');
+    return [
+      { say: t('labGuide.assembly.s1'), target: canvas },
+      { say: t('labGuide.assembly.s2'), target: canvas, run: () => drop('motherboard', 'mat'), hold: 2200 },
+      { say: t('labGuide.assembly.s3'), run: () => drop('cpu', 'socket'), hold: 2200 },
+      {
+        say: t('labGuide.assembly.s4'),
+        // the steps go in order: the cooler sits on the processor before the memory goes in
+        run: () => {
+          drop('cooler', 'cpuTop');
+          window.setTimeout(() => useAssemblyLabStore.getState().drop('ram', 'dimm'), 700);
+        },
+        hold: 2600,
+      },
+    ];
+  };
+
   return (
     <div className={styles.stage}>
       <div className={styles.scene}>
@@ -110,6 +131,7 @@ export default function AssemblyLabPage() {
       </header>
 
       <aside className={styles.panel} aria-label={t('pcLab.ui.steps')}>
+        <TaskGuide id="assembly:build" title={t('labs.modules.assembly.title')} text={t('pcLab.ui.intro')} demo={assemblyDemo} onDemoEnd={reset} />
         <p className={styles.message} data-tone={message.tone} role="status" aria-live="polite">
           {message.tone === 'ok' ? <Check size={16} aria-hidden="true" /> : message.tone === 'warn' ? <TriangleAlert size={16} aria-hidden="true" /> : message.tone === 'hint' ? <Lightbulb size={16} aria-hidden="true" /> : <MousePointer2 size={16} aria-hidden="true" />}
           <span>{messageText(message)}</span>

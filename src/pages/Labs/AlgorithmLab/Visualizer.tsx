@@ -149,7 +149,7 @@ export function Visualizer({ id }: { id: AlgorithmId }) {
       <section className={styles.stage}>
         <InputBar key={id} id={id} input={input} onApply={apply} />
 
-        <div className={styles.canvas}>
+        <div className={styles.canvas} data-guide="canvas">
           {spec.kind === 'recursion' ? <StackView step={step} /> : <ArrayView step={step} moveMs={moveMs} />}
         </div>
 
@@ -175,17 +175,17 @@ export function Visualizer({ id }: { id: AlgorithmId }) {
 
         <div className={styles.controls}>
           <div className={styles.transport}>
-            <button type="button" onClick={player.reset} disabled={player.atStart && !player.playing} aria-label={t('algorithms.ui.reset')} title={t('algorithms.ui.reset')}>
+            <button type="button" onClick={player.reset} disabled={player.atStart && !player.playing} data-guide="reset" aria-label={t('algorithms.ui.reset')} title={t('algorithms.ui.reset')}>
               <RotateCcw size={17} aria-hidden="true" />
             </button>
             <button type="button" onClick={player.back} disabled={player.atStart} aria-label={t('algorithms.ui.back')} title={t('algorithms.ui.back')}>
               <ChevronLeft size={19} aria-hidden="true" />
             </button>
-            <button type="button" className={styles.playButton} onClick={player.toggle} aria-label={t(player.playing ? 'algorithms.ui.pause' : 'algorithms.ui.play')}>
+            <button type="button" className={styles.playButton} onClick={player.toggle} data-guide="play" aria-label={t(player.playing ? 'algorithms.ui.pause' : 'algorithms.ui.play')}>
               {player.playing ? <Pause size={19} aria-hidden="true" /> : <Play size={19} aria-hidden="true" />}
               <span>{t(player.playing ? 'algorithms.ui.pause' : 'algorithms.ui.play')}</span>
             </button>
-            <button type="button" onClick={player.forward} disabled={player.atEnd} aria-label={t('algorithms.ui.forward')} title={t('algorithms.ui.forward')}>
+            <button type="button" onClick={player.forward} disabled={player.atEnd} data-guide="forward" aria-label={t('algorithms.ui.forward')} title={t('algorithms.ui.forward')}>
               <ChevronRight size={19} aria-hidden="true" />
             </button>
           </div>

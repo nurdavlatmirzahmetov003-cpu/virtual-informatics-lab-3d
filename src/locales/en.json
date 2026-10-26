@@ -7894,6 +7894,8 @@
       "s2": "We lay the motherboard on the antistatic mat.",
       "s3": "We seat the processor in the socket — the triangle marks must line up.",
       "s4": "We put the memory into the DIMM slots. Carry on from here yourself!"
-    }
+    },
+    "algoText": "{short}. Press “Play”, watch every step of the algorithm and read the explanation.",
+    "simText": "Build the computer and switch it on: watch what changes on the screen, in the sound and the temperature when a part is missing or weak."
   }
 }

@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
+import { guideEl, pressGuide } from '@/components/lab/guideDom';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
@@ -27,6 +29,14 @@ export default function AlgorithmLabPage() {
   }, [hash]);
   const set = (next: { algo?: AlgorithmId; quiz?: QuizId }) => setParams({ algo: next.algo ?? algo, quiz: next.quiz ?? quiz }, { replace: true, preventScrollReset: true });
 
+  // V4 §5.3: the first algorithm (bubble sort), shown by pressing the player's own buttons
+  const algoDemo = (): DemoStep[] => [
+    { say: t('labGuide.algorithms.s1'), target: guideEl('canvas') },
+    { say: t('labGuide.algorithms.s2'), target: guideEl('play'), run: pressGuide('play'), hold: 4200 },
+    { say: t('labGuide.algorithms.s3'), target: guideEl('canvas'), run: pressGuide('play'), hold: 1200 },
+    { say: t('labGuide.algorithms.s4'), target: guideEl('forward'), run: pressGuide('forward') },
+  ];
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -47,6 +57,13 @@ export default function AlgorithmLabPage() {
         ))}
       </nav>
 
+      <TaskGuide
+        id={`algorithms:${algo}`}
+        title={t(tk(`algorithms.names.${algo}`))}
+        text={t('labGuide.algoText', { short: t(tk(`algorithms.short.${algo}`)) })}
+        demo={algo === 'bubble' ? algoDemo : undefined}
+        onDemoEnd={pressGuide('reset')}
+      />
       <Visualizer key={algo} id={algo} />
       <QuizSection quiz={quiz} onQuiz={(q) => set({ quiz: q })} />
     </div>
