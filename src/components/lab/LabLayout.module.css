@@ -1,7 +1,8 @@
 /* V4 §5.1: palette | workspace | task panel — see LabLayout.tsx */
 
 .layout {
-  --palette-w: 210px;
+  --palette-base: 210px;
+  --palette-w: var(--palette-base);
   --panel-w: 360px;
   --tab-w: 46px;
   --sticky-top: calc(var(--topbar-h) + var(--space-3));
@@ -156,7 +157,7 @@
   }
 
   .layout {
-    --palette-w: 180px;
+    --palette-w: calc(var(--palette-base) * 0.86);
   }
 
   .panel {

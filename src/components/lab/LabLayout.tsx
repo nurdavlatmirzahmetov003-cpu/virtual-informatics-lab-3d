@@ -13,7 +13,7 @@
  * Long lists scroll inside their own region. scripts/lab-overlap.mjs checks
  * that no text is covered or clipped at 375–1920 px.
  */
-import { useCallback, useEffect, useId, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useId, useState, type CSSProperties, type ReactNode } from 'react';
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
 import { useT } from '@/hooks/useT';
 import { safeStorage, STORAGE_NAMESPACE } from '@/lib/storage';
@@ -32,6 +32,8 @@ interface LabLayoutProps {
   id: string;
   palette?: LabRegion;
   panel?: LabRegion;
+  /** Column widths in px on wide screens (palette, panel); defaults 210 and 360. */
+  widths?: readonly [number, number];
   children: ReactNode;
 }
 
@@ -78,7 +80,7 @@ function useNarrow() {
   return narrow;
 }
 
-export function LabLayout({ id, palette, panel, children }: LabLayoutProps) {
+export function LabLayout({ id, palette, panel, widths, children }: LabLayoutProps) {
   const t = useT();
   const narrow = useNarrow();
   const [folds, setFolds] = useState<Folds>(() => readFolds(id));
@@ -105,7 +107,10 @@ export function LabLayout({ id, palette, panel, children }: LabLayoutProps) {
   const panelOpen = panel ? (narrow ? folds.sheet : folds.panel) : false;
 
   return (
-    <div className={styles.layout} data-palette={palette ? (paletteOpen ? 'open' : 'closed') : 'none'} data-panel={panel ? (panelOpen ? 'open' : 'closed') : 'none'} data-narrow={narrow || undefined}>
+    <div
+      className={styles.layout}
+      style={widths ? ({ '--palette-base': `${widths[0]}px`, '--panel-w': `${widths[1]}px` } as CSSProperties) : undefined}
+      data-palette={palette ? (paletteOpen ? 'open' : 'closed') : 'none'} data-panel={panel ? (panelOpen ? 'open' : 'closed') : 'none'} data-narrow={narrow || undefined}>
       <div className={styles.row}>
         {palette &&
           (paletteOpen ? (

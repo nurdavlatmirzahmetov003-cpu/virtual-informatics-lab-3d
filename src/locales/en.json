@@ -7923,6 +7923,8 @@
     "poster": "Poster",
     "info": "Info",
     "algoSide": "Code and variables",
-    "expSide": "Findings and questions"
+    "expSide": "Findings and questions",
+    "simBuild": "The computer's parts",
+    "simGauges": "Gauges"
   }
 }

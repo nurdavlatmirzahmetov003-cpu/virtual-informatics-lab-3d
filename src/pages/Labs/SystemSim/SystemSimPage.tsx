@@ -2,11 +2,12 @@
  * Cause & Effect Lab (V2-7): build a PC, power it on and watch what a
  * missing or wrong part does; in the task, find and fix a broken PC.
  */
+import { LabLayout } from '@/components/lab/LabLayout';
 import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
 import { guideEl, pressGuide } from '@/components/lab/guideDom';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Flame, Info, Lightbulb, Play, Power, RotateCcw, Shuffle, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, Cpu, Flame, Gauge, Info, Lightbulb, Play, Power, RotateCcw, Shuffle, Volume2, VolumeX } from 'lucide-react';
 import { GradeReportCard } from '@/components/grading/GradeReportCard';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
@@ -33,7 +34,8 @@ function BuildPanel({ build, onChange, base }: { build: Build; onChange: (b: Bui
   const t = useT();
   return (
     <section className={styles.buildPanel} aria-labelledby="sim-build">
-      <h2 id="sim-build" className={styles.blockTitle}>
+      {/* the lab panel shows this title; kept for screen readers (the section is labelled by it) */}
+      <h2 id="sim-build" className="visually-hidden">
         {t('sim.build')}
       </h2>
       {BUILD_KEYS.map((k) => (
@@ -187,8 +189,15 @@ export default function SystemSimPage() {
         </p>
       </header>
 
-      <div className={styles.grid}>
-        <div className={styles.left}>
+      {/* V4 §6: the build (palette), the computer (workspace) and the gauges (panel) on the shared lab layout */}
+      <LabLayout
+        id="sim"
+        widths={[320, 340]}
+        palette={{
+          title: t('panels.simBuild'),
+          icon: <Cpu size={16} aria-hidden="true" />,
+          content: (
+            <div className={styles.left}>
           <BuildPanel build={build} onChange={setBuild} base={base} />
           {mode === 'fix' && (
             <FixPanel
@@ -202,8 +211,11 @@ export default function SystemSimPage() {
               onReset={() => setBuild(FAULTS[fault])}
             />
           )}
-        </div>
-
+            </div>
+          ),
+        }}
+        panel={{ title: t('panels.simGauges'), icon: <Gauge size={16} aria-hidden="true" />, content: <Instruments build={build} view={view} /> }}
+      >
         <div className={styles.center}>
           {mode === 'fix' && (
             <p className={styles.taskBanner}>
@@ -238,11 +250,7 @@ export default function SystemSimPage() {
             </button>
           </div>
         </div>
-
-        <div className={styles.right}>
-          <Instruments build={build} view={view} />
-        </div>
-      </div>
+      </LabLayout>
     </div>
   );
 }
