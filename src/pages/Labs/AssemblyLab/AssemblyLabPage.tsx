@@ -1,4 +1,6 @@
 import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
+import { FoldButton, FoldTab } from '@/components/panel/Foldable';
+import { useFold } from '@/components/panel/foldState';
 import { lazy, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Check, Clock3, Lightbulb, MousePointer2, Power, RotateCcw, TriangleAlert, Volume2, VolumeX } from 'lucide-react';
@@ -79,15 +81,24 @@ export default function AssemblyLabPage() {
     ];
   };
 
+  // V4 §6: the header and the steps panel fold to edge tabs, the bench is seen whole (Alt+I folds the steps)
+  const headFold = useFold('assembly:head');
+  const panelFold = useFold('assembly:panel', { primary: true, contentKey: `${message.key}:${done}` });
+  const title = t('labs.modules.assembly.title');
+
   return (
-    <div className={styles.stage}>
+    <div className={styles.stage} data-panel={panelFold.folded ? 'folded' : 'open'}>
       <div className={styles.scene}>
         <SceneCanvas initialCamera="HOME_WIDE" label={t('labs.modules.assembly.title')}>
           <AssemblyLabScene />
         </SceneCanvas>
       </div>
 
+      {headFold.folded ? (
+        <FoldTab fold={headFold} title={title} className={styles.headTab} />
+      ) : (
       <header className={styles.head}>
+        <FoldButton fold={headFold} className={styles.headFold} />
         <Link to="/labs" className={styles.back}>
           <ArrowLeft size={14} aria-hidden="true" /> {t('pcLab.ui.back')}
         </Link>
@@ -129,9 +140,14 @@ export default function AssemblyLabPage() {
           {t(sound ? 'pcLab.ui.soundOn' : 'pcLab.ui.soundOff')}
         </button>
       </header>
+      )}
 
+      {panelFold.folded ? (
+        <FoldTab fold={panelFold} title={t('pcLab.ui.steps')} side="right" className={styles.panelTab} />
+      ) : (
       <aside className={styles.panel} aria-label={t('pcLab.ui.steps')}>
-        <TaskGuide id="assembly:build" title={t('labs.modules.assembly.title')} text={t('pcLab.ui.intro')} demo={assemblyDemo} onDemoEnd={reset} />
+        <FoldButton fold={panelFold} side="right" className={styles.panelFold} />
+        <TaskGuide id="assembly:build" title={title} text={t('pcLab.ui.intro')} demo={assemblyDemo} onDemoEnd={reset} />
         <p className={styles.message} data-tone={message.tone} role="status" aria-live="polite">
           {message.tone === 'ok' ? <Check size={16} aria-hidden="true" /> : message.tone === 'warn' ? <TriangleAlert size={16} aria-hidden="true" /> : message.tone === 'hint' ? <Lightbulb size={16} aria-hidden="true" /> : <MousePointer2 size={16} aria-hidden="true" />}
           <span>{messageText(message)}</span>
@@ -177,6 +193,7 @@ export default function AssemblyLabPage() {
         </button>
         <p className={styles.note}>{t('pcLab.ui.modelNote')}</p>
       </aside>
+      )}
 
       <p className={styles.controls}>
         <MousePointer2 size={14} aria-hidden="true" /> {t('pcLab.ui.controls')}
