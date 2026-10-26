@@ -440,3 +440,23 @@
   align-self: start;
   justify-self: end;
 }
+
+@media (max-width: 760px) {
+  /* phones: the zone panel lives at the bottom, so its tab does too — clear of the map and the tools at the top
+     (bottom right: the Bit button holds the bottom left) */
+  .panelTab {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    align-self: end;
+    justify-self: end;
+  }
+
+  /* the device panel fills the screen: its fold button goes inside, beside the close button */
+  .sideFold {
+    top: 14px;
+    right: 62px;
+    left: auto;
+    z-index: 1;
+  }
+}
+
