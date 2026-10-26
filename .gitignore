@@ -20,3 +20,4 @@ assets-src/
 # the owner's private documents — never commit
 docs/defense/
 scripts/.tmp-tools/
+test-results/

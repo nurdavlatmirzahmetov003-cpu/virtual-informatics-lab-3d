@@ -46,6 +46,7 @@
     "test:fonts": "node --test scripts/fonts.test.mjs",
     "lab:impostors": "node scripts/make-impostors.mjs",
     "test:lab-visibility": "node --test scripts/lab-visibility.test.mjs",
+    "test:pc-visual": "node scripts/pc-visual.mjs",
     "test:pc-fit": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/pc-fit.test.mjs",
     "test:hero": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/hero.test.mjs",
     "test:bit": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/bit.test.mjs",

@@ -46,6 +46,8 @@ Windows: `start.bat` (қажет болса `npm install` жасайды да, d
 | `npm run blender:pipeline -- products` | 28 өнімнің Blender конфигін өткізу (`scripts/blender/configs/products/`) → сосын `npm run assets:optimize` |
 | `npm run test:visual` | Тема, 2K close-up тізімі, сапа пресеттері, екі теманың мәтін контрасты |
 | `npm run test:blender` | Blender конфигтерін және шыққан GLB-ді тексеру (Blender-сіз) |
+| `npm run test:pc-fit` | Каталогтағы әр корпус × аналық плата × салқындатқыш × видеокарта × БҚ комбинациясы: бекіту нүктелері (1 мм, 0,5°), корпус ішінде болу, қиылыспау, кулер CPU үстінде, видеокарта слотта, БҚ өз орнында, кілемше үстел үстінде |
+| `npm run test:pc-visual` | Басты беттегі және Setup Studio-дағы ДК-ны 4 бұрыштан суретке түсіріп, `scripts/visual-baselines/` суреттерімен салыстырады (сайт :5173-те ашық тұруы керек). Айырма шектен асса, `test-results/pc-visual/` ішіне жаңа сурет пен diff жазылады. Өзгеріс әдейі болса, эталонды жаңарту: `npm run test:pc-visual -- --update`, суреттерді қарап шығып, commit жасаңыз |
 
 ## Қарау
 - `/` — жеті кезеңдік 3D scroll сапары.
