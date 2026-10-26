@@ -444,8 +444,8 @@ function useGlowTexture() {
 export function Decor() {
   const preset = useQualityPreset();
   const glow = useGlowTexture();
-  // Low keeps the room, the robots and the plants; the small props and the LED wash cost too much there (V4 §2.3)
-  const rich = preset.level !== 'low';
+  // Low and Medium keep the room, the robots and the plants; the small props cost them their FPS budget (V4 §2.3)
+  const rich = preset.postprocessing;
   // the wash is two big transparent planes: only where the post chain runs (High, Ultra)
   const wash = preset.postprocessing;
   const books = useMemo(() => ['#5f7bff', '#2fc8f2', '#f4f6fb', '#a95cf5'], []);

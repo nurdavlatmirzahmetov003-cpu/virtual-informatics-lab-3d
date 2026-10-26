@@ -128,7 +128,8 @@ export interface MonsteraProps {
 }
 
 export function Monstera({ height, pot: [pr, ph], potColor, leaves = 9, seed = 5, position, yaw = 0 }: MonsteraProps) {
-  const cheap = useQualityPreset().level === 'low';
+  const level = useQualityPreset().level;
+  const cheap = level === 'low' || level === 'medium';
   const leafMesh = useRef<InstancedMesh>(null);
   const stemMesh = useRef<InstancedMesh>(null);
   const geo = useDisposable(() => ({ leaf: leafGeometry(), pot: potGeometry(pr, ph) }), [pr, ph]);

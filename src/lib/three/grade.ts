@@ -34,10 +34,11 @@ if (ShaderChunk.tonemapping_pars_fragment.includes(CUSTOM)) {
 /** Whether the mounted scene asks for the vivid grade (read by PostEffects). */
 export const useSceneGrade = create<{ vivid: boolean }>(() => ({ vivid: false }));
 
-/** Turns the vivid grade on while the calling scene is mounted. */
-export function useVividGrade() {
+/** Turns the vivid grade on while the calling scene is mounted (`on` false: the plain Neutral look, e.g. on Low). */
+export function useVividGrade(on = true) {
   const gl = useThree((s) => s.gl);
   useEffect(() => {
+    if (!on) return;
     useSceneGrade.setState({ vivid: true });
     // with the post chain on, the composer tone-maps (gl stays at NoToneMapping)
     if (gl.toneMapping !== NoToneMapping) gl.toneMapping = CustomToneMapping;
@@ -45,5 +46,5 @@ export function useVividGrade() {
       useSceneGrade.setState({ vivid: false });
       if (gl.toneMapping === CustomToneMapping) gl.toneMapping = NeutralToneMapping;
     };
-  }, [gl]);
+  }, [gl, on]);
 }
