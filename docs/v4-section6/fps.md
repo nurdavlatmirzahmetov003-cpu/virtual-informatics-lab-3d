@@ -14,3 +14,17 @@ Built sites (`vite preview`), headless Chrome on this PC's Intel UHD (ANGLE D3D1
 The folding panels are plain HTML over the canvas; the differences are within run-to-run noise
 (the few extra draw calls at home come from the §1–3 scene, the presenter robot on the desk).
 /labs/connect has its own canvas without the site's frame probe, so it is not measured here.
+
+## Home, Medium — re-measured
+
+Three runs each, main and V4 alternating on the same machine:
+
+| Run | main | V4 |
+|---|---|---|
+| 1 | 72 fps | 69 fps |
+| 2 | 72 fps | 69 fps |
+| 3 | 71 fps | 70 fps |
+| **Average** | **71.7 fps** | **69.3 fps (−3.3 %)** |
+
+Within the 5 % budget; the single 76 → 71 run above was an outlier. (The draw-call count in
+one snapshot depends on where the hero story's camera is at that moment, so it varies run to run.)
