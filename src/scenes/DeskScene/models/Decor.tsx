@@ -526,7 +526,7 @@ export function Decor() {
       </group>
     )}
     {/* instanced plants stay out of the merged group: their own two draw calls each */}
-    <Monstera height={1.0} pot={[0.15, 0.32]} potColor="#eeece6" leaves={10} seed={3} position={[1.08, 0, -0.66]} yaw={0.4} />
+    <Monstera height={1.0} pot={[0.15, 0.32]} potColor="#eeece6" leaves={10} seed={3} position={[2.95, 0, -0.62]} yaw={0.4} />
     <Monstera height={0.3} pot={[0.05, 0.085]} potColor="#d9dde6" leaves={7} seed={11} position={DESK_PLANT} yaw={-0.6} />
     </>
   );

@@ -1,54 +1,102 @@
 /**
  * Monstera in a glazed ceramic pot (V4 §2.3): procedural and cheap — every
- * leaf is one instance of a split, cupped leaf shape and every stalk one
+ * leaf is one instance of a cupped, veined leaf with its holes cut in alpha and every stalk one
  * instance of a thin stem, so a plant costs four draw calls (pot, soil,
  * stalks, leaves) whatever its size. Built standing on y = 0, front +Z.
  */
 import { useLayoutEffect, useMemo, useRef } from 'react';
-import { Color, DoubleSide, LatheGeometry, Matrix4, Quaternion, Shape, ShapeGeometry, Vector2, Vector3, type BufferGeometry, type InstancedMesh } from 'three';
+import { BufferGeometry, CanvasTexture, Color, DoubleSide, Float32BufferAttribute, LatheGeometry, Matrix4, Quaternion, SRGBColorSpace, Vector2, Vector3, type InstancedMesh } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 
-/** A monstera leaf 1 unit long from its stalk (origin) to its tip (+Y), with the splits and holes it is known for. */
+/** Half the leaf's width at `u` (0 at the stalk, 1 at the tip): a heart with a soft tip. */
+const halfWidth = (u: number) => 0.5 * Math.sin(Math.PI * Math.min(1, u * 0.92 + 0.08)) ** 0.75 * (1 - 0.15 * u);
+
+/**
+ * A monstera leaf 1 unit long from its stalk (origin) to its tip (+Y): a
+ * subdivided grid, so the cup across and the arch along stay smooth up close.
+ */
 function leafGeometry(): BufferGeometry {
-  const outline = new Shape();
-  const N = 28;
-  for (let i = 0; i <= N; i++) {
-    // a heart: wide in the middle, a notch where the stalk joins, a soft tip
-    const t = (i / N) * Math.PI * 2;
-    const x = 0.5 * Math.sin(t) * (1 - 0.12 * Math.cos(2 * t));
-    const y = 0.5 - 0.5 * Math.cos(t) + 0.06 * Math.cos(t) ** 2 - (Math.abs(Math.sin(t)) < 0.25 ? 0.06 * (1 - Math.abs(Math.sin(t)) / 0.25) : 0);
-    if (i === 0) outline.moveTo(x, y);
-    else outline.lineTo(x, y);
-  }
-  // fenestrations: long slots fanning out from the midrib on both sides
-  for (const side of [-1, 1]) {
-    for (const [cy, len, w] of [[0.3, 0.2, 0.035], [0.5, 0.22, 0.04], [0.68, 0.17, 0.035]] as const) {
-      const hole = new Shape();
-      const steps = 10;
-      const angle = side * (0.5 + cy * 0.4);
-      const dir = new Vector2(Math.sin(angle), Math.cos(angle));
-      const n = new Vector2(-dir.y, dir.x);
-      const c = new Vector2(side * (0.13 + len / 2), cy);
-      for (let i = 0; i <= steps; i++) {
-        const a = (i / steps) * Math.PI * 2;
-        const p = c.clone().addScaledVector(dir.clone().set(side, 0.25 * side).normalize(), (Math.cos(a) * len) / 2).addScaledVector(n, Math.sin(a) * w * 0.5);
-        if (i === 0) hole.moveTo(p.x, p.y);
-        else hole.lineTo(p.x, p.y);
-      }
-      outline.holes.push(hole);
+  const ROWS = 22;
+  const COLS = 10;
+  const pos: number[] = [];
+  const uv: number[] = [];
+  const index: number[] = [];
+  for (let r = 0; r <= ROWS; r++) {
+    const u = r / ROWS;
+    const hw = halfWidth(u);
+    for (let c = 0; c <= COLS; c++) {
+      const v = (c / COLS) * 2 - 1;
+      const x = v * hw;
+      // cupped across, arching along: a living leaf, not a flat card
+      pos.push(x, u, 0.22 * x * x - 0.18 * u * u + 0.1 * u);
+      uv.push(v * 0.5 + 0.5, u);
     }
   }
-  const g = new ShapeGeometry(outline, 2);
-  // cupped across, arching along: a living leaf, not a flat card
-  const pos = g.attributes.position;
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i);
-    const y = pos.getY(i);
-    pos.setZ(i, 0.22 * x * x - 0.18 * y * y + 0.1 * y);
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const i = r * (COLS + 1) + c;
+      index.push(i, i + 1, i + COLS + 1, i + 1, i + COLS + 2, i + COLS + 1);
+    }
   }
+  const g = new BufferGeometry();
+  g.setAttribute('position', new Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new Float32BufferAttribute(uv, 2));
+  g.setIndex(index);
   g.computeVertexNormals();
   return g;
+}
+
+/**
+ * The leaf's surface: light midrib and veins on a neutral ground (each leaf's
+ * instance colour tints it green) and the fenestrations cut out as alpha.
+ */
+function leafTexture(): CanvasTexture {
+  const W = 256;
+  const H = 512;
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const ctx = c.getContext('2d')!;
+  const y = (u: number) => H * (1 - u);
+  ctx.fillStyle = '#cfd6cc';
+  ctx.fillRect(0, 0, W, H);
+  // veins fan out from the midrib towards the edges
+  ctx.strokeStyle = '#e9efe6';
+  ctx.lineCap = 'round';
+  for (let k = 1; k <= 9; k++) {
+    const u0 = 0.06 + k * 0.095;
+    for (const side of [-1, 1]) {
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(W / 2, y(u0));
+      ctx.quadraticCurveTo(W / 2 + side * W * 0.25, y(u0 + 0.05), W / 2 + side * W * 0.5, y(u0 + 0.14));
+      ctx.stroke();
+    }
+  }
+  ctx.lineWidth = 9;
+  ctx.beginPath();
+  ctx.moveTo(W / 2, y(0));
+  ctx.lineTo(W / 2, y(1));
+  ctx.stroke();
+  // fenestrations: slots between the veins, from near the midrib to near the edge
+  ctx.globalCompositeOperation = 'destination-out';
+  for (let k = 1; k <= 6; k++) {
+    const u0 = 0.15 + k * 0.1;
+    for (const side of [-1, 1]) {
+      ctx.save();
+      ctx.translate(W / 2 + side * W * 0.27, y(u0 + 0.05));
+      ctx.rotate(side * -0.5);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, W * 0.15, 8 + k, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+  const t = new CanvasTexture(c);
+  t.colorSpace = SRGBColorSpace;
+  t.anisotropy = 8;
+  return t;
 }
 
 /** Glazed pot: a lathe with a rolled rim, wider at the top. */
@@ -84,6 +132,7 @@ export function Monstera({ height, pot: [pr, ph], potColor, leaves = 9, seed = 5
   const leafMesh = useRef<InstancedMesh>(null);
   const stemMesh = useRef<InstancedMesh>(null);
   const geo = useDisposable(() => ({ leaf: leafGeometry(), pot: potGeometry(pr, ph) }), [pr, ph]);
+  const leafMap = useDisposable(() => leafTexture(), []);
 
   const layout = useMemo(() => {
     let r = seed * 7919 + 13;
@@ -122,7 +171,7 @@ export function Monstera({ height, pot: [pr, ph], potColor, leaves = 9, seed = 5
     const c = new Color();
     layout.forEach(({ stem, leaf, shade }, i) => {
       lm.setMatrixAt(i, leaf);
-      lm.setColorAt(i, c.set('#2f7a43').offsetHSL(0, 0, shade));
+      lm.setColorAt(i, c.set('#3f9a55').offsetHSL(0, 0, shade));
       sm.setMatrixAt(i, stem);
     });
     lm.instanceMatrix.needsUpdate = true;
@@ -146,7 +195,7 @@ export function Monstera({ height, pot: [pr, ph], potColor, leaves = 9, seed = 5
         <meshLambertMaterial color="#4f8a45" />
       </instancedMesh>
       <instancedMesh ref={leafMesh} args={[geo.leaf, undefined, layout.length]} castShadow receiveShadow>
-        {cheap ? <meshLambertMaterial side={DoubleSide} /> : <meshStandardMaterial side={DoubleSide} roughness={0.5} />}
+        {cheap ? <meshLambertMaterial map={leafMap} alphaTest={0.5} side={DoubleSide} /> : <meshStandardMaterial map={leafMap} alphaTest={0.5} side={DoubleSide} roughness={0.5} />}
       </instancedMesh>
     </group>
   );
