@@ -15,10 +15,25 @@ export interface ModelFit {
 /**
  * Wraps `levels` (the detailed model first) in an oriented, fitted group.
  * The fit is measured on the first level, so every level lines up.
+ * `front` turns a model whose front is not +Z (lib/three/modelFront.ts); it
+ * keeps standing where it stood: same floor, same centre on the ground.
  */
-export function fitModel(levels: Object3D[], fit: ModelFit | undefined, name: string) {
+export function fitModel(levels: Object3D[], fit: ModelFit | undefined, name: string, front: readonly [number, number, number] | null = null) {
   const inner = new Group();
-  levels.forEach((l) => inner.add(l));
+  if (front) {
+    const before = new Box3().setFromObject(levels[0]);
+    const turned = new Group();
+    levels.forEach((l) => turned.add(l));
+    turned.rotation.set(...front);
+    turned.updateMatrixWorld(true);
+    const after = new Box3().setFromObject(levels[0]);
+    const was = before.getCenter(new Vector3());
+    const now = after.getCenter(new Vector3());
+    turned.position.set(was.x - now.x, before.min.y - after.min.y, was.z - now.z);
+    inner.add(turned);
+  } else {
+    levels.forEach((l) => inner.add(l));
+  }
   if (fit?.rotation) inner.rotation.set(...fit.rotation);
   const oriented = new Group();
   oriented.name = name;

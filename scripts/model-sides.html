@@ -1,0 +1,31 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Model sides</title>
+<!-- four views of catalog models, see scripts/model-sides.mjs --><style>body{margin:0;background:#dfe3ea;font:12px sans-serif}#g{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}figure{margin:0;background:#fff}figcaption{padding:2px 4px}</style></head>
+<body><div id="g"></div>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
+const ids = (new URLSearchParams(location.search).get('ids') ?? '').split(',');
+const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+r.setSize(260, 220);
+window.done = 0;
+for (const id of ids) {
+  const g = await loader.loadAsync(`/assets/models/products/${id}.glb`).catch(() => null);
+  const scene = new THREE.Scene(); scene.background = new THREE.Color('#f4f6fa');
+  scene.add(new THREE.HemisphereLight('#fff', '#667', 2.2)); const d = new THREE.DirectionalLight('#fff', 2); d.position.set(1, 2, 3); scene.add(d);
+  if (g) scene.add(g.scene);
+  const box = new THREE.Box3().setFromObject(g ? g.scene : new THREE.Object3D()); const c = box.getCenter(new THREE.Vector3()); const s = box.getSize(new THREE.Vector3());
+  // a red arrow along +Z (towards the chair), from the model's centre
+  scene.add(new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), c, Math.max(s.x, s.y, s.z) * 0.9, 0xff0000, 0.04 * Math.max(s.x, s.y, s.z) * 3, 0.03 * Math.max(s.x, s.y, s.z) * 3));
+  const cam = new THREE.PerspectiveCamera(35, 260 / 220, 0.01, 50); const R = Math.max(s.x, s.y, s.z) * 2.6;
+  for (const [name, dx, dz] of [['+Z', 0, 1], ['+X', 1, 0], ['-Z', 0, -1], ['-X', -1, 0]]) {
+    cam.position.set(c.x + R * dx, c.y + R * 0.3, c.z + R * dz); cam.lookAt(c);
+    r.render(scene, cam);
+    const img = new Image(); img.src = r.domElement.toDataURL();
+    const f = document.createElement('figure'); f.append(img); const cap = document.createElement('figcaption'); cap.textContent = `${id} from ${name}`; f.append(cap); document.getElementById('g').append(f);
+  }
+}
+window.done = 1;
+</script></body></html>

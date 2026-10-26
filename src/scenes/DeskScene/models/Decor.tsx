@@ -6,15 +6,16 @@
  * drawn once per language (crisp, never mirrored).
  */
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { CanvasTexture, Color, Matrix4, Quaternion, ShapeGeometry, SRGBColorSpace, Vector3, type Group, type InstancedMesh } from 'three';
+import { CanvasTexture, Color, Matrix4, Quaternion, ShapeGeometry, SRGBColorSpace, Vector3, type Group, type InstancedMesh, type Object3D, type SpotLight } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
+import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useT } from '@/hooks/useT';
 import { useTheme } from '@/hooks/useTheme';
 import { BRAND } from '@/config/brand';
 import { canvasFontsReady, FONT_HERO } from '@/lib/fonts';
 import { roundedRectShape, roundedSlab } from '@/lib/three/geometry';
 import { mergeStatic } from '@/lib/three/mergeStatic';
-import { BACKDROP_ORDER, DESK_TOP } from '../layout';
+import { BACKDROP_ORDER, LAMP } from '../layout';
 
 const WALL = -0.92;
 const LOGO_URL = `${import.meta.env.BASE_URL}${BRAND.logo}`;
@@ -308,32 +309,53 @@ function Shelf({ position, width }: { position: [number, number, number]; width:
 
 /* ── lamp and rug ────────────────────────────────────────── */
 
-function DeskLamp() {
+const LAMP_METAL = { color: '#e8e9ec', roughness: 0.32, metalness: 0.35 } as const;
+
+/**
+ * Architect lamp (V4 §2.1): built facing +Z like every model — the lower arm
+ * leans back, the upper arm reaches forward over the desk and the shade
+ * looks down at the keyboard. On High and up a warm spot lights the desk
+ * (one more light in every lit shader is too much for Low and Medium).
+ */
+function DeskLamp({ light }: { light: boolean }) {
+  const spot = useRef<SpotLight>(null);
+  const aim = useRef<Object3D>(null);
+  useLayoutEffect(() => {
+    if (spot.current && aim.current) spot.current.target = aim.current;
+  }, [light]);
   return (
-    <group position={[-0.8, DESK_TOP, -0.3]} rotation-y={0.5}>
-      <mesh position-y={0.008} castShadow>
-        <cylinderGeometry args={[0.065, 0.07, 0.016, 32]} />
-        <meshStandardMaterial color="#e8e9ec" roughness={0.35} metalness={0.2} />
+    <group position={[...LAMP.position]} rotation-y={LAMP.yaw}>
+      <mesh position-y={0.009} castShadow>
+        <cylinderGeometry args={[0.07, 0.076, 0.018, 40]} />
+        <meshStandardMaterial {...LAMP_METAL} />
       </mesh>
-      <group position-y={0.016} rotation-z={-0.35}>
+      <group position-y={0.018} rotation-x={-0.15}>
         <mesh position-y={0.17} castShadow>
-          <cylinderGeometry args={[0.007, 0.007, 0.34, 12]} />
-          <meshStandardMaterial color="#e8e9ec" roughness={0.35} metalness={0.2} />
+          <cylinderGeometry args={[0.0075, 0.0075, 0.34, 14]} />
+          <meshStandardMaterial {...LAMP_METAL} />
         </mesh>
-        <group position-y={0.34} rotation-z={1.75}>
-          <mesh position-y={0.13} castShadow>
-            <cylinderGeometry args={[0.006, 0.006, 0.26, 12]} />
-            <meshStandardMaterial color="#e8e9ec" roughness={0.35} metalness={0.2} />
+        <group position-y={0.34} rotation-x={1.35}>
+          {/* elbow */}
+          <mesh>
+            <sphereGeometry args={[0.014, 16, 12]} />
+            <meshStandardMaterial color="#2b2f3a" roughness={0.4} metalness={0.5} />
           </mesh>
-          <group position-y={0.27} rotation-z={-2.1}>
-            <mesh castShadow>
-              <coneGeometry args={[0.06, 0.09, 28, 1, true]} />
-              <meshStandardMaterial color="#e8e9ec" roughness={0.35} metalness={0.2} side={2} />
+          <mesh position-y={0.17} castShadow>
+            <cylinderGeometry args={[0.0065, 0.0065, 0.34, 14]} />
+            <meshStandardMaterial {...LAMP_METAL} />
+          </mesh>
+          {/* the head: its axis (+Y) points up and back, so the shade opens down and forward */}
+          <group position-y={0.34} rotation-x={-1.45}>
+            <mesh position-y={-0.05} castShadow>
+              <coneGeometry args={[0.065, 0.1, 32, 1, true]} />
+              <meshStandardMaterial {...LAMP_METAL} side={2} />
             </mesh>
-            <mesh position-y={-0.03}>
-              <sphereGeometry args={[0.024, 16, 10]} />
-              <meshBasicMaterial color="#fff3d6" toneMapped={false} />
+            <mesh position-y={-0.094} rotation-x={Math.PI / 2}>
+              <circleGeometry args={[0.06, 32]} />
+              <meshBasicMaterial color="#fff1cc" toneMapped={false} side={2} />
             </mesh>
+            <object3D ref={aim} position={[0, -1.1, 0]} />
+            {light && <spotLight ref={spot} position-y={-0.09} color="#ffd9a0" intensity={2.2} distance={1.4} angle={0.75} penumbra={0.85} decay={1.6} />}
           </group>
         </group>
       </group>
@@ -384,6 +406,7 @@ function Rug() {
 /* ── room ────────────────────────────────────────────────── */
 
 export function Decor() {
+  const preset = useQualityPreset();
   const books = useMemo(() => ['#5f7bff', '#2fc8f2', '#f4f6fb', '#a95cf5'], []);
   const root = useRef<Group>(null);
   // ~40 small meshes would cost as many draw calls a frame: one per material instead
@@ -433,7 +456,7 @@ export function Decor() {
         <Leaves count={26} seed={3} spread={0.32} height={FLOOR_LEAVES} size={0.17} droop={0.2} color="#3a7f4c" />
       </group>
 
-      <DeskLamp />
+      <DeskLamp light={preset.areaLights} />
     </group>
   );
 }
