@@ -166,7 +166,7 @@ export function HeroCompanions({ look: lookIndex }: { look: number }) {
       </group>
       <group position={[...PRESENTER.position]} rotation-y={PRESENTER.yaw} scale={PRESENTER.scale}>
         <Robot kind="presenter" accent="#5f7bff" animate={presenter} stillAt={0} name="hero-presenter" />
-        <Billboard position={[0.05, 1.85, 0]}>
+        <Billboard position={[0.3, 1.6, 0]}>
           <SpeechBubble text={text} title={t('home.decor.presenterName')} visible={bubbleOn} />
         </Billboard>
       </group>

@@ -36,8 +36,17 @@ export const LAMP = { position: [-0.8, DESK_TOP, -0.3], yaw: 0.75 } as const;
 export const DESK_PLANT = [0.78, DESK_TOP, 0.31] as const;
 /** Bit on the desk, front left, turned to the viewer; a 1 m kit robot shown at this scale. */
 export const DESK_BIT = { position: [-0.56, DESK_TOP, 0.24], yaw: -0.3, scale: 0.17 } as const;
-/** The presenter robot at the desk's front-left corner, half turned to the desk so its right arm points at it. */
-export const PRESENTER = { position: [-1.04, 0, 0.32], yaw: 0.45, scale: 0.8 } as const;
+/**
+ * The presenter robot (V4 §2.3), at the left of the setup, standing behind
+ * the desk like a host at a counter, between the lamp and the monitor. Left
+ * of the desk is the headline's place in the opening shot (at 1280–1440 px
+ * the text runs up to the desk), so this is where it is seen at every width
+ * without covering the text, the lamp's arm or the shelf above it.
+ */
+export const PRESENTER = { position: [-0.42, 0, -0.6], yaw: 0.15, scale: 0.95 } as const;
+
+/** The gaming desk right of the main desk, against the wall (centre x/z and width/depth, m). */
+export const GAMING_DESK = { center: [2.0, -0.56], size: [1.3, 0.66] } as const;
 
 /** Yaw (radians about +Y) that turns a model's +Z front from `position` towards the seat. */
 export function yawToSeat(position: readonly [number, number, number]) {

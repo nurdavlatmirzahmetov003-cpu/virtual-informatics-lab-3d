@@ -25,6 +25,7 @@ import { LivingSetup } from './hero/LivingSetup';
 import { HERO_LOOKS } from './hero/looks';
 import { StoryDevices } from './hero/StoryDevices';
 import { Decor } from './models/Decor';
+import { GamingCorner } from './models/GamingCorner';
 
 RectAreaLightUniformsLib.init();
 
@@ -52,6 +53,7 @@ export default function DeskScene() {
       <Room />
       <Desk surface={HERO_LOOKS[look].desk} />
       <Decor />
+      <GamingCorner />
       <LivingSetup onLook={setLook} />
       <HeroCompanions look={look} />
       <StoryDevices>
