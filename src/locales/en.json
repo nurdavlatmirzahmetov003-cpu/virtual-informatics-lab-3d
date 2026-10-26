@@ -7913,5 +7913,14 @@
     "algoText": "{short}. Press “Play”, watch every step of the algorithm and read the explanation.",
     "simText": "Build the computer and switch it on: watch what changes on the screen, in the sound and the temperature when a part is missing or weak.",
     "hintLevel": "Hint {n}"
+  },
+  "panels": {
+    "fold": "Fold the panel",
+    "unfold": "Open the {name} panel",
+    "unread": "Something new",
+    "device": "Device",
+    "teacher": "Bit the teacher",
+    "poster": "Poster",
+    "info": "Info"
   }
 }

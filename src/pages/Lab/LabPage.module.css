@@ -44,6 +44,7 @@
 
 .panel {
   --zone: var(--accent);
+  position: relative;
   grid-column: 1;
   grid-row: 1;
   align-self: start;
@@ -121,6 +122,7 @@
 
 /* device panel / catalog: right column under the tools */
 .side {
+  position: relative;
   grid-column: 3;
   grid-row: 1 / 4;
   /* below the tool buttons that share the column */
@@ -405,4 +407,36 @@
     top: auto;
     bottom: 46%;
   }
+}
+
+/* V4 §6: folding the panels (components/panel/Foldable) */
+.panelFold {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.panel .eyebrow {
+  padding-right: 40px;
+}
+
+.panelTab {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  justify-self: start;
+}
+
+/* on the panel's left edge, clear of its own close button */
+.sideFold {
+  position: absolute;
+  top: 68px;
+  left: -42px;
+}
+
+.sideTab {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: start;
+  justify-self: end;
 }
