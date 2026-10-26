@@ -6163,21 +6163,27 @@
         "short": "Monitor, keyboard, mouse, speakers, power",
         "instructions": "Plug the monitor, keyboard, mouse, speakers and power cable into the right sockets on the back of the system unit.",
         "expected": "All five cables in place: monitor in the graphics card, keyboard and mouse in USB, speakers in the green audio out, power in the PSU.",
-        "hint": "The graphics card’s ports are below the board’s, in a vertical row. The power inlet is at the very bottom, on the PSU."
+        "hint": "The graphics card’s ports are below the board’s, in a vertical row. The power inlet is at the very bottom, on the PSU.",
+        "hintStart": "Look at each cable’s plug: its shape tells you which port it fits.",
+        "hintNear": "Monitor → the graphics card’s HDMI, keyboard and mouse → the motherboard’s USB-A ports, speakers → the green 3.5 mm jack, power cable → the power supply."
       },
       "ethernet": {
         "title": "Connect the laptop by Ethernet",
         "short": "Router LAN → laptop RJ-45, DHCP",
         "instructions": "Plug one end of the Ethernet cable into the router and the other into the laptop, then watch the laptop get an IP address.",
         "expected": "The cable is in a router LAN port and the laptop’s RJ-45 socket; DHCP gave an address.",
-        "hint": "The router’s blue port is WAN (internet), the yellow ones are LAN. The laptop’s RJ-45 is the widest square socket."
+        "hint": "The router’s blue port is WAN (internet), the yellow ones are LAN. The laptop’s RJ-45 is the widest square socket.",
+        "hintStart": "The laptop joins the router with one Ethernet cable: one end in the laptop, the other in the router.",
+        "hintNear": "One end goes into the laptop’s RJ-45 port, the other into a yellow LAN port on the router — not the blue WAN one."
       },
       "wifi": {
         "title": "Join Wi-Fi securely",
         "short": "Protected network, right key",
         "instructions": "Put the laptop on the school Wi-Fi: pick the right network and enter the key from the router sticker.",
         "expected": "The laptop is on “Mektep-WiFi” (WPA3), never joined an open network, key right first time.",
-        "hint": "A strong open network may be a trap. Choose one with a lock — WPA2/WPA3."
+        "hint": "A strong open network may be a trap. Choose one with a lock — WPA2/WPA3.",
+        "hintStart": "The list shows each network’s security — read it before you pick one.",
+        "hintNear": "Pick “{ssid}”, the network with the lock, and enter the key from the task."
       }
     },
     "feedback": {
@@ -6355,7 +6361,16 @@
       "check": "Check",
       "reset": "Put it back",
       "changed": "Parts changed: {n}",
-      "testing": "Testing: boot + one minute of gaming…"
+      "testing": "Testing: boot + one minute of gaming…",
+      "hintStart": "Switch the computer on and watch the screen, the sound and the temperature — the sign of the fault is there.",
+      "hintFault": {
+        "ram": "The computer beeps again and again — that points at the memory. Check the memory modules.",
+        "gpu": "The fans spin but there is no picture — check the graphics card.",
+        "monitor": "The screen says “No signal” — check the monitor cable.",
+        "storage": "“Boot device not found” — the computer found no disk to start from. Check the storage drive.",
+        "cooler": "Under load the temperature climbs fast and the computer shuts down — check the cooling.",
+        "psu": "In a game the computer suddenly switches off — look at the power chart: the power supply is too weak."
+      }
     },
     "feedback": {
       "rule": {
@@ -7896,6 +7911,7 @@
       "s4": "We put the memory into the DIMM slots. Carry on from here yourself!"
     },
     "algoText": "{short}. Press “Play”, watch every step of the algorithm and read the explanation.",
-    "simText": "Build the computer and switch it on: watch what changes on the screen, in the sound and the temperature when a part is missing or weak."
+    "simText": "Build the computer and switch it on: watch what changes on the screen, in the sound and the temperature when a part is missing or weak.",
+    "hintLevel": "Hint {n}"
   }
 }

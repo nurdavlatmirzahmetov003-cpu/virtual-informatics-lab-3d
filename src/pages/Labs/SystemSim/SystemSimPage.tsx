@@ -55,7 +55,7 @@ function BuildPanel({ build, onChange, base }: { build: Build; onChange: (b: Bui
 function FixPanel({ fault, build, onNext, onReset }: { fault: FaultId; build: Build; onNext: () => void; onReset: () => void }) {
   const t = useT();
   const [cause, setCause] = useState<FaultId | null>(null);
-  const [hinted, setHinted] = useState(false);
+  const [hinted, setHinted] = useState(0);
   const [attempt, setAttempt] = useState(() => startAttempt(FIX_EXERCISE.id));
   const [report, setReport] = useState<GradeReport | null>(null);
   const changed = changesBetween(FAULTS[fault], build);
@@ -81,19 +81,19 @@ function FixPanel({ fault, build, onNext, onReset }: { fault: FaultId; build: Bu
           </label>
         ))}
       </fieldset>
-      {hinted && (
-        <p className={styles.hint}>
-          <Lightbulb size={15} aria-hidden="true" /> {t('sim.task.hint')}
+      {[t('sim.task.hintStart'), t('sim.task.hint'), t(key(`sim.task.hintFault.${fault}`))].slice(0, hinted).map((text, i) => (
+        <p key={i} className={styles.hint}>
+          <Lightbulb size={15} aria-hidden="true" /> <b>{t('labGuide.hintLevel', { n: i + 1 })}.</b> {text}
         </p>
-      )}
+      ))}
       <p className={styles.changed}>{t('sim.task.changed', { n: changed })}</p>
       <div className={styles.actions}>
         <button
           type="button"
           className={styles.secondary}
-          disabled={hinted}
+          disabled={hinted >= 3}
           onClick={() => {
-            setHinted(true);
+            setHinted((n) => n + 1);
             setAttempt((a) => ({ ...a, hintsUsed: a.hintsUsed + 1 }));
           }}
         >

@@ -3,6 +3,7 @@
  * the laptop by Ethernet (DHCP), join Wi-Fi securely. The 3D stage on the
  * left; the task, cables, messages, DHCP / Wi-Fi panels and grading on the right.
  */
+import { CONNECT_HINTS } from '@/store/connectLabStore';
 import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -328,11 +329,11 @@ export default function ConnectLabPage() {
         </section>
 
         {message && <Message m={message} names={names} />}
-        {session.hinted && (
-          <p className={styles.hintText}>
-            <Lightbulb size={16} aria-hidden="true" /> {t(key(`connect.tasks.${task}.hint`))}
+        {['hintStart', 'hint', 'hintNear'].slice(0, Number(session.hinted)).map((h, i) => (
+          <p key={h} className={styles.hintText}>
+            <Lightbulb size={16} aria-hidden="true" /> <b>{t('labGuide.hintLevel', { n: i + 1 })}.</b> {t(key(`connect.tasks.${task}.${h}`), { ssid: SCHOOL_SSID })}
           </p>
-        )}
+        ))}
 
         {task !== 'wifi' && <Cables task={task} names={names} />}
         {task === 'ethernet' && (wired ? <Dhcp client="laptop-eth" /> : <p className={styles.note}>{t('connect.dhcp.waiting')}</p>)}
@@ -340,7 +341,7 @@ export default function ConnectLabPage() {
         {task === 'wifi' && wifi.joined && isSecure(NETWORKS.find((n) => n.ssid === wifi.joined)!.security) && <Dhcp client="laptop-wifi" />}
 
         <div className={styles.actions}>
-          <button type="button" className={styles.secondary} onClick={hint} disabled={session.hinted}>
+          <button type="button" className={styles.secondary} onClick={hint} disabled={Number(session.hinted) >= CONNECT_HINTS}>
             <Lightbulb size={15} aria-hidden="true" /> {t('connect.ui.hint')}
           </button>
           <button type="button" className={styles.secondary} onClick={reset}>

@@ -33,7 +33,7 @@ const base = (id: ConnectTaskId) => ({
   instructions: { key: `connect.tasks.${id}.instructions` },
   expectedResult: { key: `connect.tasks.${id}.expected` },
   maxScore: 10,
-  hints: [{ key: `connect.tasks.${id}.hint` }],
+  hints: ['hintStart', 'hint', 'hintNear'].map((h) => ({ key: `connect.tasks.${id}.${h}` })),
 });
 
 const pcPort = (state: PlugState, end: string) => (state.plugged[end] ? portById(PC_SCENARIO, state.plugged[end]) : undefined);

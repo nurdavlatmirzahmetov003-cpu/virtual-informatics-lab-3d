@@ -15,7 +15,8 @@ export type ConnectMessage =
 interface TaskSession {
   attempt: Attempt;
   report: GradeReport | null;
-  hinted: boolean;
+  /** Hints taken so far (V4 §5.3: a ladder of three, from a nudge to almost the answer). */
+  hinted: number;
 }
 
 interface ConnectState {
@@ -43,9 +44,12 @@ interface ConnectState {
   reset: () => void;
 }
 
+/** Rungs of the hint ladder of every task (connect.tasks.<id>.hintStart, .hint, .hintNear). */
+export const CONNECT_HINTS = 3;
+
 const scenarioOf = (task: ConnectTaskId): ScenarioId | null => (task === 'wifi' ? null : task);
 const freshWifi = (): WifiWork => ({ joined: null, joinedOpen: false, wrongKeys: 0 });
-const freshSession = (task: ConnectTaskId): TaskSession => ({ attempt: startAttempt(`connect:${task}`), report: null, hinted: false });
+const freshSession = (task: ConnectTaskId): TaskSession => ({ attempt: startAttempt(`connect:${task}`), report: null, hinted: 0 });
 
 export const useConnectLabStore = create<ConnectState>()((set, get) => ({
   task: 'pc',
@@ -103,8 +107,10 @@ export const useConnectLabStore = create<ConnectState>()((set, get) => ({
   hint: () => {
     const { task, sessions } = get();
     const ses = sessions[task];
-    if (ses.hinted) return;
-    set({ sessions: { ...sessions, [task]: { ...ses, hinted: true, attempt: { ...ses.attempt, hintsUsed: ses.attempt.hintsUsed + 1 } } } });
+    // older saves kept a boolean
+    const taken = Number(ses.hinted);
+    if (taken >= CONNECT_HINTS) return;
+    set({ sessions: { ...sessions, [task]: { ...ses, hinted: taken + 1, attempt: { ...ses.attempt, hintsUsed: ses.attempt.hintsUsed + 1 } } } });
   },
 
   check: () => {
