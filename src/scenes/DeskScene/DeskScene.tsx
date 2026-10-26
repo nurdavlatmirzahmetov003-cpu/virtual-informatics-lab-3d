@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { EnvironmentLighting } from '@/components/3d/EnvironmentLighting';
+import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useVividGrade } from '@/lib/three/grade';
 import { sceneFocus } from '@/lib/three/sceneFocus';
 import { Desk } from './models/Desk';
@@ -39,6 +40,7 @@ export default function DeskScene() {
   useVividGrade();
 
   const gl = useThree((s) => s.gl);
+  const preset = useQualityPreset();
   useEffect(() => {
     sceneFocus.enabled = true;
     // the hero monitors hang on an arm: their own stands are clipped away
@@ -58,7 +60,8 @@ export default function DeskScene() {
       <Room />
       <Desk surface={HERO_LOOKS[look].desk} />
       <Decor />
-      <GamingCorner />
+      {/* Low: the corner is the first decoration to go (V4 §2.3) */}
+      {preset.level !== 'low' && <GamingCorner />}
       <LivingSetup onLook={setLook} />
       <HeroCompanions look={look} />
       <StoryDevices>

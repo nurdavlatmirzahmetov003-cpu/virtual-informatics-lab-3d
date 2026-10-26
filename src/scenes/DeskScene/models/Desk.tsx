@@ -108,14 +108,14 @@ export function Desk({ surface = 'lightWood' }: { surface?: DeskSurface }) {
           ))}
         </group>
       ))}
-      {/* apron front and back, set in from the edge */}
-      {[-1, 1].map((s) => (
+      {/* apron front and back, set in from the edge (Low: the rails alone carry the top) */}
+      {preset.level !== 'low' && [-1, 1].map((s) => (
         <mesh key={`apron${s}`} geometry={geo.apronLong} position={[0, legHeight - 0.035, s * (DESK.depth / 2 - 0.05)]} castShadow>
           <meshStandardMaterial color="#141519" metalness={0.55} roughness={0.38} />
         </mesh>
       ))}
       {/* cable tray with a power strip, under the back of the top */}
-      <group position={[0.05, legHeight - 0.13, -DESK.depth / 2 + 0.1]}>
+      {preset.level !== 'low' && <group position={[0.05, legHeight - 0.13, -DESK.depth / 2 + 0.1]}>
         <mesh geometry={geo.trayBottom} castShadow>
           <meshStandardMaterial color="#1b1d22" metalness={0.5} roughness={0.5} />
         </mesh>
@@ -127,7 +127,7 @@ export function Desk({ surface = 'lightWood' }: { surface?: DeskSurface }) {
         <mesh geometry={geo.strip} position={[0.2, 0.004, 0]}>
           <meshStandardMaterial color="#e9eaee" roughness={0.45} />
         </mesh>
-      </group>
+      </group>}
       {/* rear stretcher beam */}
       <mesh geometry={geo.beam} position={[0, legHeight - 0.12, -postZ]} castShadow>
         <meshStandardMaterial color="#141519" metalness={0.55} roughness={0.38} />

@@ -444,10 +444,14 @@ function useGlowTexture() {
 export function Decor() {
   const preset = useQualityPreset();
   const glow = useGlowTexture();
+  // Low keeps the room, the robots and the plants; the small props and the LED wash cost too much there (V4 §2.3)
+  const rich = preset.level !== 'low';
+  // the wash is two big transparent planes: only where the post chain runs (High, Ultra)
+  const wash = preset.postprocessing;
   const books = useMemo(() => ['#5f7bff', '#2fc8f2', '#f4f6fb', '#a95cf5'], []);
   const root = useRef<Group>(null);
   // ~40 small meshes would cost as many draw calls a frame: one per material instead
-  useLayoutEffect(() => (root.current ? mergeStatic(root.current) : undefined), []);
+  useLayoutEffect(() => (root.current ? mergeStatic(root.current) : undefined), [rich]);
   return (
     <>
     <group ref={root}>
@@ -493,7 +497,7 @@ export function Decor() {
         </mesh>
       ))}
       {/* the trophy on the right shelf */}
-      <group position={[0.84, 1.653, WALL + 0.09]}>
+      {rich && <group position={[0.84, 1.653, WALL + 0.09]}>
         <mesh position-y={0.012} castShadow>
           <boxGeometry args={[0.04, 0.024, 0.04]} />
           <meshStandardMaterial color="#2b2f3a" roughness={0.5} />
@@ -506,19 +510,21 @@ export function Decor() {
           <cylinderGeometry args={[0.026, 0.012, 0.045, 20]} />
           <meshStandardMaterial color="#e8b84a" roughness={0.25} metalness={0.9} />
         </mesh>
-      </group>
+      </group>}
     </group>
     {/* the wash of the LED strips on the wall: a soft additive gradient, no light */}
-    {[SLAT_PANEL.top, SLAT_PANEL.bottom].map((y, i) => (
+    {wash && [SLAT_PANEL.top, SLAT_PANEL.bottom].map((y, i) => (
       <mesh key={y} position={[0, y, WALL - 0.02]} renderOrder={2}>
         <planeGeometry args={[SLAT_PANEL.width + 0.3, i === 0 ? 0.4 : 0.28]} />
         <meshBasicMaterial map={glow} color="#7fd8ff" transparent opacity={0.55} blending={AdditiveBlending} depthWrite={false} toneMapped={false} />
       </mesh>
     ))}
     {/* a little robot figure on the right shelf, beside the trailing plant */}
-    <group position={[0.63, 1.653, WALL + 0.1]} rotation-y={-0.3} scale={0.085}>
-      <Robot kind="bit" accent="#a95cf5" glow="#ffb35c" name="shelf-figure" />
-    </group>
+    {rich && (
+      <group position={[0.63, 1.653, WALL + 0.1]} rotation-y={-0.3} scale={0.085}>
+        <Robot kind="bit" accent="#a95cf5" glow="#ffb35c" name="shelf-figure" />
+      </group>
+    )}
     {/* instanced plants stay out of the merged group: their own two draw calls each */}
     <Monstera height={1.0} pot={[0.15, 0.32]} potColor="#eeece6" leaves={10} seed={3} position={[1.08, 0, -0.66]} yaw={0.4} />
     <Monstera height={0.3} pot={[0.05, 0.085]} potColor="#d9dde6" leaves={7} seed={11} position={DESK_PLANT} yaw={-0.6} />
