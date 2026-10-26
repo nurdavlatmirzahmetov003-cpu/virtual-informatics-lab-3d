@@ -73,9 +73,9 @@
 
 .label {
   min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  /* a long name wraps to a second line rather than being cut */
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 @media (prefers-reduced-motion: no-preference) {
