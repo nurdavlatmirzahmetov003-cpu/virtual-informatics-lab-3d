@@ -7921,6 +7921,7 @@
     "device": "Device",
     "teacher": "Bit the teacher",
     "poster": "Poster",
-    "info": "Info"
+    "info": "Info",
+    "algoSide": "Code and variables"
   }
 }

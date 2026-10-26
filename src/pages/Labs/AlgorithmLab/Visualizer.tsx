@@ -1,5 +1,6 @@
+import { LabLayout } from '@/components/lab/LabLayout';
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, Dices, Gauge, Info, Pause, Play, RotateCcw } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Code2, Dices, Gauge, Info, Pause, Play, RotateCcw } from 'lucide-react';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import {
@@ -139,13 +140,70 @@ export function Visualizer({ id }: { id: AlgorithmId }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [player]);
 
+  const side = (
+  <div className={styles.side}>
+    <section className={styles.panel}>
+      <header className={styles.panelHead}>
+        <h3>{t('algorithms.ui.code')}</h3>
+        <span title={t('algorithms.ui.complexity')}>{spec.complexity}</span>
+      </header>
+      <ol className={styles.code}>
+        {Array.from({ length: spec.lines }, (_, i) => (
+          <li key={i} data-active={step.line === i}>
+            <span>{i + 1}</span>
+            <code>{t(tk(`algorithms.code.${id}.l${i}`))}</code>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section className={styles.panel}>
+      <h3>{t('algorithms.ui.vars')}</h3>
+      {step.vars.length === 0 ? (
+        <p className={styles.muted}>{t('algorithms.ui.noVars')}</p>
+      ) : (
+        <dl className={styles.vars}>
+          {step.vars.map((v) => {
+            const changed = step.changed.includes(v.name);
+            return (
+              <div key={changed ? `${v.name}-${player.index}` : v.name} data-changed={changed}>
+                <dt>{v.name}</dt>
+                <dd>{String(v.value)}</dd>
+              </div>
+            );
+          })}
+        </dl>
+      )}
+    </section>
+
+    <section className={styles.panel}>
+      <dl className={styles.stats}>
+        {spec.stats.map((k) => (
+          <div key={k}>
+            <dt>{t(tk(`algorithms.stats.${k}`))}</dt>
+            <dd>{step.stats[k] ?? 0}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  </div>
+  );
+
   const apply = (next: AlgorithmInput) => {
     setInput(next);
     player.reset();
   };
 
   return (
-    <div className={styles.visualizer}>
+    // V4 §5.1 / §6: the code, variables and counters live in the shared lab panel (folds, bottom sheet on phones)
+    <LabLayout
+      id="algorithms"
+      panel={{
+        title: t('panels.algoSide'),
+        icon: <Code2 size={16} aria-hidden="true" />,
+        content: side,
+      }}
+    >
       <section className={styles.stage}>
         <InputBar key={id} id={id} input={input} onApply={apply} />
 
@@ -212,52 +270,6 @@ export function Visualizer({ id }: { id: AlgorithmId }) {
         <p className={styles.keys}>{t('algorithms.ui.keys')}</p>
       </section>
 
-      <aside className={styles.side}>
-        <section className={styles.panel}>
-          <header className={styles.panelHead}>
-            <h3>{t('algorithms.ui.code')}</h3>
-            <span title={t('algorithms.ui.complexity')}>{spec.complexity}</span>
-          </header>
-          <ol className={styles.code}>
-            {Array.from({ length: spec.lines }, (_, i) => (
-              <li key={i} data-active={step.line === i}>
-                <span>{i + 1}</span>
-                <code>{t(tk(`algorithms.code.${id}.l${i}`))}</code>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className={styles.panel}>
-          <h3>{t('algorithms.ui.vars')}</h3>
-          {step.vars.length === 0 ? (
-            <p className={styles.muted}>{t('algorithms.ui.noVars')}</p>
-          ) : (
-            <dl className={styles.vars}>
-              {step.vars.map((v) => {
-                const changed = step.changed.includes(v.name);
-                return (
-                  <div key={changed ? `${v.name}-${player.index}` : v.name} data-changed={changed}>
-                    <dt>{v.name}</dt>
-                    <dd>{String(v.value)}</dd>
-                  </div>
-                );
-              })}
-            </dl>
-          )}
-        </section>
-
-        <section className={styles.panel}>
-          <dl className={styles.stats}>
-            {spec.stats.map((k) => (
-              <div key={k}>
-                <dt>{t(tk(`algorithms.stats.${k}`))}</dt>
-                <dd>{step.stats[k] ?? 0}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      </aside>
-    </div>
+    </LabLayout>
   );
 }
