@@ -85,6 +85,7 @@ export function Palette({ network, actions, svgRef }: { network: Network; action
               <button
                 type="button"
                 className={styles.paletteItem}
+                data-guide-item={type}
                 style={{ ['--tone' as string]: DEVICE_TONE[type] }}
                 disabled={full}
                 onPointerDown={(e) => start(e, type)}

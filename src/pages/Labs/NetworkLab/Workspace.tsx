@@ -245,7 +245,7 @@ export function Workspace({ network, selection, run, actions, svgRef, onPacketDo
   const selectedEnds = selectedLink && linkEnds(network, selectedLink);
 
   return (
-    <div className={styles.board} data-wiring={Boolean(wire)}>
+    <div className={styles.board} data-wiring={Boolean(wire)} data-guide="workspace">
       <svg
         ref={svgRef}
         viewBox={`0 0 ${VIEW.width} ${VIEW.height}`}

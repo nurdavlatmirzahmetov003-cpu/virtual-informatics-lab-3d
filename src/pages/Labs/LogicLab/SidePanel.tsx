@@ -83,7 +83,7 @@ export function TaskPanel({ task, attempt, report, actions }: { task: LogicTask;
         </ol>
       )}
       <div className={styles.actions}>
-        <button type="button" className={styles.primary} onClick={actions.check}>
+        <button type="button" className={styles.primary} onClick={actions.check} data-guide="check">
           <ShieldCheck size={16} aria-hidden="true" /> {t('logic.ui.check')}
         </button>
         <button type="button" className={styles.secondary} onClick={actions.hint} disabled={hintsLeft === 0}>

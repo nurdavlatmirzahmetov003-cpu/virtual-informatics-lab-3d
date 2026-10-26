@@ -48,7 +48,7 @@ export function PingBar({ network, from, to, onFrom, onTo, onPing, run, finished
             ))}
           </select>
         </label>
-        <button type="button" className={styles.pingButton} onClick={onPing} disabled={!ready}>
+        <button type="button" className={styles.pingButton} onClick={onPing} disabled={!ready} data-guide="ping">
           <Send size={15} aria-hidden="true" /> {t('network.ping.run')}
         </button>
       </div>

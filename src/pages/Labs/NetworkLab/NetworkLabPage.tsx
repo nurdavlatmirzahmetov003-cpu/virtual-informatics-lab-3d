@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Boxes, CircleCheck, Info, Settings2, ClipboardList, X } from 'lucide-react';
 import { LabLayout } from '@/components/lab/LabLayout';
+import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
@@ -69,6 +70,31 @@ function Lab({ mode }: { mode: Mode }) {
 
   const selectedName = selection?.kind === 'device' ? deviceById(network, selection.id)?.name : undefined;
 
+  // V4 §5.3: Bit shows the first task step by step through the lab's own actions
+  const live = useRef(network);
+  useEffect(() => {
+    live.current = network;
+  }, [network]);
+  const demo = useCallback((): DemoStep[] => {
+    const el = (sel: string) => () => document.querySelector(sel);
+    const id = (name: string) => live.current.devices.find((d) => d.name === name)?.id ?? '';
+    const sw = () => live.current.devices.find((d) => d.type === 'switch')?.id ?? '';
+    return [
+      { say: t('labGuide.network.s1'), target: el('[data-guide="workspace"]') },
+      { say: t('labGuide.network.s2'), target: el('[data-guide-item="switch"]'), run: () => actions.add('switch', 560, 320) },
+      { say: t('labGuide.network.s3'), target: el('[data-guide="workspace"]'), run: () => actions.connectDevices(id('PC1'), sw()) },
+      {
+        say: t('labGuide.network.s4'),
+        run: () => {
+          actions.connectDevices(id('PC2'), sw());
+          window.setTimeout(() => actions.connectDevices(id('PC3'), sw()), 500);
+        },
+      },
+      { say: t('labGuide.network.s5'), target: el('[data-guide="ping"]'), run: () => actions.ping(id('PC1'), id('PC3')), hold: 3600 },
+      { say: t('labGuide.network.s6'), target: el('[data-guide="check"]') },
+    ];
+  }, [actions, t]);
+
   const sideContent = exercise && attempt ? (
     <div className={styles.side}>
       <div className={styles.sideTabs} role="tablist">
@@ -98,6 +124,7 @@ function Lab({ mode }: { mode: Mode }) {
       panel={{ title: task ? t(tk(`network.tasks.${task}.title`)) : t('network.config.title'), icon: exercise ? <ClipboardList size={16} aria-hidden="true" /> : <Settings2 size={16} aria-hidden="true" />, badge: selectedName, content: sideContent }}
     >
       <div className={styles.stage}>
+        {task && <TaskGuide id={`network:${task}`} title={t(tk(`network.tasks.${task}.title`))} text={t(tk(`network.tasks.${task}.instructions`))} demo={task === NETWORK_TASK_IDS[0] ? demo : undefined} onDemoEnd={actions.restart} />}
         {notice && (
           <p className={styles.notice} role="alert">
             <Info size={15} aria-hidden="true" />

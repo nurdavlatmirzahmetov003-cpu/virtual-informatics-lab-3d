@@ -7833,5 +7833,67 @@
   "labLayout": {
     "hide": "Hide the {name} panel",
     "show": "Open the {name} panel"
+  },
+  "labGuide": {
+    "label": "Bit's welcome",
+    "hello": "Hi! I'm Bit. Today's task:",
+    "showMe": "Show me how",
+    "start": "I'll start myself",
+    "listen": "Read it aloud",
+    "close": "Close",
+    "barHint": "Bit can show you the solution step by step.",
+    "again": "Show me again",
+    "whatToDo": "What do I do?",
+    "demoLabel": "Bit is showing the solution",
+    "step": "Step {n} of {total}",
+    "stop": "Stop",
+    "yourTurnTitle": "Your turn now",
+    "yourTurn": "That's how! I've put everything back to the start — now you try.",
+    "network": {
+      "s1": "Three computers are ready, but they aren't connected. They need a switch in the middle.",
+      "s2": "We take a switch from the palette and place it in the middle of the workspace.",
+      "s3": "Now we cable each computer to the switch: PC1 first.",
+      "s4": "Then PC2 and PC3 too.",
+      "s5": "Let's test: a PING from PC1 to PC3. The packet goes through the switch.",
+      "s6": "When you're done, press “Check” to get your points."
+    },
+    "logic": {
+      "s1": "The lamp must light only when both A and B are 1. That's an AND gate.",
+      "s2": "We put an AND gate from the palette onto the board.",
+      "s3": "Input A goes to the AND's first leg, B to the second.",
+      "s4": "We connect the AND's output to the lamp Y.",
+      "s5": "Let's test: A = 1 and B = 1 — the lamp is on!",
+      "s6": "Once the truth table is full, press “Check”."
+    },
+    "algorithms": {
+      "s1": "Bubble sort compares two neighbouring numbers and moves the larger one to the right.",
+      "s2": "We press “Play” — the algorithm runs step by step.",
+      "s3": "Coloured bars are the numbers being compared now. The largest “bubbles up” to the end.",
+      "s4": "To go at your own pace, use the “Next step” button."
+    },
+    "experiments": {
+      "s1": "Load the processor and its temperature rises.",
+      "s2": "We raise the load — the temperature climbs on the chart.",
+      "s3": "Now we fit a stronger cooler and watch the difference."
+    },
+    "connect": {
+      "s1": "The back panel of the system unit has many ports. Each cable has its own.",
+      "s2": "The monitor cable (HDMI) goes into the graphics card's port, not the motherboard's.",
+      "s3": "Keyboard and mouse go into USB-A ports.",
+      "s4": "Speakers go into the green 3.5 mm audio jack.",
+      "s5": "And finally the power cable goes into the power supply."
+    },
+    "sim": {
+      "s1": "Here we build a computer, switch it on and watch what happens.",
+      "s2": "We switch the computer on.",
+      "s3": "We pick the “Game” load and start it — watch the temperature and the power.",
+      "s4": "Now swap one part: cause and effect show up right here."
+    },
+    "assembly": {
+      "s1": "A computer is always built starting from the motherboard.",
+      "s2": "We lay the motherboard on the antistatic mat.",
+      "s3": "We seat the processor in the socket — the triangle marks must line up.",
+      "s4": "We put the memory into the DIMM slots. Carry on from here yourself!"
+    }
   }
 }

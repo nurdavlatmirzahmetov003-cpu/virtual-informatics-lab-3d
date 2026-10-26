@@ -83,7 +83,7 @@
   display: inline-grid;
   place-items: center;
   flex: none;
-  color: var(--accent, var(--primary));
+  color: var(--accent);
 }
 
 /* long content scrolls inside its region */
@@ -110,7 +110,7 @@
 .fold:hover,
 .fold:focus-visible {
   color: var(--text);
-  border-color: var(--primary);
+  border-color: var(--accent);
 }
 
 /* a folded region: a slim tab on its edge, its name written down the side */
@@ -133,7 +133,7 @@
 
 .edgeTab:hover,
 .edgeTab:focus-visible {
-  border-color: var(--primary);
+  border-color: var(--accent);
 }
 
 .edgeLabel {
