@@ -7,7 +7,7 @@
  */
 import { useEffect, useMemo, useRef } from 'react';
 import { Billboard } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { CanvasTexture, SRGBColorSpace, type Group, type MeshBasicMaterial } from 'three';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { useT } from '@/hooks/useT';
@@ -125,6 +125,9 @@ const arrived = HERO_TIMING.stagger * (HERO_ORDER.length - 1) + HERO_TIMING.fly;
 export function HeroCompanions({ look: lookIndex }: { look: number }) {
   const t = useT();
   const reduced = useReducedMotion();
+  // on portrait screens the headline lies over the whole scene: a card of text under it would only fight it
+  const size = useThree((st) => st.size);
+  const roomForBubble = size.width / Math.max(1, size.height) >= 1.3;
   // the presenter's gesture clock restarts whenever a new look lands
   const gesture = useRef({ look: -1, since: 0 });
   const look = HERO_LOOKS[lookIndex] ?? HERO_LOOKS[0];
@@ -166,9 +169,11 @@ export function HeroCompanions({ look: lookIndex }: { look: number }) {
       </group>
       <group position={[...PRESENTER.position]} rotation-y={PRESENTER.yaw} scale={PRESENTER.scale}>
         <Robot kind="presenter" accent="#5f7bff" animate={presenter} stillAt={0} name="hero-presenter" />
-        <Billboard position={[0.3, 1.6, 0]}>
-          <SpeechBubble text={text} title={t('home.decor.presenterName')} visible={bubbleOn} />
-        </Billboard>
+        {roomForBubble && (
+          <Billboard position={[0.3, 1.6, 0]}>
+            <SpeechBubble text={text} title={t('home.decor.presenterName')} visible={bubbleOn} />
+          </Billboard>
+        )}
       </group>
     </>
   );
