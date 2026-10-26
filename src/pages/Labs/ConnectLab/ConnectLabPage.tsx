@@ -3,6 +3,8 @@
  * the laptop by Ethernet (DHCP), join Wi-Fi securely. The 3D stage on the
  * left; the task, cables, messages, DHCP / Wi-Fi panels and grading on the right.
  */
+import { FoldButton, FoldTab } from '@/components/panel/Foldable';
+import { useFold } from '@/components/panel/foldState';
 import { CONNECT_HINTS } from '@/store/connectLabStore';
 import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
@@ -267,6 +269,9 @@ export default function ConnectLabPage() {
     ];
   };
 
+  // V4 §6: the reading panel folds away, the stage takes the whole width (Alt+I)
+  const sideFold = useFold('connect:side', { primary: true, contentKey: task });
+
   const requested = params.get('task');
   useEffect(() => {
     setTask(isTask(requested) ? requested : 'pc');
@@ -288,15 +293,17 @@ export default function ConnectLabPage() {
   const title = t(key(`connect.tasks.${task}.title`));
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-folded={sideFold.folded || undefined}>
       <div className={styles.stage}>
+        {sideFold.folded && <FoldTab fold={sideFold} title={title} side="right" className={styles.sideTab} />}
         <Suspense fallback={null}>
           <ConnectStage task={task} names={names} label={t('connect.sceneLabel', { task: title })} />
         </Suspense>
         {scenario && <p className={styles.howTo}>{t('connect.ui.howTo')}</p>}
       </div>
 
-      <aside className={styles.side}>
+      {!sideFold.folded && <aside className={styles.side}>
+        <FoldButton fold={sideFold} side="right" className={styles.sideFold} />
         <header className={styles.head}>
           <Link to="/labs" className={styles.back}>
             <ArrowLeft size={15} aria-hidden="true" /> {t('connect.ui.back')}
@@ -352,7 +359,7 @@ export default function ConnectLabPage() {
           </button>
         </div>
         {session.report && <GradeReportCard report={session.report} />}
-      </aside>
+      </aside>}
     </div>
   );
 }
