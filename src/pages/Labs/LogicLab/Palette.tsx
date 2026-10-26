@@ -72,6 +72,7 @@ export function Palette({ circuit, allowed, actions, svgRef }: { circuit: Circui
             <button
               type="button"
               className={styles.paletteItem}
+              data-guide-item={gate}
               disabled={full}
               onPointerDown={(e: ReactPointerEvent) => {
                 if (e.button !== 0 || full) return;

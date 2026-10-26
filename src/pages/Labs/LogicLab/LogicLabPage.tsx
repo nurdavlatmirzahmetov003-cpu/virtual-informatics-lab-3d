@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { CircleCheck, ClipboardList, Cpu, Info, TriangleAlert, X } from 'lucide-react';
 import { LabLayout } from '@/components/lab/LabLayout';
+import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
@@ -32,6 +33,38 @@ function Lab({ mode }: { mode: Mode }) {
   const formula = useMemo(() => expression(circuit), [circuit]);
   const warned = useMemo(() => new Set(issues.filter((i) => i.code !== 'unused').flatMap((i) => i.nodes)), [issues]);
 
+  // V4 §5.3: Bit builds the first task's circuit through the lab's own actions
+  const live = useRef(circuit);
+  useEffect(() => {
+    live.current = circuit;
+  }, [circuit]);
+  const demo = useCallback((): DemoStep[] => {
+    const el = (sel: string) => () => document.querySelector(sel);
+    const gate = () => live.current.nodes.find((n) => n.kind === 'gate')?.id ?? '';
+    return [
+      { say: t('labGuide.logic.s1'), target: el('[data-guide="workspace"]') },
+      { say: t('labGuide.logic.s2'), target: el('[data-guide-item="AND"]'), run: () => actions.addGate('AND', 500, 280) },
+      {
+        say: t('labGuide.logic.s3'),
+        target: el('[data-guide="workspace"]'),
+        run: () => {
+          actions.connect('A', gate(), 0);
+          window.setTimeout(() => actions.connect('B', gate(), 1), 500);
+        },
+      },
+      { say: t('labGuide.logic.s4'), run: () => actions.connect(gate(), 'Y', 0) },
+      {
+        say: t('labGuide.logic.s5'),
+        run: () => {
+          actions.toggle('A');
+          window.setTimeout(() => actions.toggle('B'), 600);
+        },
+        hold: 2600,
+      },
+      { say: t('labGuide.logic.s6'), target: el('[data-guide="check"]') },
+    ];
+  }, [actions, t]);
+
   useEffect(() => {
     if (!notice) return;
     const id = window.setTimeout(actions.dismissNotice, 4500);
@@ -54,6 +87,7 @@ function Lab({ mode }: { mode: Mode }) {
       }}
     >
       <div className={styles.stage}>
+        {task && <TaskGuide id={`logic:${task}`} title={t(tk(`logic.tasks.${task}.title`))} text={t(tk(`logic.tasks.${task}.instructions`))} demo={task === LOGIC_TASK_IDS[0] ? demo : undefined} onDemoEnd={actions.restart} />}
         {exercise && exercise.allowed.length < GATE_TYPES.length && <p className={styles.restriction}>{t('logic.ui.onlyAllowed', { gates: exercise.allowed.join(', ') })}</p>}
         <div className={styles.boardWrap}>
           {notice && (

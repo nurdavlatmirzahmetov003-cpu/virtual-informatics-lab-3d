@@ -161,7 +161,7 @@ export function Board({ circuit, evaluation, bits, selection, warned, actions, s
   };
 
   return (
-    <div className={styles.board} data-wiring={Boolean(draft)}>
+    <div className={styles.board} data-wiring={Boolean(draft)} data-guide="workspace">
       <svg
         ref={svgRef}
         viewBox={`0 0 ${VIEW.width} ${VIEW.height}`}
