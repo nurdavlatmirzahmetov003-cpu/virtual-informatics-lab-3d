@@ -9,8 +9,9 @@ import { create } from 'zustand';
  *
  * Without the post chain (Low, Medium) it is three's CustomToneMapping: the
  * grade runs inside every material's own shader, so it costs no extra pass.
- * With it (High, Ultra) PostEffects does the same with its ToneMapping and
- * HueSaturation effects.
+ * The curve is Narkowicz's fit of ACES (a few multiply-adds; three's full
+ * ACES cost 2 fps on Low). With the post chain (High, Ultra) PostEffects does
+ * the same with its ToneMapping and HueSaturation effects.
  */
 export const GRADE_SATURATION = 1.12;
 /** ACES lifts mid-tones above Neutral at the same exposure; this keeps white surfaces from clipping. */
@@ -20,8 +21,10 @@ const CUSTOM = 'vec3 CustomToneMapping( vec3 color ) { return color; }';
 if (ShaderChunk.tonemapping_pars_fragment.includes(CUSTOM)) {
   ShaderChunk.tonemapping_pars_fragment = ShaderChunk.tonemapping_pars_fragment.replace(
     CUSTOM,
+    // Narkowicz's fit of the ACES curve: a few multiply-adds per pixel, no colour-space matrices
     `vec3 CustomToneMapping( vec3 color ) {
-	vec3 c = ACESFilmicToneMapping( color * ${GRADE_EXPOSURE.toFixed(3)} );
+	vec3 x = color * ( toneMappingExposure * ${GRADE_EXPOSURE.toFixed(3)} );
+	vec3 c = saturate( ( x * ( 2.51 * x + 0.03 ) ) / ( x * ( 2.43 * x + 0.59 ) + 0.14 ) );
 	float l = dot( c, vec3( 0.2126, 0.7152, 0.0722 ) );
 	return saturate( mix( vec3( l ), c, ${GRADE_SATURATION.toFixed(3)} ) );
 }`,

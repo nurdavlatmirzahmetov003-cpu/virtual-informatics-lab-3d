@@ -44,7 +44,7 @@ export const DESK_BIT = { position: [-0.56, DESK_TOP, 0.24], yaw: -0.3, scale: 0
  * the text runs up to the desk), so this is where it is seen at every width
  * without covering the text, the lamp's arm or the shelf above it.
  */
-export const PRESENTER = { position: [-0.42, 0, -0.6], yaw: 0.15, scale: 0.95 } as const;
+export const PRESENTER = { position: [-0.48, 0, -0.6], yaw: 0.18, scale: 0.95 } as const;
 
 /** The gaming desk right of the main desk, against the wall (centre x/z and width/depth, m). */
 export const GAMING_DESK = { center: [2.0, -0.56], size: [1.3, 0.66] } as const;
