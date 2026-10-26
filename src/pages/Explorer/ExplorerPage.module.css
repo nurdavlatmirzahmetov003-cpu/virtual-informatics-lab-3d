@@ -43,6 +43,7 @@
 }
 
 .intro {
+  position: relative;
   grid-column: 1;
   grid-row: 1;
   display: grid;
@@ -517,4 +518,40 @@
 
 .quizDetails[open] summary {
   margin-bottom: var(--space-4);
+}
+
+/* V4 §6: folding (components/panel/Foldable) */
+.introFold {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.intro .eyebrow {
+  padding-right: 40px;
+}
+
+/* folded: only the tab and the switches, no card behind them */
+.intro[data-folded] {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  justify-items: start;
+}
+
+.panelTab {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: start;
+  justify-self: end;
+}
+
+.panelHead {
+  gap: var(--space-2);
+}
+
+.panelHead > :first-child {
+  flex: 1;
 }
