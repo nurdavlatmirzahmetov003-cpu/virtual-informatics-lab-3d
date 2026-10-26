@@ -69,7 +69,7 @@ function headPieces(w: number, h: number, at: Vec3 = [0, 0, 0]): { solid: Piece[
   const eyeY = at[1] + h * 0.07;
   return {
     solid: [
-      { geo: new RoundedBoxGeometry(w, h, w * 0.78, 4, Math.min(w, h) * 0.34), at, color: SHELL },
+      { geo: new RoundedBoxGeometry(w, h, w * 0.78, 3, Math.min(w, h) * 0.34), at, color: SHELL },
       { geo: visor(w * 0.84, h * 0.74, h * 0.24), at: [at[0], at[1], front + 0.004], color: VISOR },
       { geo: new CylinderGeometry(w * 0.12, w * 0.12, 0.04, 20), color: JOINT, parents: [ear(-1)] },
       { geo: new CylinderGeometry(w * 0.12, w * 0.12, 0.04, 20), color: JOINT, parents: [ear(1)] },
@@ -93,13 +93,13 @@ function headPieces(w: number, h: number, at: Vec3 = [0, 0, 0]): { solid: Piece[
  * The BitLab mark is a small patch of the same surface, a little further out.
  */
 function torso(r: number, scale: Vec3, at: Vec3, shirt: { from: number; to: number } | null, logoSize = r * 0.62) {
-  const solid: Piece[] = [{ geo: new SphereGeometry(r, 36, 24), at, scale, color: SHELL }];
+  const solid: Piece[] = [{ geo: new SphereGeometry(r, 24, 16), at, scale, color: SHELL }];
   const accent: Piece[] = [];
   if (shirt) {
-    accent.push({ geo: new SphereGeometry(r * 1.03, 36, 20, 0, Math.PI * 2, shirt.from, shirt.to - shirt.from), at, scale });
+    accent.push({ geo: new SphereGeometry(r * 1.03, 24, 10, 0, Math.PI * 2, shirt.from, shirt.to - shirt.from), at, scale });
     // a rolled hem where the shirt ends, following the body's section there
     const ring = r * 1.03 * Math.sin(shirt.to);
-    accent.push({ geo: new TorusGeometry(ring, 0.009, 6, 40), at: [at[0], at[1] + r * 1.03 * Math.cos(shirt.to) * scale[1], at[2]], rot: [Math.PI / 2, 0, 0], scale: [scale[0], scale[2], 1] });
+    accent.push({ geo: new TorusGeometry(ring, 0.009, 4, 24), at: [at[0], at[1] + r * 1.03 * Math.cos(shirt.to) * scale[1], at[2]], rot: [Math.PI / 2, 0, 0], scale: [scale[0], scale[2], 1] });
   }
   const R = r * 1.045;
   // the patch spans the logo's size on the scaled surface, centred on the chest (+Z)
@@ -111,7 +111,7 @@ function torso(r: number, scale: Vec3, at: Vec3, shirt: { from: number; to: numb
     at,
     scale,
     size: logoSize,
-    geo: new SphereGeometry(R, 12, 12, Math.PI / 2 - phiLen / 2, phiLen, centre - thetaLen / 2, thetaLen),
+    geo: new SphereGeometry(R, 6, 6, Math.PI / 2 - phiLen / 2, phiLen, centre - thetaLen / 2, thetaLen),
   };
   return { solid, accent, logo };
 }
