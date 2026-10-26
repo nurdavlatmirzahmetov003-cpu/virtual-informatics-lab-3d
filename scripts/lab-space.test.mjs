@@ -27,6 +27,42 @@ test('ten zones (the stage is zone 10), unique ids, inside the hall, platforms d
   }
 });
 
+/** A zone's footprint as its four floor corners: width across its facing, depth along it. */
+function footprint(z) {
+  const [fx, fz] = z.facing;
+  const across = [fz, -fx];
+  const [w, d] = z.size;
+  return [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => [z.center[0] + (across[0] * w * a) / 2 + (fx * d * b) / 2, z.center[1] + (across[1] * w * a) / 2 + (fz * d * b) / 2]);
+}
+const segDist = (p, a, b) => {
+  const ab = [b[0] - a[0], b[1] - a[1]];
+  const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * ab[0] + (p[1] - a[1]) * ab[1]) / (ab[0] ** 2 + ab[1] ** 2)));
+  return Math.hypot(p[0] - a[0] - t * ab[0], p[1] - a[1] - t * ab[1]);
+};
+/** Walkway between two convex footprints (0 when they touch or overlap). */
+function gapBetween(P, Q) {
+  const inside = (pt, poly) => poly.every((a, i) => {
+    const b = poly[(i + 1) % poly.length];
+    return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) >= 0;
+  });
+  if (P.some((p) => inside(p, Q)) || Q.some((q) => inside(q, P))) return 0;
+  let g = Infinity;
+  for (const [A, B] of [[P, Q], [Q, P]]) for (const p of A) for (let i = 0; i < B.length; i++) g = Math.min(g, segDist(p, B[i], B[(i + 1) % B.length]));
+  return g;
+}
+
+test('V4 §3.1: every zone has its own floor, a walkway round it; print and media and the stage are 2 m apart', () => {
+  for (let i = 0; i < LAB_ZONES.length; i++)
+    for (let j = i + 1; j < LAB_ZONES.length; j++) {
+      const [a, b] = [LAB_ZONES[i], LAB_ZONES[j]];
+      const gap = gapBetween(footprint(a), footprint(b));
+      assert.ok(gap >= 1.2, `${a.id} / ${b.id}: only ${gap.toFixed(2)} m between them`);
+    }
+  const gap = gapBetween(footprint(zoneById('print_media')), footprint(zoneById('stage')));
+  assert.ok(gap >= 2, `print and media / stage: ${gap.toFixed(2)} m walkway`);
+  for (const z of LAB_ZONES) for (const [x, zz] of footprint(z)) assert.ok(inside([x, zz], 0.1), `${z.id} corner ${x.toFixed(2)},${zz.toFixed(2)} inside the hall`);
+});
+
 test('every DEVICE_CATALOG device has exactly one zone', () => {
   const catalog = readFileSync(new URL('../DEVICE_CATALOG.md', import.meta.url), 'utf8');
   const ids = [...catalog.matchAll(/^\| \d+ \| `([a-z0-9_]+)` \|/gm)].map((m) => m[1]);

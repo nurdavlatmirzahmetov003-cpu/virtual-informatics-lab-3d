@@ -22,7 +22,8 @@ import { RobotTeacher } from './classroom/RobotTeacher';
 import { ZoneStage } from './ZoneStage';
 import { LabBranding } from './LabBranding';
 import { LabRobots } from './robots/LabRobots';
-import { auditScreens, auditSignage, type ScreenReport, type SignageReport } from './visibilityAudit';
+import type { PerspectiveCamera } from 'three';
+import { auditScreens, auditSignage, auditSignOverlap, type ScreenReport, type SignageReport, type SignOverlap } from './visibilityAudit';
 import { productUrl, zoneProducts } from './zones/zoneData';
 
 const ZONE_PRODUCTS: Partial<Record<LabZoneId, string[]>> = zoneProducts();
@@ -58,16 +59,20 @@ function usePrefetchNeighbours() {
 /** ?debug or dev: window.__labAudit() runs the signage visibility audit on the live scene. */
 function AuditHook() {
   const scene = useThree((s) => s.scene);
+  const camera = useThree((s) => s.camera) as PerspectiveCamera;
+  const size = useThree((s) => s.size);
   useEffect(() => {
     if (!import.meta.env.DEV && !new URLSearchParams(window.location.search).has('debug')) return;
-    const w = window as unknown as { __labAudit?: () => SignageReport[]; __labScreens?: () => ScreenReport[] };
+    const w = window as unknown as { __labAudit?: () => SignageReport[]; __labScreens?: () => ScreenReport[]; __labSignOverlap?: () => SignOverlap[] };
     w.__labAudit = () => auditSignage(scene);
     w.__labScreens = () => auditScreens(scene);
+    w.__labSignOverlap = () => auditSignOverlap(scene, size.width / Math.max(1, size.height), camera.fov);
     return () => {
       delete w.__labAudit;
       delete w.__labScreens;
+      delete w.__labSignOverlap;
     };
-  }, [scene]);
+  }, [scene, camera, size]);
   return null;
 }
 

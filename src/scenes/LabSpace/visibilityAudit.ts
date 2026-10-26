@@ -5,8 +5,8 @@
  * points on it. A point is hidden when something else is hit first. Run in the
  * page (window.__labAudit, ?debug or dev) by scripts/lab-visibility.test.mjs.
  */
-import { Box3, Raycaster, Vector3, type Mesh, type Object3D } from 'three';
-import { LAB_ZONES } from '@/data/lab/zones';
+import { Box3, PerspectiveCamera, Raycaster, Vector3, type Mesh, type Object3D } from 'three';
+import { LAB_OVERVIEW, LAB_ZONES } from '@/data/lab/zones';
 import { overviewShot, zoneShot } from '@/lib/lab/navigation';
 
 export interface SignageReport {
@@ -150,5 +150,63 @@ export function auditScreens(scene: Object3D): ScreenReport[] {
     sv *= Math.sign(map.repeat.y) * (map.flipY ? 1 : -1);
     out.push({ name: describe(mesh), mirrored: su < 0, upsideDown: sv < 0 });
   });
+  return out;
+}
+
+export interface SignOverlap {
+  /** Camera stop: 'overview' or a zone id (its own sign against the others). */
+  from: string;
+  a: string;
+  b: string;
+}
+
+/** Screen rectangle (normalised device coordinates) of a mesh's bounding box, or null when it is behind the camera. */
+function screenRect(mesh: Mesh, camera: PerspectiveCamera) {
+  mesh.geometry.computeBoundingBox();
+  const b = mesh.geometry.boundingBox as Box3;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const x of [b.min.x, b.max.x])
+    for (const y of [b.min.y, b.max.y])
+      for (const z of [b.min.z, b.max.z]) {
+        const p = mesh.localToWorld(new Vector3(x, y, z));
+        if (p.clone().applyMatrix4(camera.matrixWorldInverse).z > -camera.near) return null;
+        p.project(camera);
+        x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x); y1 = Math.max(y1, p.y);
+      }
+  return { x0, y0, x1, y1 };
+}
+
+/**
+ * V4 §3.1: zone signs never cover each other on screen — from the overview
+ * (every pair) and from each zone's camera stop (its own sign against the
+ * others). `aspect` and `fov` are the live canvas's and camera's.
+ */
+export function auditSignOverlap(scene: Object3D, aspect: number, fov: number): SignOverlap[] {
+  scene.updateMatrixWorld(true);
+  const signs: Mesh[] = [];
+  scene.traverse((o) => {
+    if ((o as Mesh).isMesh && String(o.userData.signage ?? '').startsWith('zone-sign:') && visibleChain(o)) signs.push(o as Mesh);
+  });
+  const shots = [{ from: 'overview', ...overviewShot() }, ...LAB_ZONES.map((z) => ({ from: z.id as string, ...zoneShot(z) }))];
+  const out: SignOverlap[] = [];
+  for (const shot of shots) {
+    const camera = new PerspectiveCamera(shot.from === 'overview' ? LAB_OVERVIEW.fov : fov, aspect, 0.1, 100);
+    camera.position.set(...shot.position);
+    camera.lookAt(...shot.target);
+    camera.updateMatrixWorld(true);
+    const rects = signs.map((s) => ({ name: String(s.userData.signage), rect: screenRect(s, camera), depth: s.getWorldPosition(new Vector3()).distanceTo(camera.position) })).filter((r) => r.rect && r.rect.x1 > -1 && r.rect.x0 < 1 && r.rect.y1 > -1 && r.rect.y0 < 1);
+    for (let i = 0; i < rects.length; i++)
+      for (let j = i + 1; j < rects.length; j++) {
+        const a = rects[i];
+        const b = rects[j];
+        // from a zone stop only that zone's own sign matters
+        if (shot.from !== 'overview' && a.name !== `zone-sign:${shot.from}` && b.name !== `zone-sign:${shot.from}`) continue;
+        // a far sign seen past a near one is depth, not a collision: only signs at a similar distance can clash
+        if (Math.abs(a.depth - b.depth) > 3) continue;
+        const ra = a.rect!;
+        const rb = b.rect!;
+        if (ra.x0 < rb.x1 && rb.x0 < ra.x1 && ra.y0 < rb.y1 && rb.y0 < ra.y1) out.push({ from: shot.from, a: a.name, b: b.name });
+      }
+  }
   return out;
 }

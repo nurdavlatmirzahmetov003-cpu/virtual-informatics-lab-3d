@@ -29,13 +29,14 @@ export interface LabZone {
 }
 
 /** Interior of the hall: back wall at minZ, side walls at ±maxX, open front. */
-export const LAB_HALL = { minX: -10, maxX: 10, minZ: -7, maxZ: 8, height: 4.2 } as const;
+/** V4 §3.1: 3.5 m deeper at the open front, so the stage has its own corner, 2 m clear of print and media. */
+export const LAB_HALL = { minX: -10, maxX: 10, minZ: -7, maxZ: 11.5, height: 4.2 } as const;
 
 const BACK: Vec2 = [0, 1];
 const FROM_LEFT: Vec2 = [1, 0];
 const FROM_RIGHT: Vec2 = [-1, 0];
 /** Into the hall and a little towards the entrance: the overview and the visitors see its screen. */
-const STAGE_FACING: Vec2 = [-0.99 / Math.hypot(0.99, 0.15), 0.15 / Math.hypot(0.99, 0.15)];
+const STAGE_FACING: Vec2 = [0.99 / Math.hypot(0.99, 0.15), 0.15 / Math.hypot(0.99, 0.15)];
 
 export const LAB_ZONES: readonly LabZone[] = [
   {
@@ -85,15 +86,17 @@ export const LAB_ZONES: readonly LabZone[] = [
     devices: [],
   },
   {
-    // zone 10 (0.37): the BitLab presentation stage in the front right corner, by the window
-    id: 'stage', accent: '#5f7bff', center: [7.6, 7.0], size: [2.8, 1.6], facing: STAGE_FACING,
+    // zone 10 (0.37): the BitLab presentation stage. V4 §3.1 gave it its own corner, front left, far from
+    // print and media (they used to share X 6.6–9.0, 0.8 m apart) and clear of the minimap in the overview
+    id: 'stage', accent: '#5f7bff', center: [-8.0, 9.4], size: [2.8, 1.6], facing: STAGE_FACING,
     view: { distance: 3.45, height: 1.85, targetY: 1.3 },
     devices: [],
   },
 ];
 
 /** The whole hall from above the open front: where every visit starts and Esc returns. */
-export const LAB_OVERVIEW = { position: [0, 15.5, 19.5] as Vec3, target: [0, 0, 0.6] as Vec3, fov: 40 };
+/** V4 §3.1: framed on the deeper hall, at the same angle onto the back wall as before (its signs clear the light bars). */
+export const LAB_OVERVIEW = { position: [0, 17, 21.6] as Vec3, target: [0, 0, 2.4] as Vec3, fov: 40 };
 
 /** Orbit limits (distance from the target) per mode. */
 export const LAB_ORBIT = {
