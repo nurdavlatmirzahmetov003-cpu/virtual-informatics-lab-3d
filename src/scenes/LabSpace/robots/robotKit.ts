@@ -242,34 +242,34 @@ function builder(accent: string): RobotGeometry {
 
 /** Presenter: a tall, slim robot in a fitted BitLab T-shirt with a bow tie and a headset mic; points with its right arm. */
 function presenter(accent: string): RobotGeometry {
-  const head = headPieces(0.4, 0.31, [0, 0, 0]);
-  const body = torso(0.2, [1, 1.2, 0.86], [0, 0.76, 0], { from: 0.3, to: 1.85 });
+  const head = headPieces(0.36, 0.29, [0, 0, 0]);
+  const body = torso(0.2, [1, 1.2, 0.86], [0, 0.82, 0], { from: 0.3, to: 1.85 });
   return {
     solid: mergePieces(
       [
         ...body.solid,
         // legs reach up into the body: no gap at the hips
-        { geo: new CapsuleGeometry(0.08, 0.32, 4, 14), at: [-0.09, 0.31, 0], color: JOINT },
-        { geo: new CapsuleGeometry(0.08, 0.32, 4, 14), at: [0.09, 0.31, 0], color: JOINT },
+        { geo: new CapsuleGeometry(0.08, 0.36, 4, 14), at: [-0.09, 0.33, 0], color: JOINT },
+        { geo: new CapsuleGeometry(0.08, 0.36, 4, 14), at: [0.09, 0.33, 0], color: JOINT },
         ...[-1, 1].map((s) => ({ geo: new RoundedBoxGeometry(0.13, 0.06, 0.21, 2, 0.025), at: [s * 0.09, 0.03, 0.03] as Vec3, color: TYRE })),
-        { geo: new CylinderGeometry(0.045, 0.05, 0.08, 12), at: [0, 1.02, 0], color: JOINT },
-        ...armPieces(0.22, [{ at: [-0.22, 0.9, 0], rot: [0, 0, -0.12] }], accent),
+        { geo: new CylinderGeometry(0.045, 0.05, 0.08, 12), at: [0, 1.08, 0], color: JOINT },
+        ...armPieces(0.22, [{ at: [-0.22, 0.96, 0], rot: [0, 0, -0.12] }], accent),
         // bow tie at the collar
-        ...[-1, 1].map((s) => ({ geo: new CylinderGeometry(0.004, 0.034, 0.05, 4), at: [s * 0.027, 0.98, 0.155] as Vec3, rot: [0, 0, (s * Math.PI) / 2] as Vec3, color: JOINT })),
-        { geo: new SphereGeometry(0.013, 10, 8), at: [0, 0.98, 0.16], color: JOINT },
+        ...[-1, 1].map((s) => ({ geo: new CylinderGeometry(0.004, 0.034, 0.05, 4), at: [s * 0.027, 1.04, 0.155] as Vec3, rot: [0, 0, (s * Math.PI) / 2] as Vec3, color: JOINT })),
+        { geo: new SphereGeometry(0.013, 10, 8), at: [0, 1.04, 0.16], color: JOINT },
       ],
       true,
     ),
     accent: mergePieces(body.accent),
-    glow: mergePieces([{ geo: new SphereGeometry(0.012, 8, 6), at: [0.15, 1.16, 0.2] }]),
+    glow: mergePieces([{ geo: new SphereGeometry(0.012, 8, 6), at: [0.14, 1.22, 0.19] }]),
     head: {
       geo: mergePieces([...head.solid, { geo: new CylinderGeometry(0.004, 0.004, 0.18, 6), at: [0.14, -0.09, 0.12], rot: [0.9, 0, 0.6], color: JOINT }], true),
       glow: mergePieces(head.glow),
-      pivot: [0, 1.24, 0],
+      pivot: [0, 1.31, 0],
     },
-    arm: { geo: mergePieces(armPieces(0.22, [], accent), true), pivot: [0.22, 0.9, 0] },
+    arm: { geo: mergePieces(armPieces(0.22, [], accent), true), pivot: [0.22, 0.96, 0] },
     logo: body.logo,
-    height: 1.6,
+    height: 1.65,
   };
 }
 
