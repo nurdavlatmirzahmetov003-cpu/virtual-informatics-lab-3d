@@ -1,6 +1,7 @@
 /**
- * [PLACEHOLDER] Procedural desk: oiled oak top (Poly Haven PBR) on a powder-
- * coated steel frame. Replace with an optimised GLB in the asset pipeline.
+ * Procedural desk: a thin 22 mm top (oiled oak from Poly Haven, or a solid
+ * finish) on a powder-coated steel frame with a set-back apron, and a cable
+ * tray with a power strip under the back (V4 §2.3).
  */
 import { useTexture } from '@react-three/drei';
 import { RepeatWrapping, SRGBColorSpace, type Texture } from 'three';
@@ -20,6 +21,8 @@ const SURFACE: Record<DeskSurface, { color: string; useMap: boolean; roughness: 
 };
 
 const TEX = `${import.meta.env.BASE_URL}assets/textures/`;
+/** Cable tray under the back of the top (V4 §2.3). */
+const TRAY = { width: 1.0, depth: 0.13 };
 
 const WOOD = [`${TEX}wood_diff.jpg`, `${TEX}wood_nor.webp`, `${TEX}wood_rough.jpg`];
 /** Low preset (phones): 512 px copies — the GPU would shrink the 2K ones anyway. */
@@ -54,6 +57,12 @@ export function Desk({ surface = 'lightWood' }: { surface?: DeskSurface }) {
       post: extrudeFlat(roundedRectShape(0.04, 0.04, 0.005), DESK_TOP - DESK.thickness, { bevel: 0.0015 }),
       rail: roundedSlab(0.04, 0.03, DESK.depth - 0.08, 0.004, 0.0015),
       beam: roundedSlab(DESK.width - 0.2, 0.05, 0.02, 0.004, 0.0015),
+      // apron round the top, 5 cm in from the edge, so the 22 mm top seems to float
+      apronLong: roundedSlab(DESK.width - 0.1, 0.035, 0.02, 0.004, 0.0015),
+      // cable tray under the back: a shallow open channel
+      trayBottom: roundedSlab(TRAY.width, 0.004, TRAY.depth, 0.004, 0.001),
+      trayLip: roundedSlab(TRAY.width, 0.05, 0.004, 0.002, 0.001),
+      strip: roundedSlab(0.3, 0.038, 0.055, 0.008, 0.002),
     }),
     [],
   );
@@ -99,6 +108,26 @@ export function Desk({ surface = 'lightWood' }: { surface?: DeskSurface }) {
           ))}
         </group>
       ))}
+      {/* apron front and back, set in from the edge */}
+      {[-1, 1].map((s) => (
+        <mesh key={`apron${s}`} geometry={geo.apronLong} position={[0, legHeight - 0.035, s * (DESK.depth / 2 - 0.05)]} castShadow>
+          <meshStandardMaterial color="#141519" metalness={0.55} roughness={0.38} />
+        </mesh>
+      ))}
+      {/* cable tray with a power strip, under the back of the top */}
+      <group position={[0.05, legHeight - 0.13, -DESK.depth / 2 + 0.1]}>
+        <mesh geometry={geo.trayBottom} castShadow>
+          <meshStandardMaterial color="#1b1d22" metalness={0.5} roughness={0.5} />
+        </mesh>
+        {[-1, 1].map((s) => (
+          <mesh key={s} geometry={geo.trayLip} position={[0, 0.025, (s * TRAY.depth) / 2]} castShadow>
+            <meshStandardMaterial color="#1b1d22" metalness={0.5} roughness={0.5} />
+          </mesh>
+        ))}
+        <mesh geometry={geo.strip} position={[0.2, 0.004, 0]}>
+          <meshStandardMaterial color="#e9eaee" roughness={0.45} />
+        </mesh>
+      </group>
       {/* rear stretcher beam */}
       <mesh geometry={geo.beam} position={[0, legHeight - 0.12, -postZ]} castShadow>
         <meshStandardMaterial color="#141519" metalness={0.55} roughness={0.38} />

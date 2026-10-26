@@ -14,6 +14,7 @@ import type { ResolvedBuild } from '@/lib/studio/build';
 import { applyPaint, type PaintFinish } from '@/lib/three/finish';
 import { isTieredModel } from '@/lib/three/modelUrls';
 import { DeskMat } from '@/scenes/DeskScene/models/DeskMat';
+import { MonitorArm } from '@/scenes/DeskScene/models/MonitorArm';
 import { useMonitorWallpaper } from '@/scenes/DeskScene/models/useMonitorWallpaper';
 import { HEADSET, KEYBOARD, MONITOR, MOUSE, SPEAKERS } from '@/scenes/DeskScene/layout';
 import { PCCase, type PcRigMode } from '@/scenes/DeskScene/pc/PCCase';
@@ -199,16 +200,29 @@ function useScreenPower(animated: boolean) {
 
 const landed = (p: number) => Math.abs(p - 1) < 0.001;
 
-function Monitor({ product, paint, animated }: { product: HardwareItem; paint: PaintFinish | null; animated: boolean }) {
+function Monitor({ product, paint, animated, arm }: { product: HardwareItem; paint: PaintFinish | null; animated: boolean; arm: boolean }) {
   const onScreen = useScreenPower(animated);
   const pair = useRef<Group>(null);
   const whole = useRef<Group>(null);
   useFrame(() => {
-    if (!animated || !pair.current || !whole.current) return;
+    if (arm || !animated || !pair.current || !whole.current) return;
     const done = landed(assemblyRig.pieces.monitorStand) && landed(assemblyRig.pieces.monitor);
     pair.current.visible = !done;
     whole.current.visible = done;
   });
+  if (arm) {
+    // V4 §2.3: the panel alone (its own stand clipped away), held by a desk-clamp arm
+    return (
+      <group position={[...MONITOR.position]}>
+        <Piece k="monitorStand" animated={animated} from={[0, 0.2, 0.05]}>
+          <MonitorArm />
+        </Piece>
+        <Piece k="monitor" animated={animated} from={[0, 0.3, 0]}>
+          <ClippedMonitor product={product} paint={paint} part="panel" onScreen={onScreen} />
+        </Piece>
+      </group>
+    );
+  }
   if (!animated) {
     return (
       <group position={[...MONITOR.position]}>
@@ -276,7 +290,8 @@ const HEADSET_OFFSET = [0, 0.045, 0] as const;
  * `pcRig`: who drives the system unit (default: the assembly timeline when
  * animated, else a fixed pose; the home hero leaves it to the scroll story).
  */
-export function SetupItems({ build, finish, animated = false, pcRig }: { build: ResolvedBuild; finish: Finish; animated?: boolean; pcRig?: PcRigMode }) {
+/** `monitorArm`: the monitor hangs on a desk-clamp arm instead of its own stand (the home hero, V4 §2.3). */
+export function SetupItems({ build, finish, animated = false, pcRig, monitorArm = false }: { build: ResolvedBuild; finish: Finish; animated?: boolean; pcRig?: PcRigMode; monitorArm?: boolean }) {
   const theme = finish.peripherals;
   const paints = useMemo(
     () => ({
@@ -308,7 +323,7 @@ export function SetupItems({ build, finish, animated = false, pcRig }: { build: 
       <Piece k="mat" animated={animated} unroll={matPivot}>
         <DeskMat layout={mat} />
       </Piece>
-      {monitor && <Monitor key={monitor.id} product={monitor} paint={paints.monitor} animated={animated} />}
+      {monitor && <Monitor key={monitor.id} product={monitor} paint={paints.monitor} animated={animated} arm={monitorArm} />}
       {keyboard && (
         <Piece k="keyboard" animated={animated} from={[0, 0.08, 0.3]}>
           <ProductModel key={keyboard.id} product={keyboard} axis={0} paint={paints.keyboard} position={KEYBOARD.position} />

@@ -4,7 +4,8 @@
  * Camera states in `data/camera/cameraStates.ts` are framed on these values.
  */
 export const DESK_TOP = 0.75;
-export const DESK = { width: 1.8, depth: 0.8, thickness: 0.035 } as const;
+/** A thin 22 mm top (V4 §2.3); the steel apron under it is set back, so the edge reads thin. */
+export const DESK = { width: 1.8, depth: 0.8, thickness: 0.022 } as const;
 
 export const MAT = { position: [0.04, DESK_TOP, 0.16], size: [0.92, 0.38], thickness: 0.003 } as const;
 export const MAT_TOP = DESK_TOP + MAT.thickness;

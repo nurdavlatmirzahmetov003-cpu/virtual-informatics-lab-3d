@@ -6,6 +6,7 @@
  * ([PLACEHOLDER] entries) for the GLB replacements.
  */
 import { useEffect, useState } from 'react';
+import { useThree } from '@react-three/fiber';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { EnvironmentLighting } from '@/components/3d/EnvironmentLighting';
 import { useVividGrade } from '@/lib/three/grade';
@@ -37,12 +38,16 @@ export default function DeskScene() {
   const [look, setLook] = useState(0);
   useVividGrade();
 
+  const gl = useThree((s) => s.gl);
   useEffect(() => {
     sceneFocus.enabled = true;
+    // the hero monitors hang on an arm: their own stands are clipped away
+    gl.localClippingEnabled = true;
     return () => {
       sceneFocus.enabled = false;
+      gl.localClippingEnabled = false;
     };
-  }, []);
+  }, [gl]);
 
   return (
     <>

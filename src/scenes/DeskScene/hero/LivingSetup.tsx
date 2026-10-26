@@ -47,12 +47,12 @@ function LookSlot({ look, active, still, boundary, onLoaded }: { look: HeroLook;
     <group ref={group} visible={active} matrixWorldAutoUpdate={active}>
       {boundary ? (
         <Suspense fallback={null}>
-          <SetupItems build={look.build} finish={look.finish} animated={!still} pcRig="auto" />
+          <SetupItems build={look.build} finish={look.finish} animated={!still} pcRig="auto" monitorArm />
           <Loaded key={active ? 'shown' : 'warm'} onLoaded={active ? onLoaded : warm} />
         </Suspense>
       ) : (
         <>
-          <SetupItems build={look.build} finish={look.finish} animated={!still} pcRig="auto" />
+          <SetupItems build={look.build} finish={look.finish} animated={!still} pcRig="auto" monitorArm />
           <Loaded key={active ? 'shown' : 'warm'} onLoaded={active ? onLoaded : warm} />
         </>
       )}
