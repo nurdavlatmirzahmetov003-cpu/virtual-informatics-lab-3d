@@ -74,7 +74,7 @@ export default defineConfig({
           includeDependenciesRecursively: false,
           groups: [
             { name: 'three', test: pkg('three') },
-            { name: 'r3f', test: pkg('@react-three|postprocessing|three-stdlib|maath|camera-controls') },
+            { name: 'r3f', test: pkg('@react-three|postprocessing|n8ao|three-stdlib|maath|camera-controls') },
             // Vite's preload helper lives with React: react-router and the lazy
             // locale chunks both use it, and outside this group it would create
             // a react ⇄ useT import cycle (evaluation order breaks at startup)
