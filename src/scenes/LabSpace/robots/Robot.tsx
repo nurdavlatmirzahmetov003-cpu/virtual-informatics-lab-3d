@@ -41,7 +41,7 @@ export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent
   const body = useMemo(() => withAccent(geo.solid, geo.accent, accent), [geo, accent]);
   useEffect(
     () => () => {
-      for (const g of [geo.solid, geo.accent, geo.glow, geo.arm?.geo, geo.head?.geo, geo.head?.glow, geo.logo.geo]) g?.dispose();
+      for (const g of [geo.solid, geo.accent, geo.glow, geo.arm?.geo, geo.head?.geo, geo.head?.glow, geo.logo.geo, geo.hat?.geo]) g?.dispose();
     },
     [geo],
   );
@@ -92,6 +92,11 @@ export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent
         <mesh position={[...geo.logo.at]} rotation={geo.logo.rot ? [...geo.logo.rot] : undefined}>
           <planeGeometry args={[geo.logo.size, geo.logo.size]} />
           <meshBasicMaterial map={logo} transparent toneMapped={false} />
+        </mesh>
+      )}
+      {geo.hat && !geo.hat.onHead && (
+        <mesh geometry={geo.hat.geo} castShadow>
+          {solid}
         </mesh>
       )}
       {geo.arm && (

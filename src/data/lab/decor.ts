@@ -22,7 +22,7 @@ export interface DecorItem {
   radius: number;
 }
 
-const { minX, maxX, minZ, maxZ } = LAB_HALL;
+const { minX, maxX, minZ } = LAB_HALL;
 /** Facing into the room from the left / right wall. */
 const FROM_LEFT = Math.PI / 2;
 const FROM_RIGHT = -Math.PI / 2;
@@ -31,7 +31,7 @@ export const DECOR: readonly DecorItem[] = [
   // tall plants in the corners and between the back zones
   { kind: 'plant_tall', at: [minX + 0.55, minZ + 0.55], yaw: 0, radius: 0.4 },
   { kind: 'plant_tall', at: [maxX - 0.55, minZ + 0.55], yaw: 0.6, radius: 0.4 },
-  { kind: 'plant_tall', at: [maxX - 0.55, maxZ - 0.6], yaw: 1.2, radius: 0.4 },
+  // (the front right corner's plant moved into the robots' lounge, V4 §4.3)
   // (the front right corner is the presentation stage's, 0.37)
   { kind: 'plant_bush', at: [-3.15, minZ + 0.5], yaw: 0.3, radius: 0.35 },
   { kind: 'plant_bush', at: [3.15, minZ + 0.5], yaw: 1.4, radius: 0.35 },

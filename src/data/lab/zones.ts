@@ -6,7 +6,7 @@
  * Zone ids follow DEVICE_CATALOG.md ("Lab zones"); `workstation` (the home
  * desk setup) and `showcase` complete the PLAN_V2 list.
  */
-export const LAB_ZONE_IDS = ['workstation', 'assembly', 'storage', 'peripherals', 'print_media', 'network', 'power', 'mobile', 'showcase', 'stage'] as const;
+export const LAB_ZONE_IDS = ['workstation', 'assembly', 'storage', 'peripherals', 'print_media', 'network', 'power', 'mobile', 'showcase', 'stage', 'robots'] as const;
 export type LabZoneId = (typeof LAB_ZONE_IDS)[number];
 
 export type Vec2 = readonly [number, number];
@@ -90,6 +90,14 @@ export const LAB_ZONES: readonly LabZone[] = [
     // print and media (they used to share X 6.6–9.0, 0.8 m apart) and clear of the minimap in the overview
     id: 'stage', accent: '#5f7bff', center: [-8.0, 9.4], size: [2.8, 1.6], facing: STAGE_FACING,
     view: { distance: 3.45, height: 1.85, targetY: 1.3 },
+    devices: [],
+  },
+  {
+    // zone 11 (V4 §4.3): the robots' yard, front right, the stage's mirror — garages, a rest lounge, a play corner
+    // and a mini football pitch on one big low platform (data/robots/yard.ts lays it out); 1.3 m clear of print and
+    // media. Seen from in front of the open front, like the overview: no wall there to stand behind
+    id: 'robots', accent: '#fb923c', center: [6.0, 9.25], size: [7.2, 4.3], facing: BACK,
+    view: { distance: 5.4, height: 3.6, targetY: 0.4 },
     devices: [],
   },
 ];

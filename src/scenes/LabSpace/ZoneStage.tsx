@@ -23,6 +23,7 @@ import { AssemblyZone, PeripheralsZone, PrintMediaZone, StorageZone } from './zo
 import { MobileZone, NetworkZone, PowerZone } from './zones/techZones';
 import type { ZoneContentProps } from './zones/zoneData';
 import { StageZone } from './zones/StageZone';
+import { RobotsZone } from './zones/robots/RobotsZone';
 
 const CONTENT: Record<LabZoneId, ComponentType<ZoneContentProps>> = {
   workstation: WorkstationZone,
@@ -35,6 +36,7 @@ const CONTENT: Record<LabZoneId, ComponentType<ZoneContentProps>> = {
   mobile: MobileZone,
   showcase: ShowcaseZone,
   stage: StageZone,
+  robots: RobotsZone,
 };
 
 const PLATFORM_H = 0.05;

@@ -16,7 +16,8 @@
     "games": "Games",
     "path": "My path",
     "report": "Report for parents",
-    "identify": "Identify with the camera"
+    "identify": "Identify with the camera",
+    "robots": "Our Robots"
   },
   "settings": {
     "language": "Language",
@@ -3458,6 +3459,11 @@
         "name": "BitLab stage",
         "caption": "A live tour of the site",
         "description": "Robots present BitLab: slides on the screen, and Bit tells you about each section in its own voice. Come closer and the presentation starts."
+      },
+      "robots": {
+        "name": "Robots' yard",
+        "caption": "Where our robots live",
+        "description": "Here the robots work, charge in their garages, rest and play football. Click any robot to hear its tip."
       }
     },
     "stage": {
@@ -7928,13 +7934,193 @@
     "simGauges": "Gauges"
   },
   "menu": {
-      "open": "Open menu",
-      "close": "Close menu",
-      "title": "Menu",
-      "learning": "Learning",
-      "help": "Help",
-      "about": "About",
-      "settings": "Settings",
-      "account": "Account"
+    "open": "Open menu",
+    "close": "Close menu",
+    "title": "Menu",
+    "learning": "Learning",
+    "help": "Help",
+    "about": "About",
+    "settings": "Settings",
+    "account": "Account"
+  },
+  "robots": {
+    "title": "Our Robots",
+    "eyebrow": "The lab's helpers",
+    "lead": "Meet every robot of the lab: watch them work, dress them up, level them up and listen to their tips.",
+    "pick": "Choose a robot",
+    "viewer": {
+      "label": "{name} robot — 360° view",
+      "spin": "Auto-spin",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "reset": "Reset view",
+      "hint": "Drag to rotate, scroll to zoom",
+      "anims": {
+        "idle": "Idle",
+        "work": "Work",
+        "wave": "Wave",
+        "dance": "Dance"
+      },
+      "locked": "Unlocks at level {level}"
+    },
+    "card": {
+      "job": "Job",
+      "fact": "Fun fact",
+      "level": "Level",
+      "energy": "Energy",
+      "topic": "Tips about",
+      "skill": "Special skill",
+      "skillEffect": "Works 30 % longer on one charge.",
+      "skillLocked": "Unlocks at level {level}",
+      "now": "Now",
+      "inHall": "Also works in the lab hall"
+    },
+    "states": {
+      "work": "Working",
+      "toGarage": "Going to charge",
+      "charging": "Charging in its garage",
+      "waking": "Waking up",
+      "toPlay": "Going to play",
+      "play": "Playing football",
+      "rest": "In the rest lounge"
+    },
+    "topics": {
+      "cyber": "Computer and internet safety",
+      "room": "Room and electrical safety",
+      "posture": "Posture and eye breaks",
+      "etiquette": "Etiquette and good manners",
+      "facts": "Fun facts"
+    },
+    "wallet": {
+      "coins": "Coins",
+      "xp": "Experience (XP)",
+      "how": "You earn coins from tasks, lessons, games and the robots' tips.",
+      "guest": "Guest mode: your progress stays in this browser. Sign in to keep it in your account.",
+      "saved": "Saved",
+      "offline": "The server is not reachable: changes are saved in this browser."
+    },
+    "wardrobe": {
+      "title": "Wardrobe",
+      "slots": {
+        "hat": "Hat",
+        "shirt": "T-shirt",
+        "face": "Glasses",
+        "neck": "Neck",
+        "back": "Back",
+        "badge": "Badge"
+      },
+      "buy": "Buy · {price}",
+      "wear": "Wear",
+      "takeOff": "Take off",
+      "owned": "Owned",
+      "notEnough": "Not enough coins",
+      "needLevel": "Needs level {level}",
+      "cannot": "This robot cannot wear it",
+      "items": {
+        "cap": "BitLab cap",
+        "headphones": "Headphones",
+        "crown": "Crown",
+        "gradcap": "Graduation cap",
+        "kalpak": "Kalpak",
+        "shirt_blue": "BitLab blue",
+        "shirt_violet": "BitLab violet",
+        "shirt_cyan": "BitLab cyan",
+        "shirt_nauryz": "Nauryz",
+        "shirt_autumn": "Autumn",
+        "shirt_winter": "Winter",
+        "glasses": "Glasses",
+        "scarf": "Scarf",
+        "backpack": "Backpack",
+        "badge": "BitLab badge"
+      }
+    },
+    "train": {
+      "title": "Training",
+      "button": "Train to the next level · {price}",
+      "max": "Top level",
+      "unlocks": "Unlocks: {what}",
+      "done": "{name} reached level {level}!",
+      "unlock": {
+        "wave": "the wave animation",
+        "items": "new items",
+        "dance": "the dance animation",
+        "skill": "a special skill"
+      }
+    },
+    "tips": {
+      "ask": "Give me a tip",
+      "wait": "Just a moment…",
+      "heard": "Tips heard: {n} of {total}",
+      "from": "{name} has a tip"
+    },
+    "lab": {
+      "open": "Our Robots page",
+      "garage": "{name}'s garage",
+      "football": "Football pitch",
+      "lounge": "Rest lounge",
+      "play": "Play corner"
+    },
+    "list": {
+      "guide": {
+        "name": "Guide",
+        "job": "Greets visitors and gives tours of the lab's zones.",
+        "fact": "Knows the lab's map by heart and can lead you to any of the eleven zones.",
+        "skill": "Quick tour"
+      },
+      "cleaner": {
+        "name": "Cleaner",
+        "job": "Vacuums the floor and empties the bins.",
+        "fact": "It drives about a kilometre a day — all of it on the floor!",
+        "skill": "Turbo brush"
+      },
+      "cargo": {
+        "name": "Cargo",
+        "job": "Carries boxes of parts between the zones.",
+        "fact": "Its forklift lifts a box heavier than the robot itself.",
+        "skill": "Double load"
+      },
+      "presenter": {
+        "name": "Presenter",
+        "job": "Gives slide presentations on the stage.",
+        "fact": "Changes slides with one button of its clicker — and has never mixed them up.",
+        "skill": "Master speaker"
+      },
+      "assembler": {
+        "name": "Assembler",
+        "job": "Builds PCs from parts at the assembly table.",
+        "fact": "It has three arms: one holds, two drive the screws.",
+        "skill": "Three hands"
+      },
+      "teacher": {
+        "name": "Teacher",
+        "job": "Teaches lessons at the board.",
+        "fact": "The glasses are for style: its screen face sees perfectly well without them.",
+        "skill": "Master teacher"
+      },
+      "guard": {
+        "name": "Cyber-guard",
+        "job": "Looks after computer and internet safety.",
+        "fact": "Never tells anyone its password — not even Bit.",
+        "skill": "Shield"
+      },
+      "inspector": {
+        "name": "Inspector",
+        "job": "Checks cables, sockets, fire safety and posture.",
+        "fact": "Its checklist has thirty items, and it never skips one.",
+        "skill": "Sharp eye"
+      },
+      "librarian": {
+        "name": "Librarian",
+        "job": "Keeps the books and the fun facts.",
+        "fact": "Its chest is a real book with more than a thousand facts written inside.",
+        "skill": "Treasury of knowledge"
+      },
+      "coach": {
+        "name": "Coach",
+        "job": "Runs the breaks, the games and the football.",
+        "fact": "Its whistle announces both the kick-off and break time.",
+        "skill": "Champion spirit"
+      }
     }
+  }
 }

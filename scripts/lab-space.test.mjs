@@ -11,9 +11,10 @@ import { clampToHall, keyAction, loadPlan, stepZone, toMinimap, zoneNumber, zone
 
 const inside = ([x, z], m = 0) => x >= LAB_HALL.minX + m && x <= LAB_HALL.maxX - m && z >= LAB_HALL.minZ + m && z <= LAB_HALL.maxZ - m;
 
-test('ten zones (the stage is zone 10), unique ids, inside the hall, platforms do not overlap', () => {
-  assert.equal(LAB_ZONES.length, 10);
+test('eleven zones (the stage is zone 10, the robots\' yard zone 11), unique ids, inside the hall, platforms do not overlap', () => {
+  assert.equal(LAB_ZONES.length, 11);
   assert.equal(LAB_ZONE_IDS[9], 'stage');
+  assert.equal(LAB_ZONE_IDS[10], 'robots');
   assert.deepEqual(LAB_ZONES.map((z) => z.id), [...LAB_ZONE_IDS]);
   for (const z of LAB_ZONES) {
     assert.ok(inside(z.center, 1), `${z.id} inside`);
@@ -75,7 +76,9 @@ test('every DEVICE_CATALOG device has exactly one zone', () => {
 test('zone shots stand in the hall, in front of the zone, looking at it', () => {
   for (const z of LAB_ZONES) {
     const { position, target } = zoneShot(z);
-    assert.ok(inside([position[0], position[2]], 0.3), `${z.id} camera inside the hall`);
+    // the robots' yard is seen like the overview, from in front of the open front (no wall there)
+    const openFront = z.facing[1] === 1 && position[2] > LAB_HALL.maxZ;
+    assert.ok(inside([position[0], position[2]], 0.3) || openFront, `${z.id} camera inside the hall`);
     const toZone = [target[0] - position[0], target[2] - position[2]];
     assert.ok(toZone[0] * -z.facing[0] + toZone[1] * -z.facing[1] > 0, `${z.id} camera faces the zone`);
     assert.ok(position[1] > 1 && position[1] < LAB_HALL.height - 0.5);
@@ -93,8 +96,8 @@ test('keyboard: digits, escape, stepping, zoom and orbit', () => {
   assert.deepEqual(keyAction('ArrowLeft'), { type: 'orbit', dir: -1 });
   assert.equal(keyAction('a'), null);
   assert.equal(stepZone(null, 1), LAB_ZONE_IDS[0]);
-  assert.equal(stepZone(null, -1), LAB_ZONE_IDS[9]);
-  assert.equal(stepZone(LAB_ZONE_IDS[9], 1), LAB_ZONE_IDS[0]);
+  assert.equal(stepZone(null, -1), LAB_ZONE_IDS.at(-1));
+  assert.equal(stepZone(LAB_ZONE_IDS.at(-1), 1), LAB_ZONE_IDS[0]);
   assert.equal(zoneNumber('storage'), 3);
 });
 
