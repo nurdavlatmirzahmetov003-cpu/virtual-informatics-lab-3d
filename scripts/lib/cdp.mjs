@@ -70,7 +70,12 @@ export async function openChrome({ port = 9335, width = 1440, height = 900, serv
       ws.close();
       proc.kill();
       await sleep(300);
-      rmSync(profile, { recursive: true, force: true });
+      // Windows: Chrome's child processes may still hold the profile for a moment (EPERM)
+      try {
+        rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
+      } catch {
+        // a leftover temp folder must not fail the check
+      }
     },
   };
 }
