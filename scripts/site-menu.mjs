@@ -42,7 +42,8 @@ const STATE = `(() => {
     button: br,
     buttonVisible: !!b && getComputedStyle(b).visibility !== 'hidden' && getComputedStyle(b).display !== 'none',
     buttonOnTop: !!top && (top === b || b.contains(top)),
-    open: !!layer && getComputedStyle(layer).visibility === 'visible',
+    onTop: top ? top.tagName.toLowerCase() + '.' + String(top.className).split(' ')[0] + ' ' + (top.closest('[data-chrome]')?.getAttribute('data-chrome') ?? '') : '',
+    open: !!layer?.hasAttribute('data-open'),
     panel: p && r(p),
     focusInside: !!p && p.contains(document.activeElement),
     focusOnButton: document.activeElement === b,
@@ -58,7 +59,11 @@ const go = async (path) => {
   await c.navigate(SITE + path);
   await sleep(400);
   await ready();
-  await sleep(700);
+  // a 3D page shows its loading screen over everything (the top bar too) until the scene is ready
+  if (path === '/lab') {
+    await c.waitFor('!!document.querySelector("canvas") && !document.querySelector("[data-visible=true]")', 120000).catch(() => {});
+    await sleep(1500); // its fade-out
+  } else await sleep(700);
 };
 const click = (sel) => c.evaluate(`document.querySelector(${JSON.stringify(sel)}).click()`);
 const key = async (k, shift = false) => {
@@ -69,7 +74,9 @@ const key = async (k, shift = false) => {
 };
 const openMenu = async () => {
   await click('[data-site-menu-button]');
-  await sleep(500);
+  // until the slide-in has finished
+  await c.waitFor(`(() => { const p = document.querySelector('[data-site-menu]'); const m = p && new DOMMatrix(getComputedStyle(p).transform); return !!m && Math.abs(m.m41) < 1; })()`, 5000).catch(() => {});
+  await sleep(150);
   return state();
 };
 const shot = async (name) => {
@@ -90,13 +97,18 @@ try {
     for (const from of FROM) {
       const where = `${w}px ${from}`;
       await go(from);
+      // something passing over the button (a fading loading screen) is not covering it: give it 10 s
       let s = await state();
+      for (let i = 0; i < 20 && s.buttonVisible && !s.buttonOnTop; i++) {
+        await sleep(500);
+        s = await state();
+      }
       if (!s.buttonVisible || !s.button) {
         fail(where, 'menu button not shown');
         continue;
       }
       if (s.button.left < 0 || s.button.right > s.vw || s.button.top < 0 || s.button.bottom > s.vh) fail(where, 'menu button outside the screen');
-      if (!s.buttonOnTop) fail(where, 'menu button covered');
+      if (!s.buttonOnTop) fail(where, `menu button covered by ${s.onTop}`);
       if (s.overflowX) fail(where, 'horizontal page scroll (menu closed)');
 
       s = await openMenu();

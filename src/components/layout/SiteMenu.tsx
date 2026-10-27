@@ -9,7 +9,7 @@
  * button. The slide follows the motion tokens, so reduced motion and the
  * «calm» option make it instant.
  */
-import { useEffect, useId, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { useEffect, useId, useRef, useState, type TouchEvent as ReactTouchEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogIn, LogOut, Menu, UserRound, X } from 'lucide-react';
@@ -82,17 +82,19 @@ export function SiteMenu() {
     };
   }, [open]);
 
-  // swipe to close: the drawer follows the finger to the right, and goes past the threshold or springs back
-  const swipe = useRef<{ x: number; y: number; id: number; dx: number } | null>(null);
-  const onPointerDown = (e: ReactPointerEvent) => {
-    if (e.pointerType === 'mouse') return;
-    swipe.current = { x: e.clientX, y: e.clientY, id: e.pointerId, dx: 0 };
+  // swipe to close: the drawer follows the finger to the right, and goes past the threshold or springs back.
+  // Touch events, not pointer events: the browser cancels the pointer as soon as it sees a pan starting.
+  const swipe = useRef<{ x: number; y: number; dx: number } | null>(null);
+  const onTouchStart = (e: ReactTouchEvent) => {
+    const p = e.touches[0];
+    swipe.current = e.touches.length === 1 ? { x: p.clientX, y: p.clientY, dx: 0 } : null;
   };
-  const onPointerMove = (e: ReactPointerEvent) => {
+  const onTouchMove = (e: ReactTouchEvent) => {
     const s = swipe.current;
-    if (!s || s.id !== e.pointerId || !panel.current) return;
-    const dx = e.clientX - s.x;
-    if (Math.abs(e.clientY - s.y) > Math.abs(dx) && s.dx === 0) {
+    if (!s || !panel.current) return;
+    const p = e.touches[0];
+    const dx = p.clientX - s.x;
+    if (s.dx === 0 && Math.abs(p.clientY - s.y) > Math.abs(dx)) {
       swipe.current = null; // a vertical scroll, not a swipe
       return;
     }
@@ -100,7 +102,7 @@ export function SiteMenu() {
     panel.current.style.transition = 'none';
     panel.current.style.transform = `translateX(${s.dx}px)`;
   };
-  const onPointerEnd = () => {
+  const onTouchEnd = () => {
     const s = swipe.current;
     swipe.current = null;
     if (!s || !panel.current) return;
@@ -134,10 +136,10 @@ export function SiteMenu() {
             aria-modal="true"
             aria-labelledby={titleId}
             data-site-menu=""
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerEnd}
-            onPointerCancel={onPointerEnd}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            onTouchCancel={onTouchEnd}
           >
             <div className={styles.head}>
               <span className={styles.brand}>
