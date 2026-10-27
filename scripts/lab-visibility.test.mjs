@@ -22,7 +22,7 @@ test('every lab sign, banner, poster and logo can be seen, zone signs never over
     for (const theme of ['light', 'dark']) {
       await chrome.navigate(`${preview.base}/credits`);
       await chrome.waitFor('document.readyState === "complete"');
-      await chrome.evaluate(`(() => { const k = 'vil3d:settings'; const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":2}'); s.state = { ...s.state, theme: '${theme}', qualityMode: 'low' }; localStorage.setItem(k, JSON.stringify(s)); })()`);
+      await chrome.evaluate(`(() => { const k = 'vil3d:settings'; const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":3}'); s.state = { ...s.state, theme: '${theme}', qualityMode: 'low' }; localStorage.setItem(k, JSON.stringify(s)); })()`);
       await chrome.navigate(`${preview.base}/lab?debug`);
       await chrome.waitFor('!!window.__vil3d?.ready?.() && !!window.__labAudit && !!window.__labSignOverlap', 90000);
       // posters and signs draw their text into canvases once the fonts are in

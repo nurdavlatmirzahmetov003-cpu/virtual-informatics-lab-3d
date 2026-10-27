@@ -27,7 +27,7 @@ test('every page of the built site opens without an error', { skip: !built ? 'ru
     try {
       await chrome.navigate(`${preview.base}/credits`);
       await chrome.waitFor('document.readyState === "complete"');
-      await chrome.evaluate(`(() => { const k = 'vil3d:settings'; const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":2}'); s.state = { ...s.state, qualityMode: 'low' }; localStorage.setItem(k, JSON.stringify(s)); })()`);
+      await chrome.evaluate(`(() => { const k = 'vil3d:settings'; const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":3}'); s.state = { ...s.state, qualityMode: 'low' }; localStorage.setItem(k, JSON.stringify(s)); })()`);
       // errors are collected inside the page: uncaught ones and React Router's error screen
       await chrome.send('Page.addScriptToEvaluateOnNewDocument', { source: ERRS });
       await chrome.navigate(`${preview.base}${page}`);

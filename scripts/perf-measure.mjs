@@ -145,7 +145,7 @@ await send('Page.navigate', { url: `${base}/credits` });
 await sleep(1500);
 await evaluate(`(() => {
   const k = 'vil3d:settings';
-  const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":2}');
+  const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":3}');
   s.state = { ...s.state, qualityMode: ${JSON.stringify(quality)}, theme: ${JSON.stringify(theme)} };
   localStorage.setItem(k, JSON.stringify(s));
 })()`);
