@@ -197,9 +197,10 @@
 }
 
 .mapFold {
+  /* on the panel's corner, outside the zone list */
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: -14px;
+  right: -14px;
   z-index: 1;
   display: grid;
   place-items: center;
@@ -318,7 +319,7 @@
   }
 }
 
-.minimap svg {
+.minimap > svg {
   width: 210px;
   height: auto;
   overflow: visible;
@@ -466,7 +467,7 @@
   .minimap {
     grid-template-columns: 170px;
   }
-  .minimap svg {
+  .minimap > svg {
     width: 170px;
   }
   .zoneList {
@@ -540,7 +541,7 @@
   .minimap {
     grid-template-columns: 120px;
   }
-  .minimap svg {
+  .minimap > svg {
     width: 120px;
   }
   .hint,
