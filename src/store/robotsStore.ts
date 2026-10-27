@@ -10,10 +10,10 @@ import { create } from 'zustand';
 import type { RobotId } from '@/data/robots/roster';
 import { call } from '@/services/auth/api';
 import { buy, emptySave, heardTip, normalizeSave, train, wear, type ItemId, type RobotSave, type WardrobeSlot } from '@/services/robots/economy';
-import { STORAGE_NAMESPACE, safeStorage } from '@/lib/storage';
+import { DATA_NAMESPACE, safeStorage } from '@/lib/storage';
 import { useAuthStore } from './authStore';
 
-const KEY = `${STORAGE_NAMESPACE}:robots`;
+const KEY = `${DATA_NAMESPACE}:robots`;
 
 function readLocal(): RobotSave {
   try {

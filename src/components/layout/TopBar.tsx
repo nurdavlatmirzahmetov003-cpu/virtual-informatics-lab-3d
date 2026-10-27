@@ -8,6 +8,7 @@ import { A11yMenu } from '@/components/ui/A11yMenu';
 import { BrandMark } from '@/components/brand/BrandMark';
 import { BRAND } from '@/config/brand';
 import { AccountButton } from './AccountButton';
+import { DemoChip } from './DemoChip';
 import { SiteMenu } from './SiteMenu';
 import styles from './TopBar.module.css';
 
@@ -32,6 +33,7 @@ export function TopBar() {
           <span className={styles.brandLight}>{BRAND.wordmark[1]}</span>
         </span>
       </NavLink>
+      <DemoChip />
 
       <nav className={styles.nav} aria-label={t('nav.primary')}>
         {NAV.map((item) => (

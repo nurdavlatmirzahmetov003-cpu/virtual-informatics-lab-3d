@@ -9,6 +9,7 @@ import { create } from 'zustand';
 import { ApiError, authApi, progressApi, type User } from '@/services/auth/api';
 import { createAccountProgressRepository } from '@/services/progress/accountRepository';
 import { createLocalProgressRepository } from '@/services/progress/repository';
+import { DEMO_ACTIVE } from '@/lib/storage';
 import { setProgressRepository } from './progressStore';
 
 export type AuthStatus = 'loading' | 'guest' | 'signedIn';
@@ -44,6 +45,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   init: async () => {
     try {
       const { user, csrfToken } = await authApi.me();
+      // V4 §8.4: the demo profile is a guest; no account is read or written in demo mode
+      if (DEMO_ACTIVE) {
+        set({ serverOnline: true, user: null, csrf: null, status: 'guest' });
+        return;
+      }
       set({ serverOnline: true, user, csrf: csrfToken ?? null, status: user ? 'signedIn' : 'guest' });
       // a returning student: their account copy, not the guest one
       if (user && csrfToken) await switchToAccount(user, csrfToken, false);
