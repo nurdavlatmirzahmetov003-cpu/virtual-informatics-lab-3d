@@ -5,6 +5,7 @@ import { AppShell } from '@/components/layout/AppShell';
 
 // Every page is its own chunk: a lab's scene code loads only when visited.
 const HomePage = lazy(() => import('@/pages/Home/HomePage'));
+const RobotsPage = lazy(() => import('@/pages/Robots/RobotsPage'));
 const LabsPage = lazy(() => import('@/pages/Labs/LabsPage'));
 const SetupStudioPage = lazy(() => import('@/pages/SetupStudio/SetupStudioPage'));
 const SetupSummaryPage = lazy(() => import('@/pages/SetupStudio/SetupSummaryPage'));
@@ -74,6 +75,7 @@ export const router = createBrowserRouter([
       { path: 'path', element: <PathPage /> },
       { path: 'progress/report', element: <ReportPage /> },
       { path: 'identify', element: <IdentifyPage /> },
+      { path: 'robots', element: <RobotsPage /> },
       { path: 'remote', element: <RemotePage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'teacher', element: <TeacherHome /> },

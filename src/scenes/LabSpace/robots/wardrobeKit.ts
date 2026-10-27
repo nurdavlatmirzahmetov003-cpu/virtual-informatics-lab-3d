@@ -64,14 +64,16 @@ function itemPieces(id: string, size: number): Piece[] {
       ];
     case 'glasses':
       return [
-        ...[-1, 1].map((side) => ({ geo: new TorusGeometry(s * 0.13, s * 0.018, 6, 24), at: [side * s * 0.18, 0, 0] as Vec3, color: DARK })),
-        { geo: new BoxGeometry(s * 0.1, s * 0.025, s * 0.025), color: DARK },
+        // light frames: they show on the dark screen face
+        ...[-1, 1].map((side) => ({ geo: new TorusGeometry(s * 0.13, s * 0.02, 6, 24), at: [side * s * 0.18, 0, 0] as Vec3, color: '#f8fafc' })),
+        { geo: new BoxGeometry(s * 0.1, s * 0.028, s * 0.028), color: '#f8fafc' },
       ];
     case 'scarf':
       return [
         { geo: new TorusGeometry(s * 0.7, s * 0.28, 8, 24), rot: [Math.PI / 2, 0, 0], scale: [1, 1, 0.8], color: '#ef4444' },
-        { geo: new RoundedBoxGeometry(s * 0.45, s * 1.3, s * 0.18, 2, s * 0.06), at: [s * 0.3, -s * 0.7, s * 0.72], rot: [0.15, 0, 0.12], color: '#ef4444' },
-        { geo: new BoxGeometry(s * 0.47, s * 0.1, s * 0.2), at: [s * 0.25, -s * 1.1, s * 0.78], rot: [0.15, 0, 0.12], color: '#ffffff' },
+        // the tail hangs over the chest, in front of the shirt
+        { geo: new RoundedBoxGeometry(s * 0.45, s * 1.3, s * 0.16, 2, s * 0.06), at: [s * 0.35, -s * 0.75, s * 1.55], rot: [0.32, 0, 0.12], color: '#ef4444' },
+        { geo: new BoxGeometry(s * 0.47, s * 0.1, s * 0.18), at: [s * 0.3, -s * 1.38, s * 1.75], rot: [0.32, 0, 0.12], color: '#ffffff' },
       ];
     case 'backpack':
       return [
