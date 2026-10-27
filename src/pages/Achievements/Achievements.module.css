@@ -479,6 +479,18 @@
   .card button {
     padding: 12px 8px;
   }
+
+  .filter {
+    display: flex;
+    width: 100%;
+  }
+
+  .filter button {
+    flex: 1;
+    min-width: 0;
+    padding: 0 4px;
+    font-size: 0.82rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
