@@ -17,6 +17,24 @@ export const CHROME = [
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * Stops Chrome and deletes its temp profile. The profile is removed only once
+ * Chrome has exited — before that Windows keeps it locked (EPERM) and the
+ * folder used to stay behind, ~40 MB per run, until the disk was full.
+ */
+async function stopAndClean(proc, profile) {
+  if (proc.exitCode === null) {
+    const exited = new Promise((r) => proc.once('exit', r));
+    proc.kill();
+    await Promise.race([exited, sleep(5000)]);
+  }
+  try {
+    rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
+  } catch {
+    // Chrome's helpers still hold a file: a leftover temp folder must not fail the check
+  }
+}
+
 /** `serviceWorker`: let the site install its offline worker (off by default: its background caching would skew measurements). */
 export async function openChrome({ port = 9335, width = 1440, height = 900, serviceWorker = false } = {}) {
   if (!CHROME) throw new Error('Chrome/Edge not found');
@@ -31,7 +49,11 @@ export async function openChrome({ port = 9335, width = 1440, height = 900, serv
     }
     if (!url) await sleep(200);
   }
-  if (!url) throw new Error('Chrome did not start');
+  if (!url) {
+    // leave no Chrome and no profile behind (a full temp disk stops every check)
+    await stopAndClean(proc, profile);
+    throw new Error('Chrome did not start');
+  }
   const ws = new WebSocket(url);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   let id = 0;
@@ -68,14 +90,7 @@ export async function openChrome({ port = 9335, width = 1440, height = 900, serv
     },
     close: async () => {
       ws.close();
-      proc.kill();
-      await sleep(300);
-      // Windows: Chrome's child processes may still hold the profile for a moment (EPERM)
-      try {
-        rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
-      } catch {
-        // a leftover temp folder must not fail the check
-      }
+      await stopAndClean(proc, profile);
     },
   };
 }

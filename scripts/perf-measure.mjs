@@ -280,10 +280,12 @@ for (const p of pages) {
 
 console.log(JSON.stringify(results, null, 2));
 ws.close();
+// remove the profile only once Chrome has exited (Windows locks it until then; leftovers filled the disk)
+const exited = new Promise((r) => chrome.once('exit', r));
 chrome.kill();
-await sleep(500);
+await Promise.race([exited, sleep(5000)]);
 try {
-  rmSync(profile, { recursive: true, force: true });
+  rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 300 });
 } catch {
   /* profile still locked */
 }

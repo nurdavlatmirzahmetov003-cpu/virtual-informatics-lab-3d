@@ -384,7 +384,7 @@
   }
 
   /* only the certificate (a direct child of <body>) goes to paper */
-  :global(body) > :not(.printCert) {
+  :global(body):has(> .printCert) > :not(.printCert) {
     display: none !important;
   }
 

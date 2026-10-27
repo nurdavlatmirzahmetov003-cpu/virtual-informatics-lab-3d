@@ -1,0 +1,55 @@
+preview-375-light.jpg: hscroll=false
+preview-768-light.jpg: hscroll=false
+preview-1280-light.jpg: hscroll=false
+preview-1366-light.jpg: hscroll=false
+preview-1920-light.jpg: hscroll=false
+preview-375-dark.jpg: hscroll=false
+preview-768-dark.jpg: hscroll=false
+preview-1280-dark.jpg: hscroll=false
+preview-1366-dark.jpg: hscroll=false
+preview-1920-dark.jpg: hscroll=false
+certificate-sample.pdf, certificate-demo.pdf (print to PDF, A4 landscape, one page) + *-print.jpg (the printed page)
+celebrate clicked: true
+celebration-a-bit-1366-light.jpg: hscroll=false
+celebration-b-fireworks-1366-light.jpg: hscroll=false
+celebration-c-certificate-1366-light.jpg: hscroll=false
+celebrate clicked: true
+celebration-a-bit-1366-dark.jpg: hscroll=false
+celebration-b-fireworks-1366-dark.jpg: hscroll=false
+celebration-c-certificate-1366-dark.jpg: hscroll=false
+celebrate clicked: true
+celebration-a-bit-375-dark.jpg: hscroll=false
+celebration-b-fireworks-375-dark.jpg: hscroll=false
+celebration-c-certificate-375-dark.jpg: hscroll=false
+celebrate clicked: true
+celebration-a-bit-1920-light.jpg: hscroll=false
+celebration-b-fireworks-1920-light.jpg: hscroll=false
+celebration-c-certificate-1920-light.jpg: hscroll=false
+celebration-reduced-motion-1366-light.jpg: hscroll=false
+demo-login-1366-light.jpg: hscroll=false
+demo flag: 1
+demo-progress-1366-light.jpg: hscroll=false
+demo-chip-1366-light.jpg: hscroll=false
+demo-robots-1366-light.jpg: hscroll=false
+instant certificate: true
+demo-certificate-celebration-1366-light.jpg: hscroll=false
+demo-certificate-1366-light.jpg: hscroll=false
+demo-report-1366-light.jpg: hscroll=false
+demo-login-1366-dark.jpg: hscroll=false
+demo flag: 1
+demo-progress-1366-dark.jpg: hscroll=false
+demo-chip-1366-dark.jpg: hscroll=false
+demo-robots-1366-dark.jpg: hscroll=false
+instant certificate: true
+demo-certificate-celebration-1366-dark.jpg: hscroll=false
+demo-certificate-1366-dark.jpg: hscroll=false
+demo-report-1366-dark.jpg: hscroll=false
+demo-login-375-light.jpg: hscroll=false
+demo flag: 1
+demo-progress-375-light.jpg: hscroll=false
+demo-chip-375-light.jpg: hscroll=false
+demo-robots-375-light.jpg: hscroll=false
+instant certificate: true
+demo-certificate-celebration-375-light.jpg: hscroll=false
+demo-certificate-375-light.jpg: hscroll=false
+demo-report-375-light.jpg: hscroll=false

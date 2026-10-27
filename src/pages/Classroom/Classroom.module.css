@@ -1228,7 +1228,7 @@
 
 @media print {
   /* the cards are a direct child of <body> (portal); everything else leaves the paper */
-  :global(body) > :not(.printSheet) {
+  :global(body):has(> .printSheet) > :not(.printSheet) {
     display: none !important;
   }
 
