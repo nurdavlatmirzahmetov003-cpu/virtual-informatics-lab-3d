@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: safe center;
   gap: var(--space-4);
   padding: 64px 16px 24px;
   overflow-y: auto;
@@ -107,7 +107,9 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
-  width: min(880px, 100%);
+  /* the sheet, Bit and the buttons fit on one screen */
+  width: min(880px, 100%, (100svh - 300px) * 297 / 210);
+  min-width: min(300px, 100%);
   animation: rise 0.8s cubic-bezier(0.2, 0.9, 0.3, 1) both;
 }
 

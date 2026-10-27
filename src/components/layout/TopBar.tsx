@@ -33,7 +33,6 @@ export function TopBar() {
           <span className={styles.brandLight}>{BRAND.wordmark[1]}</span>
         </span>
       </NavLink>
-      <DemoChip />
 
       <nav className={styles.nav} aria-label={t('nav.primary')}>
         {NAV.map((item) => (
@@ -49,6 +48,7 @@ export function TopBar() {
       </nav>
 
       <div className={styles.controls}>
+        <DemoChip />
         <span className={styles.quality}>
           <QualitySelect />
         </span>

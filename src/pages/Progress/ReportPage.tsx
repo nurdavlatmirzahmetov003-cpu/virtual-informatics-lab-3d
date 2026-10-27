@@ -14,6 +14,7 @@ import { formatDuration } from '@/services/grading';
 import { taskById } from '@/services/progress';
 import { nextStep } from '@/services/progress/learningPath';
 import { currentWeek, weeklyReport } from '@/services/progress/weeklyReport';
+import { DEMO_ACTIVE } from '@/lib/storage';
 import { useAuthStore } from '@/store/authStore';
 import { useProgressStore } from '@/store/progressStore';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -57,7 +58,7 @@ export default function ReportPage() {
 
       <article className={styles.sheet}>
         <header className={styles.sheetHead}>
-          <h2>{t('report.sheetTitle', { name: user?.displayName ?? t('report.student') })}</h2>
+          <h2>{t('report.sheetTitle', { name: user?.displayName ?? (DEMO_ACTIVE ? t('demo.student') : t('report.student')) })}</h2>
           <p>{range}</p>
         </header>
 

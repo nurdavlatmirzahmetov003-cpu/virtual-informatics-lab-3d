@@ -32,8 +32,8 @@ export function DemoChip() {
   if (!DEMO_ACTIVE) return null;
   return (
     <div className={styles.root} ref={box}>
-      <button type="button" className={styles.chip} aria-expanded={open} aria-controls="demo-panel" onClick={() => setOpen(!open)} title={t('demo.badge')}>
-        <Sparkles size={14} aria-hidden="true" /> DEMO
+      <button type="button" className={styles.chip} aria-expanded={open} aria-controls="demo-panel" onClick={() => setOpen(!open)} title={t('demo.badge')} aria-label={t('demo.badge')}>
+        <Sparkles size={14} aria-hidden="true" /> <span className={styles.label}>DEMO</span>
       </button>
       {open && (
         <div id="demo-panel" className={styles.panel} role="dialog" aria-label={t('demo.badge')}>

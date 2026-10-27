@@ -28,7 +28,7 @@
 .panel {
   position: absolute;
   top: calc(100% + 10px);
-  left: 0;
+  right: 0;
   z-index: var(--z-topbar);
   display: flex;
   flex-direction: column;
@@ -71,4 +71,17 @@
 .action:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* narrower screens: the nav needs the room, the chip keeps its icon */
+@media (max-width: 1280px) {
+  .chip {
+    width: 32px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .label {
+    display: none;
+  }
 }

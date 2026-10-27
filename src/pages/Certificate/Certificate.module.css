@@ -291,8 +291,8 @@
 .seal {
   position: absolute;
   z-index: 2;
-  right: -1.5cqw;
-  bottom: 0.2cqw;
+  right: 0.6cqw;
+  bottom: 1.2cqw;
   width: 10.5cqw;
   height: 10.5cqw;
   opacity: 0.88;
