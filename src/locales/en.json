@@ -6,6 +6,7 @@
     "tagline": "See the computer, build it with your own hands, understand it"
   },
   "nav": {
+    "achievements": "Achievements",
     "home": "Home",
     "labs": "Labs",
     "studio": "Setup Studio",
@@ -3102,6 +3103,38 @@
     "connectSummary": "Cables and networking: the right sockets."
   },
   "achievements": {
+    "page": {
+      "eyebrow": "Player profile",
+      "title": "Achievements",
+      "subtitle": "Every badge is something you really did in the lab. Rarer badges give more XP and more coins for the robots.",
+      "toProgress": "Back to my results"
+    },
+    "rarity": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "legendary": "Legendary"
+    },
+    "ceremony": {
+      "cheer": "Brilliant! The «{name}» badge is yours. Keep it up!"
+    },
+    "coins": "coins",
+    "summary": {
+      "title": "Achievements summary",
+      "earned": "badges earned",
+      "earnedShort": "Earned",
+      "coinsHint": "Coins for the robots: they grow with your XP",
+      "recent": "Recently earned",
+      "recentEmpty": "Your first badge is ahead: finish any task.",
+      "showcase": "Top three",
+      "showcaseEmpty": "Your rarest badges will stand here."
+    },
+    "filter": {
+      "label": "Filter",
+      "all": "All",
+      "earned": "Earned",
+      "locked": "Locked"
+    },
     "toast": {
       "eyebrow": "Achievement unlocked",
       "close": "Close",

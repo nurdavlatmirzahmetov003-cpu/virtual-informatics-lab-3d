@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { X } from 'lucide-react';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
 import { evaluateAchievements, summarize, type AchievementId } from '@/services/progress';
@@ -8,58 +6,17 @@ import { useProgressStore, type XpGain } from '@/store/progressStore';
 import { LevelRing } from '@/components/game/GamePanel';
 import { rankOf } from '@/services/game/xp';
 import game from '@/components/game/Game.module.css';
-import { ACHIEVEMENT_ICONS } from './achievementIcons';
+import { UnlockCeremony } from './UnlockCeremony';
 import styles from './AchievementToaster.module.css';
 
 const tk = (key: string) => key as TranslationKey;
-const SHOW_MS = 6000;
 
-function Toast({ id, onClose }: { id: AchievementId; onClose: () => void }) {
-  const t = useT();
-  const Icon = ACHIEVEMENT_ICONS[id];
-  const [paused, setPaused] = useState(false);
-  const [leaving, setLeaving] = useState(false);
+/** V4 §9: a new achievement gets the big unlock moment (UnlockCeremony). */
+function Unlocked({ id, onClose }: { id: AchievementId; onClose: () => void }) {
   const exercises = useProgressStore((s) => s.exercises);
   const attempts = useProgressStore((s) => s.attempts);
   const target = evaluateAchievements(summarize({ exercises }), attempts).find((a) => a.id === id)?.target ?? 1;
-
-  useEffect(() => {
-    if (paused) return;
-    const timer = window.setTimeout(() => setLeaving(true), SHOW_MS);
-    return () => window.clearTimeout(timer);
-  }, [paused]);
-
-  useEffect(() => {
-    if (!leaving) return;
-    const timer = window.setTimeout(onClose, 260);
-    return () => window.clearTimeout(timer);
-  }, [leaving, onClose]);
-
-  return (
-    <div
-      className={styles.toast}
-      data-leaving={leaving}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-    >
-      <span className={styles.icon} aria-hidden="true">
-        <Icon size={22} strokeWidth={1.6} />
-      </span>
-      <div className={styles.text}>
-        <span className={styles.eyebrow}>{t('achievements.toast.eyebrow')}</span>
-        <strong>{t(tk(`achievements.items.${id}.name`))}</strong>
-        <small>{t(tk(`achievements.items.${id}.condition`), { target })}</small>
-        <Link to="/progress#achievements" className={styles.link} onClick={() => setLeaving(true)}>
-          {t('achievements.toast.open')} →
-        </Link>
-      </div>
-      <button type="button" className={styles.close} onClick={() => setLeaving(true)} aria-label={t('achievements.toast.close')}>
-        <X size={15} aria-hidden="true" />
-      </button>
-    </div>
-  );
+  return <UnlockCeremony id={id} target={target} onClose={onClose} />;
 }
 
 const GAIN_MS = 2600;
@@ -104,7 +61,7 @@ export function AchievementToaster() {
   return (
     <div className={styles.region} role="status" aria-live="polite">
       {gain && <GainToast key={gain.id} gain={gain} onClose={onGainClose} />}
-      {current && <Toast key={current} id={current} onClose={onClose} />}
+      {current && <Unlocked key={current} id={current} onClose={onClose} />}
     </div>
   );
 }

@@ -15,7 +15,7 @@ import { CHROME, openChrome, startPreview } from './lib/cdp.mjs';
 const root = path.resolve(import.meta.dirname, '..');
 const built = existsSync(path.join(root, 'dist/index.html'));
 
-const PAGES = ['/', '/lab', '/robots', '/studio', '/explorer', '/labs', '/labs/assembly', '/labs/network', '/labs/connect', '/labs/sim', '/labs/algorithms', '/labs/logic', '/labs/experiments', '/games', '/path', '/identify', '/progress', '/credits'];
+const PAGES = ['/', '/lab', '/robots', '/studio', '/explorer', '/labs', '/labs/assembly', '/labs/network', '/labs/connect', '/labs/sim', '/labs/algorithms', '/labs/logic', '/labs/experiments', '/games', '/path', '/identify', '/progress', '/achievements', '/certificate', '/certificate/preview', '/credits'];
 
 test('every page of the built site opens without an error', { skip: !built ? 'run npm run build first' : !CHROME ? 'no Chrome/Edge' : false, timeout: 300000 }, async () => {
   const preview = await startPreview(root, 4181);

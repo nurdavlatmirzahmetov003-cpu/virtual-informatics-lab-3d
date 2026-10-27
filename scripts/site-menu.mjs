@@ -19,7 +19,7 @@ const SHOTS = process.argv.includes('--shots');
 const WIDTHS = [375, 768, 1280, 1366, 1920];
 const heightOf = (w) => (w === 375 ? 812 : w === 768 ? 1024 : w === 1366 ? 768 : w === 1920 ? 1080 : 800);
 /** every secondary page (src/components/layout/siteLinks.ts) and where it must land */
-const EXPECTED = ['/path', '/certificate', '/games', '/identify', '/robots', '/feedback#contact', '/feedback', '/credits', '/privacy'];
+const EXPECTED = ['/path', '/achievements', '/certificate', '/games', '/identify', '/robots', '/feedback#contact', '/feedback', '/credits', '/privacy'];
 /** pages the menu is opened from: a content page and a full-screen 3D page with the Bit tab and 3D controls */
 const FROM = ['/credits', '/lab'];
 

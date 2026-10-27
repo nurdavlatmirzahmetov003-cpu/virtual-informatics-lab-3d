@@ -3,7 +3,7 @@
  * footer, so a page added here shows up in both.
  */
 import type { LucideIcon } from 'lucide-react';
-import { Award, Bot, Gamepad2, Mail, MessageSquareText, Route, Scale, ScanEye, ShieldCheck } from 'lucide-react';
+import { Award, Bot, Gamepad2, Medal, Mail, MessageSquareText, Route, Scale, ScanEye, ShieldCheck } from 'lucide-react';
 import type { TranslationKey } from '@/lib/i18n';
 
 export interface SiteLink {
@@ -24,6 +24,8 @@ export const SITE_LINK_GROUPS: readonly SiteLinkGroup[] = [
     title: 'menu.learning',
     links: [
       { to: '/path', label: 'nav.path', icon: Route },
+      // V4 §9
+      { to: '/achievements', label: 'nav.achievements', icon: Medal },
       { to: '/certificate', label: 'footer.certificate', icon: Award },
       { to: '/games', label: 'footer.games', icon: Gamepad2 },
       { to: '/identify', label: 'nav.identify', icon: ScanEye },

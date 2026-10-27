@@ -624,3 +624,30 @@ a.histRow:focus-visible {
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/* V4 §9: earned medals; the full screen is /achievements */
+.medalStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 18px);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.medalStrip:hover {
+  border-color: var(--accent);
+}
+
+.stripMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-weight: 700;
+  color: var(--accent);
+}
