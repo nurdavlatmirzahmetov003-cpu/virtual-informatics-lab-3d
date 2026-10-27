@@ -7,8 +7,10 @@
  * playing football and resting in the lounge.
  *
  * Draw calls: the yard is one mesh, the docks one, the name plates one, the
- * ball one; each robot 4–6 (fewer robots on Low). Far from the yard (the
- * camera at another zone) the simulation steps five times a second.
+ * ball one; each robot 4–6 (fewer robots on Low), or one still merged mesh
+ * on Low / Medium while the yard is only seen from the overview. Far from
+ * the yard (the camera at another zone) the simulation steps five times a
+ * second.
  * A click on a robot (or, focused on the yard, coming close) makes it say a
  * tip (§4.5).
  */
@@ -47,6 +49,8 @@ export function RobotsZone({ detail }: ZoneContentProps) {
   const fonts = useCanvasFonts();
   const level = useQualityPreset().level;
   const low = level === 'low';
+  // Low / Medium: from the overview each yard robot is one still mesh
+  const cheap = level === 'low' || level === 'medium';
   const reduced = useReducedMotion();
   const save = useRobotsStore((s) => s.save);
   const levels = save.levels;
@@ -123,7 +127,7 @@ export function RobotsZone({ detail }: ZoneContentProps) {
     sayRobotTip(id, 'click', useSettingsStore.getState().language, useBitStore.getState().voice);
   };
 
-  const solid = level === 'low' || level === 'medium' ? <meshLambertMaterial vertexColors /> : <meshStandardMaterial vertexColors roughness={0.6} metalness={0.05} />;
+  const solid = cheap ? <meshLambertMaterial vertexColors /> : <meshStandardMaterial vertexColors roughness={0.6} metalness={0.05} />;
   return (
     <group name="robots-yard">
       <mesh geometry={staticGeo} receiveShadow castShadow={detail === 'full'}>
@@ -142,13 +146,13 @@ export function RobotsZone({ detail }: ZoneContentProps) {
       {world.agents
         .filter((a) => a.state !== 'away')
         .map((a, i) => (
-          <YardRobot key={a.id} agent={a} phase={i * 0.7} onClick={click(a.id)} holder={(g) => (g ? holders.current.set(a.id, g) : holders.current.delete(a.id))} />
+          <YardRobot key={a.id} agent={a} phase={i * 0.7} simple={detail === 'preview' && cheap} onClick={click(a.id)} holder={(g) => (g ? holders.current.set(a.id, g) : holders.current.delete(a.id))} />
         ))}
     </group>
   );
 }
 
-function YardRobot({ agent, phase, onClick, holder }: { agent: Agent; phase: number; onClick: (e: ThreeEvent<MouseEvent>) => void; holder: (g: Group | null) => void }) {
+function YardRobot({ agent, phase, simple, onClick, holder }: { agent: Agent; phase: number; simple: boolean; onClick: (e: ThreeEvent<MouseEvent>) => void; holder: (g: Group | null) => void }) {
   const r = robotById(agent.id);
   const wear = useRobotsStore((s) => s.save.wear[agent.id]);
   const animate = useMemo(() => (p: RobotParts, time: number) => poseRobot(r.kind, p, poseOf(agent), time, phase), [r.kind, agent, phase]);
@@ -159,7 +163,7 @@ function YardRobot({ agent, phase, onClick, holder }: { agent: Agent; phase: num
   return (
     <group ref={holder} position={[agent.pos[0], 0, agent.pos[1]]} rotation-y={agent.yaw}>
       <group scale={r.scale}>
-        <Robot kind={r.kind} accent={r.accent} glow={r.glow} animate={animate} stillAt={phase} onClick={onClick} wear={wear} name={`yard-${agent.id}`}>
+        <Robot kind={r.kind} accent={r.accent} glow={r.glow} animate={animate} stillAt={phase} onClick={onClick} wear={wear} simple={simple} name={`yard-${agent.id}`}>
           {agent.id === 'cargo' && (
             <mesh ref={box} position={[0, 0.45, -0.05]} visible={false}>
               <boxGeometry args={[0.3, 0.22, 0.26]} />

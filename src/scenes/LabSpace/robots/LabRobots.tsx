@@ -7,9 +7,9 @@
  *   - a builder at the PC build bench, screwing the board in.
  * Routes and places: data/lab/robots.ts. Still for reduced motion.
  */
-import { useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
-import { Color, Matrix4, PlaneGeometry, Quaternion, Vector3, type Group, type InstancedMesh } from 'three';
+import { Color, Matrix4, PlaneGeometry, Quaternion, Vector3, type BufferGeometry, type Group, type InstancedMesh } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
 import { zoneById } from '@/data/lab/zones';
 import { ADVISOR_ZONES, BUILDER, CLEANER_ROUTE, CLEANER_SPEED, COURIER_ROUTE, COURIER_SPEED, PARCEL_STACK, advisorPlace, zoneToWorld } from '@/data/lab/robots';
@@ -21,7 +21,7 @@ import { useLabStore } from '@/store/labStore';
 import { bitVoice, useVoiceStore } from '@/services/bit/voice';
 import { brandMarkTexture } from './brandMark';
 import { Robot, type RobotParts } from './Robot';
-import { parcelGeometry, robotGeometry } from './robotKit';
+import { lowPoly, parcelGeometry, robotGeometry } from './robotKit';
 import { routeAt, routeLength } from './route';
 
 const k = (s: string) => s as TranslationKey;
@@ -34,6 +34,25 @@ function Advisors() {
   const cheap = ['low', 'medium'].includes(useQualityPreset().level);
   const reduced = useReducedMotion();
   const geo = useMemo(() => robotGeometry('advisor'), []);
+  // V4 §4.3: on Low / Medium the advisors (small, ten of them) swap to copies with a third of the triangles
+  const [light, setLight] = useState<{ solid: BufferGeometry; accent: BufferGeometry; glow: BufferGeometry } | null>(null);
+  useEffect(() => {
+    if (!cheap) return;
+    let live = true;
+    let made: BufferGeometry[] = [];
+    Promise.all([lowPoly(geo.solid, 0.3), lowPoly(geo.accent, 0.3), lowPoly(geo.glow, 0.5)])
+      .then(([solid, accent, glow]) => {
+        made = [solid, accent, glow];
+        if (live) setLight({ solid, accent, glow });
+        else made.forEach((g) => g.dispose());
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+      made.forEach((g) => g.dispose());
+    };
+  }, [cheap, geo]);
+  const shape = cheap && light ? light : geo;
   const solid = useRef<InstancedMesh>(null);
   const accent = useRef<InstancedMesh>(null);
   const glow = useRef<InstancedMesh>(null);
@@ -119,13 +138,13 @@ ${shader.vertexShader}`
   const n = places.length;
   return (
     <group name="advisors">
-      <instancedMesh ref={solid} args={[geo.solid, undefined, n]} castShadow onClick={click} onPointerOver={hover(true)} onPointerOut={hover(false)}>
+      <instancedMesh ref={solid} args={[undefined, undefined, n]} geometry={shape.solid} castShadow onClick={click} onPointerOver={hover(true)} onPointerOut={hover(false)}>
         {cheap ? <meshLambertMaterial vertexColors onBeforeCompile={sway} /> : <meshStandardMaterial vertexColors metalness={0.2} roughness={0.32} onBeforeCompile={sway} />}
       </instancedMesh>
-      <instancedMesh ref={accent} args={[geo.accent, undefined, n]} castShadow onClick={click}>
+      <instancedMesh ref={accent} args={[undefined, undefined, n]} geometry={shape.accent} castShadow onClick={click}>
         {cheap ? <meshLambertMaterial onBeforeCompile={sway} /> : <meshStandardMaterial metalness={0.15} roughness={0.4} onBeforeCompile={sway} />}
       </instancedMesh>
-      <instancedMesh ref={glow} args={[geo.glow, undefined, n]}>
+      <instancedMesh ref={glow} args={[undefined, undefined, n]} geometry={shape.glow}>
         <meshBasicMaterial color={GLOW} toneMapped={false} onBeforeCompile={sway} />
       </instancedMesh>
       <instancedMesh ref={logo} args={[logoGeo, undefined, n]}>

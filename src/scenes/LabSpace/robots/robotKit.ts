@@ -16,7 +16,7 @@
  * the arms and the BitLab mark printed on a patch that follows the chest.
  */
 import { BoxGeometry, BufferAttribute, CapsuleGeometry, CircleGeometry, Color, CylinderGeometry, SphereGeometry, TorusGeometry, type BufferGeometry } from 'three';
-import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { extrudeFront, roundedRectShape } from '@/lib/three/geometry';
 import { mergePieces, type Piece, type Place, type Vec3 } from '../classroom/mergeParts';
@@ -633,3 +633,53 @@ export function withAccent(solid: BufferGeometry, accent: BufferGeometry, color:
   return merged;
 }
 
+
+/**
+ * V4 §4.3: the whole robot as one vertex-coloured geometry — shell, glow
+ * (in `glow`), worn items and the arm and head at their pivots, standing
+ * still. One draw call for a robot seen from afar (the yard from the
+ * overview on Low / Medium); the logo is left out.
+ */
+export function flatRobot(body: BufferGeometry, geo: RobotGeometry, glow: Color, extra: { worn: BufferGeometry | null; headWorn: BufferGeometry | null; hat: boolean }): BufferGeometry {
+  const parts: BufferGeometry[] = [];
+  const add = (g: BufferGeometry | null | undefined, at?: Vec3, colour?: Color) => {
+    if (!g) return;
+    const c = g.index ? g.toNonIndexed() : g.clone();
+    for (const name of Object.keys(c.attributes)) if (name !== 'position' && name !== 'normal' && name !== 'color') c.deleteAttribute(name);
+    if (!c.attributes.normal) c.computeVertexNormals();
+    if (colour || !c.attributes.color) {
+      const k = colour ?? new Color('#cccccc');
+      const n = c.attributes.position.count;
+      const data = new Float32Array(n * 3);
+      for (let i = 0; i < n; i++) data.set([k.r, k.g, k.b], i * 3);
+      c.setAttribute('color', new BufferAttribute(data, 3));
+    }
+    if (at) c.translate(at[0], at[1], at[2]);
+    parts.push(c);
+  };
+  add(body);
+  add(geo.glow, undefined, glow);
+  add(extra.worn);
+  if (extra.hat && geo.hat && !geo.hat.onHead) add(geo.hat.geo);
+  if (geo.arm) add(geo.arm.geo, geo.arm.pivot);
+  if (geo.head) {
+    add(geo.head.geo, geo.head.pivot);
+    add(geo.head.glow, geo.head.pivot, glow);
+    add(extra.headWorn, geo.head.pivot);
+  }
+  const merged = mergeGeometries(parts) ?? parts[0];
+  parts.forEach((p) => p !== merged && p.dispose());
+  return merged;
+}
+
+/**
+ * A lighter copy of `geo` with about `keep` of its triangles (meshoptimizer,
+ * loaded on first use; each part's border is locked, so colours stay apart).
+ */
+export async function lowPoly(geo: BufferGeometry, keep: number): Promise<BufferGeometry> {
+  const { SimplifyModifier } = await import('three/addons/modifiers/SimplifyModifier.js');
+  const welded = mergeVertices(geo);
+  const out = await new SimplifyModifier().modify(welded, Math.floor(welded.attributes.position.count * (1 - keep)));
+  welded.dispose();
+  return out;
+}

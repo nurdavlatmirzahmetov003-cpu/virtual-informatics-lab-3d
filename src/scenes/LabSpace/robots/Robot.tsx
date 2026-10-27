@@ -6,15 +6,15 @@
  * it from the wardrobe (a shirt repaints it; the rest is one or two merged
  * meshes, a worn hat replaces the robot's own).
  */
-import { forwardRef, useEffect, useMemo, useRef, type ReactNode } from 'react';
+import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
-import { Color, type Group, type MeshBasicMaterial } from 'three';
+import { Color, type BufferGeometry, type Group, type MeshBasicMaterial } from 'three';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { bitVoice } from '@/services/bit/voice';
 import { brandMarkTexture } from './brandMark';
 import type { WardrobeSlot } from '@/services/robots/economy';
-import { robotGeometry, withAccent, type RobotGeometry, type RobotKind } from './robotKit';
+import { flatRobot, lowPoly, robotGeometry, withAccent, type RobotGeometry, type RobotKind } from './robotKit';
 import { shirtColour, wornGeometry } from './wardrobeKit';
 
 export interface RobotParts {
@@ -42,16 +42,18 @@ export interface RobotProps {
   name?: string;
   /** Wardrobe items worn, by slot. */
   wear?: Partial<Record<WardrobeSlot, string>>;
+  /** One merged, still mesh (arm and head do not move, no logo): a robot seen from afar. */
+  simple?: boolean;
 }
 
-export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent, glow = '#38d6f5', position, yaw = 0, animate, stillAt, speaking, onClick, children, name, wear }, ref) {
+export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent, glow = '#38d6f5', position, yaw = 0, animate, stillAt, speaking, onClick, children, name, wear, simple }, ref) {
   const wearKey = JSON.stringify(wear ?? {});
   const colour = useMemo(() => shirtColour(accent, JSON.parse(wearKey)), [accent, wearKey]);
   const geo = useMemo(() => robotGeometry(kind, colour), [kind, colour]);
   // shell and accent in one draw call (the accent only changes with a new shirt)
   const body = useMemo(() => withAccent(geo.solid, geo.accent, colour), [geo, colour]);
   const worn = useMemo(() => wornGeometry(geo, JSON.parse(wearKey)), [geo, wearKey]);
-  const ownHat = geo.hat && !JSON.parse(wearKey).hat;
+  const ownHat = !!geo.hat && !JSON.parse(wearKey).hat;
   useEffect(() => () => void [worn.body, worn.head].forEach((g) => g?.dispose()), [worn]);
   useEffect(
     () => () => {
@@ -67,6 +69,28 @@ export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent
   const arm = useRef<Group>(null);
   const head = useRef<Group>(null);
   const glowColor = useMemo(() => new Color(glow).multiplyScalar(1.6), [glow]);
+  // `simple`: the merged robot at once, then a copy with a third of its triangles
+  const [merged, setMerged] = useState<BufferGeometry | null>(null);
+  useEffect(() => {
+    if (!simple) return;
+    const full = flatRobot(body, geo, new Color(glow), { worn: worn.body, headWorn: worn.head, hat: ownHat });
+    let light: BufferGeometry | null = null;
+    let live = true;
+    setMerged(full);
+    lowPoly(full, 0.3)
+      .then((g) => {
+        if (!live) return g.dispose();
+        light = g;
+        setMerged(g);
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+      full.dispose();
+      light?.dispose();
+    };
+  }, [simple, body, geo, glow, worn, ownHat]);
+  const flat = simple ? merged : null;
   const glowBody = useRef<MeshBasicMaterial>(null);
   const glowHead = useRef<MeshBasicMaterial>(null);
   const logo = brandMarkTexture();
@@ -94,54 +118,63 @@ export const Robot = forwardRef<Group, RobotProps>(function Robot({ kind, accent
       rotation-y={yaw}
       onClick={onClick}
     >
-      <mesh geometry={body} castShadow>
-        {solid}
-      </mesh>
-      <mesh geometry={geo.glow}>
-        <meshBasicMaterial ref={glowBody} color={glowColor} toneMapped={false} />
-      </mesh>
-      {worn.body && (
-        <mesh geometry={worn.body} castShadow>
-          {solid}
+      {flat && (
+        <mesh geometry={flat}>
+          <meshLambertMaterial vertexColors />
         </mesh>
       )}
-      {geo.logo.geo ? (
-        // printed on the shirt: a patch of the chest's own surface
-        <mesh geometry={geo.logo.geo} position={[...geo.logo.at]} scale={geo.logo.scale ? [...geo.logo.scale] : undefined}>
-          <meshBasicMaterial map={logo} transparent alphaTest={0.05} toneMapped={false} />
-        </mesh>
-      ) : (
-        <mesh position={[...geo.logo.at]} rotation={geo.logo.rot ? [...geo.logo.rot] : undefined}>
-          <planeGeometry args={[geo.logo.size, geo.logo.size]} />
-          <meshBasicMaterial map={logo} transparent toneMapped={false} />
-        </mesh>
-      )}
-      {ownHat && geo.hat && !geo.hat.onHead && (
-        <mesh geometry={geo.hat.geo} castShadow>
-          {solid}
-        </mesh>
-      )}
-      {geo.arm && (
-        <group ref={arm} position={[...geo.arm.pivot]}>
-          <mesh geometry={geo.arm.geo} castShadow>
+      {!flat && (
+        <>
+          <mesh geometry={body} castShadow>
             {solid}
           </mesh>
-        </group>
-      )}
-      {geo.head && (
-        <group ref={head} position={[...geo.head.pivot]}>
-          <mesh geometry={geo.head.geo} castShadow>
-            {solid}
+          <mesh geometry={geo.glow}>
+            <meshBasicMaterial ref={glowBody} color={glowColor} toneMapped={false} />
           </mesh>
-          <mesh geometry={geo.head.glow}>
-            <meshBasicMaterial ref={glowHead} color={glowColor} toneMapped={false} />
-          </mesh>
-          {worn.head && (
-            <mesh geometry={worn.head} castShadow>
+          {worn.body && (
+            <mesh geometry={worn.body} castShadow>
               {solid}
             </mesh>
           )}
-        </group>
+          {geo.logo.geo ? (
+            // printed on the shirt: a patch of the chest's own surface
+            <mesh geometry={geo.logo.geo} position={[...geo.logo.at]} scale={geo.logo.scale ? [...geo.logo.scale] : undefined}>
+              <meshBasicMaterial map={logo} transparent alphaTest={0.05} toneMapped={false} />
+            </mesh>
+          ) : (
+            <mesh position={[...geo.logo.at]} rotation={geo.logo.rot ? [...geo.logo.rot] : undefined}>
+              <planeGeometry args={[geo.logo.size, geo.logo.size]} />
+              <meshBasicMaterial map={logo} transparent toneMapped={false} />
+            </mesh>
+          )}
+          {ownHat && geo.hat && !geo.hat.onHead && (
+            <mesh geometry={geo.hat.geo} castShadow>
+              {solid}
+            </mesh>
+          )}
+          {geo.arm && (
+            <group ref={arm} position={[...geo.arm.pivot]}>
+              <mesh geometry={geo.arm.geo} castShadow>
+                {solid}
+              </mesh>
+            </group>
+          )}
+          {geo.head && (
+            <group ref={head} position={[...geo.head.pivot]}>
+              <mesh geometry={geo.head.geo} castShadow>
+                {solid}
+              </mesh>
+              <mesh geometry={geo.head.glow}>
+                <meshBasicMaterial ref={glowHead} color={glowColor} toneMapped={false} />
+              </mesh>
+              {worn.head && (
+                <mesh geometry={worn.head} castShadow>
+                  {solid}
+                </mesh>
+              )}
+            </group>
+          )}
+        </>
       )}
       {children}
     </group>
