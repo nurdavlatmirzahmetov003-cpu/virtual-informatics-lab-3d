@@ -3,9 +3,51 @@
  * the scripts that need a real WebGL page: launch, navigate, evaluate, close.
  */
 import { spawn } from 'node:child_process';
-import { existsSync, mkdtempSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, statSync } from 'node:fs';
 import path from 'node:path';
+
+/**
+ * Chrome profiles live in the project's ignored `.tmp/chrome/` (on the
+ * project's own disk, not the system temp) and are always removed: after
+ * close, when Chrome fails to start, when the script exits or crashes, and
+ * any left by a killed run are swept on the next start (older than an hour).
+ */
+export const PROFILE_ROOT = process.env.VIL3D_PROFILE_DIR ?? path.resolve(import.meta.dirname, '../../.tmp/chrome');
+const live = new Map();
+process.once('exit', () => {
+  for (const [proc, profile] of live) {
+    try {
+      proc.kill();
+    } catch {
+      /* already gone */
+    }
+    try {
+      rmSync(profile, { recursive: true, force: true });
+    } catch {
+      /* still locked: swept on the next start */
+    }
+  }
+});
+
+/** A fresh profile folder; removes ones a killed run left behind. */
+export function newProfile(prefix) {
+  mkdirSync(PROFILE_ROOT, { recursive: true });
+  for (const name of readdirSync(PROFILE_ROOT)) {
+    const dir = path.join(PROFILE_ROOT, name);
+    try {
+      if (Date.now() - statSync(dir).mtimeMs > 3_600_000) rmSync(dir, { recursive: true, force: true });
+    } catch {
+      /* in use by another run */
+    }
+  }
+  return mkdtempSync(path.join(PROFILE_ROOT, prefix));
+}
+
+/** Remembers a running Chrome, so an exiting script still stops it and removes its profile. */
+export function track(proc, profile) {
+  live.set(proc, profile);
+  proc.once('exit', () => live.delete(proc));
+}
 
 export const CHROME = [
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -38,8 +80,9 @@ async function stopAndClean(proc, profile) {
 /** `serviceWorker`: let the site install its offline worker (off by default: its background caching would skew measurements). */
 export async function openChrome({ port = 9335, width = 1440, height = 900, serviceWorker = false } = {}) {
   if (!CHROME) throw new Error('Chrome/Edge not found');
-  const profile = mkdtempSync(path.join(tmpdir(), 'vil3d-cdp-'));
+  const profile = newProfile('vil3d-cdp-');
   const proc = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${port}`, `--user-data-dir=${profile}`, `--window-size=${width},${height}`, '--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11', 'about:blank'], { stdio: 'ignore' });
+  track(proc, profile);
   let url;
   for (let i = 0; i < 60 && !url; i++) {
     try {

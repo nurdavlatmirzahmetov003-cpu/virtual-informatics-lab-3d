@@ -9,8 +9,8 @@
  * texture memory and JS heap (`__vil3d.memory`). Prints JSON.
  */
 import { spawn } from 'node:child_process';
-import { mkdtempSync, rmSync, existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { rmSync, existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+import { newProfile, track } from './lib/cdp.mjs';
 import path from 'node:path';
 
 const args = process.argv.slice(2);
@@ -53,13 +53,15 @@ const CHROME = [
 ].find(existsSync);
 if (!CHROME) throw new Error('Chrome/Edge not found');
 
-const profile = mkdtempSync(path.join(tmpdir(), 'vil3d-perf-'));
+// in the project's ignored .tmp/chrome/, removed even if the run fails (lib/cdp.mjs)
+const profile = newProfile('vil3d-perf-');
 const chrome = spawn(CHROME, [
   '--headless=new', `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`,
   '--window-size=1440,900', '--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11',
   '--disable-background-timer-throttling', '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows',
   '--no-first-run', '--no-default-browser-check', ...(noWebgl ? ['--disable-webgl', '--disable-3d-apis'] : []), 'about:blank',
 ], { stdio: 'ignore' });
+track(chrome, profile);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

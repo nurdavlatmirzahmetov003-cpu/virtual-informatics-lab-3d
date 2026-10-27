@@ -21,3 +21,6 @@ assets-src/
 docs/defense/
 scripts/.tmp-tools/
 test-results/
+
+# headless Chrome profiles of the test scripts (scripts/lib/cdp.mjs)
+.tmp/
