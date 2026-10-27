@@ -7517,7 +7517,40 @@
       "tooShort": "The message is too short."
     }
   },
+  "demo": {
+    "badge": "Demo mode",
+    "note": "A sample profile for the defence: all data are examples. Your real progress and account are not touched.",
+    "reset": "Reset demo",
+    "exit": "Leave demo",
+    "enter": "Demo mode",
+    "enterHint": "For the defence: every lab open, achievements, robots and the certificate ready.",
+    "signInBlocked": "Signing in is not available in demo mode.",
+    "student": "Demo Student",
+    "instantCertificate": "Get the certificate now (demo)"
+  },
   "certificate": {
+    "course": "Course «{brand} — Virtual Informatics Lab»",
+    "teamRole": "Project team",
+    "sticker": "COURSE\nCOMPLETED",
+    "sample": "SAMPLE",
+    "download": "Download PDF",
+    "share": "Share",
+    "shareText": "I finished the {brand} virtual informatics course and earned a certificate!",
+    "copied": "Link copied",
+    "celebrate": "See the celebration",
+    "celebration": {
+      "title": "Congratulations!",
+      "voice": "Congratulations, {name}! You have done every task of the {brand} course. Here is your certificate!",
+      "you": "my friend",
+      "close": "Close"
+    },
+    "preview": {
+      "link": "See a sample certificate",
+      "title": "Sample certificate",
+      "subtitle": "This is the certificate a student gets for finishing the course: an A4 sheet, a check code and QR, seals and a sticker.",
+      "sampleName": "Aigerim Serikova",
+      "note": "This is a sample: its code does not verify. A real certificate goes to a student who finishes the course."
+    },
     "eyebrow": "Course completion",
     "title": "Certificate",
     "subtitle": "Complete every task of the {brand} course to earn a certificate. With an average above 90% you earn a commendation.",
@@ -7547,6 +7580,7 @@
     "verifyAt": "Verify at {url}",
     "notVerified": "Not verified (guest mode)",
     "check": {
+      "demo": "This is a demo or sample certificate. Such a code does not verify.",
       "title": "Check a certificate",
       "valid": "The certificate is valid",
       "notFound": "No certificate with this code was found.",

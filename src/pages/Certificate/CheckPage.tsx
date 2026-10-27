@@ -7,6 +7,7 @@ import { useT } from '@/hooks/useT';
 import { formatLongDate } from '../Progress/dates';
 import { useSettingsStore } from '@/store/settingsStore';
 import { certificateApi, type Certificate } from '@/services/feedback/api';
+import { isDemoCode } from '@/services/certificate/codes';
 import own from './CertificatePage.module.css';
 
 
@@ -14,8 +15,11 @@ export default function CheckPage() {
   const t = useT();
   const language = useSettingsStore((s) => s.language);
   const { code = '' } = useParams();
+  const demo = isDemoCode(code);
   const [cert, setCert] = useState<Certificate | null | undefined>(undefined);
   useEffect(() => {
+    // V4 §8.4: demo and sample sheets never verify (the server refuses them too)
+    if (demo) return;
     let alive = true;
     certificateApi
       .check(code)
@@ -24,10 +28,11 @@ export default function CheckPage() {
     return () => {
       alive = false;
     };
-  }, [code]);
+  }, [code, demo]);
   return (
     <PageLayout eyebrow={t('certificate.eyebrow')} title={t('certificate.check.title')}>
-      {cert === null && <p className={own.invalid}>{t('certificate.check.notFound')}</p>}
+      {demo && <p className={own.invalid}>{t('certificate.check.demo')}</p>}
+      {!demo && cert === null && <p className={own.invalid}>{t('certificate.check.notFound')}</p>}
       {cert && (
         <div className={own.result}>
           <span className={own.valid}>

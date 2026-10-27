@@ -3,10 +3,13 @@
  * done the server issues a certificate (average ≥ 90 %: a commendation)
  * with a code anyone can check. Guests and offline users get an unverified
  * printable copy from the progress in this browser.
+ *
+ * V4 §8: a new certificate opens the celebration (Celebration.tsx); the demo
+ * profile gets one at once, watermarked, with a DEMO- code that never verifies.
  */
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Award, Printer, Search } from 'lucide-react';
+import { Award, Eye, PartyPopper, Printer, Search } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useT } from '@/hooks/useT';
 import { summarize } from '@/services/progress';
@@ -14,6 +17,9 @@ import { useProgressStore } from '@/store/progressStore';
 import { useAuthStore } from '@/store/authStore';
 import { ApiError } from '@/services/auth/api';
 import { certificateApi, type Certificate, type Eligibility } from '@/services/feedback/api';
+import { DEMO_ACTIVE } from '@/lib/storage';
+import { demoCertificateCode } from '@/services/demo/mode';
+import { Celebration } from './Celebration';
 import { CertificateSheet, type SheetData } from './CertificateSheet';
 import styles from '../Feedback/Feedback.module.css';
 import own from './CertificatePage.module.css';
@@ -74,6 +80,8 @@ export default function CertificatePage() {
   const [busy, setBusy] = useState(false);
   const [guestName, setGuestName] = useState('');
   const [today] = useState(() => Date.now());
+  const [celebrating, setCelebrating] = useState(false);
+  const [demoIssued, setDemoIssued] = useState(false);
   const student = status === 'signedIn' && user?.role === 'student';
 
   useEffect(() => {
@@ -110,6 +118,7 @@ export default function CertificatePage() {
     try {
       const r = await certificateApi.issue();
       setCerts((list) => [...list.filter((c) => c.code !== r.certificate.code), r.certificate]);
+      setCelebrating(true);
     } catch (err) {
       setError(err instanceof ApiError && err.code === 'notYet' ? t('certificate.errors.notYet') : t('certificate.errors.generic'));
     } finally {
@@ -119,7 +128,11 @@ export default function CertificatePage() {
 
   const sheet: SheetData | null = best
     ? { kind: best.kind, name: best.name, average: best.average, total: best.total, issuedAt: best.issuedAt, code: best.code }
-    : !student && local.kind
+    : DEMO_ACTIVE
+      ? demoIssued && local.kind
+        ? { kind: local.kind, name: t('demo.student'), average: local.average, total: local.total, issuedAt: today, code: demoCertificateCode(), mark: 'demo' }
+        : null
+      : !student && local.kind
       ? { kind: local.kind, name: guestName.trim(), average: local.average, total: local.total, issuedAt: today, code: null }
       : null;
 
@@ -132,7 +145,19 @@ export default function CertificatePage() {
             <Award size={16} aria-hidden="true" /> {t('certificate.get')}
           </button>
         )}
-        {!student && local.kind && (
+        {DEMO_ACTIVE && local.kind && !demoIssued && (
+          <button
+            type="button"
+            className={styles.primary}
+            onClick={() => {
+              setDemoIssued(true);
+              setCelebrating(true);
+            }}
+          >
+            <Award size={16} aria-hidden="true" /> {t('demo.instantCertificate')}
+          </button>
+        )}
+        {!student && !DEMO_ACTIVE && local.kind && (
           <label className={styles.field}>
             <span>{t('certificate.guestName')}</span>
             <input value={guestName} onChange={(ev) => setGuestName(ev.target.value)} maxLength={80} autoComplete="name" />
@@ -147,16 +172,27 @@ export default function CertificatePage() {
 
       {sheet && (
         <section className={own.sheetWrap}>
-          {!student && <p className={styles.muted}>{t('certificate.guestNote')}</p>}
+          {!student && !DEMO_ACTIVE && <p className={styles.muted}>{t('certificate.guestNote')}</p>}
           <CertificateSheet data={sheet} />
           <div className={own.actions}>
             <button type="button" className={styles.primary} onClick={() => window.print()} disabled={!sheet.name}>
               <Printer size={16} aria-hidden="true" /> {t('certificate.print')}
             </button>
+            <button type="button" className={own.secondary} onClick={() => setCelebrating(true)}>
+              <PartyPopper size={16} aria-hidden="true" /> {t('certificate.celebrate')}
+            </button>
             <p className={styles.small}>{t('certificate.printHint')}</p>
           </div>
         </section>
       )}
+
+      {celebrating && sheet && <Celebration data={sheet} onClose={() => setCelebrating(false)} />}
+
+      <p className={own.previewLink}>
+        <Link to="/certificate/preview">
+          <Eye size={16} aria-hidden="true" /> {t('certificate.preview.link')}
+        </Link>
+      </p>
 
       <section className={own.checkWrap}>
         <h2>{t('certificate.check.title')}</h2>

@@ -35,6 +35,7 @@ const GamePlayPage = lazy(() => import('@/pages/Games/GamePlayPage'));
 const FeedbackPage = lazy(() => import('@/pages/Feedback/FeedbackPage'));
 const CertificatePage = lazy(() => import('@/pages/Certificate/CertificatePage'));
 const CertificateCheckPage = lazy(() => import('@/pages/Certificate/CheckPage'));
+const CertificatePreviewPage = lazy(() => import('@/pages/Certificate/PreviewPage'));
 const LivePage = lazy(() => import('@/pages/Live/LivePage'));
 const PrivacyPage = lazy(() => import('@/pages/Privacy/PrivacyPage'));
 const PathPage = lazy(() => import('@/pages/Path/PathPage'));
@@ -70,6 +71,7 @@ export const router = createBrowserRouter([
       { path: 'feedback', element: <FeedbackPage /> },
       { path: 'certificate', element: <CertificatePage /> },
       { path: 'certificate/check/:code', element: <CertificateCheckPage /> },
+      { path: 'certificate/preview', element: <CertificatePreviewPage /> },
       { path: 'credits', element: <CreditsPage /> },
       { path: 'privacy', element: <PrivacyPage /> },
       { path: 'path', element: <PathPage /> },

@@ -318,6 +318,9 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 
 three (MIT), @react-three/fiber/drei/postprocessing (MIT), postprocessing (Zlib), gsap (Standard "no charge" license — https://gsap.com/standard-license), zustand (MIT), react / react-router (MIT), lucide-react (ISC).
 
+## Сертификат мөрлері (V4 §8.2) — `public/certificate/`
+- `seal-team.svg` (ММАН командасының дөңгелек мөрі), `seal-brand.svg` (BitLab брендтік мөрі), `signature-team.svg` (қолтаңба үлгісі) — өзіміздің жұмысымыз, CC0. `node scripts/certificate-seals.mjs` арқылы салынады. «Курс аяқталды» голографиялық стикері — кодтағы SVG (`src/pages/Certificate/HoloSticker.tsx`). Бәрі ауыстырылатын үлгілер: жолдары `src/config/brand.ts`-те.
+
 ## Legacy ассеттер (`legacy/assets`, `legacy/textures`) — тек мұрағат
 - `legacy/assets/*.jpg` — пайдаланушы фотолары, дереккөзі белгісіз → жаңа қосымшада ҚОЛДАНЫЛМАЙДЫ.
 - `legacy/assets/products/*` — Wikimedia Commons / Openverse (CC BY / CC BY-SA, авторлары нақтыланбаған) → жаңа қосымшада қолданбас бұрын әр файлдың Commons бетінен автор мен лицензияны тексеру керек.

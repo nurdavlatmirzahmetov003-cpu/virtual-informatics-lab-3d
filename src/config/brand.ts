@@ -18,15 +18,20 @@ export const BRAND = {
   logo: 'brand/logo.svg',
   logoFull: 'brand/logo-full.svg',
   /**
-   * Certificates and commendations (pages/Certificate). The seal and the
-   * signature are SAMPLE placeholders: replace public/certificate/seal.svg and
-   * signature.svg with your organisation's images (PNG works too — change the
-   * file names here), and put the signer's real name and position below.
+   * Certificates and commendations (pages/Certificate), V4 §8. The seals and
+   * the signature are in-house placeholders (scripts/certificate-seals.mjs):
+   * replace the files in public/certificate/ with real scans (PNG works too —
+   * change the file names here).
+   * - team: the signature line «ММАН:» (the project team's initials; written
+   *   out only on the seal's ring) with the round seal over the signature;
+   * - brandSeal: BitLab's own gold seal.
    */
   certificate: {
-    seal: 'certificate/seal.svg',
-    signature: 'certificate/signature.svg',
-    signer: 'А. Ә. Тегі',
-    signerRole: { kk: 'Директор', ru: 'Директор', en: 'Director' },
+    team: {
+      label: 'ММАН',
+      seal: 'certificate/seal-team.svg',
+      signature: 'certificate/signature-team.svg',
+    },
+    brandSeal: 'certificate/seal-brand.svg',
   },
 } as const;
