@@ -81,7 +81,8 @@ test('zone shots stand in the hall, in front of the zone, looking at it', () => 
     assert.ok(inside([position[0], position[2]], 0.3) || openFront, `${z.id} camera inside the hall`);
     const toZone = [target[0] - position[0], target[2] - position[2]];
     assert.ok(toZone[0] * -z.facing[0] + toZone[1] * -z.facing[1] > 0, `${z.id} camera faces the zone`);
-    assert.ok(position[1] > 1 && position[1] < LAB_HALL.height - 0.5);
+    // under the ceiling — or, outside the open front, free to rise like the overview
+    assert.ok(position[1] > 1 && (position[1] < LAB_HALL.height - 0.5 || openFront), `${z.id} camera height`);
   }
   assert.ok(LAB_OVERVIEW.position[1] > LAB_HALL.height, 'overview from above');
 });

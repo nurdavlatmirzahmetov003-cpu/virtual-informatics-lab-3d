@@ -22,8 +22,8 @@ export interface LabZone {
   size: Vec2;
   /** Unit vector (x, z) from the zone towards its visitor: the side the zone is seen from. */
   facing: Vec2;
-  /** Camera framing when the zone is focused. */
-  view: { distance: number; height: number; targetY: number };
+  /** Camera framing when the zone is focused; `maxOrbit`: how far it may zoom out there (default LAB_ORBIT.zone.max). */
+  view: { distance: number; height: number; targetY: number; maxOrbit?: number };
   /** DEVICE_CATALOG.md device ids shown here from V2-4 on (each device in exactly one zone). */
   devices: readonly string[];
 }
@@ -97,7 +97,7 @@ export const LAB_ZONES: readonly LabZone[] = [
     // and a mini football pitch on one big low platform (data/robots/yard.ts lays it out); 1.3 m clear of print and
     // media. Seen from in front of the open front, like the overview: no wall there to stand behind
     id: 'robots', accent: '#fb923c', center: [6.0, 9.25], size: [7.2, 4.3], facing: BACK,
-    view: { distance: 5.4, height: 3.6, targetY: 0.4 },
+    view: { distance: 7.2, height: 4.9, targetY: 0.2, maxOrbit: 10 },
     devices: [],
   },
 ];
