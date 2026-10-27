@@ -17,7 +17,8 @@ const SITE = process.env.LAB_BASE ?? 'http://localhost:5173';
 const only = process.argv.slice(2).find((a) => !a.startsWith('--'));
 const WIDTHS = [375, 768, 1280, 1366, 1920];
 const heightOf = (w) => (w === 375 ? 812 : w === 768 ? 1024 : w === 1366 ? 768 : w === 1920 ? 1080 : 800);
-const FOLD_IDS = ['lab:zone', 'lab:side', 'anatomy:intro', 'anatomy:panel', 'home:explore', 'connect:side', 'assembly:head', 'assembly:panel'];
+// lab:map — the 3D lab's zone map folds into a round BitLab tab (asked before V4 §10)
+const FOLD_IDS = ['lab:map', 'lab:zone', 'lab:side', 'anatomy:intro', 'anatomy:panel', 'home:explore', 'connect:side', 'assembly:head', 'assembly:panel'];
 
 /** name, path, and a step run once the scene is ready (opens the panel under test). */
 const PAGES = [
@@ -119,6 +120,11 @@ async function main() {
           const bit = found.filter((f) => f.startsWith('[bit]'));
           const real = found.filter((f) => !f.startsWith('[bit]'));
           if (bit.length) bitNotes.push({ name, w, folded, items: bit });
+          // the zone map (lab overview and zones; a device panel takes its place): open, or its tab when folded
+          if (name === 'lab' || name === 'lab-zone') {
+            const map = await c.evaluate(`!!document.querySelector('${folded ? '[data-map-tab]' : '[data-map-open]'}')`);
+            if (!map) real.push(`zone map ${folded ? 'tab' : 'panel'} missing`);
+          }
           if (real.length) problems.push({ name, w, folded, items: real });
           process.stdout.write(real.length ? '✖' : '·');
         }

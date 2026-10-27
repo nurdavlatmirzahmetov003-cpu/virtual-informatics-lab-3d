@@ -3422,7 +3422,13 @@
     "atOverview": "Overview",
     "hint": "Drag to orbit · Wheel or pinch to zoom · Esc for the overview",
     "keys": "Keys",
+    "mapFold": {
+      "title": "Zone map",
+      "open": "Open the zone map",
+      "close": "Fold the map"
+    },
     "keysList": {
+      "map": "M — fold / open the zone map",
       "digits": "1–9 — fly to a zone",
       "overview": "Esc or 0 — overview",
       "step": "[ ] or PageUp/PageDown — previous/next zone",

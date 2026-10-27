@@ -142,7 +142,7 @@ function ViewTools({ catalog, onCatalog, onClassMode }: { catalog: boolean; onCa
       )}
       {showKeys && (
         <ul id="lab-keys" className={styles.keys}>
-          {(['digits', 'overview', 'step', 'zoom', 'orbit'] as const).map((k) => (
+          {(['digits', 'overview', 'step', 'zoom', 'orbit', 'map'] as const).map((k) => (
             <li key={k}>{t(key(`lab.keysList.${k}`))}</li>
           ))}
         </ul>
