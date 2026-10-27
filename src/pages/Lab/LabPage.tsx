@@ -40,6 +40,7 @@ const ZONE_LINKS: Partial<Record<LabZoneId, string>> = {
   network: '/labs/network',
   power: '/labs/connect',
   showcase: '/studio',
+  robots: '/robots',
 };
 
 /** Page-wide keyboard control (ignored while typing in a field). */

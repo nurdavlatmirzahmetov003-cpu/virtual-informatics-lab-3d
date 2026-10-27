@@ -1,5 +1,5 @@
 /**
- * The large 3D lab (V2-3): one hall, ten zones (zone 10, the stage, 0.37). Pure data (no three.js), so
+ * The large 3D lab (V2-3): one hall, eleven zones (zone 10, the stage, 0.37; zone 11, the robots' yard, V4 §4). Pure data (no three.js), so
  * navigation logic and tests can use it. World units are metres; the hall
  * floor is y = 0, the open (cut-away) side faces +Z, the entrance.
  *

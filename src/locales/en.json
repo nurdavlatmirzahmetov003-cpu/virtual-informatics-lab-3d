@@ -76,8 +76,8 @@
     "modules": {
       "space": {
         "title": "3D lab",
-        "desc": "A large hall with ten zones: workstation, PC build, storage, input/output, printing, networking, power, mobile devices, a showcase and the BitLab stage. Minimap and keyboard control.",
-        "tag": "3D · 10 zones"
+        "desc": "A large hall with eleven zones: workstation, PC build, storage, input/output, printing, networking, power, mobile devices, a showcase, the BitLab stage and the robots' yard. Minimap and keyboard control.",
+        "tag": "3D · 11 zones"
       },
       "hardware": {
         "title": "Computer hardware",
@@ -3373,8 +3373,8 @@
     },
     "title": "3D lab",
     "eyebrow": "The large lab space",
-    "lead": "Tour ten zones: pick a zone and the camera flies there.",
-    "sceneLabel": "3D lab hall with ten zones",
+    "lead": "Tour eleven zones: pick a zone and the camera flies there.",
+    "sceneLabel": "3D lab hall with eleven zones",
     "overview": "Overview",
     "next": "Next zone",
     "prev": "Previous zone",
@@ -3463,7 +3463,8 @@
       "robots": {
         "name": "Robots' yard",
         "caption": "Where our robots live",
-        "description": "Here the robots work, charge in their garages, rest and play football. Click any robot to hear its tip."
+        "description": "Here the robots work, charge in their garages, rest and play football. Click any robot to hear its tip.",
+        "action": "Meet our robots"
       }
     },
     "stage": {
@@ -3475,7 +3476,7 @@
         },
         "s2": {
           "title": "The big 3D lab",
-          "body": "Ten zones and sixty devices. Click any device to learn what it does, which ports it has and what is inside."
+          "body": "Eleven zones and sixty devices. Click any device to learn what it does, which ports it has and what is inside."
         },
         "s3": {
           "title": "Setup Studio",
@@ -7700,7 +7701,7 @@
     "start": "Enter the lab",
     "lab": {
       "title": "Welcome to BitLab!",
-      "text": "This is a 3D informatics lab. Walk through ten zones, click any device and look inside it: from a processor to a 3D printer."
+      "text": "This is a 3D informatics lab. Walk through eleven zones, click any device and look inside it: from a processor to a 3D printer."
     },
     "play": {
       "title": "Do it with your own hands",

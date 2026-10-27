@@ -1,5 +1,5 @@
 /**
- * The large 3D lab (V2-3): one hall, ten zones (0.37: the stage, BitLab
+ * The large 3D lab (V2-3): one hall, eleven zones (0.37: the stage, BitLab
  * branding and helper robots). Zones show light previews
  * on the overview; the focused zone mounts its full models, its neighbours'
  * files are prefetched into the HTTP cache (not parsed, so nothing waits in
