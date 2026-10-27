@@ -1,0 +1,229 @@
+/* V4 §7: side menu — a drawer from the right over everything but the loader's own Bit */
+
+.burger {
+  width: 38px;
+  height: 38px;
+  color: var(--text);
+}
+
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-loader) + 2);
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear var(--dur-med);
+}
+
+.layer[data-open] {
+  visibility: visible;
+  pointer-events: auto;
+  transition: none;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(8 12 30 / 0.45);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease-out);
+}
+
+.layer[data-open] .backdrop {
+  opacity: 1;
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(360px, 88vw);
+  border-left: 1px solid var(--border);
+  background: var(--bg-elevated);
+  box-shadow: -24px 0 60px -30px rgb(0 0 0 / 0.55);
+  transform: translateX(100%);
+  transition: transform var(--dur-med) var(--ease-out);
+  touch-action: pan-y;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.layer[data-open] .panel {
+  transform: translateX(0);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: var(--topbar-base);
+  padding: 0 var(--space-4) 0 var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.body {
+  flex: 1;
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-4) var(--space-6);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.group ul {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.groupTitle {
+  margin: 0 0 var(--space-2);
+  padding: 0 var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 46px;
+  padding: 0 var(--space-2);
+  border-radius: 12px;
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--dur-fast) linear;
+}
+
+.link:hover,
+.link[aria-current] {
+  background: rgb(var(--ink-rgb) / 0.06);
+}
+
+.link[aria-current] {
+  color: var(--accent);
+}
+
+.link:focus-visible,
+.signIn:focus-visible,
+.userLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 46px;
+  padding: 0 var(--space-2);
+  font-weight: 600;
+}
+
+.a11y {
+  display: grid;
+  gap: 2px;
+  margin-top: var(--space-2);
+}
+
+.subTitle {
+  margin: 0;
+  padding: 0 var(--space-2);
+  font-weight: 700;
+}
+
+.signIn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 46px;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-accent);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.user {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.userText {
+  display: grid;
+  min-width: 0;
+}
+
+.userText strong,
+.userText small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userText small {
+  color: var(--text-muted);
+}
+
+.userLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+@media print {
+  .layer,
+  .burger {
+    display: none;
+  }
+}

@@ -7926,5 +7926,15 @@
     "expSide": "Findings and questions",
     "simBuild": "The computer's parts",
     "simGauges": "Gauges"
-  }
+  },
+  "menu": {
+      "open": "Open menu",
+      "close": "Close menu",
+      "title": "Menu",
+      "learning": "Learning",
+      "help": "Help",
+      "about": "About",
+      "settings": "Settings",
+      "account": "Account"
+    }
 }

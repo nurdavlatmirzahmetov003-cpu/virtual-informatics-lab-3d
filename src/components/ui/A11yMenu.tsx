@@ -17,7 +17,6 @@ const k = (s: string) => s as TranslationKey;
 export function A11yMenu() {
   const t = useT();
   const a11y = useSettingsStore((s) => s.a11y);
-  const setA11y = useSettingsStore((s) => s.setA11y);
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
@@ -60,17 +59,25 @@ export function A11yMenu() {
       {open && (
         <div id={id} className={styles.menu} role="group" aria-label={t('a11y.title')}>
           <p className={styles.menuTitle}>{t('a11y.title')}</p>
-          {OPTIONS.map((o) => (
-            <label key={o} className={styles.switchRow}>
-              <input type="checkbox" checked={a11y[o]} onChange={(e) => setA11y({ [o]: e.target.checked })} />
-              <span>
-                <b>{t(k(`a11y.${o}.name`))}</b>
-                <small>{t(k(`a11y.${o}.hint`))}</small>
-              </span>
-            </label>
-          ))}
+          <A11yOptions />
         </div>
       )}
     </div>
   );
+}
+
+/** The four switches themselves; the side menu (V4 §7) shows them inline. */
+export function A11yOptions() {
+  const t = useT();
+  const a11y = useSettingsStore((s) => s.a11y);
+  const setA11y = useSettingsStore((s) => s.setA11y);
+  return OPTIONS.map((o) => (
+    <label key={o} className={styles.switchRow}>
+      <input type="checkbox" checked={a11y[o]} onChange={(e) => setA11y({ [o]: e.target.checked })} />
+      <span>
+        <b>{t(k(`a11y.${o}.name`))}</b>
+        <small>{t(k(`a11y.${o}.hint`))}</small>
+      </span>
+    </label>
+  ));
 }

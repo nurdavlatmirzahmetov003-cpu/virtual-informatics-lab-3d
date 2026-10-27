@@ -8,6 +8,7 @@ import { A11yMenu } from '@/components/ui/A11yMenu';
 import { BrandMark } from '@/components/brand/BrandMark';
 import { BRAND } from '@/config/brand';
 import { AccountButton } from './AccountButton';
+import { SiteMenu } from './SiteMenu';
 import styles from './TopBar.module.css';
 
 const NAV: ReadonlyArray<{ to: string; label: TranslationKey; end?: boolean }> = [
@@ -46,11 +47,17 @@ export function TopBar() {
       </nav>
 
       <div className={styles.controls}>
-        <QualitySelect />
-        <ThemeToggle />
-        <A11yMenu />
-        <LanguageSwitcher />
-        <AccountButton />
+        <span className={styles.quality}>
+          <QualitySelect />
+        </span>
+        {/* V4 §7: on tablets and phones these live only in the side menu */}
+        <span className={styles.wide}>
+          <ThemeToggle />
+          <A11yMenu />
+          <LanguageSwitcher />
+          <AccountButton />
+        </span>
+        <SiteMenu />
       </div>
     </header>
   );

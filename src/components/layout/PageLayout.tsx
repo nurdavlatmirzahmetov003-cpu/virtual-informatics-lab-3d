@@ -4,26 +4,34 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import { BrandMark } from '@/components/brand/BrandMark';
 import { BRAND } from '@/config/brand';
+import { SITE_LINK_GROUPS } from './siteLinks';
 import styles from './PageLayout.module.css';
 
-/** Links every content page ends with (0.36): feedback, contact, certificate, games, credits. */
+/** Links every content page ends with (0.36), in the side menu's groups (V4 §7). */
 function Footer() {
   const t = useT();
   return (
     <footer className={styles.footer}>
       <span className={styles.footBrand}>
-        <BrandMark size={22} /> {BRAND.name}
+        <BrandMark size={26} /> {BRAND.name}
       </span>
-      <nav aria-label={t('app.short')}>
-        <Link to="/feedback">{t('footer.feedback')}</Link>
-        <Link to="/feedback#contact">{t('footer.contact')}</Link>
-        <Link to="/certificate">{t('footer.certificate')}</Link>
-        <Link to="/games">{t('footer.games')}</Link>
-        <Link to="/identify">{t('nav.identify')}</Link>
-        <Link to="/path">{t('nav.path')}</Link>
-        <Link to="/credits">{t('footer.credits')}</Link>
-        <Link to="/privacy">{t('footer.privacy')}</Link>
-      </nav>
+      <div className={styles.footGroups}>
+        {SITE_LINK_GROUPS.map((g) => (
+          <nav key={g.id} className={styles.footGroup} aria-label={t(g.title)}>
+            <h2 className={styles.footTitle}>{t(g.title)}</h2>
+            <ul>
+              {g.links.map(({ to, label, icon: Icon }) => (
+                <li key={to}>
+                  <Link to={to}>
+                    <Icon size={16} aria-hidden="true" />
+                    {t(label)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
+      </div>
     </footer>
   );
 }
