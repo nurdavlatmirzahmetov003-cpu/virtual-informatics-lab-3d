@@ -160,6 +160,13 @@
     --palette-w: calc(var(--palette-base) * 0.86);
   }
 
+  /* V4 §11: touch screens have a 44 px fold button in the palette's header: it keeps room for its title */
+  @media (pointer: coarse) {
+    .layout {
+      --palette-w: max(calc(var(--palette-base) * 0.86), 200px);
+    }
+  }
+
   .panel {
     position: static;
     max-height: none;

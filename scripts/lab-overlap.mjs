@@ -11,6 +11,7 @@
  *
  *   npm run test:lab-overlap                 # needs the dev site on :5173 (npm run dev)
  *   npm run test:lab-overlap -- network      # only the labs whose path contains "network"
+ *   npm run test:lab-overlap -- --width=1024 # only this width (comma-separated)
  *   LAB_BASE=http://localhost:4173 npm run test:lab-overlap   # a built site (npm run preview)
  *
  * Problems are listed per page and width; screenshots of the failing views are
@@ -30,6 +31,8 @@ const root = path.resolve(import.meta.dirname, '..');
 const OUT = path.join(root, 'test-results/lab-overlap');
 const SITE = process.env.LAB_BASE ?? 'http://localhost:5173';
 const only = process.argv.slice(2).find((a) => !a.startsWith('--'));
+/** --width=1024 (comma-separated): only these widths */
+const widthArg = process.argv.find((a) => a.startsWith('--width='))?.slice(8);
 // V4 §11: phones (360, 390), tablets portrait and landscape (768, 1024) as touch devices, and laptops
 const WIDTHS = [360, 375, 390, 768, 1024, 1280, 1366, 1920];
 const HEIGHTS = { 360: 740, 375: 812, 390: 844, 768: 1024, 1024: 768, 1280: 800, 1366: 768, 1920: 1080 };
@@ -154,7 +157,7 @@ async function main() {
   }
   const pages = LAB_PAGES.filter((p) => !only || p.includes(only));
   const problems = [];
-  for (const w of WIDTHS) {
+  for (const w of WIDTHS.filter((x) => !widthArg || widthArg.split(',').map(Number).includes(x))) {
     const h = heightOf(w);
     const c = await openChrome({ width: w, height: h, port: 9410 + WIDTHS.indexOf(w) });
     await asTouch(c, w);
