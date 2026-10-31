@@ -6,9 +6,8 @@
  * row towards the middle to the first gap. Text in
  * a panel that floats over the page (a bottom sheet) is avoided too when a
  * free spot is near. The dock the student chose stays saved; the step aside
- * is only an offset, measured
- * again when the window, the page or its scroll changes, and once a second
- * for panels that open by themselves.
+ * is only an offset, measured again when the window or a scroll changes, and
+ * at most once a second after the page itself changed (a panel opening by itself).
  */
 import { useEffect, useRef, useState, type RefObject } from 'react';
 
@@ -156,7 +155,18 @@ export function useStepAside(button: RefObject<HTMLElement | null>, active: bool
       timer = window.setTimeout(measure, 180);
     };
     const now = window.setTimeout(measure);
-    const every = window.setInterval(measure, 1000);
+    // once a second, but only after the page changed: elements added or removed (a panel opening by itself);
+    // a 3D page's moving labels change only attributes, so a still page costs nothing
+    let dirty = false;
+    const watch = new MutationObserver(() => {
+      dirty = true;
+    });
+    watch.observe(document.body, { childList: true, subtree: true });
+    const every = window.setInterval(() => {
+      if (!dirty) return;
+      dirty = false;
+      measure();
+    }, 1000);
     window.addEventListener('resize', soon);
     // any scroller: the page or a panel's list
     window.addEventListener('scroll', soon, { capture: true, passive: true });
@@ -164,6 +174,7 @@ export function useStepAside(button: RefObject<HTMLElement | null>, active: bool
       window.clearTimeout(timer);
       window.clearTimeout(now);
       window.clearInterval(every);
+      watch.disconnect();
       window.removeEventListener('resize', soon);
       window.removeEventListener('scroll', soon, { capture: true });
     };
