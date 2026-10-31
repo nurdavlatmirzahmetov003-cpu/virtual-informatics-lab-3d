@@ -1003,3 +1003,11 @@
     gap: 5px;
   }
 }
+
+/* V4 §11: on touch screens the camera buttons keep a 44 px target when their labels hide */
+@media (pointer: coarse) {
+  .viewTools button {
+    min-width: 44px;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,537 @@
+[
+ {
+  "size": "390",
+  "route": "home",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "lab",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": [
+   "button \"Құрылғылар\" 40×44"
+  ]
+ },
+ {
+  "size": "390",
+  "route": "lab-zone",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": [
+   "button \"Құрылғылар\" 40×44"
+  ]
+ },
+ {
+  "size": "390",
+  "route": "labs",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "assembly",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "network",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "connect",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "sim",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "algorithms",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "logic",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "experiments",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "assignments",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "explorer",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "studio",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": [
+   "button \"Камераны қалпына келтіру\" 39×44",
+   "button \"Авто айналу\" 39×44"
+  ]
+ },
+ {
+  "size": "390",
+  "route": "studio-summary",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "progress",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "report",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "achievements",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "path",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "robots",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "games",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "leaderboard",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "live",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "certificate",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "certificate-preview",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "identify",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "remote",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "feedback",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "credits",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "privacy",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "login",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "join",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "390",
+  "route": "not-found",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "home",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "lab",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "lab-zone",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "labs",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "assembly",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "network",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "connect",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "sim",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "algorithms",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "logic",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "experiments",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "assignments",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "explorer",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "studio",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "studio-summary",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "progress",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "report",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "achievements",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "path",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "robots",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "games",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "leaderboard",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "live",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "certificate",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "certificate-preview",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "identify",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "remote",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "feedback",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "credits",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "privacy",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "login",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "join",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ },
+ {
+  "size": "1366",
+  "route": "not-found",
+  "hscroll": false,
+  "cut": [],
+  "bit": [],
+  "small": []
+ }
+]
