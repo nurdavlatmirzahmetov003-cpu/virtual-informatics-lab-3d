@@ -46,7 +46,8 @@
   --zone: var(--accent);
   position: relative;
   grid-column: 1;
-  grid-row: 1;
+  /* all rows (V4 §11): a tall zone text must not stretch the first row and push the zone map off a 768 px screen */
+  grid-row: 1 / -1;
   align-self: start;
   display: grid;
   gap: var(--space-3);
@@ -478,6 +479,19 @@
 @media (max-width: 1100px) {
   .side {
     width: min(380px, 44vw);
+  }
+  /* V4 §11: tablets — the tools are icons (the catalog's name is in its tooltip) and the
+     left column gives way, so the whole tool row fits at 768 px; the mouse hint is for desktops */
+  .overlay {
+    grid-template-columns: minmax(0, 340px) minmax(0, 1fr) auto;
+  }
+  .btnLabel,
+  .hint {
+    display: none;
+  }
+  .textBtn:has(.btnLabel) {
+    width: 44px;
+    padding: 0;
   }
 }
 

@@ -78,14 +78,17 @@ const CHECK = (touch) => `(() => {
   // R3F's two wrappers around the canvas; drei's labels (pinned in the scene, moving with the camera) live in the outer one
   const hosts = [...document.querySelectorAll('canvas')].map((c) => c.parentElement?.parentElement ?? c.parentElement);
   const shown = (el) => el.checkVisibility?.({ opacityProperty: true, visibilityProperty: true }) ?? el.offsetParent !== null;
-  // a scroller (or a clipping box) between the control and the page brings it back into view
-  const scrolled = (el) => {
+  // a scroller between the control and the page brings it back into view (a box that only clips does not)
+  const scrolled = (el, axis = 'X') => {
     for (let e = el.parentElement; e && e !== document.body; e = e.parentElement) {
       const s = getComputedStyle(e);
-      if (/(auto|scroll|hidden|clip)/.test(s.overflowX) && e.scrollWidth > e.clientWidth + 1) return true;
+      const over = axis === 'X' ? e.scrollWidth > e.clientWidth + 1 : e.scrollHeight > e.clientHeight + 1;
+      if (/(auto|scroll)/.test(axis === 'X' ? s.overflowX : s.overflowY) && over) return true;
     }
     return false;
   };
+  // a page that does not scroll (the 3D pages): whatever hangs below the screen is out of reach
+  const pageScrolls = document.documentElement.scrollHeight > vh + 1;
   const inSentence = (el) => el.tagName === 'A' && el.closest('p, li, td, small, figcaption') && !el.querySelector('svg') && getComputedStyle(el).display === 'inline';
   const bitBtn = document.querySelector('[data-chrome="bit"] button');
   const bit = bitBtn?.getBoundingClientRect();
@@ -97,11 +100,12 @@ const CHECK = (touch) => `(() => {
     // visually hidden (skip links, radios inside styled labels)
     if (r.width <= 2 || getComputedStyle(el).clip === 'rect(0px, 0px, 0px, 0px)' || Number(getComputedStyle(el).opacity) === 0) continue;
     if ((r.left < -1 || r.right > vw + 1) && r.bottom > 0 && r.top < vh && !scrolled(el)) out.cut.push(label(el) + ' x ' + Math.round(r.left) + '..' + Math.round(r.right));
+    else if (!pageScrolls && r.top < vh - 4 && r.bottom > vh + 1 && !scrolled(el, 'Y')) out.cut.push(label(el) + ' y ' + Math.round(r.top) + '..' + Math.round(r.bottom));
     if (bit && r.bottom > bit.top + 4 && r.top < bit.bottom - 4 && r.right > bit.left + 4 && r.left < bit.right - 4 && r.top > 0 && r.bottom < vh) {
       const top = document.elementFromPoint(Math.min(Math.max(r.left + r.width / 2, bit.left + 2), bit.right - 2), Math.min(Math.max(r.top + r.height / 2, bit.top + 2), bit.bottom - 2));
       if (top?.closest('[data-chrome="bit"]')) out.bit.push(label(el));
     }
-    if (${touch} && !inSentence(el) && (r.height < 43.5 || r.width < 43.5) && !['checkbox', 'radio', 'range'].includes(el.type)) out.small.push(label(el) + ' ' + Math.round(r.width) + '×' + Math.round(r.height));
+    if (${touch} && r.bottom > 0 && r.top < vh && !inSentence(el) && (r.height < 43.5 || r.width < 43.5) && !['checkbox', 'radio', 'range'].includes(el.type)) out.small.push(label(el) + ' ' + Math.round(r.width) + '×' + Math.round(r.height));
   }
   out.cut = [...new Set(out.cut)];
   out.small = [...new Set(out.small)];

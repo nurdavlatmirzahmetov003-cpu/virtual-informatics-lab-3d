@@ -739,7 +739,10 @@
   margin: var(--space-2) 0 0;
   padding: 0;
   border-radius: var(--radius-md);
-  overflow: hidden;
+  /* V4 §11: on a short laptop screen the panel shrinks the list; it scrolls (it only clipped, hiding the last parts) */
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
   background: var(--border);
   list-style: none;
 }

@@ -85,3 +85,10 @@
     display: none;
   }
 }
+
+/* touch screens: a round 44 px button (V4 §11) */
+@media (pointer: coarse) and (max-width: 1600px) {
+  .chip {
+    width: 44px;
+  }
+}

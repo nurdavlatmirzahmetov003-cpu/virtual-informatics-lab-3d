@@ -168,3 +168,17 @@ svg {
   transition-duration: 0.001ms !important;
   scroll-behavior: auto !important;
 }
+
+/* V4 §11: on touch screens every button, field and button-like link takes at least 44 × 44 px
+   (a fingertip, not a cursor), whatever a component's own minimum for the mouse; links inside
+   sentences keep their size. data-compact opts out (a control whose hit area is grown otherwise). */
+@media (pointer: coarse) {
+  :is(button, [role='button'], [role='tab'], select, input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden']), a[class], nav a[href], footer a[href], a[href]:has(> svg)):not([data-compact]) {
+    min-height: 44px !important;
+  }
+
+  /* the width only for icon-only buttons: a text's own width is wider, and a min-width would let a flex row squeeze texts together */
+  :is(button, [role='button'], a[href]):has(> svg:only-child):not([data-compact]) {
+    min-width: 44px !important;
+  }
+}

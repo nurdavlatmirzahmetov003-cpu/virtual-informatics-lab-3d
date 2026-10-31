@@ -315,3 +315,11 @@
     padding: 0;
   }
 }
+
+/* touch screens: the logo link is a 44 px target even when only the mark shows (V4 §11) */
+@media (pointer: coarse) {
+  .brand {
+    min-width: 44px;
+    justify-content: center;
+  }
+}
