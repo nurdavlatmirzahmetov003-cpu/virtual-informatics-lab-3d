@@ -11,6 +11,7 @@ import { createServer } from 'node:http';
 import { handleAi, aiStatus } from './ai';
 import { createBit } from './bit';
 import { createBitVoice } from './bitVoice';
+import { describeProvider, selectProvider } from './providers';
 import { createApp } from './app';
 import { openDb, migrate } from './db';
 import { loadEnv, serverConfig } from './env';
@@ -30,8 +31,11 @@ const security = { secure: config.cookieSecure, origins: config.allowedOrigins }
 const site = config.staticDir ? staticSite(config.staticDir, security) : null;
 // Bit, the voice assistant: Gemini behind this server (the key never reaches the browser)
 // …and its voice: Gemini speech synthesis and recognition (0.37)
-const bitVoice = createBitVoice({ allowedOrigins: config.allowedOrigins });
-const bit = createBit({ allowedOrigins: config.allowedOrigins, voice: { tts: bitVoice.configured, stt: bitVoice.configured } });
+// V4 §12.1: BIT_PROVIDER=openai (with OPENAI_API_KEY) puts OpenAI first, Gemini stays the fallback
+const provider = selectProvider();
+console.log(describeProvider(provider));
+const bitVoice = createBitVoice({ allowedOrigins: config.allowedOrigins, provider });
+const bit = createBit({ allowedOrigins: config.allowedOrigins, voice: { tts: bitVoice.configured, stt: bitVoice.configured }, provider });
 const app = createApp({ db, config, extra: site ? [bitVoice, bit, handleAi, site] : [bitVoice, bit, handleAi], aiStatus, headers: securityHeaders(security) });
 const server = createServer((req, res) => void app(req, res));
 // live games (V2-11b, /api/live/ws) and class events (V2-12, /api/events/ws) speak WebSocket
