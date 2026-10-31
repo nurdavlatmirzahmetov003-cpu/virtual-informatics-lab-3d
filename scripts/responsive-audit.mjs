@@ -75,7 +75,8 @@ const CHECK = (touch) => `(() => {
     const t = (el.getAttribute('aria-label') || el.innerText || el.value || el.getAttribute('placeholder') || '').trim().replace(/\\s+/g, ' ').slice(0, 32);
     return el.tagName.toLowerCase() + ' "' + t + '"';
   };
-  const hosts = [...document.querySelectorAll('canvas')].map((c) => c.parentElement);
+  // R3F's two wrappers around the canvas; drei's labels (pinned in the scene, moving with the camera) live in the outer one
+  const hosts = [...document.querySelectorAll('canvas')].map((c) => c.parentElement?.parentElement ?? c.parentElement);
   const shown = (el) => el.checkVisibility?.({ opacityProperty: true, visibilityProperty: true }) ?? el.offsetParent !== null;
   // a scroller (or a clipping box) between the control and the page brings it back into view
   const scrolled = (el) => {

@@ -83,6 +83,13 @@ export function useFold(id: string, { primary = false, contentKey }: { primary?:
     setWasFolded(folded);
     if (folded) setKeyAtFold(contentKey);
   }
+  // V4 §11: what a link opens the page with (`/lab?zone=…` sets the zone just after the first render) is not news
+  const [settled, setSettled] = useState(false);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSettled(true), 1500);
+    return () => window.clearTimeout(timer);
+  }, []);
+  if (!settled && !Object.is(keyAtFold, contentKey)) setKeyAtFold(contentKey);
 
   useEffect(() => {
     if (!primary) return;

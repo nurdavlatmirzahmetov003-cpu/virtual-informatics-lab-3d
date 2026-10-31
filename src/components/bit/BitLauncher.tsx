@@ -106,7 +106,7 @@ export function BitLauncher() {
           data-side={dock.side}
           data-low={dock.y > 0.5 || undefined}
           data-dragging={drag ? true : undefined}
-          style={drag ? { left: drag.x, top: drag.y, right: 'auto' } : { ...(dock.y > 0.5 ? { bottom: vh - top - SIZE } : { top }), translate: aside ? `0 ${aside}px` : undefined }}
+          style={drag ? { left: drag.x, top: drag.y, right: 'auto' } : { ...(dock.y > 0.5 ? { bottom: vh - top - SIZE } : { top }), translate: aside.x || aside.y ? `${aside.x}px ${aside.y}px` : undefined }}
         >
           <button
             ref={avatar}
