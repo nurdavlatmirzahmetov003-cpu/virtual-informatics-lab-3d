@@ -70,7 +70,8 @@
     "test:remote": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/remote.test.mjs",
     "bit:voice-audition": "node --experimental-strip-types --import ./scripts/test-resolve.mjs scripts/bit-voice-audition.mjs",
     "test:responsive": "node scripts/responsive-audit.mjs",
-    "test:ai-provider": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/ai-provider.test.mjs"
+    "test:ai-provider": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/ai-provider.test.mjs",
+    "server:backup": "node --experimental-strip-types --import ./scripts/test-resolve.mjs server/cli.ts backup"
   },
   "dependencies": {
     "@fontsource-variable/montserrat": "^5.3.0",

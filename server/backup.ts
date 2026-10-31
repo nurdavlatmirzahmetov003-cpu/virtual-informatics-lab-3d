@@ -50,6 +50,19 @@ export function createBackup(db: Db, dir: string, label: 'manual' | 'auto' | 'be
   return { name, size: st.size, createdAt: st.mtimeMs };
 }
 
+/**
+ * Deletes the oldest backups with this label beyond the newest `keep`
+ * (V4 §12.2: the daily backup on the server keeps two weeks). Returns the names deleted.
+ */
+export function pruneBackups(dir: string, keep: number, label: 'auto' | 'manual' = 'auto'): string[] {
+  const mine = listBackups(dir)
+    .filter((b) => b.name.includes(`-${label}`))
+    .sort((a, b) => b.createdAt - a.createdAt || b.name.localeCompare(a.name));
+  const gone = mine.slice(Math.max(0, keep)).map((b) => b.name);
+  for (const name of gone) deleteBackup(dir, name);
+  return gone;
+}
+
 /** Throws 400 unless the file is an intact lab database with at least one active admin. */
 export function verifyBackup(file: string) {
   let probe: DatabaseSync | null = null;

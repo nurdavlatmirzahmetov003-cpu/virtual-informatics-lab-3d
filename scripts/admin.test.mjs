@@ -282,12 +282,37 @@ test('backups: snapshot, download, restore (sessions end), upload check, safe na
     assert.equal((await s.call('/api/admin/backups', { as: again })).body.backups.length, 2);
 
     const h = (await s.call('/api/admin/health', { as: again })).body;
-    assert.deepEqual(h.database.migrations, ['001_init', '002_classroom', '003_admin', '004_game', '005_live', '006_arcade', '007_feedback', '008_robots']);
+    assert.deepEqual(h.database.migrations, ['001_init', '002_classroom', '003_admin', '004_game', '005_live', '006_arcade', '007_feedback', '008_robots', '009_bit_voice']);
     assert.equal(h.backups.count, 2);
     assert.ok(h.database.size > 0 && h.server.node.startsWith('v'));
     assert.ok(h.warnings.includes('cookieNotSecure') && !h.warnings.includes('noRecentBackup'));
     assert.deepEqual((await s.call('/api/admin/health/integrity', { method: 'POST', as: again })).body.result, ['ok']);
   } finally {
     await s.close();
+  }
+});
+
+test('V4 §12.2: the daily backup (npm run server:backup) — a verified snapshot, the newest 14 automatic ones kept, manual ones untouched', async () => {
+  const { backupNow } = await import('../server/cli.ts');
+  const { createBackup, listBackups } = await import('../server/backup.ts');
+  const dir = mkdtempSync(join(tmpdir(), 'lab-daily-'));
+  const live = join(dir, 'lab.db');
+  const db = openDb(live);
+  try {
+    migrate(db);
+    await createUser(db, { login: 'boss', displayName: 'Boss', role: 'admin', password: `Adm1n-${Math.random().toString(36).slice(2, 10)}` });
+    const backups = join(dir, 'backups');
+    createBackup(db, backups, 'manual', Date.UTC(2026, 0, 1));
+    const day = 86_400_000;
+    let last;
+    for (let i = 0; i < 16; i++) last = backupNow(db, backups, 14, Date.UTC(2026, 9, 1) + i * day);
+    const all = listBackups(backups);
+    assert.equal(all.filter((b) => b.name.includes('-auto')).length, 14);
+    assert.equal(all.filter((b) => b.name.includes('-manual')).length, 1, 'a manual backup is never pruned');
+    assert.ok(last.made.size > 0);
+    assert.ok(all.some((b) => b.name === last.made.name), 'the newest is kept');
+  } finally {
+    db.close();
+    rmSync(dir, { recursive: true, force: true });
   }
 });

@@ -1,0 +1,21 @@
+# Google Cloud (DEPLOY_GCP.md, V4 §12.2): the same two containers as
+# docker-compose.yml, with their data on the VM's persistent disk, mounted at
+# /mnt/disks/lab-data by setup-vm.sh. The disk outlives the VM: a new VM, an
+# image update or a reboot keeps the database, backups, voice cache and the
+# HTTPS certificates.
+#
+#   docker compose -f docker-compose.yml -f deploy/gcp/docker-compose.gcp.yml up -d --build
+
+services:
+  lab:
+    volumes:
+      # SQLite (lab.db), backups/ and voice-cache/ on the persistent disk
+      - /mnt/disks/lab-data/lab:/data
+    # a small VM: the lab never takes the whole of its 2 GB
+    mem_limit: 1200m
+
+  caddy:
+    volumes:
+      # certificates are kept, so a restart never asks Let's Encrypt again
+      - /mnt/disks/lab-data/caddy/data:/data
+      - /mnt/disks/lab-data/caddy/config:/config
