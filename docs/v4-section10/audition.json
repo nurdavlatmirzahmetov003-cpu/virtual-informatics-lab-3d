@@ -1,0 +1,124 @@
+{
+  "text": "Сәлем, мен Битпін, бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+  "at": "2026-10-31T13:43:12.744Z",
+  "results": [
+    {
+      "voice": "Kore",
+      "status": "ok",
+      "cache": "hit",
+      "seconds": 13.2,
+      "pitchHz": 178,
+      "accuracy": 1,
+      "heard": "Сәлем, мен Битпін. Бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+      "keep": true
+    },
+    {
+      "voice": "Leda",
+      "status": "ok",
+      "cache": "hit",
+      "seconds": 12.2,
+      "pitchHz": 202,
+      "accuracy": 1,
+      "heard": "Сәлем, мен Битпін. Бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+      "keep": true
+    },
+    {
+      "voice": "Aoede",
+      "status": "ok",
+      "cache": "new",
+      "seconds": 12.8,
+      "pitchHz": 173,
+      "accuracy": 1,
+      "heard": "Сәлем, мен Битпін. Бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+      "keep": true
+    },
+    {
+      "voice": "Sulafat",
+      "status": "ok",
+      "cache": "new",
+      "seconds": 12.8,
+      "pitchHz": 197,
+      "accuracy": 1,
+      "heard": "Сәлем! Мен Битпін. Бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+      "keep": true
+    },
+    {
+      "voice": "Charon",
+      "status": "ok",
+      "cache": "hit",
+      "seconds": 12.8,
+      "pitchHz": 115,
+      "accuracy": 1,
+      "heard": "Сәлем, мен Битпін. Бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+      "keep": true,
+      "note": "recogniser failed on the first run (502); retried"
+    },
+    {
+      "voice": "Puck",
+      "status": "ok",
+      "cache": "hit",
+      "seconds": 11.1,
+      "pitchHz": 109,
+      "accuracy": 1,
+      "heard": "Сәлем, мен Битпін. Бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+      "keep": true
+    },
+    {
+      "voice": "Orus",
+      "status": "ok",
+      "cache": "new",
+      "seconds": 12.3,
+      "pitchHz": 160,
+      "accuracy": 1,
+      "heard": "Сәлем! Мен Битпін. Бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+      "keep": true
+    },
+    {
+      "voice": "Iapetus",
+      "status": "ok",
+      "cache": "hit",
+      "seconds": 12.9,
+      "pitchHz": 132,
+      "accuracy": 0.91,
+      "heard": "Сәлем, мен Бит пән. Бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+      "keep": true,
+      "note": "recogniser failed on the first run (502); retried"
+    },
+    {
+      "voice": "Achird",
+      "status": "ok",
+      "cache": "hit",
+      "seconds": 13.5,
+      "pitchHz": 136,
+      "accuracy": 0.73,
+      "heard": "Сәлем, Бит! Бүгін компьютердің ішінде не орыны екенін бірге көреміз.",
+      "keep": false,
+      "note": "recogniser failed on the first run (502); retried"
+    },
+    {
+      "voice": "Umbriel",
+      "status": "ok",
+      "cache": "new",
+      "seconds": 12.4,
+      "pitchHz": 128,
+      "accuracy": 1,
+      "heard": "Сәлем, мен Битпін. Бүгін компьютердің ішінде не бар екенін бірге көреміз.",
+      "keep": true
+    }
+  ],
+  "offered": {
+    "female": [
+      "Kore",
+      "Leda",
+      "Sulafat"
+    ],
+    "male": [
+      "Charon",
+      "Puck"
+    ],
+    "neutral": [
+      "Orus"
+    ]
+  },
+  "why": "Kept: every word written back right (accuracy 1.0). Neutral: Orus, median pitch 160 Hz, between the male (109-115 Hz) and female (178-202 Hz) voices. Out: Iapetus («Битпін» heard as «Бит пән»), Achird (words lost). Aoede and Umbriel also passed but sound close to Kore and Charon; left out to keep the cache small."
+}
