@@ -8,11 +8,18 @@
  * the current one plays. Without it (static demo, no key, quota used up):
  * the browser's own voice (speech.ts) reads the same sentence. An analyser
  * gives the loudness that moves Bit's mouth.
+ *
+ * V4 §10: the student's voice, style and emotion go with every request (each
+ * is its own cached recording on the server); the speed is applied here, the
+ * same recording played faster or slower with its pitch kept. When Gemini's
+ * daily quota is used up the server still plays what it has recorded, the
+ * rest is read by the browser voice, and `notice` says so kindly.
  */
 import { create } from 'zustand';
 import type { Language } from '@/lib/i18n';
 import { chooseVoice, speakable, ttsSupported } from './speech';
 import { speechChunks, splitSentences } from './text';
+import { DEFAULT_VOICE_PREFS, type VoicePrefs } from './voicePrefs';
 
 export const TTS_RATE = 24_000;
 
@@ -24,12 +31,16 @@ export interface VoiceState {
   source: 'gemini' | 'browser' | null;
   /** Which narration (an information panel) asked for it; null for the chat. */
   owner: string | null;
+  /** Gemini's speech quota is used up for now: new sentences are read by the browser voice. */
+  notice: 'quota' | null;
 }
 
-export const useVoiceStore = create<VoiceState>(() => ({ speaking: false, sentence: '', source: null, owner: null }));
+export const useVoiceStore = create<VoiceState>(() => ({ speaking: false, sentence: '', source: null, owner: null, notice: null }));
 
 interface Item {
   text: string;
+  /** The voice it is said in (a preview may differ from the saved choice). */
+  prefs: VoicePrefs;
   onStart?: () => void;
   /** PCM chunks as they arrive (server voice). */
   chunks: Float32Array<ArrayBuffer>[];
@@ -56,8 +67,37 @@ export function sentencesOf(text: string): string[] {
   return [...done, rest.trim()].map(speakable).filter(Boolean);
 }
 
+/** Float PCM chunks → a 16-bit mono WAV (for the audio element at another speed). */
+export function wavOf(chunks: readonly Float32Array[]): Blob {
+  const n = chunks.reduce((a, c) => a + c.length, 0);
+  const buf = new ArrayBuffer(44 + n * 2);
+  const v = new DataView(buf);
+  const str = (o: number, t: string) => [...t].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+  str(0, 'RIFF');
+  v.setUint32(4, 36 + n * 2, true);
+  str(8, 'WAVEfmt ');
+  v.setUint32(16, 16, true);
+  v.setUint16(20, 1, true);
+  v.setUint16(22, 1, true);
+  v.setUint32(24, TTS_RATE, true);
+  v.setUint32(28, TTS_RATE * 2, true);
+  v.setUint16(32, 2, true);
+  v.setUint16(34, 16, true);
+  str(36, 'data');
+  v.setUint32(40, n * 2, true);
+  let o = 44;
+  for (const c of chunks)
+    for (const x of c) {
+      v.setInt16(o, Math.max(-1, Math.min(1, x)) * 0x7fff, true);
+      o += 2;
+    }
+  return new Blob([buf], { type: 'audio/wav' });
+}
+
 class BitVoice {
   language: Language = 'kk';
+  /** The student's voice (bitStore keeps it current). */
+  prefs: VoicePrefs = DEFAULT_VOICE_PREFS;
   /** The server synthesises (health says so); switched off for a minute after a failure. */
   server = false;
   private serverDownUntil = 0;
@@ -67,6 +107,7 @@ class BitVoice {
   private ctx: AudioContext | null = null;
   private analyser: AnalyserNode | null = null;
   private sources: AudioBufferSourceNode[] = [];
+  private element: HTMLAudioElement | null = null;
   private levelData: Uint8Array<ArrayBuffer> | null = null;
   private fakeLevelUntil = 0;
   private idle = new Set<() => void>();
@@ -82,9 +123,9 @@ class BitVoice {
   }
 
   /** Speaks the text (one or more sentences). `onStart` runs when it starts. */
-  say(text: string, onStart?: () => void) {
+  say(text: string, onStart?: () => void, prefs: VoicePrefs = this.prefs) {
     const parts = speechChunks(sentencesOf(text));
-    parts.forEach((p, i) => this.queue.push({ text: p, onStart: i === 0 ? onStart : undefined, chunks: [], done: false, failed: false, controller: null, wake: null }));
+    parts.forEach((p, i) => this.queue.push({ text: p, prefs, onStart: i === 0 ? onStart : undefined, chunks: [], done: false, failed: false, controller: null, wake: null }));
     this.prefetch();
     if (!this.playing) void this.next();
   }
@@ -92,6 +133,13 @@ class BitVoice {
   /** One sentence per call, each with its own start callback (karaoke). */
   sayEach(sentences: readonly string[], onSentence: (index: number) => void) {
     sentences.forEach((s, i) => this.say(s, () => onSentence(i)));
+  }
+
+  /** The settings' Preview: says `text` in a voice that is not saved yet, cutting off anything else. */
+  preview(text: string, prefs: VoicePrefs) {
+    this.stop();
+    useVoiceStore.setState({ owner: 'voice-preview' });
+    this.say(text, undefined, prefs);
   }
 
   stop() {
@@ -107,6 +155,8 @@ class BitVoice {
       }
     }
     this.sources = [];
+    this.element?.pause();
+    this.element = null;
     if (ttsSupported()) window.speechSynthesis.cancel();
     useVoiceStore.setState({ speaking: false, sentence: '', source: null, owner: null });
   }
@@ -153,10 +203,17 @@ class BitVoice {
       const res = await fetch('/api/ai/bit/tts', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ text: it.text, lang: this.language }),
+        body: JSON.stringify({ text: it.text, lang: this.language, voice: it.prefs.voice, style: it.prefs.style, emotion: it.prefs.emotion }),
         signal: it.controller.signal,
       });
+      if (res.status === 503 && (await res.clone().json().catch(() => null))?.error === 'quota') {
+        // the day's quota is used up: say so once, keep asking (recorded sentences still play)
+        useVoiceStore.setState({ notice: 'quota' });
+        throw new Error('quota');
+      }
       if (!res.ok || !res.body) throw new Error(String(res.status));
+      // a freshly synthesised sentence: the quota is back
+      if (res.headers.get('x-bit-model') && useVoiceStore.getState().notice) useVoiceStore.setState({ notice: null });
       const reader = res.body.getReader();
       let carry: number[] = [];
       for (;;) {
@@ -171,8 +228,8 @@ class BitVoice {
     } catch (e) {
       if ((e as Error).name !== 'AbortError') {
         it.failed = true;
-        // the quota (503) or the server: the browser voice takes over for a while
-        this.serverDownUntil = Date.now() + ((e as Error).message === '503' ? 10 * 60_000 : 60_000);
+        // the server is away (not the quota): the browser voice takes over for a minute
+        if ((e as Error).message !== 'quota') this.serverDownUntil = Date.now() + 60_000;
       }
     }
     it.done = true;
@@ -189,7 +246,7 @@ class BitVoice {
       return;
     }
     this.prefetch();
-    if (it.controller && !it.failed) await this.playServer(it, gen);
+    if (it.controller && !it.failed) await (it.prefs.speed === 1 ? this.playServer(it, gen) : this.playStretched(it, gen));
     else await this.playBrowser(it, gen);
     if (gen === this.generation) void this.next();
   }
@@ -239,6 +296,50 @@ class BitVoice {
     });
   }
 
+  /**
+   * Another speed: the whole sentence (cached ones arrive at once) played by an
+   * audio element, which changes the tempo and keeps the pitch; the analyser
+   * still hears it for the mouth.
+   */
+  private async playStretched(it: Item, gen: number): Promise<void> {
+    await new Promise<void>((resolve) => {
+      const check = () => {
+        if (it.done || gen !== this.generation) resolve();
+        else it.wake = check;
+      };
+      it.wake = check;
+      check();
+    });
+    if (gen !== this.generation) return;
+    if (it.failed || !it.chunks.length) return this.playBrowser(it, gen);
+    const ctx = this.audio();
+    const url = URL.createObjectURL(wavOf(it.chunks));
+    const el = new Audio(url);
+    el.preservesPitch = true;
+    el.playbackRate = it.prefs.speed;
+    this.element = el;
+    try {
+      ctx.createMediaElementSource(el).connect(this.analyser!);
+    } catch {
+      /* no Web Audio routing: it still plays, the mouth wobbles less */
+    }
+    await new Promise<void>((resolve) => {
+      const end = () => {
+        URL.revokeObjectURL(url);
+        if (this.element === el) this.element = null;
+        resolve();
+      };
+      el.onended = end;
+      el.onerror = end;
+      el.onplaying = () => {
+        if (gen !== this.generation) return;
+        it.onStart?.();
+        useVoiceStore.setState({ speaking: true, sentence: it.text, source: 'gemini' });
+      };
+      el.play().catch(end);
+    });
+  }
+
   private playBrowser(it: Item, gen: number): Promise<void> {
     return new Promise((resolve) => {
       if (!ttsSupported()) return resolve();
@@ -246,6 +347,7 @@ class BitVoice {
       const pick = chooseVoice(this.language, voices);
       if (!pick && voices.length) return resolve(); // no voice for this language: stay silent, never another language
       const u = new SpeechSynthesisUtterance(it.text);
+      u.rate = it.prefs.speed;
       if (pick) {
         u.voice = voices[pick.index];
         u.lang = voices[pick.index].lang;

@@ -7346,7 +7346,50 @@
     "geminiVoice": "Clear voice · Gemini",
     "listenPanel": "Read it with Bit",
     "stopPanel": "Stop",
-    "says": "Bit explains"
+    "says": "Bit explains",
+    "quota": "Bit's Gemini voice has reached today's limit. Answers stay as text and the browser's own voice reads them. Bit's voice will be back tomorrow.",
+    "voiceSettings": {
+      "title": "Bit's voice",
+      "back": "Back to the conversation",
+      "autoRead": "Read answers aloud by itself",
+      "autoReadHint": "Bit reads answers, tips and congratulations aloud. Turn it off and Bit speaks only when you press a button.",
+      "voice": "Voice",
+      "kinds": {
+        "female": "Female voice",
+        "male": "Male voice",
+        "neutral": "Neutral voice"
+      },
+      "voices": {
+        "Kore": "Clear and calm",
+        "Leda": "Young and bright",
+        "Sulafat": "Warm and soft",
+        "Charon": "Deep and measured",
+        "Puck": "Lively and cheerful",
+        "Orus": "Mid-range and steady"
+      },
+      "style": "Speaking style",
+      "styles": {
+        "teacher": "Calm teacher",
+        "friend": "Cheerful friend",
+        "energetic": "Energetic presenter"
+      },
+      "speed": "Speed",
+      "speeds": {
+        "slow": "Slow",
+        "normal": "Normal",
+        "fast": "Fast"
+      },
+      "emotion": "Emotion",
+      "emotionOn": "Speak with feeling",
+      "emotionHint": "Happy when praising, gentle after a mistake, amazed by a fun fact.",
+      "preview": "Preview",
+      "stop": "Stop",
+      "browserOnly": "Gemini's voice is not connected, so Bit speaks with the browser's voice. Speed works right away; the voice and style are heard once the server is connected.",
+      "savedAccount": "Saved to your account: Bit sounds the same on any computer.",
+      "saving": "Saving…",
+      "savedOffline": "The server is away, so the settings are kept in this browser for now.",
+      "savedLocal": "Saved in this browser. Sign in and your settings go with you."
+    }
   },
   "arcade": {
     "eyebrow": "Games arena",
