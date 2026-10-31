@@ -1,7 +1,7 @@
 .root {
   max-width: 1200px;
   margin: 0 auto;
-  padding: calc(var(--topbar-h) + var(--space-7)) var(--gutter) var(--space-8);
+  padding: calc(var(--topbar-h) + var(--space-7)) var(--gutter-right) calc(var(--space-8) + env(safe-area-inset-bottom, 0px)) var(--gutter-left);
 }
 
 .header {

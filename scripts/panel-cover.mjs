@@ -1,7 +1,7 @@
 /**
  * V4 §6: the info and Bit panels never cover the main 3D controls (devices
  * list, zoom, reset, keyboard help, view switches, fold tabs). Every 3D page
- * is opened at 375, 768, 1280, 1366 and 1920 px with its panels open and then
+ * is opened at 360, 375, 390, 768, 1024 (touch), 1280, 1366 and 1920 px with its panels open and then
  * folded; each visible control is hit-tested at its centre and corners with
  * elementsFromPoint. A control whose point is topped by something outside its
  * own tree is covered. The site's top bar (data-chrome) floats over the page
@@ -15,8 +15,16 @@ import { openChrome } from './lib/cdp.mjs';
 
 const SITE = process.env.LAB_BASE ?? 'http://localhost:5173';
 const only = process.argv.slice(2).find((a) => !a.startsWith('--'));
-const WIDTHS = [375, 768, 1280, 1366, 1920];
-const heightOf = (w) => (w === 375 ? 812 : w === 768 ? 1024 : w === 1366 ? 768 : w === 1920 ? 1080 : 800);
+// V4 §11: phones (360, 390), tablets portrait and landscape (768, 1024) as touch devices, and laptops
+const WIDTHS = [360, 375, 390, 768, 1024, 1280, 1366, 1920];
+const HEIGHTS = { 360: 740, 375: 812, 390: 844, 768: 1024, 1024: 768, 1280: 800, 1366: 768, 1920: 1080 };
+const heightOf = (w) => HEIGHTS[w] ?? 800;
+/** A phone or tablet: touch input and a coarse pointer, as the site sees a real one. */
+async function asTouch(c, w) {
+  if (w > 1024) return;
+  await c.send('Emulation.setDeviceMetricsOverride', { width: w, height: heightOf(w), deviceScaleFactor: 1, mobile: w < 768, screenWidth: w, screenHeight: heightOf(w) });
+  await c.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
+}
 // lab:map — the 3D lab's zone map folds into a round BitLab tab (asked before V4 §10)
 const FOLD_IDS = ['lab:map', 'lab:zone', 'lab:side', 'anatomy:intro', 'anatomy:panel', 'home:explore', 'connect:side', 'assembly:head', 'assembly:panel'];
 
@@ -99,6 +107,7 @@ async function main() {
   const bitNotes = [];
   for (const w of WIDTHS) {
     const c = await openChrome({ width: w, height: heightOf(w), port: 9460 + WIDTHS.indexOf(w) });
+    await asTouch(c, w);
     try {
       await c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
       await c.navigate(`${SITE}/credits`);

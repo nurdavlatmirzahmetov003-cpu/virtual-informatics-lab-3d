@@ -6,8 +6,8 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--space-5);
-  height: var(--topbar-base);
-  padding: 0 var(--gutter);
+  height: calc(var(--topbar-base) + var(--safe-top));
+  padding: var(--safe-top) var(--gutter-right) 0 var(--gutter-left);
   background: linear-gradient(180deg, rgb(var(--panel-rgb) / 0.96), rgb(var(--panel-rgb) / 0.82));
   backdrop-filter: blur(16px);
   pointer-events: none;

@@ -1,7 +1,7 @@
 .banner {
   --c: var(--accent);
   position: fixed;
-  top: calc(var(--topbar-base) + 8px);
+  top: calc(var(--topbar-base) + var(--safe-top) + 8px);
   left: 50%;
   z-index: var(--z-topbar);
   display: flex;
@@ -63,7 +63,7 @@
 
 @media (max-width: 720px) {
   .banner {
-    top: calc(var(--topbar-base) + 52px);
+    top: calc(var(--topbar-base) + var(--safe-top) + 52px);
   }
 }
 

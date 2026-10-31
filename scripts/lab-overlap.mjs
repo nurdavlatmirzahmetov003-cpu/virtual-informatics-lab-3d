@@ -1,6 +1,6 @@
 /**
  * V4 §5.2: no lab ever covers or clips its own text. Every lab and every task
- * is opened at 375, 768, 1280, 1366 and 1920 px in headless Chrome; the page
+ * is opened at 360, 375, 390, 768, 1024 (touch), 1280, 1366 and 1920 px in headless Chrome; the page
  * is scrolled through, and at each step every visible text block is sampled
  * with elementsFromPoint — a block whose points are covered by something
  * outside its own element tree is an overlap (the site's top bar and the
@@ -30,8 +30,16 @@ const root = path.resolve(import.meta.dirname, '..');
 const OUT = path.join(root, 'test-results/lab-overlap');
 const SITE = process.env.LAB_BASE ?? 'http://localhost:5173';
 const only = process.argv.slice(2).find((a) => !a.startsWith('--'));
-const WIDTHS = [375, 768, 1280, 1366, 1920];
-const heightOf = (w) => (w === 375 ? 812 : w === 768 ? 1024 : w === 1366 ? 768 : w === 1920 ? 1080 : 800);
+// V4 §11: phones (360, 390), tablets portrait and landscape (768, 1024) as touch devices, and laptops
+const WIDTHS = [360, 375, 390, 768, 1024, 1280, 1366, 1920];
+const HEIGHTS = { 360: 740, 375: 812, 390: 844, 768: 1024, 1024: 768, 1280: 800, 1366: 768, 1920: 1080 };
+const heightOf = (w) => HEIGHTS[w] ?? 800;
+/** A phone or tablet: touch input and a coarse pointer, as the site sees a real one. */
+async function asTouch(c, w) {
+  if (w > 1024) return;
+  await c.send('Emulation.setDeviceMetricsOverride', { width: w, height: heightOf(w), deviceScaleFactor: 1, mobile: w < 768, screenWidth: w, screenHeight: heightOf(w) });
+  await c.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
+}
 
 export const LAB_PAGES = [
   ...[...NETWORK_TASK_IDS, 'free'].map((t) => `/labs/network?task=${t}`),
@@ -149,6 +157,7 @@ async function main() {
   for (const w of WIDTHS) {
     const h = heightOf(w);
     const c = await openChrome({ width: w, height: h, port: 9410 + WIDTHS.indexOf(w) });
+    await asTouch(c, w);
     try {
       await c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
       await c.navigate(`${SITE}/credits`);
