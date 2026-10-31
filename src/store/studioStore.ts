@@ -17,7 +17,7 @@ import {
 } from '@/data/studio/options';
 import type { Build } from '@/lib/studio/build';
 import { recommendBuild } from '@/lib/studio/recommend';
-import { STORAGE_KEYS, STORAGE_VERSIONS, safeStorage } from '@/lib/storage';
+import { DEMO_ACTIVE, STORAGE_KEYS, STORAGE_VERSIONS, safeStorage } from '@/lib/storage';
 
 export type StudioStep = 'purpose' | 'budget' | 'style' | 'products' | 'colors';
 export const STUDIO_STEPS: readonly StudioStep[] = ['purpose', 'budget', 'style', 'products', 'colors'];
@@ -147,3 +147,13 @@ export const useStudioStore = create<StudioState>()(
     },
   ),
 );
+
+// the demo profile (V4 §8.4) opens Setup Studio with a ready gaming build in white, like the home page's
+if (DEMO_ACTIVE && !Object.keys(useStudioStore.getState().build).length) {
+  const s = useStudioStore.getState();
+  s.setPurpose('gaming');
+  s.setBudget(1_200_000);
+  s.setStyle('white');
+  s.recommend();
+  s.setStep('products');
+}

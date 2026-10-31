@@ -97,14 +97,38 @@
 }
 
 .quality,
-.wide {
+.wide,
+.extras {
   display: contents;
 }
 
-/* V4 §7: tablets and phones keep only the quality and the menu button; the rest is in the side menu */
-@media (max-width: 1024px) {
+/* V4 §7: tablets and phones keep only the quality and the menu button; the rest is in the side menu.
+   V4 §11: small laptops (to 1279 px) too, and below 1536 px the theme, accessibility and language
+   move there as well, so the seven section links (and the demo chip) always fit and never scroll */
+@media (max-width: 1535px) {
+  .extras {
+    display: none;
+  }
+}
+
+@media (max-width: 1279px) {
   .wide {
     display: none;
+  }
+}
+
+/* the narrowest laptops: a little less air around the links */
+@media (min-width: 1025px) and (max-width: 1119px) {
+  .root {
+    gap: var(--space-1);
+  }
+
+  .nav {
+    gap: 0;
+  }
+
+  .link {
+    padding-inline: 5px;
   }
 }
 

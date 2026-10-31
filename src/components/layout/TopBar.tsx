@@ -52,11 +52,13 @@ export function TopBar() {
         <span className={styles.quality}>
           <QualitySelect />
         </span>
-        {/* V4 §7: on tablets and phones these live only in the side menu */}
+        {/* V4 §7: on tablets and phones these live only in the side menu; V4 §11: on laptops the theme, accessibility and language too, so every section link fits */}
         <span className={styles.wide}>
-          <ThemeToggle />
-          <A11yMenu />
-          <LanguageSwitcher />
+          <span className={styles.extras}>
+            <ThemeToggle />
+            <A11yMenu />
+            <LanguageSwitcher />
+          </span>
           <AccountButton />
         </span>
         <SiteMenu />

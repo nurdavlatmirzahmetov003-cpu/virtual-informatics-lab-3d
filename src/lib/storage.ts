@@ -32,8 +32,8 @@ export const DATA_NAMESPACE = DEMO_ACTIVE ? DEMO_NAMESPACE : STORAGE_NAMESPACE;
 
 export const STORAGE_KEYS = {
   settings: `${STORAGE_NAMESPACE}:settings`,
-  /** Setup Studio configuration (store/studioStore.ts). */
-  setup: `${STORAGE_NAMESPACE}:setup`,
+  /** Setup Studio configuration (store/studioStore.ts); the demo profile has its own (V4 §11: a ready build). */
+  setup: `${DATA_NAMESPACE}:setup`,
   /** Student progress (services/progress — repository, migrations); the demo profile has its own. */
   progress: `${DATA_NAMESPACE}:progress`,
   /** Bit the assistant: voice on/off, conversation mode (store/bitStore.ts). */

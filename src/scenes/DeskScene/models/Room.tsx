@@ -92,12 +92,9 @@ export function Room({ orbit = false }: { orbit?: boolean }) {
         color="#53cfff"
       />
       </group>
-      {!preset.shadows && (
-        <>
-          <ContactShadows position={[0, 0.001, 0]} scale={[DESK.width + 0.6, 1.4]} far={0.8} blur={2.5} opacity={0.7} resolution={256} frames={1} />
-          <ContactShadows position={[0, DESK_TOP + 0.0005, 0]} scale={[DESK.width, DESK.depth]} far={0.3} blur={1.8} opacity={0.6} resolution={512} frames={1} />
-        </>
-      )}
+      {/* V4 §11: only the floor's. A desk-top one was drawn once, before the hero setup had landed (it comes and
+          goes look by look), and laid a 60 % shadow over the whole top: the white desk read grey on Low */}
+      {!preset.shadows && <ContactShadows position={[0, 0.001, 0]} scale={[DESK.width + 0.6, 1.4]} far={0.8} blur={2.5} opacity={0.7} resolution={256} frames={1} />}
     </group>
   );
 }
