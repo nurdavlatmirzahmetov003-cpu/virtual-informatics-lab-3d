@@ -12,6 +12,7 @@
  *   npm run test:responsive                 # needs the dev site (npm start)
  *   npm run test:responsive -- lab 360      # pages / sizes whose name contains these
  *   npm run test:responsive -- --no-shots
+ *   npm run test:responsive -- --dark       # the dark theme (screenshots get a -dark suffix)
  * Exit code 1 when any page scrolls sideways, cuts a control or puts one under Bit.
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -21,6 +22,7 @@ const SITE = process.env.LAB_BASE ?? 'http://localhost:5173';
 const OUT = 'docs/v4-section11/audit';
 const args = process.argv.slice(2);
 const shots = !args.includes('--no-shots');
+const dark = args.includes('--dark');
 const filters = args.filter((a) => !a.startsWith('--'));
 
 export const SIZES = [
@@ -152,6 +154,7 @@ async function main() {
       await c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
       await c.navigate(`${SITE}/?demo=1`);
       await sleep(2500);
+      await c.evaluate(`(() => { const k = 'vil3d:settings'; const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":3}'); s.state = { ...s.state, theme: '${dark ? 'dark' : 'light'}' }; s.version = 3; localStorage.setItem(k, JSON.stringify(s)); })()`);
       for (const [route, path] of routes) {
         await c.navigate(SITE + path);
         await settle(c);
@@ -161,7 +164,7 @@ async function main() {
         report.push({ size: name, route, ...found });
         if (shots) {
           const s = await c.send('Page.captureScreenshot', { format: 'jpeg', quality: 70 });
-          writeFileSync(`${OUT}/${route}-${name}.jpg`, Buffer.from(s.result.data, 'base64'));
+          writeFileSync(`${OUT}/${route}-${name}${dark ? '-dark' : ''}.jpg`, Buffer.from(s.result.data, 'base64'));
         }
         process.stdout.write(bad ? '✖' : found.small.length ? '·' : '✓');
       }
@@ -180,7 +183,7 @@ async function main() {
   const small = report.filter((r) => r.small.length);
   console.log(`\nSmall touch targets (< 44 px) on ${small.length} page × size pairs; worst:`);
   for (const r of small.sort((a, b) => b.small.length - a.small.length).slice(0, 12)) console.log(`  ${r.route} @ ${r.size}: ${r.small.length} — ${r.small.slice(0, 4).join('; ')}`);
-  writeFileSync('docs/v4-section11/audit.json', JSON.stringify(report, null, 1) + '\n');
+  writeFileSync(`docs/v4-section11/audit${dark ? '-dark' : ''}.json`, JSON.stringify(report, null, 1) + '\n');
   console.log(`\n${routes.length} pages × ${sizes.length} sizes: ${failed} with sideways scroll, a cut control or a control under Bit → docs/v4-section11/audit.json`);
   if (failed) process.exit(1);
 }

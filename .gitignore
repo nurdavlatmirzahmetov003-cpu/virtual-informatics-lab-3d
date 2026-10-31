@@ -24,3 +24,6 @@ test-results/
 
 # headless Chrome profiles of the test scripts (scripts/lib/cdp.mjs)
 .tmp/
+
+# V4 §11: the responsive audit's 230+ frames (the contact sheets and audit.json are kept)
+docs/v4-section11/audit/
