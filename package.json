@@ -1,7 +1,7 @@
 {
   "name": "virtual-informatics-lab-3d",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.38.0",
   "type": "module",
   "description": "Оқушыларға арналған виртуалды информатика зертханасы — VIRTUAL INFORMATICS LAB 3D",
   "scripts": {
