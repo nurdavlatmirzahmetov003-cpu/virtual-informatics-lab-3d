@@ -128,4 +128,12 @@ test('V4 §11: socket rings never overlap on screen — each shrinks to 80 % of 
   // never smaller than a dot that can still be seen
   assert.deepEqual(ringSizes([[0, 0], [2, 0]]), [6, 6]);
   assert.deepEqual(ringSizes([[5, 5]]), [16]);
+  // a touch screen's hit area stops halfway to the next socket
+  const { ringReach } = await import('../src/scenes/ConnectLab/rings.ts');
+  assert.deepEqual(ringReach(row, sizes), [0, 0, 0, 0]);
+  assert.deepEqual(ringReach([[0, 0], [40, 0]], [16, 16]), [6, 6]);
+  const pts = [[0, 0], [26, 0]];
+  const reach = ringReach(pts, [16, 16]);
+  // each hit area reaches size / 2 + reach from its centre (the CSS's extra 2 px only covers the ring's own border)
+  assert.ok(16 / 2 + reach[0] + 16 / 2 + reach[1] < 26, 'two hit areas never meet');
 });

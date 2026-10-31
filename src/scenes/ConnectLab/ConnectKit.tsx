@@ -11,7 +11,7 @@ import { CatmullRomCurve3, Group, Mesh, Plane, Raycaster, TubeGeometry, Vector2,
 import type { PortKind } from '@/labs/ConnectLab';
 import { useConnectLabStore } from '@/store/connectLabStore';
 import { anchors, carry } from './anchors';
-import { ringSizes } from './rings';
+import { ringReach, ringSizes } from './rings';
 import styles from './ConnectKit.module.css';
 
 // ── sockets ────────────────────────────────────────────────────────────────
@@ -33,13 +33,16 @@ export function PortHotspots({ ids, names, version }: { ids: readonly string[]; 
       tmp.copy(anchors.get(id)!.pos).project(camera);
       return [(tmp.x * 0.5 + 0.5) * size.width, (-tmp.y * 0.5 + 0.5) * size.height] as const;
     });
-    ringSizes(points).forEach((px, i) => {
+    const sizes = ringSizes(points);
+    const reach = ringReach(points, sizes);
+    sizes.forEach((px, i) => {
       const el = rings.current.get(shown[i])!;
       const v = `${px}px`;
       if (el.style.width !== v) {
         el.style.width = v;
         el.style.height = v;
       }
+      el.style.setProperty('--reach', `${reach[i]}px`);
     });
   });
   return (

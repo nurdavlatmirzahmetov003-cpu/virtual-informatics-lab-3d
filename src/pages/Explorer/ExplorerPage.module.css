@@ -568,3 +568,10 @@
   }
 }
 
+/* V4 §11: touch screens have 44 px chips (and the strip's scrollbar): the sheet sits higher still */
+@media (max-width: 959px) and (pointer: coarse) {
+  .panel {
+    bottom: calc(var(--space-3) + 76px);
+  }
+}
+
