@@ -115,3 +115,17 @@ test('every Connection Lab text exists in kk, ru and en', () => {
     }
   }
 });
+
+test('V4 §11: socket rings never overlap on screen — each shrinks to 80 % of the gap to the nearest socket (6–16 px)', async () => {
+  const { ringSizes } = await import('../src/scenes/ConnectLab/rings.ts');
+  // close up: far apart, full size
+  assert.deepEqual(ringSizes([[0, 0], [100, 0], [0, 100]]), [16, 16, 16]);
+  // from afar: 10 px apart, rings of 8 px; two rings never reach each other
+  const row = [[0, 0], [10, 0], [20, 0], [30, 0]];
+  const sizes = ringSizes(row);
+  assert.deepEqual(sizes, [8, 8, 8, 8]);
+  for (let i = 1; i < row.length; i++) assert.ok(sizes[i - 1] / 2 + sizes[i] / 2 < row[i][0] - row[i - 1][0]);
+  // never smaller than a dot that can still be seen
+  assert.deepEqual(ringSizes([[0, 0], [2, 0]]), [6, 6]);
+  assert.deepEqual(ringSizes([[5, 5]]), [16]);
+});

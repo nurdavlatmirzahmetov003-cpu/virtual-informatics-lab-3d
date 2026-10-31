@@ -70,7 +70,8 @@ const CHECK = `(() => {
     const cx = r.left + r.width / 2, cy = r.top + r.height / 2, ix = Math.min(r.height / 2, r.width / 2 - 1);
     const pts = [[cx, cy], [r.left + ix, cy], [r.right - ix, cy], [cx, r.top + 3], [cx, r.bottom - 3]];
     for (const [x, y] of pts) {
-      const top = document.elementsFromPoint(x, y)[0];
+      // the topmost thing that shows (a socket's name is in the page at opacity 0 until hover: it hides nothing)
+      const top = document.elementsFromPoint(x, y).find((t) => el.contains(t) || t.contains(el) || visible(t));
       if (!top || el.contains(top) || top.contains(el)) continue;
       // a transparent wrapper (no background, no text of its own) hides nothing
       const s = getComputedStyle(top);
