@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import { keepNear, touchPan } from '@/components/3d/touchPan';
 import { OrbitControls } from '@react-three/drei';
 import { Vector3, type PerspectiveCamera } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -38,6 +39,7 @@ export function AnatomyCamera() {
   const size = useThree((s) => s.size);
   const aspect = size.width / Math.max(1, size.height);
   const controls = useRef<OrbitControlsImpl>(null);
+  const [touch] = useState(touchPan);
   const reduced = useReducedMotion();
   const category = useAnatomyStore((s) => s.category);
   const selected = useAnatomyStore((s) => s.selected);
@@ -88,7 +90,7 @@ export function AnatomyCamera() {
       camera.position.lerp(f.pos, k);
       c.target.lerp(f.target, k);
       if (camera.position.distanceTo(f.pos) < 0.002 && c.target.distanceTo(f.target) < 0.002) f.active = false;
-    }
+    } else if (touch) keepNear(c.target, camera.position, f.target, 0.3);
     if (Math.abs(camera.fov - f.fov) > 0.01) {
       camera.fov += (f.fov - camera.fov) * k;
       camera.updateProjectionMatrix();
@@ -114,7 +116,7 @@ export function AnatomyCamera() {
       dampingFactor={0.07}
       rotateSpeed={0.6}
       zoomSpeed={0.8}
-      enablePan={false}
+      enablePan={touch}
       minDistance={shot.minDistance}
       maxDistance={(shot.maxDistance ?? 3) * framingScale(aspect)}
       // stay above the desk plane

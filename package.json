@@ -68,7 +68,8 @@
     "test:demo": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/demo.test.mjs",
     "test:robots": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/robots.test.mjs",
     "test:remote": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/remote.test.mjs",
-    "bit:voice-audition": "node --experimental-strip-types --import ./scripts/test-resolve.mjs scripts/bit-voice-audition.mjs"
+    "bit:voice-audition": "node --experimental-strip-types --import ./scripts/test-resolve.mjs scripts/bit-voice-audition.mjs",
+    "test:responsive": "node scripts/responsive-audit.mjs"
   },
   "dependencies": {
     "@fontsource-variable/montserrat": "^5.3.0",

@@ -132,6 +132,9 @@ export function HeroCompanions({ look: lookIndex }: { look: number }) {
   const gesture = useRef({ look: -1, since: 0 });
   const look = HERO_LOOKS[lookIndex] ?? HERO_LOOKS[0];
   const text = useMemo(() => presenterLine(t, look), [t, look]);
+  useEffect(() => {
+    heroPresence.line = text;
+  }, [text]);
 
   const presenter = (p: RobotParts, time: number) => {
     const g = gesture.current;

@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import { keepNear, touchPan } from '@/components/3d/touchPan';
 import { OrbitControls } from '@react-three/drei';
 import { Vector3, type PerspectiveCamera } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -35,6 +36,7 @@ export function StudioCamera() {
   const camera = useThree((s) => s.camera) as PerspectiveCamera;
   const size = useThree((s) => s.size);
   const controls = useRef<OrbitControlsImpl>(null);
+  const [touch] = useState(touchPan);
   const reduced = useReducedMotion();
   const autoRotate = useStudioStore((s) => s.autoRotate);
   const resetToken = useStudioStore((s) => s.cameraReset);
@@ -72,7 +74,7 @@ export function StudioCamera() {
       camera.position.lerp(f.pos, k);
       c.target.lerp(f.target, k);
       if (camera.position.distanceTo(f.pos) < 0.002 && c.target.distanceTo(f.target) < 0.002) f.active = false;
-    }
+    } else if (touch) keepNear(c.target, camera.position, f.target, 0.35);
     // Auto-rotation sweeps back and forth: the wall behind the desk closes the circle.
     if (autoRotate && !reduced && !f.active) {
       const az = c.getAzimuthalAngle();
@@ -99,7 +101,7 @@ export function StudioCamera() {
       dampingFactor={0.07}
       rotateSpeed={0.6}
       zoomSpeed={0.8}
-      enablePan={false}
+      enablePan={touch}
       minDistance={shot.minDistance}
       maxDistance={shot.maxDistance}
       // stay above the floor and out of the wall behind the desk

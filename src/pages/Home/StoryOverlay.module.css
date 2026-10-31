@@ -366,11 +366,14 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  height: 40px;
+  min-height: 44px;
   padding: 0 var(--space-4);
   border: 1px solid var(--accent);
   border-radius: var(--radius-pill);
-  background: var(--accent-soft);
+  /* readable over the white desk too (V4 §11) */
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)), var(--surface-strong);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
   color: var(--text);
   font-weight: 700;
   font-size: var(--fs-sm);
@@ -380,7 +383,56 @@
 }
 
 .exploreBtn:hover {
-  background: rgba(56, 214, 245, 0.22);
+  background: linear-gradient(rgba(56, 214, 245, 0.22), rgba(56, 214, 245, 0.22)), var(--surface-strong);
+}
+
+/* the presenter's line on portrait screens (V4 §11): a speech card with its tail towards the presenter */
+.presenter {
+  position: relative;
+  max-width: 34ch;
+  margin: var(--space-4) 0 0;
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid #5f7bff;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.97);
+  color: #141a33;
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(6px) scale(0.97);
+  transform-origin: 20px 100%;
+  transition:
+    opacity var(--dur-med) var(--ease-out),
+    transform var(--dur-med) var(--ease-out);
+}
+
+.presenter[data-on] {
+  opacity: 1;
+  transform: none;
+}
+
+.presenter strong {
+  color: #5f7bff;
+}
+
+.presenter::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  bottom: -9px;
+  width: 14px;
+  height: 14px;
+  border-right: 2px solid #5f7bff;
+  border-bottom: 2px solid #5f7bff;
+  background: inherit;
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .presenter {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* ---------- chapter navigation ---------- */

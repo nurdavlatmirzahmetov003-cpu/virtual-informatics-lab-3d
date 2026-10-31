@@ -3,8 +3,9 @@
  * zoom (mouse, touch, keyboard) around the current subject, and the pose the
  * minimap draws. A drag cancels a running flight; reduced motion jumps.
  */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import { touchPan } from '@/components/3d/touchPan';
 import { OrbitControls } from '@react-three/drei';
 import { Spherical, Vector3, type PerspectiveCamera } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -39,6 +40,7 @@ export function LabCamera() {
   const size = useThree((s) => s.size);
   const invalidate = useThree((s) => s.invalidate);
   const controls = useRef<OrbitControlsImpl>(null);
+  const [touch] = useState(touchPan);
   const reduced = useReducedMotion();
   const focus = useLabStore((s) => s.focus);
   const token = useLabStore((s) => s.flightToken);
@@ -154,7 +156,8 @@ export function LabCamera() {
       dampingFactor={0.08}
       rotateSpeed={0.55}
       zoomSpeed={0.8}
-      enablePan={false}
+      // two fingers pan on touch screens; the aim stays in the hall (clampToHall above)
+      enablePan={touch}
       minPolarAngle={0.15}
       // stay above the floor
       maxPolarAngle={spot ? Math.PI * 0.5 : focus ? Math.PI * 0.48 : Math.PI * 0.42}

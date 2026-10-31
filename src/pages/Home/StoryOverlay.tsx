@@ -1,8 +1,10 @@
-import type { CSSProperties, Ref } from 'react';
+import { useEffect, useState, type CSSProperties, type Ref } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, DoorOpen, Hand, MousePointer2, Rotate3d } from 'lucide-react';
 import type { TranslationKey } from '@/lib/i18n';
 import { useT } from '@/hooks/useT';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { heroPresence } from '@/scenes/DeskScene/hero/heroCycle';
 import { CHAPTERS } from '@/scenes/DeskScene/chapters';
 import { PARTS } from '@/scenes/DeskScene/pc/parts';
 import { usePcStore } from '@/store/pcStore';
@@ -16,6 +18,31 @@ interface StoryOverlayProps {
 }
 
 const key = (k: string) => k as TranslationKey;
+
+/**
+ * V4 §11: on a portrait screen the presenter's 3D speech bubble would lie
+ * across the headline, so phones get the same line as a card under the
+ * buttons, shown while a look holds on the desk.
+ */
+function PresenterCard({ active }: { active: boolean }) {
+  const t = useT();
+  const portrait = useMediaQuery('(max-aspect-ratio: 13/10)');
+  const [said, setSaid] = useState({ on: false, line: '' });
+  useEffect(() => {
+    if (!portrait || !active) return;
+    const id = window.setInterval(() => {
+      const on = heroPresence.ready && heroPresence.away < 0.3 && !!heroPresence.line;
+      setSaid((s) => (s.on === on && s.line === heroPresence.line ? s : { on, line: heroPresence.line }));
+    }, 300);
+    return () => window.clearInterval(id);
+  }, [portrait, active]);
+  if (!portrait || !said.line) return null;
+  return (
+    <p className={styles.presenter} data-on={(said.on && active) || undefined}>
+      <strong>{t('home.decor.presenterName')}</strong> {said.line}
+    </p>
+  );
+}
 
 /**
  * HTML layer over the story canvas: chapter 1 hero, one compact info panel
@@ -55,6 +82,7 @@ export function StoryOverlay({ onNavigate, progressRef }: StoryOverlayProps) {
           </Link>
           <button type="button" className={styles.exploreBtn} tabIndex={chapter === 0 ? 0 : -1} onClick={() => enterDevice('setup')}><Rotate3d size={16} />{t('explore.viewSetup')}</button>
         </div>
+        <PresenterCard active={chapter === 0} />
         <div className={styles.scrollHint} aria-hidden="true">
           <MousePointer2 size={14} />
           {t('story.scrollHint')}

@@ -1,16 +1,18 @@
 /**
  * Bit on every page (AppShell): a small talking avatar on a screen edge.
  * Drag it anywhere along either edge (remembered); a click opens the panel.
+ * It steps aside from any control it would cover (V4 §11, useStepAside).
  * Folded away ("mini"), the conversation goes on: Bit keeps talking with
  * subtitles under its face, and a tour / lesson can step on from here.
  * The panel, its texts and the speech code load on the first open.
  */
-import { lazy, Suspense, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { ChevronRight, Maximize2, Square } from 'lucide-react';
 import { useT } from '@/hooks/useT';
 import { useBitStore, type BitDock } from '@/store/bitStore';
 import { bitVoice, useVoiceStore } from '@/services/bit/voice';
 import { BitFace } from './BitFace';
+import { useStepAside } from './useStepAside';
 import styles from './Bit.module.css';
 
 const loadPanel = () => import('./BitPanel');
@@ -60,7 +62,8 @@ export function BitLauncher() {
     return () => window.removeEventListener('keydown', onKey);
   }, [openBit]);
 
-  const topbar = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) || 64;
+  const topbar = useCallback(() => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) || 64, []);
+  const avatar = useRef<HTMLButtonElement>(null);
 
   const onPointerDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
     if (e.button !== 0) return;
@@ -92,6 +95,7 @@ export function BitLauncher() {
 
   const top = drag ? drag.y : dockTop(dock, vh, typeof document === 'undefined' ? 64 : topbar());
   const showCaption = mini && (speaking || !!guide);
+  const aside = useStepAside(avatar, !open && !drag, top, topbar);
 
   return (
     <>
@@ -102,9 +106,10 @@ export function BitLauncher() {
           data-side={dock.side}
           data-low={dock.y > 0.5 || undefined}
           data-dragging={drag ? true : undefined}
-          style={drag ? { left: drag.x, top: drag.y, right: 'auto' } : dock.y > 0.5 ? { bottom: vh - top - SIZE } : { top }}
+          style={drag ? { left: drag.x, top: drag.y, right: 'auto' } : { ...(dock.y > 0.5 ? { bottom: vh - top - SIZE } : { top }), translate: aside ? `0 ${aside}px` : undefined }}
         >
           <button
+            ref={avatar}
             type="button"
             className={styles.avatarBtn}
             data-speaking={speaking || undefined}
