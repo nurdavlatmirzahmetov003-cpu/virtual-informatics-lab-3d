@@ -59,7 +59,7 @@
     "test:bit": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/bit.test.mjs",
     "test:arcade": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/arcade.test.mjs",
     "test:feedback": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/feedback.test.mjs",
-    "test:bit-voice": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/bit-voice.test.mjs scripts/bit-voice-prefs.test.mjs",
+    "test:bit-voice": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/bit-voice.test.mjs scripts/bit-voice-prefs.test.mjs scripts/bit-language.test.mjs",
     "bit:voice-warm": "node --experimental-strip-types --import ./scripts/test-resolve.mjs scripts/bit-voice-warm.mjs",
     "test:games3d": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/games3d.test.mjs",
     "test:bit-safety": "node --experimental-strip-types --import ./scripts/test-resolve.mjs --test scripts/bit-safety.test.mjs",

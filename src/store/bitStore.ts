@@ -14,6 +14,7 @@ import { DEFAULT_VOICE_PREFS, normalizeVoicePrefs, type VoicePrefs } from '@/ser
 import { bitVoice } from '@/services/bit/voice';
 import { call } from '@/services/auth/api';
 import { useAuthStore } from './authStore';
+import { useSettingsStore } from './settingsStore';
 
 export type BitSource = 'faq' | 'ai' | 'local';
 
@@ -193,3 +194,6 @@ useBitStore.subscribe((s) => {
 useAuthStore.subscribe((s, prev) => {
   if (s.user?.id !== prev.user?.id && s.status !== 'loading') void useBitStore.getState().loadPrefs();
 });
+// Bit speaks only the site language (the KK / RU / EN switch): a switch stops it and drops the old queue
+bitVoice.setLanguage(useSettingsStore.getState().language);
+useSettingsStore.subscribe((s) => bitVoice.setLanguage(s.language));

@@ -143,7 +143,7 @@ export function Celebration({ data, onClose }: { data: SheetData; onClose: () =>
   }, [calm]);
 
   useEffect(() => {
-    bitVoice.language = language;
+    bitVoice.setLanguage(language);
     bitVoice.say(congrats);
     const timer = calm ? 0 : window.setTimeout(() => setStage('sheet'), 2600);
     return () => {

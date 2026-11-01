@@ -35,7 +35,7 @@ export function UnlockCeremony({ id, unlocked = true, target = 1, current, repla
 
   useEffect(() => {
     if (replay || !voice) return;
-    bitVoice.language = language;
+    bitVoice.setLanguage(language);
     bitVoice.say(cheer);
     return () => bitVoice.stop();
     // once per ceremony

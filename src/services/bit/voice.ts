@@ -14,10 +14,17 @@
  * same recording played faster or slower with its pitch kept. When Gemini's
  * daily quota is used up the server still plays what it has recorded, the
  * rest is read by the browser voice, and `notice` says so kindly.
+ *
+ * One language only: Bit speaks the site's language (the KK / RU / EN switch,
+ * setLanguage). Switching it stops Bit and drops what was queued; the
+ * browser's voice is used only when it is a voice of that very language —
+ * Kazakh is never read by an English or Russian voice. Whether the server
+ * speaks is asked before the first sentence, so a panel read before Bit's
+ * chat was ever opened is not given to the browser voice by mistake.
  */
 import { create } from 'zustand';
 import type { Language } from '@/lib/i18n';
-import { chooseVoice, speakable, ttsSupported } from './speech';
+import { SPEECH_LANG, chooseVoice, speakable, ttsSupported, voicesReady } from './speech';
 import { speechChunks, splitSentences } from './text';
 import { DEFAULT_VOICE_PREFS, type VoicePrefs } from './voicePrefs';
 
@@ -39,6 +46,8 @@ export const useVoiceStore = create<VoiceState>(() => ({ speaking: false, senten
 
 interface Item {
   text: string;
+  /** The language it was queued in (the site's at that moment). */
+  lang: Language;
   /** The voice it is said in (a preview may differ from the saved choice). */
   prefs: VoicePrefs;
   onStart?: () => void;
@@ -94,8 +103,19 @@ export function wavOf(chunks: readonly Float32Array[]): Blob {
   return new Blob([buf], { type: 'audio/wav' });
 }
 
+/**
+ * The browser voice to read `language` with: one of that very language, or
+ * none (silence; the text stays on screen). Never a neighbour's voice.
+ */
+export function browserVoiceIndex(language: Language, voices: readonly Pick<SpeechSynthesisVoice, 'lang' | 'name' | 'localService'>[]): number | null {
+  const pick = chooseVoice(language, voices);
+  return pick && !pick.approximate ? pick.index : null;
+}
+
 class BitVoice {
+  /** The site's language (setLanguage); Bit speaks nothing else. */
   language: Language = 'kk';
+  private probe: Promise<void> | null = null;
   /** The student's voice (bitStore keeps it current). */
   prefs: VoicePrefs = DEFAULT_VOICE_PREFS;
   /** The server synthesises (health says so); switched off for a minute after a failure. */
@@ -122,12 +142,40 @@ class BitVoice {
     return !!this.playing || this.queue.length > 0;
   }
 
-  /** Speaks the text (one or more sentences). `onStart` runs when it starts. */
+  /** The site language changed: Bit stops and drops what was queued in the old one. */
+  setLanguage(language: Language) {
+    if (language === this.language) return;
+    this.stop();
+    this.language = language;
+  }
+
+  /** Asks the server once whether it speaks (Gemini), before the first sentence. */
+  private ready(): Promise<void> {
+    if (this.server || typeof window === 'undefined' || typeof fetch === 'undefined') return Promise.resolve();
+    this.probe ??= fetch('/api/ai/bit/health')
+      .then((r) => (r.ok ? (r.json() as Promise<{ tts?: boolean }>) : null))
+      .then((b) => {
+        if (b?.tts) this.server = true;
+      })
+      .catch(() => undefined);
+    return this.probe;
+  }
+
+  /** Speaks the text (one or more sentences) in the site language. `onStart` runs when it starts. */
   say(text: string, onStart?: () => void, prefs: VoicePrefs = this.prefs) {
     const parts = speechChunks(sentencesOf(text));
-    parts.forEach((p, i) => this.queue.push({ text: p, prefs, onStart: i === 0 ? onStart : undefined, chunks: [], done: false, failed: false, controller: null, wake: null }));
-    this.prefetch();
-    if (!this.playing) void this.next();
+    parts.forEach((p, i) => this.queue.push({ text: p, lang: this.language, prefs, onStart: i === 0 ? onStart : undefined, chunks: [], done: false, failed: false, controller: null, wake: null }));
+    const gen = this.generation;
+    void this.ready().then(() => {
+      if (gen !== this.generation) return;
+      this.prefetch();
+      if (!this.playing) void this.next();
+    });
+  }
+
+  /** What is queued, in order (tests). */
+  get pending(): ReadonlyArray<{ text: string; lang: Language }> {
+    return [this.playing, ...this.queue].filter((x): x is Item => !!x).map(({ text, lang }) => ({ text, lang }));
   }
 
   /** One sentence per call, each with its own start callback (karaoke). */
@@ -203,7 +251,7 @@ class BitVoice {
       const res = await fetch('/api/ai/bit/tts', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ text: it.text, lang: this.language, voice: it.prefs.voice, style: it.prefs.style, emotion: it.prefs.emotion }),
+        body: JSON.stringify({ text: it.text, lang: it.lang, voice: it.prefs.voice, style: it.prefs.style, emotion: it.prefs.emotion }),
         signal: it.controller.signal,
       });
       if (res.status === 503 && (await res.clone().json().catch(() => null))?.error === 'quota') {
@@ -238,7 +286,9 @@ class BitVoice {
 
   private async next() {
     const gen = this.generation;
-    const it = this.queue.shift();
+    let it = this.queue.shift();
+    // queued in another language (the switch was pressed): never spoken
+    while (it && it.lang !== this.language) it = this.queue.shift();
     this.playing = it ?? null;
     if (!it) {
       useVoiceStore.setState({ speaking: false, sentence: '', source: null, owner: null });
@@ -340,18 +390,20 @@ class BitVoice {
     });
   }
 
-  private playBrowser(it: Item, gen: number): Promise<void> {
+  private async playBrowser(it: Item, gen: number): Promise<void> {
+    if (!ttsSupported() || it.lang !== this.language) return;
+    // the voice list arrives late in Chrome: without it the default (English) voice would read
+    await voicesReady();
+    if (gen !== this.generation) return;
+    const voices = window.speechSynthesis.getVoices();
+    const pick = browserVoiceIndex(it.lang, voices);
+    // no voice of this language on this device: stay silent (the text is on screen), never another language
+    if (pick === null) return;
     return new Promise((resolve) => {
-      if (!ttsSupported()) return resolve();
-      const voices = window.speechSynthesis.getVoices();
-      const pick = chooseVoice(this.language, voices);
-      if (!pick && voices.length) return resolve(); // no voice for this language: stay silent, never another language
       const u = new SpeechSynthesisUtterance(it.text);
       u.rate = it.prefs.speed;
-      if (pick) {
-        u.voice = voices[pick.index];
-        u.lang = voices[pick.index].lang;
-      }
+      u.voice = voices[pick];
+      u.lang = voices[pick].lang || SPEECH_LANG[it.lang];
       const done = () => {
         this.fakeLevelUntil = 0;
         resolve();
