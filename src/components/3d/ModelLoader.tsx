@@ -4,6 +4,7 @@ import { Box3, Sphere, Vector3, type Material, type Mesh, type Object3D, type Te
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { hdFile, modelLevels, splitModelUrl } from '@/lib/three/loaders';
 import { capTreeTextures, tuneTreeTextures } from '@/lib/three/assetCache';
+import { frontRotationOf } from '@/lib/three/modelFront';
 import { cloneSource, fitModel, lodSwitches, notifyPcPart, useModelFile, type ModelFit } from '@/lib/three/modelAssets';
 import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useSceneStatus } from '@/store/sceneStatusStore';
@@ -104,7 +105,7 @@ function GLTFModel({
     const near = cloneSource(pick(main.scene), castShadow, receiveShadow, preset.transmission);
     const farClone = useLod ? cloneSource(pick(far.scene), castShadow, receiveShadow, preset.transmission) : null;
     if (farClone) farClone.visible = false;
-    const oriented = fitModel(farClone ? [near, farClone] : [near], fit, `asset:${node ?? file.split('/').pop()}`);
+    const oriented = fitModel(farClone ? [near, farClone] : [near], fit, `asset:${node ?? file.split('/').pop()}`, node ? null : frontRotationOf(file));
     if (preset.maxTextureSize < 2048) capTreeTextures(oriented, preset.maxTextureSize);
     tuneTreeTextures(oriented, preset.anisotropy);
     // which level(s) this model renders — light only (Low / not yet detailed), switching, or full

@@ -36,7 +36,7 @@ function AssemblyPcController({ build }: { build: ResolvedBuild }) {
   useFrame((_, delta) => {
     const { phase, view } = useAssemblyStore.getState();
     if (phase === 'assembling') {
-      const parts: Partial<Record<PartId, number>> = { fans: 0 };
+      const parts: Partial<Record<PartId, number>> = {};
       const hidden = new Set<PartId>();
       for (const id of INSTALL_ORDER) {
         const p = assemblyRig.parts[id];
@@ -47,6 +47,8 @@ function AssemblyPcController({ build }: { build: ResolvedBuild }) {
       pcRig.hidden = hidden;
       pcRig.explode = 0;
       pcRig.glassOpen = assemblyRig.glassOpen;
+      pcRig.socketLever = assemblyRig.socketLever;
+      pcRig.paste = assemblyRig.paste;
       pcRig.cables = assemblyRig.cables;
       pcRig.fanSpeed = assemblyRig.fanSpeed;
       pcRig.rgbPower = assemblyRig.rgb;
@@ -62,6 +64,7 @@ function AssemblyPcController({ build }: { build: ResolvedBuild }) {
     pcRig.explode += (explode - pcRig.explode) * k;
     pcRig.glassOpen += (glass - pcRig.glassOpen) * k;
     pcRig.cables = pcRig.fanSpeed = pcRig.rgbPower = pcRig.glow = pcRig.interior = 1;
+    pcRig.socketLever = 0;
   });
   return null;
 }

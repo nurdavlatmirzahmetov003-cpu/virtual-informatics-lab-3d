@@ -22,6 +22,8 @@ import { isTeardownId } from '@/data/teardown/teardowns';
 import { TeardownView } from './TeardownView';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { BitSays } from '@/components/bit/BitSays';
+import { FoldButton, FoldTab } from '@/components/panel/Foldable';
+import { useFold } from '@/components/panel/foldState';
 import { ClassMode } from './ClassMode';
 import styles from './LabPage.module.css';
 
@@ -38,6 +40,7 @@ const ZONE_LINKS: Partial<Record<LabZoneId, string>> = {
   network: '/labs/network',
   power: '/labs/connect',
   showcase: '/studio',
+  robots: '/robots',
 };
 
 /** Page-wide keyboard control (ignored while typing in a field). */
@@ -71,8 +74,13 @@ function ZonePanel() {
   const { step, focusZone } = useLabStore.getState();
   const zone = focus ? zoneById(focus) : null;
   const link = focus ? ZONE_LINKS[focus] : undefined;
+  // V4 §6: the panel folds to a tab, so the hall is seen whole (Alt+I)
+  const fold = useFold('lab:zone', { primary: true, contentKey: focus });
+  const title = zone ? t(key(`lab.zones.${zone.id}.name`)) : t('lab.title');
+  if (fold.folded) return <FoldTab fold={fold} title={title} className={styles.panelTab} />;
   return (
     <section className={styles.panel} style={zone ? { ['--zone' as string]: zone.accent } : undefined} aria-labelledby="lab-zone-title">
+      <FoldButton fold={fold} className={styles.panelFold} />
       <span className={styles.eyebrow}>{zone ? `${String(zoneNumber(zone.id)).padStart(2, '0')} · ${t('lab.title')}` : t('lab.eyebrow')}</span>
       <h1 id="lab-zone-title" className={styles.title}>
         {zone ? t(key(`lab.zones.${zone.id}.name`)) : t('lab.title')}
@@ -134,7 +142,7 @@ function ViewTools({ catalog, onCatalog, onClassMode }: { catalog: boolean; onCa
       )}
       {showKeys && (
         <ul id="lab-keys" className={styles.keys}>
-          {(['digits', 'overview', 'step', 'zoom', 'orbit'] as const).map((k) => (
+          {(['digits', 'overview', 'step', 'zoom', 'orbit', 'map'] as const).map((k) => (
             <li key={k}>{t(key(`lab.keysList.${k}`))}</li>
           ))}
         </ul>
@@ -210,6 +218,9 @@ export default function LabPage() {
   useEffect(() => () => useLabStore.getState().focusZone(null), []);
   // a device, the robot teacher or a poster replaces the catalog; closing it returns to it
   const side = device ? <DevicePanel /> : teacher ? <TeacherPanel /> : poster ? <PosterPanel /> : catalog ? <DeviceCatalog onClose={() => setCatalog(false)} /> : null;
+  // V4 §6: the device / poster / teacher / catalog panel folds to a tab on the right
+  const sideFold = useFold('lab:side', { contentKey: device ?? poster ?? (teacher ? 'teacher' : catalog ? 'catalog' : null) });
+  const sideTitle = device ? t('panels.device') : teacher ? t('panels.teacher') : poster ? t('panels.poster') : t('deviceUi.catalog');
   return (
     <div className={styles.stage}>
       {/* the scene sleeps while a full-screen panel covers it (phones, teardown view) */}
@@ -218,7 +229,18 @@ export default function LabPage() {
       </SceneCanvas>
       <div className={styles.overlay}>
         <ZonePanel />
-        {side ? <div className={styles.side}>{side}</div> : <LabMinimap />}
+        {side ? (
+          sideFold.folded ? (
+            <FoldTab fold={sideFold} title={sideTitle} side="right" className={styles.sideTab} />
+          ) : (
+            <div className={styles.side}>
+              <FoldButton fold={sideFold} side="right" className={styles.sideFold} />
+              {side}
+            </div>
+          )
+        ) : (
+          <LabMinimap />
+        )}
         <ViewTools
           catalog={catalog}
           onCatalog={() => setCatalog((v) => !v)}

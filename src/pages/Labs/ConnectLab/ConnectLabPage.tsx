@@ -3,6 +3,10 @@
  * the laptop by Ethernet (DHCP), join Wi-Fi securely. The 3D stage on the
  * left; the task, cables, messages, DHCP / Wi-Fi panels and grading on the right.
  */
+import { FoldButton, FoldTab } from '@/components/panel/Foldable';
+import { useFold } from '@/components/panel/foldState';
+import { CONNECT_HINTS } from '@/store/connectLabStore';
+import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, CheckCircle2, Lightbulb, Lock, LockOpen, RotateCcw, ShieldAlert, Wifi, XCircle } from 'lucide-react';
@@ -245,6 +249,29 @@ export default function ConnectLabPage() {
   const exercises = useProgressStore((s) => s.exercises);
   const names = usePortNames();
 
+  // V4 §5.3: the first task, plugged in cable by cable through the lab's own store
+  const connectDemo = (): DemoStep[] => {
+    const portOf = (owner: string, kind: string, nth = 0) => PC_SCENARIO.ports.filter((p) => p.owner === owner && p.kind === kind)[nth]?.id ?? '';
+    const plug = useConnectLabStore.getState().plug;
+    const canvas = () => document.querySelector('canvas');
+    return [
+      { say: t('labGuide.connect.s1'), target: canvas },
+      { say: t('labGuide.connect.s2'), target: canvas, run: () => plug('monitor', portOf('gpu', 'hdmi')) },
+      {
+        say: t('labGuide.connect.s3'),
+        run: () => {
+          plug('keyboard', portOf('motherboard', 'usb_a', 0));
+          window.setTimeout(() => useConnectLabStore.getState().plug('mouse', portOf('motherboard', 'usb_a', 1)), 600);
+        },
+      },
+      { say: t('labGuide.connect.s4'), run: () => plug('speakers', portOf('motherboard', 'audio_3_5')) },
+      { say: t('labGuide.connect.s5'), run: () => plug('power', portOf('psu', 'power_ac')), hold: 2200 },
+    ];
+  };
+
+  // V4 §6: the reading panel folds away, the stage takes the whole width (Alt+I)
+  const sideFold = useFold('connect:side', { primary: true, contentKey: task });
+
   const requested = params.get('task');
   useEffect(() => {
     setTask(isTask(requested) ? requested : 'pc');
@@ -266,15 +293,17 @@ export default function ConnectLabPage() {
   const title = t(key(`connect.tasks.${task}.title`));
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-folded={sideFold.folded || undefined}>
       <div className={styles.stage}>
+        {sideFold.folded && <FoldTab fold={sideFold} title={title} side="right" className={styles.sideTab} />}
         <Suspense fallback={null}>
           <ConnectStage task={task} names={names} label={t('connect.sceneLabel', { task: title })} />
         </Suspense>
         {scenario && <p className={styles.howTo}>{t('connect.ui.howTo')}</p>}
       </div>
 
-      <aside className={styles.side}>
+      {!sideFold.folded && <aside className={styles.side}>
+        <FoldButton fold={sideFold} side="right" className={styles.sideFold} />
         <header className={styles.head}>
           <Link to="/labs" className={styles.back}>
             <ArrowLeft size={15} aria-hidden="true" /> {t('connect.ui.back')}
@@ -293,6 +322,7 @@ export default function ConnectLabPage() {
           ))}
         </div>
 
+        <TaskGuide id={`connect:${task}`} title={title} text={t(key(`connect.tasks.${task}.instructions`))} demo={task === 'pc' ? connectDemo : undefined} onDemoEnd={reset} />
         <section className={styles.taskCard}>
           <h2>{title}</h2>
           <p>{t(key(`connect.tasks.${task}.instructions`))}</p>
@@ -306,11 +336,11 @@ export default function ConnectLabPage() {
         </section>
 
         {message && <Message m={message} names={names} />}
-        {session.hinted && (
-          <p className={styles.hintText}>
-            <Lightbulb size={16} aria-hidden="true" /> {t(key(`connect.tasks.${task}.hint`))}
+        {['hintStart', 'hint', 'hintNear'].slice(0, Number(session.hinted)).map((h, i) => (
+          <p key={h} className={styles.hintText}>
+            <Lightbulb size={16} aria-hidden="true" /> <b>{t('labGuide.hintLevel', { n: i + 1 })}.</b> {t(key(`connect.tasks.${task}.${h}`), { ssid: SCHOOL_SSID })}
           </p>
-        )}
+        ))}
 
         {task !== 'wifi' && <Cables task={task} names={names} />}
         {task === 'ethernet' && (wired ? <Dhcp client="laptop-eth" /> : <p className={styles.note}>{t('connect.dhcp.waiting')}</p>)}
@@ -318,7 +348,7 @@ export default function ConnectLabPage() {
         {task === 'wifi' && wifi.joined && isSecure(NETWORKS.find((n) => n.ssid === wifi.joined)!.security) && <Dhcp client="laptop-wifi" />}
 
         <div className={styles.actions}>
-          <button type="button" className={styles.secondary} onClick={hint} disabled={session.hinted}>
+          <button type="button" className={styles.secondary} onClick={hint} disabled={Number(session.hinted) >= CONNECT_HINTS}>
             <Lightbulb size={15} aria-hidden="true" /> {t('connect.ui.hint')}
           </button>
           <button type="button" className={styles.secondary} onClick={reset}>
@@ -329,7 +359,7 @@ export default function ConnectLabPage() {
           </button>
         </div>
         {session.report && <GradeReportCard report={session.report} />}
-      </aside>
+      </aside>}
     </div>
   );
 }

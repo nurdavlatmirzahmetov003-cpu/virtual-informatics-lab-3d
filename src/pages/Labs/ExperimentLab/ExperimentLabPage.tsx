@@ -1,3 +1,5 @@
+import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
+import { guideEl, setInputValue } from '@/components/lab/guideDom';
 import { Suspense, lazy, type ComponentType, type LazyExoticComponent } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Binary, CircleCheck, Cpu, Globe, Grid3x3, HardDrive, MemoryStick, MonitorPlay, Palette, Thermometer, type LucideIcon } from 'lucide-react';
@@ -43,6 +45,21 @@ export default function ExperimentLabPage() {
   const id: ExperimentId = isExperimentId(raw) ? raw : 'cpuTemp';
   const exercises = useProgressStore((s) => s.exercises);
   const View = VIEWS[id];
+  const slider = () => document.querySelector('[data-guide="slider"] input');
+  // V4 §5.3: the first experiment, shown through its own slider and buttons
+  const expDemo = (): DemoStep[] => [
+    { say: t('labGuide.experiments.s1'), target: guideEl('slider') },
+    { say: t('labGuide.experiments.s2'), target: guideEl('slider'), run: () => setInputValue(slider(), 100), hold: 2400 },
+    {
+      say: t('labGuide.experiments.s3'),
+      target: guideEl('segmented'),
+      run: () => {
+        const all = document.querySelectorAll('[data-guide="segmented"] button');
+        (all[all.length - 1] as HTMLElement | undefined)?.click();
+      },
+      hold: 2400,
+    },
+  ];
 
   return (
     <div className={styles.page}>
@@ -75,6 +92,7 @@ export default function ExperimentLabPage() {
           <h2>{t(tk(`experiments.${id}.title`))}</h2>
         </header>
         <Suspense fallback={<p className={styles.loading}>{t('experiments.ui.loading')}</p>}>
+          <TaskGuide id={`experiments:${id}`} title={t(`experiments.${id}.title`)} text={t(`experiments.${id}.intro`)} demo={id === 'cpuTemp' ? expDemo : undefined} />
           <View key={id} />
         </Suspense>
       </div>

@@ -1,3 +1,5 @@
+import { FoldButton, FoldTab } from '@/components/panel/Foldable';
+import { useFold } from '@/components/panel/foldState';
 import { lazy, useEffect, useMemo } from 'react';
 import { SceneCanvas } from '@/components/3d/SceneCanvas';
 import { ANATOMY_ITEMS,itemsIn } from '@/data/hardware/anatomy';
@@ -29,6 +31,9 @@ function AnatomyStage() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  const introFold = useFold('anatomy:intro', { primary: !selected });
+  const panelFold = useFold('anatomy:panel', { primary: !!selected, contentKey: selected });
+
   return (
     <div className={styles.stage}>
       <SceneCanvas initialCamera="ANATOMY_EXTERNAL" label={t('anatomy.sceneLabel')}>
@@ -36,10 +41,18 @@ function AnatomyStage() {
       </SceneCanvas>
 
       <div className={styles.overlay}>
-        <header className={styles.intro}>
-          <span className={styles.eyebrow}>{t('anatomy.eyebrow')}</span>
-          <h1 className={styles.title}>{t('anatomy.title')}</h1>
-          <p className={styles.lead}>{t('anatomy.lead')}</p>
+        {/* V4 §6: the intro folds to a tab; its switches stay, they steer the view */}
+        <header className={styles.intro} data-folded={introFold.folded || undefined}>
+          {introFold.folded ? (
+            <FoldTab fold={introFold} title={t('anatomy.title')} />
+          ) : (
+            <>
+              <FoldButton fold={introFold} className={styles.introFold} />
+              <span className={styles.eyebrow}>{t('anatomy.eyebrow')}</span>
+              <h1 className={styles.title}>{t('anatomy.title')}</h1>
+              <p className={styles.lead}>{t('anatomy.lead')}</p>
+            </>
+          )}
           <div className={styles.switches}>
             <CategorySwitch />
             <ViewSwitch />
@@ -74,7 +87,12 @@ function AnatomyStage() {
           )}
         </nav>
 
-        {selected && <AnatomyPanel key={selected} id={selected} />}
+        {selected &&
+          (panelFold.folded ? (
+            <FoldTab fold={panelFold} title={t(itemKey(selected, 'name'))} side="right" className={styles.panelTab} />
+          ) : (
+            <AnatomyPanel key={selected} id={selected} fold={panelFold} />
+          ))}
         <p className={styles.hint}>{t('anatomy.hint')}</p>
       </div>
     </div>

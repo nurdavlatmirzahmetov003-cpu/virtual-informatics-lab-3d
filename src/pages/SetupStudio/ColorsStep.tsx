@@ -2,6 +2,7 @@ import { useId } from 'react';
 import { CASE_FINISHES, CASE_FINISH_IDS, DESK_SURFACES, PERIPHERAL_THEMES, RGB_COLORS, RGB_MODES, type Finish } from '@/data/studio/options';
 import { useT } from '@/hooks/useT';
 import { useStudioStore } from '@/store/studioStore';
+import { DESIGN_BY_ID } from '@/scenes/DeskScene/pc/caseDesigns';
 import { sk } from './studioText';
 import styles from './SetupStudio.module.css';
 
@@ -45,20 +46,29 @@ export function ColorsStep() {
   const pickerId = useId();
   const finish = useStudioStore((s) => s.finish);
   const setFinish = useStudioStore((s) => s.setFinish);
+  // BitLab's cases come in their own colours (one product per colourway): nothing to paint
+  const ownColour = useStudioStore((s) => !!s.build.case && s.build.case in DESIGN_BY_ID);
 
   return (
     <section className={styles.step}>
       <h2 className={styles.stepTitle}>{t('studio.colors.title')}</h2>
       <p className={styles.stepHint}>{t('studio.colors.hint')}</p>
 
-      <Swatches
-        label={t('studio.colors.case')}
-        items={CASE_FINISH_IDS}
-        value={finish.case}
-        onPick={(c) => setFinish({ case: c })}
-        swatch={(c) => CASE_FINISHES[c].color}
-        labelOf={(c) => t(sk(`finish.${c}`))}
-      />
+      {ownColour ? (
+        <fieldset className={styles.swatchGroup}>
+          <legend>{t('studio.colors.case')}</legend>
+          <p className={styles.stepHint}>{t('studio.colors.caseFromModel')}</p>
+        </fieldset>
+      ) : (
+        <Swatches
+          label={t('studio.colors.case')}
+          items={CASE_FINISH_IDS}
+          value={finish.case}
+          onPick={(c) => setFinish({ case: c })}
+          swatch={(c) => CASE_FINISHES[c].color}
+          labelOf={(c) => t(sk(`finish.${c}`))}
+        />
+      )}
 
       <Swatches
         label={t('studio.colors.rgb')}
@@ -66,7 +76,7 @@ export function ColorsStep() {
         value={finish.rgb}
         onPick={(rgb) => setFinish({ rgb })}
         swatch={(m) =>
-          m === 'off' ? 'repeating-linear-gradient(45deg, #2a2d34 0 4px, #15171c 4px 8px)' : m === 'custom' ? finish.rgbCustom : RGB_COLORS[m]
+          m === 'off' ? 'repeating-linear-gradient(45deg, #2a2d34 0 4px, #15171c 4px 8px)' : m === 'flow' ? 'conic-gradient(#ff5fd2, #4f86ff, #9b5cff, #ff5fd2)' : m === 'custom' ? finish.rgbCustom : RGB_COLORS[m]
         }
         labelOf={(m) => t(sk(`rgb.${m}`))}
       />

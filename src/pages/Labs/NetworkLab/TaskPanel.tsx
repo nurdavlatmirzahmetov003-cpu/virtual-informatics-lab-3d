@@ -51,7 +51,7 @@ export function TaskPanel({ task, attempt, report, actions }: { task: NetworkTas
       )}
 
       <div className={styles.taskActions}>
-        <button type="button" className={styles.primaryButton} onClick={actions.check}>
+        <button type="button" className={styles.primaryButton} onClick={actions.check} data-guide="check">
           <ShieldCheck size={16} aria-hidden="true" /> {t('network.task.check')}
         </button>
         <button type="button" className={styles.ghostButton} onClick={actions.hint} disabled={hintsLeft === 0}>

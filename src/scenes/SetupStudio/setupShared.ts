@@ -7,7 +7,9 @@ export const STUDIO_HDRI = `${import.meta.env.BASE_URL}assets/hdr/studio_small_0
 export const setupChanged = { listeners: new Set<() => void>() };
 export const notifySetupChanged = () => setupChanged.listeners.forEach((l) => l());
 
-export function rgbColorOf(finish: Finish): string | null {
+/** `null`: lights off; `undefined`: the flowing showcase palette. */
+export function rgbColorOf(finish: Finish): string | null | undefined {
   if (finish.rgb === 'off') return null;
+  if (finish.rgb === 'flow') return undefined;
   return finish.rgb === 'custom' ? finish.rgbCustom : RGB_COLORS[finish.rgb];
 }

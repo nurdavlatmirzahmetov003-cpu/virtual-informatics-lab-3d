@@ -11,7 +11,7 @@ import { ArrowRight, Check, Eye, Flag, RotateCcw, Volume2, X } from 'lucide-reac
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
-import { STORAGE_NAMESPACE, safeStorage } from '@/lib/storage';
+import { DATA_NAMESPACE, safeStorage } from '@/lib/storage';
 import { loadBitContent, type BitContent } from '@/services/bit/content';
 import { bitVoice } from '@/services/bit/voice';
 import type { FaqId } from '@/services/bit/faq';
@@ -21,7 +21,7 @@ import { useSettingsStore } from '@/store/settingsStore';
 import styles from './Path.module.css';
 
 const k = (s: string) => s as TranslationKey;
-const CARDS_KEY = `${STORAGE_NAMESPACE}:cards`;
+const CARDS_KEY = `${DATA_NAMESPACE}:cards`;
 const DAY = 86_400_000;
 
 function loadCards(): Cards {

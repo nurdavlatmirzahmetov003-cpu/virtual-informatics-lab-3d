@@ -10,11 +10,17 @@
  * language of the question. Text is streamed as it is generated, so the
  * browser can start speaking the first sentence while the rest is written.
  * Bit's built-in answers, navigation, tours and lessons work without this.
+ *
+ * V4 §12.1: with BIT_PROVIDER=openai and an OpenAI key, OpenAI answers first
+ * (providers/openai.ts) and Gemini's models follow when it fails; the safety
+ * checks are the same whoever answers.
  */
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { SECTIONS, isSectionId } from '@/services/bit/sections';
 import { GEMINI_SAFETY, REFUSALS, answerIsSafe, screenQuestion } from './bitSafety';
 import { MAX_IMAGE_BYTES, VISION_SCHEMA, parseImage, parseVision, visionPrompt } from './bitVision';
+import type { ProviderChoice } from './providers';
+import { openAiChat, parseOpenAiEvent, toOpenAiMessages } from './providers/openai';
 
 export type BitLang = 'kk' | 'ru' | 'en';
 const LANGS: readonly BitLang[] = ['kk', 'ru', 'en'];
@@ -44,6 +50,8 @@ export interface BitOptions {
   /** Wait before the one retry of an overloaded (503) model. */
   retryDelayMs?: number;
   now?: () => number;
+  /** Who answers first (V4 §12.1, providers/index.ts); default: Gemini only. */
+  provider?: ProviderChoice;
 }
 
 const LANGUAGE_RULES: Record<BitLang, string> = {
@@ -210,7 +218,8 @@ export function createBit(options: BitOptions = {}) {
   const now = options.now ?? Date.now;
   const hits = new Map<string, number[]>();
   const days = new Map<string, { day: number; n: number }>();
-  const configured = apiKey.length > 0;
+  const openai = options.provider?.primary === 'openai' ? options.provider.openai : null;
+  const configured = apiKey.length > 0 || !!openai;
 
   const limited = (ip: string) => {
     const t = now();
@@ -277,7 +286,24 @@ export function createBit(options: BitOptions = {}) {
       let upstream: Response | null = null;
       let quota = false;
       let lastStatus = 0;
-      for (const m of models) {
+      /** How the answering provider writes its stream. */
+      let parse = parseGeminiEvent;
+      // V4 §12.1: OpenAI first when it is the chosen provider; any failure falls back to Gemini
+      if (openai) {
+        const r = await openAiChat(openai, toOpenAiMessages(bitSystemPrompt(lang, page), toContents(body.history, message)), controller.signal).catch((e: Error) => {
+          if (!controller.signal.aborted) console.warn('[bit] openai failed:', e.message);
+          return null;
+        });
+        if (r?.ok && r.body) {
+          upstream = r;
+          parse = parseOpenAiEvent;
+        } else if (r) {
+          lastStatus = r.status;
+          if (r.status === 429) quota = true;
+          console.warn('[bit] openai answered', r.status);
+        }
+      }
+      for (const m of upstream || !apiKey ? [] : models) {
         for (let attempt = 0; attempt < 2; attempt++) {
           if (attempt) await new Promise((r) => setTimeout(r, retryDelayMs));
           const r = await call(m);
@@ -322,7 +348,7 @@ export function createBit(options: BitOptions = {}) {
         res.write(`${JSON.stringify({ d: out })}\n`);
       };
       const handle = (line: string) => {
-        const ev = parseGeminiEvent(line.trim());
+        const ev = parse(line.trim());
         if (!ev || stopped) return;
         if (ev.blocked) blocked = ev.blocked;
         if (ev.finish === 'SAFETY' || ev.finish === 'PROHIBITED_CONTENT') blocked = ev.finish;
@@ -406,7 +432,7 @@ export function createBit(options: BitOptions = {}) {
   async function handle(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
     const path = new URL(req.url ?? '/', 'http://local').pathname;
     if (!path.startsWith('/api/ai/bit/')) return false;
-    if (path === '/api/ai/bit/health' && req.method === 'GET') sendJson(res, 200, { configured, model: configured ? model : null, tts: !!options.voice?.tts, stt: !!options.voice?.stt });
+    if (path === '/api/ai/bit/health' && req.method === 'GET') sendJson(res, 200, { configured, model: configured ? (openai ? openai.chatModel : model) : null, provider: openai ? 'openai' : 'gemini', tts: !!options.voice?.tts, stt: !!options.voice?.stt });
     else if (path === '/api/ai/bit/ask' && req.method === 'POST') await ask(req, res);
     else if (path === '/api/ai/bit/identify' && req.method === 'POST') await identify(req, res);
     else sendJson(res, 404, { error: 'not-found' });

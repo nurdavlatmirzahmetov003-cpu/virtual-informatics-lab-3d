@@ -4,12 +4,17 @@
  * logged or stored anywhere except as a scrypt hash.
  *
  *   npm run server:create-admin
+ *   npm run server:backup [-- --keep 14]   V4 §12.2: a verified snapshot of the
+ *                                          database into BACKUP_DIR, keeping the
+ *                                          newest 14 automatic ones (cron / systemd)
  */
 import { createInterface } from 'node:readline';
 import { stdin, stdout } from 'node:process';
 import { openDb, migrate, type Db } from './db';
 import { loadEnv, serverConfig } from './env';
 import { audit } from './audit';
+import { createBackup, pruneBackups, verifyBackup } from './backup';
+import { join } from 'node:path';
 import { passwordProblem, PASSWORD_MIN } from './auth/password';
 import { createUser, loginProblem, normalizeLogin, userByLogin } from './users';
 
@@ -52,10 +57,28 @@ function askHidden(question: string): Promise<string> {
   });
 }
 
+/** A consistent copy of the live database (safe while the server runs), checked, then old ones pruned. */
+export function backupNow(db: Db, dir: string, keep: number, now = Date.now()) {
+  const made = createBackup(db, dir, 'auto', now);
+  verifyBackup(join(dir, made.name));
+  return { made, pruned: pruneBackups(dir, keep, 'auto') };
+}
+
 async function main() {
   const [command] = process.argv.slice(2);
+  if (command === 'backup') {
+    loadEnv();
+    const config = serverConfig();
+    const db = openDb(config.dbFile);
+    migrate(db);
+    const k = process.argv.indexOf('--keep');
+    const keep = k > 0 ? Math.max(1, Number(process.argv[k + 1]) || 14) : 14;
+    const { made, pruned } = backupNow(db, config.backupDir, keep);
+    console.log(`Backup ${made.name} (${Math.round(made.size / 1024)} KB) in ${config.backupDir}; ${pruned.length} older removed, ${keep} kept.`);
+    return;
+  }
   if (command !== 'create-admin') {
-    console.log('Usage: npm run server:create-admin');
+    console.log('Usage: npm run server:create-admin | npm run server:backup [-- --keep 14]');
     process.exit(1);
   }
   loadEnv();

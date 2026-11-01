@@ -1,0 +1,55 @@
+.medal {
+  display: block;
+  overflow: visible;
+  color: var(--text);
+}
+
+/* glow by rarity (earned only) */
+.medal[data-unlocked='true'][data-rarity='bronze'] {
+  filter: drop-shadow(0 4px 8px rgb(194 122 62 / 0.35));
+}
+
+.medal[data-unlocked='true'][data-rarity='silver'] {
+  filter: drop-shadow(0 4px 10px rgb(148 163 184 / 0.5));
+}
+
+.medal[data-unlocked='true'][data-rarity='gold'] {
+  filter: drop-shadow(0 4px 14px rgb(242 184 31 / 0.55));
+}
+
+.medal[data-unlocked='true'][data-rarity='legendary'] {
+  filter: drop-shadow(0 0 16px rgb(168 85 247 / 0.65));
+  animation: legendGlow 3s ease-in-out infinite;
+}
+
+.medal[data-unlocked='false'] {
+  opacity: 0.55;
+}
+
+.ringFill {
+  stroke: var(--accent);
+}
+
+.sparkles {
+  animation: twinkle 2.2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes legendGlow {
+  50% {
+    filter: drop-shadow(0 0 24px rgb(244 114 182 / 0.8));
+  }
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .medal[data-unlocked='true'][data-rarity='legendary'],
+  .sparkles {
+    animation: none;
+  }
+}

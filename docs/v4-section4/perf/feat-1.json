@@ -1,0 +1,79 @@
+{
+  "base": "http://localhost:4173",
+  "quality": "medium",
+  "theme": "dark",
+  "mobile": false,
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x000046A3) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pages": {
+    "/lab": {
+      "readyMs": 10464,
+      "firstFrameMs": 10939,
+      "readyKB": 5219,
+      "downloadKB": 5219,
+      "requests": 144,
+      "by": {
+        "js": {
+          "files": 93,
+          "KB": 957
+        },
+        "fonts": {
+          "files": 13,
+          "KB": 285
+        },
+        "other": {
+          "files": 16,
+          "KB": 3
+        },
+        "textures": {
+          "files": 7,
+          "KB": 2505
+        },
+        "css": {
+          "files": 11,
+          "KB": 30
+        },
+        "hdr": {
+          "files": 1,
+          "KB": 1161
+        },
+        "models": {
+          "files": 3,
+          "KB": 277
+        }
+      },
+      "scene": {
+        "level": "medium",
+        "dpr": 1,
+        "bench": {
+          "calls": 231,
+          "triangles": 164081,
+          "msPerFrame": 9.38
+        },
+        "fps": 77,
+        "memory": {
+          "textures": 47,
+          "textureMB": 174.3,
+          "heapMB": 66.3,
+          "gl": {
+            "geometries": 287,
+            "textures": 56
+          }
+        },
+        "lodSwitches": 0,
+        "programs": 50,
+        "state": {
+          "dpr": 1,
+          "antialias": true,
+          "shadows": true,
+          "shadowMapSize": 1024,
+          "postprocessing": false,
+          "maxTexturePx": 2048,
+          "lod": {
+            "light": 3
+          }
+        }
+      },
+      "errors": []
+    }
+  }
+}

@@ -36,7 +36,7 @@ export const FIX_EXERCISE: Exercise<FixWork> = {
   instructions: { key: 'sim.task.instructions' },
   expectedResult: { key: 'sim.task.expected' },
   maxScore: 10,
-  hints: [{ key: 'sim.task.hint' }],
+  hints: [{ key: 'sim.task.hintStart' }, { key: 'sim.task.hint' }, { key: 'sim.task.hintFault' }],
   gradingRules: [
     {
       id: 'diagnosis',

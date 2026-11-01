@@ -1,0 +1,5 @@
+# V4 §12.2: scripts and units that run on Linux servers keep LF line endings on every checkout
+*.sh text eol=lf
+deploy/** text eol=lf
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf

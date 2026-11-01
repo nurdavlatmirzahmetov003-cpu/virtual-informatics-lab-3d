@@ -6,6 +6,7 @@
     "tagline": "See the computer, build it with your own hands, understand it"
   },
   "nav": {
+    "achievements": "Achievements",
     "home": "Home",
     "labs": "Labs",
     "studio": "Setup Studio",
@@ -16,7 +17,8 @@
     "games": "Games",
     "path": "My path",
     "report": "Report for parents",
-    "identify": "Identify with the camera"
+    "identify": "Identify with the camera",
+    "robots": "Our Robots"
   },
   "settings": {
     "language": "Language",
@@ -59,7 +61,12 @@
       "posterBrand": "Open the computer in 3D",
       "posterBrandSub": "Build parts, wire networks, write code — all in one lab.",
       "posterBits": "It's all bits and bytes",
-      "posterBitsSub": "Every picture, song and game is a chain of zeros and ones."
+      "posterBitsSub": "Every picture, song and game is a chain of zeros and ones.",
+      "presenterWhite": "This is the white setup",
+      "presenterBlack": "This is the black setup",
+      "presenterRgb": "This is the RGB setup",
+      "presenterLine": "{look}: {gpu}, {ram} GB of memory, {cpu}.",
+      "presenterName": "Bit the presenter"
     }
   },
   "labs": {
@@ -70,8 +77,8 @@
     "modules": {
       "space": {
         "title": "3D lab",
-        "desc": "A large hall with ten zones: workstation, PC build, storage, input/output, printing, networking, power, mobile devices, a showcase and the BitLab stage. Minimap and keyboard control.",
-        "tag": "3D · 10 zones"
+        "desc": "A large hall with eleven zones: workstation, PC build, storage, input/output, printing, networking, power, mobile devices, a showcase, the BitLab stage and the robots' yard. Minimap and keyboard control.",
+        "tag": "3D · 11 zones"
       },
       "hardware": {
         "title": "Computer hardware",
@@ -246,7 +253,8 @@
       "rgb": "RGB lighting",
       "desk": "Desk top",
       "peripherals": "Peripherals",
-      "customPick": "Custom colour"
+      "customPick": "Custom colour",
+      "caseFromModel": "The colour comes with the case model. For another colour, pick another case on the Products step."
     },
     "finish": {
       "black": "Black",
@@ -254,10 +262,12 @@
       "graphite": "Graphite",
       "silver": "Silver",
       "grey": "Grey",
-      "wood": "Wood"
+      "wood": "Wood",
+      "pink": "Pink"
     },
     "rgb": {
       "off": "Off",
+      "flow": "Flow",
       "white": "White",
       "cyan": "Cyan",
       "blue": "Blue",
@@ -308,6 +318,7 @@
       "coolerSocket": "The {cooler} mounting kit does not support the {socket} socket.",
       "coolerTooTall": "The cooler will not fit: {cooler} is {height} mm tall, but {case} allows at most {max} mm.",
       "radiatorTooBig": "The {cooler} radiator ({radiator} mm) does not fit {case} (max {max} mm).",
+      "coolerBlocksGpu": "{cooler} is too wide for {board}: it would cover the first PCIe slot and touch {gpu}. The 3D view shows a liquid cooler (AIO) in its place. Choose a narrower cooler or an AIO.",
       "coolerWeak": "{cooler} is rated for about {capacity} W, but {cpu} can put out up to {heat} W under load. It may overheat and slow down.",
       "error": "Error",
       "warning": "Warning"
@@ -884,7 +895,8 @@
     "license": "License",
     "edits": "Adaptations: merged geometry, Meshopt compression, 1K WebP textures, scale and orientation. Removed loose cables, extracted chassis and speakers, used the headphone rest pose. Screen wallpaper is an original project design. Trademarks belong to their owners; this is an educational demonstration.",
     "environment": "Environment and materials — Poly Haven, CC0:",
-    "specs": "Verified specification sources:"
+    "specs": "Verified specification sources:",
+    "own": "BitLab's own models (eight cases: Panorama, Panorama Black, Panorama Blossom, Tower Showcase, Cube, Core, Flow RGB, Grove; fans; the AERO motherboard, graphics card, memory, AIO and power supply) are the project's own work, CC0, built by scripts/blender/make-showcase.py. The room on the home page is the project's own work too (CC0), built in code: the waving Bit and the presenter robot in a BitLab T-shirt, the monstera plants, the gaming desk and chair, the monitor arm, the desk lamp, the LED strips and the framed posters."
   },
   "anatomy": {
     "title": "Computer anatomy",
@@ -1816,16 +1828,19 @@
       "pcCase": "Placing the case",
       "sidePanel": "Opening the side glass",
       "motherboard": "Installing the motherboard",
-      "cpu": "Seating the CPU",
-      "ram": "Installing the memory",
-      "ssd": "Installing the SSD",
-      "cooler": "Installing the cooler",
-      "psu": "Installing the power supply",
-      "gpu": "Installing the graphics card",
-      "cables": "Connecting power cables",
-      "fans": "Starting the fans",
-      "rgb": "Switching on RGB",
-      "glassClose": "Closing the glass panel",
+      "socket": "The socket lever lifts",
+      "cpu": "The CPU drops exactly into the socket",
+      "socketLock": "The lever comes down and locks the CPU",
+      "paste": "A dot of thermal paste goes on the CPU",
+      "ram": "The RAM is pressed in and the clips snap shut",
+      "ssd": "The M.2 SSD is fixed to the board",
+      "cooler": "The cooler sits on top of the CPU",
+      "psu": "The PSU goes into its own chamber",
+      "gpu": "The graphics card goes into the PCIe slot and the latch closes",
+      "cables": "The power cables are plugged in",
+      "fans": "The fans are mounted",
+      "rgb": "Power on: the fans spin up and the RGB lights up",
+      "glassClose": "The glass panel closes",
       "monitorOn": "Powering on the monitor",
       "lights": "Switching on setup lighting",
       "present": "Your setup is ready"
@@ -3088,6 +3103,38 @@
     "connectSummary": "Cables and networking: the right sockets."
   },
   "achievements": {
+    "page": {
+      "eyebrow": "Player profile",
+      "title": "Achievements",
+      "subtitle": "Every badge is something you really did in the lab. Rarer badges give more XP and more coins for the robots.",
+      "toProgress": "Back to my results"
+    },
+    "rarity": {
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold",
+      "legendary": "Legendary"
+    },
+    "ceremony": {
+      "cheer": "Brilliant! The «{name}» badge is yours. Keep it up!"
+    },
+    "coins": "coins",
+    "summary": {
+      "title": "Achievements summary",
+      "earned": "badges earned",
+      "earnedShort": "Earned",
+      "coinsHint": "Coins for the robots: they grow with your XP",
+      "recent": "Recently earned",
+      "recentEmpty": "Your first badge is ahead: finish any task.",
+      "showcase": "Top three",
+      "showcaseEmpty": "Your rarest badges will stand here."
+    },
+    "filter": {
+      "label": "Filter",
+      "all": "All",
+      "earned": "Earned",
+      "locked": "Locked"
+    },
     "toast": {
       "eyebrow": "Achievement unlocked",
       "close": "Close",
@@ -3359,8 +3406,8 @@
     },
     "title": "3D lab",
     "eyebrow": "The large lab space",
-    "lead": "Tour ten zones: pick a zone and the camera flies there.",
-    "sceneLabel": "3D lab hall with ten zones",
+    "lead": "Tour eleven zones: pick a zone and the camera flies there.",
+    "sceneLabel": "3D lab hall with eleven zones",
     "overview": "Overview",
     "next": "Next zone",
     "prev": "Previous zone",
@@ -3375,7 +3422,13 @@
     "atOverview": "Overview",
     "hint": "Drag to orbit · Wheel or pinch to zoom · Esc for the overview",
     "keys": "Keys",
+    "mapFold": {
+      "title": "Zone map",
+      "open": "Open the zone map",
+      "close": "Fold the map"
+    },
     "keysList": {
+      "map": "M — fold / open the zone map",
       "digits": "1–9 — fly to a zone",
       "overview": "Esc or 0 — overview",
       "step": "[ ] or PageUp/PageDown — previous/next zone",
@@ -3445,6 +3498,12 @@
         "name": "BitLab stage",
         "caption": "A live tour of the site",
         "description": "Robots present BitLab: slides on the screen, and Bit tells you about each section in its own voice. Come closer and the presentation starts."
+      },
+      "robots": {
+        "name": "Robots' yard",
+        "caption": "Where our robots live",
+        "description": "Here the robots work, charge in their garages, rest and play football. Click any robot to hear its tip.",
+        "action": "Meet our robots"
       }
     },
     "stage": {
@@ -3456,7 +3515,7 @@
         },
         "s2": {
           "title": "The big 3D lab",
-          "body": "Ten zones and sixty devices. Click any device to learn what it does, which ports it has and what is inside."
+          "body": "Eleven zones and sixty devices. Click any device to learn what it does, which ports it has and what is inside."
         },
         "s3": {
           "title": "Setup Studio",
@@ -6150,21 +6209,27 @@
         "short": "Monitor, keyboard, mouse, speakers, power",
         "instructions": "Plug the monitor, keyboard, mouse, speakers and power cable into the right sockets on the back of the system unit.",
         "expected": "All five cables in place: monitor in the graphics card, keyboard and mouse in USB, speakers in the green audio out, power in the PSU.",
-        "hint": "The graphics card’s ports are below the board’s, in a vertical row. The power inlet is at the very bottom, on the PSU."
+        "hint": "The graphics card’s ports are below the board’s, in a vertical row. The power inlet is at the very bottom, on the PSU.",
+        "hintStart": "Look at each cable’s plug: its shape tells you which port it fits.",
+        "hintNear": "Monitor → the graphics card’s HDMI, keyboard and mouse → the motherboard’s USB-A ports, speakers → the green 3.5 mm jack, power cable → the power supply."
       },
       "ethernet": {
         "title": "Connect the laptop by Ethernet",
         "short": "Router LAN → laptop RJ-45, DHCP",
         "instructions": "Plug one end of the Ethernet cable into the router and the other into the laptop, then watch the laptop get an IP address.",
         "expected": "The cable is in a router LAN port and the laptop’s RJ-45 socket; DHCP gave an address.",
-        "hint": "The router’s blue port is WAN (internet), the yellow ones are LAN. The laptop’s RJ-45 is the widest square socket."
+        "hint": "The router’s blue port is WAN (internet), the yellow ones are LAN. The laptop’s RJ-45 is the widest square socket.",
+        "hintStart": "The laptop joins the router with one Ethernet cable: one end in the laptop, the other in the router.",
+        "hintNear": "One end goes into the laptop’s RJ-45 port, the other into a yellow LAN port on the router — not the blue WAN one."
       },
       "wifi": {
         "title": "Join Wi-Fi securely",
         "short": "Protected network, right key",
         "instructions": "Put the laptop on the school Wi-Fi: pick the right network and enter the key from the router sticker.",
         "expected": "The laptop is on “Mektep-WiFi” (WPA3), never joined an open network, key right first time.",
-        "hint": "A strong open network may be a trap. Choose one with a lock — WPA2/WPA3."
+        "hint": "A strong open network may be a trap. Choose one with a lock — WPA2/WPA3.",
+        "hintStart": "The list shows each network’s security — read it before you pick one.",
+        "hintNear": "Pick “{ssid}”, the network with the lock, and enter the key from the task."
       }
     },
     "feedback": {
@@ -6342,7 +6407,16 @@
       "check": "Check",
       "reset": "Put it back",
       "changed": "Parts changed: {n}",
-      "testing": "Testing: boot + one minute of gaming…"
+      "testing": "Testing: boot + one minute of gaming…",
+      "hintStart": "Switch the computer on and watch the screen, the sound and the temperature — the sign of the fault is there.",
+      "hintFault": {
+        "ram": "The computer beeps again and again — that points at the memory. Check the memory modules.",
+        "gpu": "The fans spin but there is no picture — check the graphics card.",
+        "monitor": "The screen says “No signal” — check the monitor cable.",
+        "storage": "“Boot device not found” — the computer found no disk to start from. Check the storage drive.",
+        "cooler": "Under load the temperature climbs fast and the computer shuts down — check the cooling.",
+        "psu": "In a game the computer suddenly switches off — look at the power chart: the power supply is too weak."
+      }
     },
     "feedback": {
       "rule": {
@@ -7272,7 +7346,50 @@
     "geminiVoice": "Clear voice · Gemini",
     "listenPanel": "Read it with Bit",
     "stopPanel": "Stop",
-    "says": "Bit explains"
+    "says": "Bit explains",
+    "quota": "Bit's Gemini voice has reached today's limit. Answers stay as text and the browser's own voice reads them. Bit's voice will be back tomorrow.",
+    "voiceSettings": {
+      "title": "Bit's voice",
+      "back": "Back to the conversation",
+      "autoRead": "Read answers aloud by itself",
+      "autoReadHint": "Bit reads answers, tips and congratulations aloud. Turn it off and Bit speaks only when you press a button.",
+      "voice": "Voice",
+      "kinds": {
+        "female": "Female voice",
+        "male": "Male voice",
+        "neutral": "Neutral voice"
+      },
+      "voices": {
+        "Kore": "Clear and calm",
+        "Leda": "Young and bright",
+        "Sulafat": "Warm and soft",
+        "Charon": "Deep and measured",
+        "Puck": "Lively and cheerful",
+        "Orus": "Mid-range and steady"
+      },
+      "style": "Speaking style",
+      "styles": {
+        "teacher": "Calm teacher",
+        "friend": "Cheerful friend",
+        "energetic": "Energetic presenter"
+      },
+      "speed": "Speed",
+      "speeds": {
+        "slow": "Slow",
+        "normal": "Normal",
+        "fast": "Fast"
+      },
+      "emotion": "Emotion",
+      "emotionOn": "Speak with feeling",
+      "emotionHint": "Happy when praising, gentle after a mistake, amazed by a fun fact.",
+      "preview": "Preview",
+      "stop": "Stop",
+      "browserOnly": "Gemini's voice is not connected, so Bit speaks with the browser's voice. Speed works right away; the voice and style are heard once the server is connected.",
+      "savedAccount": "Saved to your account: Bit sounds the same on any computer.",
+      "saving": "Saving…",
+      "savedOffline": "The server is away, so the settings are kept in this browser for now.",
+      "savedLocal": "Saved in this browser. Sign in and your settings go with you."
+    }
   },
   "arcade": {
     "eyebrow": "Games arena",
@@ -7482,7 +7599,40 @@
       "tooShort": "The message is too short."
     }
   },
+  "demo": {
+    "badge": "Demo mode",
+    "note": "A sample profile for the defence: all data are examples. Your real progress and account are not touched.",
+    "reset": "Reset demo",
+    "exit": "Leave demo",
+    "enter": "Demo mode",
+    "enterHint": "For the defence: every lab open, achievements, robots and the certificate ready.",
+    "signInBlocked": "Signing in is not available in demo mode.",
+    "student": "Demo Student",
+    "instantCertificate": "Get the certificate now (demo)"
+  },
   "certificate": {
+    "course": "Course «{brand} — Virtual Informatics Lab»",
+    "teamRole": "Project team",
+    "sticker": "COURSE\nCOMPLETED",
+    "sample": "SAMPLE",
+    "download": "Download PDF",
+    "share": "Share",
+    "shareText": "I finished the {brand} virtual informatics course and earned a certificate!",
+    "copied": "Link copied",
+    "celebrate": "See the celebration",
+    "celebration": {
+      "title": "Congratulations!",
+      "voice": "Congratulations, {name}! You have done every task of the {brand} course. Here is your certificate!",
+      "you": "my friend",
+      "close": "Close"
+    },
+    "preview": {
+      "link": "See a sample certificate",
+      "title": "Sample certificate",
+      "subtitle": "This is the certificate a student gets for finishing the course: an A4 sheet, a check code and QR, seals and a sticker.",
+      "sampleName": "Aigerim Serikova",
+      "note": "This is a sample: its code does not verify. A real certificate goes to a student who finishes the course."
+    },
     "eyebrow": "Course completion",
     "title": "Certificate",
     "subtitle": "Complete every task of the {brand} course to earn a certificate. With an average above 90% you earn a commendation.",
@@ -7512,6 +7662,7 @@
     "verifyAt": "Verify at {url}",
     "notVerified": "Not verified (guest mode)",
     "check": {
+      "demo": "This is a demo or sample certificate. Such a code does not verify.",
       "title": "Check a certificate",
       "valid": "The certificate is valid",
       "notFound": "No certificate with this code was found.",
@@ -7666,7 +7817,7 @@
     "start": "Enter the lab",
     "lab": {
       "title": "Welcome to BitLab!",
-      "text": "This is a 3D informatics lab. Walk through ten zones, click any device and look inside it: from a processor to a 3D printer."
+      "text": "This is a 3D informatics lab. Walk through eleven zones, click any device and look inside it: from a processor to a 3D printer."
     },
     "play": {
       "title": "Do it with your own hands",
@@ -7815,6 +7966,278 @@
       "cpu": "What is a processor?",
       "network": "What is a computer network?",
       "safety": "How do I stay safe online?"
+    }
+  },
+  "labLayout": {
+    "hide": "Hide the {name} panel",
+    "show": "Open the {name} panel"
+  },
+  "labGuide": {
+    "label": "Bit's welcome",
+    "hello": "Hi! I'm Bit. Today's task:",
+    "showMe": "Show me how",
+    "start": "I'll start myself",
+    "listen": "Read it aloud",
+    "close": "Close",
+    "barHint": "Bit can show you the solution step by step.",
+    "again": "Show me again",
+    "whatToDo": "What do I do?",
+    "demoLabel": "Bit is showing the solution",
+    "step": "Step {n} of {total}",
+    "stop": "Stop",
+    "yourTurnTitle": "Your turn now",
+    "yourTurn": "That's how! I've put everything back to the start — now you try.",
+    "network": {
+      "s1": "Three computers are ready, but they aren't connected. They need a switch in the middle.",
+      "s2": "We take a switch from the palette and place it in the middle of the workspace.",
+      "s3": "Now we cable each computer to the switch: PC1 first.",
+      "s4": "Then PC2 and PC3 too.",
+      "s5": "Let's test: a PING from PC1 to PC3. The packet goes through the switch.",
+      "s6": "When you're done, press “Check” to get your points."
+    },
+    "logic": {
+      "s1": "The lamp must light only when both A and B are 1. That's an AND gate.",
+      "s2": "We put an AND gate from the palette onto the board.",
+      "s3": "Input A goes to the AND's first leg, B to the second.",
+      "s4": "We connect the AND's output to the lamp Y.",
+      "s5": "Let's test: A = 1 and B = 1 — the lamp is on!",
+      "s6": "Once the truth table is full, press “Check”."
+    },
+    "algorithms": {
+      "s1": "Bubble sort compares two neighbouring numbers and moves the larger one to the right.",
+      "s2": "We press “Play” — the algorithm runs step by step.",
+      "s3": "Coloured bars are the numbers being compared now. The largest “bubbles up” to the end.",
+      "s4": "To go at your own pace, use the “Next step” button."
+    },
+    "experiments": {
+      "s1": "Load the processor and its temperature rises.",
+      "s2": "We raise the load — the temperature climbs on the chart.",
+      "s3": "Now we fit a stronger cooler and watch the difference."
+    },
+    "connect": {
+      "s1": "The back panel of the system unit has many ports. Each cable has its own.",
+      "s2": "The monitor cable (HDMI) goes into the graphics card's port, not the motherboard's.",
+      "s3": "Keyboard and mouse go into USB-A ports.",
+      "s4": "Speakers go into the green 3.5 mm audio jack.",
+      "s5": "And finally the power cable goes into the power supply."
+    },
+    "sim": {
+      "s1": "Here we build a computer, switch it on and watch what happens.",
+      "s2": "We switch the computer on.",
+      "s3": "We pick the “Game” load and start it — watch the temperature and the power.",
+      "s4": "Now swap one part: cause and effect show up right here."
+    },
+    "assembly": {
+      "s1": "A computer is always built starting from the motherboard.",
+      "s2": "We lay the motherboard on the antistatic mat.",
+      "s3": "We seat the processor in the socket — the triangle marks must line up.",
+      "s4": "We put the memory into the DIMM slots. Carry on from here yourself!"
+    },
+    "algoText": "{short}. Press “Play”, watch every step of the algorithm and read the explanation.",
+    "simText": "Build the computer and switch it on: watch what changes on the screen, in the sound and the temperature when a part is missing or weak.",
+    "hintLevel": "Hint {n}"
+  },
+  "panels": {
+    "fold": "Fold the panel",
+    "unfold": "Open the {name} panel",
+    "unread": "Something new",
+    "device": "Device",
+    "teacher": "Bit the teacher",
+    "poster": "Poster",
+    "info": "Info",
+    "algoSide": "Code and variables",
+    "expSide": "Findings and questions",
+    "simBuild": "The computer's parts",
+    "simGauges": "Gauges"
+  },
+  "menu": {
+    "open": "Open menu",
+    "close": "Close menu",
+    "title": "Menu",
+    "learning": "Learning",
+    "help": "Help",
+    "about": "About",
+    "settings": "Settings",
+    "account": "Account"
+  },
+  "robots": {
+    "title": "Our Robots",
+    "eyebrow": "The lab's helpers",
+    "lead": "Meet every robot of the lab: watch them work, dress them up, level them up and listen to their tips.",
+    "pick": "Choose a robot",
+    "viewer": {
+      "label": "{name} robot — 360° view",
+      "spin": "Auto-spin",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "reset": "Reset view",
+      "hint": "Drag to rotate, scroll to zoom",
+      "anims": {
+        "idle": "Idle",
+        "work": "Work",
+        "wave": "Wave",
+        "dance": "Dance"
+      },
+      "locked": "Unlocks at level {level}"
+    },
+    "card": {
+      "job": "Job",
+      "fact": "Fun fact",
+      "level": "Level",
+      "energy": "Energy",
+      "topic": "Tips about",
+      "skill": "Special skill",
+      "skillEffect": "Works 30 % longer on one charge.",
+      "skillLocked": "Unlocks at level {level}",
+      "now": "Now",
+      "inHall": "Also works in the lab hall"
+    },
+    "states": {
+      "work": "Working",
+      "toGarage": "Going to charge",
+      "charging": "Charging in its garage",
+      "waking": "Waking up",
+      "toPlay": "Going to play",
+      "play": "Playing football",
+      "rest": "In the rest lounge"
+    },
+    "topics": {
+      "cyber": "Computer and internet safety",
+      "room": "Room and electrical safety",
+      "posture": "Posture and eye breaks",
+      "etiquette": "Etiquette and good manners",
+      "facts": "Fun facts"
+    },
+    "wallet": {
+      "coins": "Coins",
+      "xp": "Experience (XP)",
+      "how": "You earn coins from tasks, lessons, games and the robots' tips.",
+      "guest": "Guest mode: your progress stays in this browser. Sign in to keep it in your account.",
+      "saved": "Saved",
+      "offline": "The server is not reachable: changes are saved in this browser."
+    },
+    "wardrobe": {
+      "title": "Wardrobe",
+      "slots": {
+        "hat": "Hat",
+        "shirt": "T-shirt",
+        "face": "Glasses",
+        "neck": "Neck",
+        "back": "Back",
+        "badge": "Badge"
+      },
+      "buy": "Buy · {price}",
+      "wear": "Wear",
+      "takeOff": "Take off",
+      "owned": "Owned",
+      "notEnough": "Not enough coins",
+      "needLevel": "Needs level {level}",
+      "cannot": "This robot cannot wear it",
+      "items": {
+        "cap": "BitLab cap",
+        "headphones": "Headphones",
+        "crown": "Crown",
+        "gradcap": "Graduation cap",
+        "kalpak": "Kalpak",
+        "shirt_blue": "BitLab blue",
+        "shirt_violet": "BitLab violet",
+        "shirt_cyan": "BitLab cyan",
+        "shirt_nauryz": "Nauryz",
+        "shirt_autumn": "Autumn",
+        "shirt_winter": "Winter",
+        "glasses": "Glasses",
+        "scarf": "Scarf",
+        "backpack": "Backpack",
+        "badge": "BitLab badge"
+      }
+    },
+    "train": {
+      "title": "Training",
+      "button": "Train to the next level · {price}",
+      "max": "Top level",
+      "unlocks": "Unlocks: {what}",
+      "done": "{name} reached level {level}!",
+      "unlock": {
+        "wave": "the wave animation",
+        "items": "new items",
+        "dance": "the dance animation",
+        "skill": "a special skill"
+      }
+    },
+    "tips": {
+      "ask": "Give me a tip",
+      "wait": "Just a moment…",
+      "heard": "Tips heard: {n} of {total}",
+      "from": "{name} has a tip"
+    },
+    "lab": {
+      "open": "Our Robots page",
+      "garage": "{name}'s garage",
+      "football": "Football pitch",
+      "lounge": "Rest lounge",
+      "play": "Play corner"
+    },
+    "list": {
+      "guide": {
+        "name": "Guide",
+        "job": "Greets visitors and gives tours of the lab's zones.",
+        "fact": "Knows the lab's map by heart and can lead you to any of the eleven zones.",
+        "skill": "Quick tour"
+      },
+      "cleaner": {
+        "name": "Cleaner",
+        "job": "Vacuums the floor and empties the bins.",
+        "fact": "It drives about a kilometre a day — all of it on the floor!",
+        "skill": "Turbo brush"
+      },
+      "cargo": {
+        "name": "Cargo",
+        "job": "Carries boxes of parts between the zones.",
+        "fact": "Its forklift lifts a box heavier than the robot itself.",
+        "skill": "Double load"
+      },
+      "presenter": {
+        "name": "Presenter",
+        "job": "Gives slide presentations on the stage.",
+        "fact": "Changes slides with one button of its clicker — and has never mixed them up.",
+        "skill": "Master speaker"
+      },
+      "assembler": {
+        "name": "Assembler",
+        "job": "Builds PCs from parts at the assembly table.",
+        "fact": "It has three arms: one holds, two drive the screws.",
+        "skill": "Three hands"
+      },
+      "teacher": {
+        "name": "Teacher",
+        "job": "Teaches lessons at the board.",
+        "fact": "The glasses are for style: its screen face sees perfectly well without them.",
+        "skill": "Master teacher"
+      },
+      "guard": {
+        "name": "Cyber-guard",
+        "job": "Looks after computer and internet safety.",
+        "fact": "Never tells anyone its password — not even Bit.",
+        "skill": "Shield"
+      },
+      "inspector": {
+        "name": "Inspector",
+        "job": "Checks cables, sockets, fire safety and posture.",
+        "fact": "Its checklist has thirty items, and it never skips one.",
+        "skill": "Sharp eye"
+      },
+      "librarian": {
+        "name": "Librarian",
+        "job": "Keeps the books and the fun facts.",
+        "fact": "Its chest is a real book with more than a thousand facts written inside.",
+        "skill": "Treasury of knowledge"
+      },
+      "coach": {
+        "name": "Coach",
+        "job": "Runs the breaks, the games and the football.",
+        "fact": "Its whistle announces both the kick-off and break time.",
+        "skill": "Champion spirit"
+      }
     }
   }
 }

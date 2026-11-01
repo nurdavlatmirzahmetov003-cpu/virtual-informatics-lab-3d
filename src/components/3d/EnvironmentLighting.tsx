@@ -36,6 +36,8 @@ interface EnvironmentLightingProps {
   /** Half-size (m) of the key light's shadow frustum — keep tight for crisp shadows. */
   shadowExtent?: number;
   fog?: [near: number, far: number];
+  /** Blur of the key light's shadow edge (PCF radius, texels): softer contact shadows at the same cost. */
+  shadowSoftness?: number;
 }
 
 /**
@@ -50,6 +52,7 @@ export function EnvironmentLighting({
   background,
   shadowExtent = 3,
   fog = [6, 16],
+  shadowSoftness = 1,
 }: EnvironmentLightingProps) {
   const preset = useQualityPreset();
   const palette = useScenePalette();
@@ -98,6 +101,7 @@ export function EnvironmentLighting({
         shadow-mapSize={[preset.shadowMapSize, preset.shadowMapSize]}
         shadow-bias={-0.0002}
         shadow-normalBias={0.015}
+        shadow-radius={shadowSoftness}
         shadow-camera-left={-shadowExtent}
         shadow-camera-right={shadowExtent}
         shadow-camera-top={shadowExtent}

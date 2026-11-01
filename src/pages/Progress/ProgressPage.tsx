@@ -1,8 +1,9 @@
 import { useEffect, useMemo, type CSSProperties } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, Lock } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { ACHIEVEMENT_ICONS } from '@/components/achievements/achievementIcons';
+import { BadgeMedal } from '@/components/achievements/BadgeMedal';
+import { rarityRank } from '@/services/progress/rarity';
 import { GamePanel } from '@/components/game/GamePanel';
 import { STATUS_ICON } from '@/components/progress/statusIcons';
 import { useT } from '@/hooks/useT';
@@ -13,7 +14,7 @@ import { useProgressStore, useProgressSummary } from '@/store/progressStore';
 import { LAB_MODULES } from '@/pages/Labs/modules';
 import { ActivityChart } from './ActivityChart';
 import { DataPanel } from './DataPanel';
-import { formatDateTime, formatDay } from './dates';
+import { formatDateTime } from './dates';
 import styles from './Progress.module.css';
 
 const tk = (key: string) => key as TranslationKey;
@@ -124,42 +125,19 @@ export default function ProgressPage() {
           <h2 id="ach-title">{t('progress.achievements.title')}</h2>
           <span>{t('progress.achievements.count', { n: unlockedCount, total: achievements.length })}</span>
         </div>
-        <ul className={styles.achievements}>
-          {achievements.map((a) => {
-            const Icon = ACHIEVEMENT_ICONS[a.id];
-            const at = unlockedAt[a.id];
-            const unlocked = at !== undefined || a.unlocked;
-            return (
-              <li key={a.id} className={styles.achievement} data-unlocked={unlocked}>
-                <span className={styles.achIcon} aria-hidden="true">
-                  <Icon size={20} strokeWidth={1.6} />
-                  {!unlocked && (
-                    <span className={styles.lock}>
-                      <Lock size={10} />
-                    </span>
-                  )}
-                </span>
-                <div>
-                  <b>{t(tk(`achievements.items.${a.id}.name`))}</b>
-                  <p>{t(tk(`achievements.items.${a.id}.condition`), { target: a.target })}</p>
-                  {unlocked ? (
-                    <small className={styles.achDate}>{at !== undefined ? t('progress.achievements.unlockedAt', { date: formatDay(at) }) : null}</small>
-                  ) : (
-                    <span className={styles.achProgress}>
-                      <span className={styles.track} aria-hidden="true">
-                        <i style={{ width: `${(a.current / a.target) * 100}%` }} />
-                      </span>
-                      <small>
-                        <span className="visually-hidden">{t('progress.achievements.locked')}: </span>
-                        {t('progress.achievements.progress', { current: a.current, target: a.target })}
-                      </small>
-                    </span>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        {/* V4 §9: the full screen is /achievements; here the earned medals, rarest first */}
+        <Link to="/achievements" className={styles.medalStrip} aria-label={t('achievements.toast.open')}>
+          {achievements
+            .filter((a) => a.unlocked || unlockedAt[a.id] !== undefined)
+            .sort((a, b) => rarityRank(b.id) - rarityRank(a.id))
+            .slice(0, 8)
+            .map((a) => (
+              <BadgeMedal key={a.id} id={a.id} unlocked size={52} />
+            ))}
+          <span className={styles.stripMore}>
+            {unlockedCount === 0 ? t('achievements.summary.recentEmpty') : t('achievements.toast.open')} <ArrowRight size={16} aria-hidden="true" />
+          </span>
+        </Link>
       </section>
 
       <section className={styles.section} aria-labelledby="recent-title">

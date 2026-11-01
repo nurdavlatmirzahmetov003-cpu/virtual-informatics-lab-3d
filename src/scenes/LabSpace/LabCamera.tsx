@@ -3,12 +3,16 @@
  * zoom (mouse, touch, keyboard) around the current subject, and the pose the
  * minimap draws. A drag cancels a running flight; reduced motion jumps.
  */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
+import { touchPan } from '@/components/3d/touchPan';
 import { OrbitControls } from '@react-three/drei';
 import { Spherical, Vector3, type PerspectiveCamera } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import { LAB_ORBIT, LAB_OVERVIEW } from '@/data/lab/zones';
+import { LAB_ORBIT, LAB_OVERVIEW, zoneById, type LabZoneId } from '@/data/lab/zones';
+
+/** Zoom limits at a zone: a big zone (the robots' yard) may be seen from further away. */
+const zoneLimits = (id: LabZoneId | null) => ({ min: LAB_ORBIT.zone.min, max: (id && zoneById(id).view.maxOrbit) || LAB_ORBIT.zone.max });
 import { clampToHall, shotFor } from '@/lib/lab/navigation';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { framingScale } from '@/lib/three/framing';
@@ -36,6 +40,7 @@ export function LabCamera() {
   const size = useThree((s) => s.size);
   const invalidate = useThree((s) => s.invalidate);
   const controls = useRef<OrbitControlsImpl>(null);
+  const [touch] = useState(touchPan);
   const reduced = useReducedMotion();
   const focus = useLabStore((s) => s.focus);
   const token = useLabStore((s) => s.flightToken);
@@ -120,7 +125,7 @@ export function LabCamera() {
       v.copy(camera.position).sub(c.target);
       s.setFromVector3(v);
       const st = useLabStore.getState();
-      const limits = st.focus || st.spot ? LAB_ORBIT.zone : LAB_ORBIT.overview;
+      const limits = st.focus || st.spot ? zoneLimits(st.focus) : LAB_ORBIT.overview;
       s.radius = Math.min(limits.max, Math.max(limits.min, s.radius * Math.pow(0.85, dz)));
       s.theta += dorbit * 0.35;
       camera.position.copy(c.target).add(v.setFromSpherical(s));
@@ -129,7 +134,7 @@ export function LabCamera() {
     // distance limits apply once the camera has arrived (a flight crosses them)
     const st = useLabStore.getState();
     const close = st.focus !== null || st.spot !== null;
-    const lim = close ? LAB_ORBIT.zone : LAB_ORBIT.overview;
+    const lim = close ? zoneLimits(st.focus) : LAB_ORBIT.overview;
     c.minDistance = f.active ? 0.3 : lim.min;
     c.maxDistance = f.active ? 100 : lim.max * (close ? 1 : Math.max(1, framingScale(aspect)));
 
@@ -151,7 +156,8 @@ export function LabCamera() {
       dampingFactor={0.08}
       rotateSpeed={0.55}
       zoomSpeed={0.8}
-      enablePan={false}
+      // two fingers pan on touch screens; the aim stays in the hall (clampToHall above)
+      enablePan={touch}
       minPolarAngle={0.15}
       // stay above the floor
       maxPolarAngle={spot ? Math.PI * 0.5 : focus ? Math.PI * 0.48 : Math.PI * 0.42}

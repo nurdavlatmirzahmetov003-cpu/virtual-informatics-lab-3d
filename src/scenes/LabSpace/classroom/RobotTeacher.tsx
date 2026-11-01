@@ -66,8 +66,13 @@ function robotGeometry() {
     arm: mergePieces(armPieces(), true),
     head: mergePieces(
       [
-        { geo: new RoundedBoxGeometry(0.44, 0.32, 0.34, 3, 0.1), color: SHELL },
-        { geo: panel(0.36, 0.22, 0.06, 0.02), at: [0, 0, 0.165], color: SCREEN },
+        // V4 §3.2: the lab robots' style — a soft shell, a big screen face, cheeks, eye highlights, and a teacher's round glasses
+        { geo: new RoundedBoxGeometry(0.44, 0.32, 0.34, 4, 0.12), color: SHELL },
+        { geo: panel(0.38, 0.25, 0.08, 0.02), at: [0, 0, 0.165], color: SCREEN },
+        ...[-1, 1].map((s) => ({ geo: new CircleGeometry(0.02, 16), at: [s * 0.13, -0.05, 0.1785] as const, scale: [1, 0.7, 1] as const, color: '#ff9cc0' })),
+        ...[-1, 1].map((s) => ({ geo: new CircleGeometry(0.011, 12), at: [s * 0.08 - 0.014, 0.05, 0.181] as const })),
+        ...[-1, 1].map((s) => ({ geo: new TorusGeometry(0.056, 0.006, 6, 24), at: [s * 0.08, 0.02, 0.185] as const, color: JOINT })),
+        { geo: new CylinderGeometry(0.004, 0.004, 0.05, 6), at: [0, 0.03, 0.185], rot: [0, 0, Math.PI / 2], color: JOINT },
         { geo: new CylinderGeometry(0.06, 0.06, 0.04, 16), color: JOINT, parents: [ear(-1)] },
         { geo: new CylinderGeometry(0.06, 0.06, 0.04, 16), color: JOINT, parents: [ear(1)] },
         { geo: new CylinderGeometry(0.008, 0.008, 0.12, 8), at: [0, 0.22, 0], color: JOINT },
@@ -76,12 +81,12 @@ function robotGeometry() {
     ),
     headGlow: mergePieces([
       // smile, ear rings and the antenna tip
-      { geo: new TorusGeometry(0.05, 0.007, 5, 14, Math.PI), at: [0, -0.035, 0.178], rot: [0, 0, Math.PI] },
+      { geo: new TorusGeometry(0.06, 0.008, 5, 18, Math.PI), at: [0, -0.04, 0.178], rot: [0, 0, Math.PI] },
       { geo: new TorusGeometry(0.04, 0.007, 5, 18), at: [0, 0.022, 0], parents: [ear(-1)] },
       { geo: new TorusGeometry(0.04, 0.007, 5, 18), at: [0, -0.022, 0], parents: [ear(1)] },
       { geo: new SphereGeometry(0.028, 10, 8), at: [0, 0.29, 0] },
     ]),
-    eyes: mergePieces([-0.075, 0.075].map((x) => ({ geo: new CircleGeometry(0.03, 16), at: [x, 0, 0] as const, scale: [1, 1.35, 1] as const }))),
+    eyes: mergePieces([-0.08, 0.08].map((x) => ({ geo: new CircleGeometry(0.038, 20), at: [x, 0, 0] as const, scale: [1, 1.3, 1] as const }))),
   };
 }
 

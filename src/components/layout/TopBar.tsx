@@ -8,6 +8,8 @@ import { A11yMenu } from '@/components/ui/A11yMenu';
 import { BrandMark } from '@/components/brand/BrandMark';
 import { BRAND } from '@/config/brand';
 import { AccountButton } from './AccountButton';
+import { DemoChip } from './DemoChip';
+import { SiteMenu } from './SiteMenu';
 import styles from './TopBar.module.css';
 
 const NAV: ReadonlyArray<{ to: string; label: TranslationKey; end?: boolean }> = [
@@ -23,7 +25,7 @@ const NAV: ReadonlyArray<{ to: string; label: TranslationKey; end?: boolean }> =
 export function TopBar() {
   const t = useT();
   return (
-    <header className={styles.root}>
+    <header className={styles.root} data-chrome="topbar">
       <NavLink to="/" className={styles.brand} aria-label={t('app.title')}>
         <BrandMark size={32} className={styles.mark} />
         <span className={styles.brandText}>
@@ -46,11 +48,20 @@ export function TopBar() {
       </nav>
 
       <div className={styles.controls}>
-        <QualitySelect />
-        <ThemeToggle />
-        <A11yMenu />
-        <LanguageSwitcher />
-        <AccountButton />
+        <DemoChip />
+        <span className={styles.quality}>
+          <QualitySelect />
+        </span>
+        {/* V4 §7: on tablets and phones these live only in the side menu; V4 §11: on laptops the theme, accessibility and language too, so every section link fits */}
+        <span className={styles.wide}>
+          <span className={styles.extras}>
+            <ThemeToggle />
+            <A11yMenu />
+            <LanguageSwitcher />
+          </span>
+          <AccountButton />
+        </span>
+        <SiteMenu />
       </div>
     </header>
   );

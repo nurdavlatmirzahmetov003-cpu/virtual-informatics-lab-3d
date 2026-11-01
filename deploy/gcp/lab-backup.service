@@ -1,0 +1,13 @@
+# Daily backup of the lab database (DEPLOY_GCP.md, V4 §12.2), started by
+# lab-backup.timer. A consistent snapshot of data/lab.db (VACUUM INTO, safe
+# while the site runs), checked, into /data/backups on the persistent disk;
+# the newest 14 are kept. setup-vm.sh puts the project folder in place of @DIR@.
+[Unit]
+Description=Virtual informatics lab: daily database backup
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=@DIR@
+ExecStart=/usr/bin/docker compose -f docker-compose.yml -f deploy/gcp/docker-compose.gcp.yml exec -T lab npm run --silent server:backup -- --keep 14

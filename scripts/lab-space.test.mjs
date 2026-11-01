@@ -11,9 +11,10 @@ import { clampToHall, keyAction, loadPlan, stepZone, toMinimap, zoneNumber, zone
 
 const inside = ([x, z], m = 0) => x >= LAB_HALL.minX + m && x <= LAB_HALL.maxX - m && z >= LAB_HALL.minZ + m && z <= LAB_HALL.maxZ - m;
 
-test('ten zones (the stage is zone 10), unique ids, inside the hall, platforms do not overlap', () => {
-  assert.equal(LAB_ZONES.length, 10);
+test('eleven zones (the stage is zone 10, the robots\' yard zone 11), unique ids, inside the hall, platforms do not overlap', () => {
+  assert.equal(LAB_ZONES.length, 11);
   assert.equal(LAB_ZONE_IDS[9], 'stage');
+  assert.equal(LAB_ZONE_IDS[10], 'robots');
   assert.deepEqual(LAB_ZONES.map((z) => z.id), [...LAB_ZONE_IDS]);
   for (const z of LAB_ZONES) {
     assert.ok(inside(z.center, 1), `${z.id} inside`);
@@ -25,6 +26,42 @@ test('ten zones (the stage is zone 10), unique ids, inside the hall, platforms d
     const d = Math.hypot(a.center[0] - b.center[0], a.center[1] - b.center[1]);
     assert.ok(d > Math.max(...a.size) / 2 + Math.max(...b.size) / 2 - 0.2, `${a.id} / ${b.id} overlap`);
   }
+});
+
+/** A zone's footprint as its four floor corners: width across its facing, depth along it. */
+function footprint(z) {
+  const [fx, fz] = z.facing;
+  const across = [fz, -fx];
+  const [w, d] = z.size;
+  return [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => [z.center[0] + (across[0] * w * a) / 2 + (fx * d * b) / 2, z.center[1] + (across[1] * w * a) / 2 + (fz * d * b) / 2]);
+}
+const segDist = (p, a, b) => {
+  const ab = [b[0] - a[0], b[1] - a[1]];
+  const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * ab[0] + (p[1] - a[1]) * ab[1]) / (ab[0] ** 2 + ab[1] ** 2)));
+  return Math.hypot(p[0] - a[0] - t * ab[0], p[1] - a[1] - t * ab[1]);
+};
+/** Walkway between two convex footprints (0 when they touch or overlap). */
+function gapBetween(P, Q) {
+  const inside = (pt, poly) => poly.every((a, i) => {
+    const b = poly[(i + 1) % poly.length];
+    return (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]) >= 0;
+  });
+  if (P.some((p) => inside(p, Q)) || Q.some((q) => inside(q, P))) return 0;
+  let g = Infinity;
+  for (const [A, B] of [[P, Q], [Q, P]]) for (const p of A) for (let i = 0; i < B.length; i++) g = Math.min(g, segDist(p, B[i], B[(i + 1) % B.length]));
+  return g;
+}
+
+test('V4 §3.1: every zone has its own floor, a walkway round it; print and media and the stage are 2 m apart', () => {
+  for (let i = 0; i < LAB_ZONES.length; i++)
+    for (let j = i + 1; j < LAB_ZONES.length; j++) {
+      const [a, b] = [LAB_ZONES[i], LAB_ZONES[j]];
+      const gap = gapBetween(footprint(a), footprint(b));
+      assert.ok(gap >= 1.2, `${a.id} / ${b.id}: only ${gap.toFixed(2)} m between them`);
+    }
+  const gap = gapBetween(footprint(zoneById('print_media')), footprint(zoneById('stage')));
+  assert.ok(gap >= 2, `print and media / stage: ${gap.toFixed(2)} m walkway`);
+  for (const z of LAB_ZONES) for (const [x, zz] of footprint(z)) assert.ok(inside([x, zz], 0.1), `${z.id} corner ${x.toFixed(2)},${zz.toFixed(2)} inside the hall`);
 });
 
 test('every DEVICE_CATALOG device has exactly one zone', () => {
@@ -39,10 +76,13 @@ test('every DEVICE_CATALOG device has exactly one zone', () => {
 test('zone shots stand in the hall, in front of the zone, looking at it', () => {
   for (const z of LAB_ZONES) {
     const { position, target } = zoneShot(z);
-    assert.ok(inside([position[0], position[2]], 0.3), `${z.id} camera inside the hall`);
+    // the robots' yard is seen like the overview, from in front of the open front (no wall there)
+    const openFront = z.facing[1] === 1 && position[2] > LAB_HALL.maxZ;
+    assert.ok(inside([position[0], position[2]], 0.3) || openFront, `${z.id} camera inside the hall`);
     const toZone = [target[0] - position[0], target[2] - position[2]];
     assert.ok(toZone[0] * -z.facing[0] + toZone[1] * -z.facing[1] > 0, `${z.id} camera faces the zone`);
-    assert.ok(position[1] > 1 && position[1] < LAB_HALL.height - 0.5);
+    // under the ceiling — or, outside the open front, free to rise like the overview
+    assert.ok(position[1] > 1 && (position[1] < LAB_HALL.height - 0.5 || openFront), `${z.id} camera height`);
   }
   assert.ok(LAB_OVERVIEW.position[1] > LAB_HALL.height, 'overview from above');
 });
@@ -57,8 +97,8 @@ test('keyboard: digits, escape, stepping, zoom and orbit', () => {
   assert.deepEqual(keyAction('ArrowLeft'), { type: 'orbit', dir: -1 });
   assert.equal(keyAction('a'), null);
   assert.equal(stepZone(null, 1), LAB_ZONE_IDS[0]);
-  assert.equal(stepZone(null, -1), LAB_ZONE_IDS[9]);
-  assert.equal(stepZone(LAB_ZONE_IDS[9], 1), LAB_ZONE_IDS[0]);
+  assert.equal(stepZone(null, -1), LAB_ZONE_IDS.at(-1));
+  assert.equal(stepZone(LAB_ZONE_IDS.at(-1), 1), LAB_ZONE_IDS[0]);
   assert.equal(zoneNumber('storage'), 3);
 });
 

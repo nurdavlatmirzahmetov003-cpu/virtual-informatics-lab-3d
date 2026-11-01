@@ -1,0 +1,92 @@
+/* V4 §6: fold button and edge tab — see Foldable.tsx */
+
+.fold {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.fold:hover,
+.fold:focus-visible {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.fold:focus-visible,
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(60vw, 280px);
+  min-height: 46px;
+  padding: 6px 14px 6px 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.tab[data-side='right'] {
+  flex-direction: row-reverse;
+  padding: 6px 6px 6px 14px;
+}
+
+.tab:hover {
+  border-color: var(--accent);
+}
+
+.face {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+}
+
+.dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 11px;
+  height: 11px;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: #ff5d73;
+}
+
+.label {
+  min-width: 0;
+  /* a long name wraps to a second line rather than being cut */
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tab {
+    animation: tabIn 0.25s ease-out both;
+  }
+
+  @keyframes tabIn {
+    from {
+      opacity: 0;
+      transform: translateX(-8px);
+    }
+  }
+}

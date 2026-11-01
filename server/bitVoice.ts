@@ -3,7 +3,13 @@
  * Gemini, so Kazakh sounds and is understood like Kazakh on every device
  * (browsers rarely ship a Kazakh voice, and their Kazakh recognition is weak).
  *
- *   POST /api/ai/bit/tts   { text, lang }        → audio/L16 (PCM 16-bit, 24 kHz, mono), streamed
+ *   POST /api/ai/bit/tts   { text, lang, voice?, style?, emotion? }
+ *                          → audio/L16 (PCM 16-bit, 24 kHz, mono), streamed
+ *   (V4 §10: the student's voice and speaking style; services/bit/voicePrefs.ts)
+ *
+ * V4 §12.1: with BIT_PROVIDER=openai and an OpenAI key, OpenAI speaks and
+ * listens first (providers/openai.ts; its recordings are cached apart) and
+ * Gemini takes over whenever it fails.
  *   POST /api/ai/bit/stt?lang=kk   <audio body>  → { text }
  *
  * The browser asks for one sentence at a time and plays it while the next
@@ -17,6 +23,11 @@ import { join } from 'node:path';
 import { gunzipSync, gzip } from 'node:zlib';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { fallbackModelsFromEnv, isBitLang, type BitLang } from './bit';
+import { isBitVoice, isVoiceStyle, type BitVoiceId, type VoiceStyle } from '@/services/bit/voicePrefs';
+import type { ProviderChoice } from './providers';
+import { openAiSpeech, openAiTranscribe } from './providers/openai';
+
+export { BIT_VOICES, VOICE_STYLES } from '@/services/bit/voicePrefs';
 
 export interface BitVoiceOptions {
   apiKey?: string;
@@ -26,6 +37,8 @@ export interface BitVoiceOptions {
    */
   ttsModels?: readonly string[];
   voice?: string;
+  /** Voices a request may ask for (default: Bit's voices, services/bit/voicePrefs.ts); the audition passes its candidates. */
+  voices?: readonly string[];
   /** Recognition model (default: the chat model). */
   sttModel?: string;
   /** Recognition models tried in turn when it is out of quota (default: Bit's fallbacks). */
@@ -37,6 +50,8 @@ export interface BitVoiceOptions {
   cacheBytes?: number;
   /** Folder for synthesised sentences kept across restarts (null: memory only). */
   cacheDir?: string | null;
+  /** Who speaks and listens first (V4 §12.1, providers/index.ts); default: Gemini only. */
+  provider?: ProviderChoice;
 }
 
 /** Native-sounding Kazakh first (gemini-3.8-flash-tts was rated best in our listening check). */
@@ -75,19 +90,52 @@ export function voiceMood(text: string): VoiceMood {
   return 'calm';
 }
 
-/** The director's note before the words (Gemini TTS reads only what follows the colon). */
-const MOOD_STYLE: Record<VoiceMood, string> = {
-  joyful: 'in a joyful, excited and warm voice, like a kind teacher proudly praising a student',
-  supportive: 'in a gentle, warm and encouraging voice, like a kind teacher helping after a mistake',
-  curious: 'in a curious, lively voice full of wonder, like sharing an amazing fact',
-  calm: 'in a calm, clear and friendly voice, like a kind teacher explaining',
-};
-export const ttsPrompt = (lang: BitLang, text: string) => `Say ${MOOD_STYLE[voiceMood(text)]}, clearly in ${LANG_NAME[lang]}: ${text}`;
+export interface VoiceDelivery {
+  style?: VoiceStyle;
+  /** The mood of each sentence (praise, help after a mistake, a fun fact) changes the delivery. */
+  emotion?: boolean;
+}
 
-/** Cache key of a synthesised text (the same in the warm-up script); a non-calm mood is a different recording. */
-export function ttsKey(voice: string, lang: string, text: string) {
-  const mood = voiceMood(text);
-  return createHash('sha1').update(`${voice}|${lang}|${mood === 'calm' ? '' : `${mood}|`}${text}`).digest('hex');
+/** Who is speaking, per style: the default (teacher) is the 0.37 wording, so its recordings stay valid. */
+const STYLE_WHO: Record<VoiceStyle, string> = {
+  teacher: 'like a kind teacher',
+  friend: 'like a cheerful school friend',
+  energetic: 'like an energetic, enthusiastic presenter',
+};
+
+/** The director's note before the words (Gemini TTS reads only what follows the colon). */
+function moodStyle(mood: VoiceMood, style: VoiceStyle) {
+  const who = STYLE_WHO[style];
+  switch (mood) {
+    case 'joyful':
+      return `in a joyful, excited and warm voice, ${who} proudly praising a student`;
+    case 'supportive':
+      return `in a gentle, warm and encouraging voice, ${who} helping after a mistake`;
+    case 'curious':
+      return style === 'teacher' ? 'in a curious, lively voice full of wonder, like sharing an amazing fact' : `in a curious, lively voice full of wonder, ${who} sharing an amazing fact`;
+    default:
+      return style === 'teacher'
+        ? 'in a calm, clear and friendly voice, like a kind teacher explaining'
+        : style === 'friend'
+          ? `in a cheerful, relaxed and friendly voice, ${who} explaining`
+          : `in a bright, energetic and upbeat voice, ${who} explaining`;
+  }
+}
+
+/** The mood a sentence is said in: its own with emotion on, the style's calm one with it off. */
+const moodOf = (text: string, d: VoiceDelivery) => (d.emotion === false ? 'calm' : voiceMood(text));
+
+export const ttsPrompt = (lang: BitLang, text: string, d: VoiceDelivery = {}) => `Say ${moodStyle(moodOf(text, d), d.style ?? 'teacher')}, clearly in ${LANG_NAME[lang]}: ${text}`;
+
+/**
+ * Cache key of a synthesised text (the same in the warm-up script). Each
+ * voice, style and mood is its own recording; the default style with emotion
+ * on keeps the 0.37 key, so sentences recorded before stay in the cache.
+ */
+export function ttsKey(voice: string, lang: string, text: string, d: VoiceDelivery = {}) {
+  const mood = moodOf(text, d);
+  const style = d.style && d.style !== 'teacher' ? `${d.style}|` : '';
+  return createHash('sha1').update(`${voice}|${lang}|${style}${mood === 'calm' ? '' : `${mood}|`}${text}`).digest('hex');
 }
 
 /** Raw request body up to `limit` bytes. */
@@ -208,7 +256,8 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
   const origins = options.allowedOrigins ?? [];
   const now = options.now ?? Date.now;
   const cache = new PcmCache(options.cacheBytes ?? 64 * 1024 * 1024);
-  const configured = apiKey.length > 0;
+  const openai = options.provider?.primary === 'openai' ? options.provider.openai : null;
+  const configured = apiKey.length > 0 || !!openai;
   const hits = new Map<string, number[]>();
   const limited = (key: string, max: number) => {
     const t = now();
@@ -233,10 +282,10 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
       body: JSON.stringify(body),
     });
 
-  async function tts(req: IncomingMessage, res: ServerResponse, parsed?: { text: string; lang: BitLang }) {
+  async function tts(req: IncomingMessage, res: ServerResponse, parsed?: { text: string; lang: BitLang; voice?: unknown; style?: unknown; emotion?: unknown; geminiOnly?: boolean }) {
     // a few sentences at a time: a long answer is several requests
     if (!parsed && refuse(req, res, 'tts', 150)) return;
-    let body: { text?: unknown; lang?: unknown };
+    let body: { text?: unknown; lang?: unknown; voice?: unknown; style?: unknown; emotion?: unknown };
     try {
       body = parsed ?? JSON.parse((await readRaw(req, 8 * 1024)).toString('utf8'));
     } catch {
@@ -245,18 +294,32 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
     const text = typeof body.text === 'string' ? body.text.replace(/\s+/g, ' ').trim().slice(0, MAX_TEXT) : '';
     if (!text) return sendJson(res, 400, { error: 'empty-text' });
     if (!isBitLang(body.lang)) return sendJson(res, 400, { error: 'bad-lang' });
-    // any of the models may have said it: the cache key is the voice, language and words
-    const key = ttsKey(voice, body.lang, text);
+    // the student's choice (V4 §10) when it is one of Bit's voices, else the server's
+    const who = typeof body.voice === 'string' && (options.voices ? options.voices.includes(body.voice) : isBitVoice(body.voice)) ? body.voice : voice;
+    const delivery: VoiceDelivery = { style: isVoiceStyle(body.style) ? body.style : 'teacher', emotion: body.emotion !== false };
+    // any of the models may have said it: the cache key is the voice, style, mood, language and words
+    const key = ttsKey(who, body.lang, text, delivery);
+    // OpenAI's voices sound different: their recordings have keys of their own
+    const openKey = openai ? ttsKey(`openai:${who}`, body.lang, text, delivery) : null;
     const headers = { 'content-type': `audio/L16; rate=${TTS_RATE}; channels=1`, 'cache-control': 'no-store', 'x-accel-buffering': 'no' };
-    const hit = cache.get(key) ?? fromDisk(key);
-    if (hit) {
-      cache.set(key, hit);
-      res.writeHead(200, { ...headers, 'x-bit-cache': 'hit' });
-      return res.end(hit);
+    for (const k of openKey ? [openKey, key] : [key]) {
+      const hit = cache.get(k) ?? fromDisk(k);
+      if (hit) {
+        cache.set(k, hit);
+        res.writeHead(200, { ...headers, 'x-bit-cache': 'hit' });
+        return res.end(hit);
+      }
+    }
+    if (openai && openKey && !parsed?.geminiOnly) {
+      const done = await speakOpenAi(res, headers, openKey, text, body.lang, who as BitVoiceId, delivery.style ?? 'teacher');
+      if (done) return;
+      // OpenAI could not: Gemini says it (or, with no Gemini key, the browser does)
+      if (!apiKey) return sendJson(res, 503, { error: 'quota' });
     }
     const model = ttsModels.find((m) => (resting.get(m) ?? 0) <= now());
     // every model's quota is used up: the browser reads it with its own voice
     if (!model) return sendJson(res, 503, { error: 'quota' });
+    const again = { text, lang: body.lang, voice: who, style: delivery.style, emotion: delivery.emotion, geminiOnly: true };
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 30_000);
     res.on('close', () => controller.abort());
@@ -265,7 +328,7 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
       const upstream = await gemini(
         model,
         'streamGenerateContent?alt=sse',
-        { contents: [{ parts: [{ text: ttsPrompt(body.lang, text) }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } } } },
+        { contents: [{ parts: [{ text: ttsPrompt(body.lang, text, delivery) }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: who } } } } },
         controller.signal,
       );
       if (upstream.status === 429) {
@@ -274,7 +337,7 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
         console.warn(`[bit-voice] ${model}: quota used up, resting ${Math.round(pause / 60_000)} min`);
         clearTimeout(timer);
         // the next model may still have quota: try again with it
-        return tts(req, res, { text, lang: body.lang });
+        return tts(req, res, again);
       }
       if (!upstream.ok || !upstream.body) {
         console.warn('[bit-voice] tts answered', upstream.status);
@@ -321,6 +384,46 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
     }
   }
 
+  /** OpenAI's speech (raw PCM, the same format as Gemini's), streamed and cached; false when it could not speak. */
+  async function speakOpenAi(res: ServerResponse, headers: Record<string, string>, key: string, text: string, lang: BitLang, who: BitVoiceId, style: VoiceStyle): Promise<boolean> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30_000);
+    res.on('close', () => controller.abort());
+    try {
+      const r = await openAiSpeech(openai!, text, who, style, LANG_NAME[lang], controller.signal);
+      if (!r.ok || !r.body) {
+        console.warn('[bit-voice] openai tts answered', r.status);
+        return false;
+      }
+      res.writeHead(200, { ...headers, 'x-bit-model': `openai:${openai!.ttsModel}` });
+      const reader = r.body.getReader();
+      const all: Buffer[] = [];
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        const chunk = Buffer.from(value);
+        all.push(chunk);
+        res.write(chunk);
+      }
+      const pcm = Buffer.concat(all);
+      if (pcm.length) {
+        cache.set(key, pcm);
+        toDisk(key, pcm);
+      }
+      res.end();
+      return true;
+    } catch (error) {
+      if (!controller.signal.aborted) console.warn('[bit-voice] openai tts failed:', (error as Error).message);
+      if (res.headersSent) {
+        res.end();
+        return true;
+      }
+      return false;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   async function stt(req: IncomingMessage, res: ServerResponse, lang: string | null) {
     if (refuse(req, res, 'stt', 40)) return;
     if (!isBitLang(lang)) return sendJson(res, 400, { error: 'bad-lang' });
@@ -336,6 +439,13 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 20_000);
     try {
+      // V4 §12.1: OpenAI listens first when it is the chosen provider
+      if (openai) {
+        const heard = await openAiTranscribe(openai, audio, mime === 'audio/x-wav' ? 'audio/wav' : mime, lang, sttPrompt(lang), controller.signal).catch(() => ({ ok: false as const, status: 0 }));
+        if (heard.ok) return sendJson(res, 200, { text: heard.text.replace(/^["«]|["»]$/g, '').slice(0, 600) });
+        console.warn('[bit-voice] openai stt answered', heard.status);
+        if (!apiKey) return sendJson(res, 502, { error: heard.status === 429 ? 'quota' : 'upstream' });
+      }
       // a model out of quota rests (as for speech) and the next one listens
       let upstream: Response | null = null;
       for (const model of sttModels.filter((m) => (resting.get(m) ?? 0) <= now())) {
@@ -383,5 +493,7 @@ export function createBitVoice(options: BitVoiceOptions = {}) {
     return true;
   }
 
-  return Object.assign(handle, { configured, ttsModel, ttsModels, voice, sttModel, cacheSize: () => cache.size });
+  /** Quota left for speech right now: false when every model is resting (cached sentences still play). */
+  const ttsAvailable = () => ttsModels.some((m) => (resting.get(m) ?? 0) <= now());
+  return Object.assign(handle, { configured, provider: openai ? ('openai' as const) : ('gemini' as const), ttsModel, ttsModels, voice, sttModel, ttsAvailable, cacheSize: () => cache.size });
 }

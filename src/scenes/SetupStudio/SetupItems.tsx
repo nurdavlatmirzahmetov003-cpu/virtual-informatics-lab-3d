@@ -14,9 +14,13 @@ import type { ResolvedBuild } from '@/lib/studio/build';
 import { applyPaint, type PaintFinish } from '@/lib/three/finish';
 import { isTieredModel } from '@/lib/three/modelUrls';
 import { DeskMat } from '@/scenes/DeskScene/models/DeskMat';
+import { MonitorArm } from '@/scenes/DeskScene/models/MonitorArm';
 import { useMonitorWallpaper } from '@/scenes/DeskScene/models/useMonitorWallpaper';
-import { HEADSET, KEYBOARD, MAT, MONITOR, MOUSE, SPEAKERS } from '@/scenes/DeskScene/layout';
+import { HEADSET, KEYBOARD, MONITOR, MOUSE, SPEAKERS } from '@/scenes/DeskScene/layout';
 import { PCCase, type PcRigMode } from '@/scenes/DeskScene/pc/PCCase';
+import { DESIGN_BY_ID } from '@/scenes/DeskScene/pc/caseDesigns';
+import { caseMountsFor } from '@/scenes/DeskScene/pc/mounts';
+import { deskTopOf, matOn, pcShiftOn } from '@/scenes/DeskScene/deskFit';
 import type { PartId } from '@/scenes/DeskScene/pc/parts';
 import { assemblyRig, type PieceKey } from './assembly/assemblyRig';
 import { Chair } from './Chair';
@@ -196,16 +200,29 @@ function useScreenPower(animated: boolean) {
 
 const landed = (p: number) => Math.abs(p - 1) < 0.001;
 
-function Monitor({ product, paint, animated }: { product: HardwareItem; paint: PaintFinish | null; animated: boolean }) {
+function Monitor({ product, paint, animated, arm }: { product: HardwareItem; paint: PaintFinish | null; animated: boolean; arm: boolean }) {
   const onScreen = useScreenPower(animated);
   const pair = useRef<Group>(null);
   const whole = useRef<Group>(null);
   useFrame(() => {
-    if (!animated || !pair.current || !whole.current) return;
+    if (arm || !animated || !pair.current || !whole.current) return;
     const done = landed(assemblyRig.pieces.monitorStand) && landed(assemblyRig.pieces.monitor);
     pair.current.visible = !done;
     whole.current.visible = done;
   });
+  if (arm) {
+    // V4 §2.3: the panel alone (its own stand clipped away), held by a desk-clamp arm
+    return (
+      <group position={[...MONITOR.position]}>
+        <Piece k="monitorStand" animated={animated} from={[0, 0.2, 0.05]}>
+          <MonitorArm />
+        </Piece>
+        <Piece k="monitor" animated={animated} from={[0, 0.3, 0]}>
+          <ClippedMonitor product={product} paint={paint} part="panel" onScreen={onScreen} />
+        </Piece>
+      </group>
+    );
+  }
   if (!animated) {
     return (
       <group position={[...MONITOR.position]}>
@@ -234,7 +251,7 @@ function Monitor({ product, paint, animated }: { product: HardwareItem; paint: P
 /* ── PC ──────────────────────────────────────────────────── */
 
 /** Finish a catalog case model already has (V2-2b); other finishes are painted on. */
-const NATIVE_CASE_FINISH: Readonly<Record<string, CaseFinish>> = { 'case-lianli-o11d-evo': 'white', 'case-nzxt-h5-flow-2024': 'white', 'case-bitlab-aero': 'white' };
+const NATIVE_CASE_FINISH: Readonly<Record<string, CaseFinish>> = { 'case-lianli-o11d-evo': 'white', 'case-nzxt-h5-flow-2024': 'white', 'case-bitlab-aero': 'white', 'case-bitlab-panorama': 'white' };
 
 /** System unit with case paint and RGB; parts missing from the build are hidden. */
 function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish; rig: PcRigMode }) {
@@ -242,7 +259,8 @@ function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish;
   const applied = useRef('');
   const own = build.case && isTieredModel(build.case.modelPath) ? build.case : null;
   const native = own ? (NATIVE_CASE_FINISH[own.id] ?? 'black') : 'black';
-  const paint = finish.case === native ? null : CASE_FINISHES[finish.case];
+  // BitLab's designed cases keep their own colours (each colourway is its own product)
+  const paint = finish.case === native || (own && own.id in DESIGN_BY_ID) ? null : CASE_FINISHES[finish.case];
   const hide = useMemo<PartId[]>(() => (['motherboard', 'cpu', 'cooler', 'ram', 'gpu', 'ssd', 'psu'] as const).filter(id => !build[id === 'cooler' ? 'cooling' : id]), [build]);
   const found = useRef<Object3D | null>(null);
   useFrame(() => {
@@ -267,13 +285,13 @@ function SetupPC({ build, finish, rig }: { build: ResolvedBuild; finish: Finish;
 const MOUSE_ROT = [0, Math.PI, 0] as const;
 const CHAIR_POSITION = [-1.12, 0, 0.4] as const;
 const HEADSET_OFFSET = [0, 0.045, 0] as const;
-const MAT_PIVOT = { pivotX: MAT.position[0] - MAT.size[0] / 2 };
 
 /**
  * `pcRig`: who drives the system unit (default: the assembly timeline when
  * animated, else a fixed pose; the home hero leaves it to the scroll story).
  */
-export function SetupItems({ build, finish, animated = false, pcRig }: { build: ResolvedBuild; finish: Finish; animated?: boolean; pcRig?: PcRigMode }) {
+/** `monitorArm`: the monitor hangs on a desk-clamp arm instead of its own stand (the home hero, V4 §2.3). */
+export function SetupItems({ build, finish, animated = false, pcRig, monitorArm = false }: { build: ResolvedBuild; finish: Finish; animated?: boolean; pcRig?: PcRigMode; monitorArm?: boolean }) {
   const theme = finish.peripherals;
   const paints = useMemo(
     () => ({
@@ -288,13 +306,24 @@ export function SetupItems({ build, finish, animated = false, pcRig }: { build: 
   const { monitor, keyboard, mouse, headset, speakers, chair } = build;
   const chairWhite = theme === 'white' && chair?.colors.includes('white');
   const rightSpeaker = useMemo(() => speakers && { ...speakers, modelPath: speakers.modelPath.replace('speaker_left', 'speaker_right') }, [speakers]);
+  // the mat and the system unit stay on the desk in use (V4 §1.2)
+  const desk = build.desk && isTieredModel(build.desk.modelPath) ? build.desk : null;
+  const top = useMemo(() => deskTopOf(desk), [desk]);
+  const mat = useMemo(() => matOn(top), [top]);
+  const matPivot = useMemo(() => ({ pivotX: mat.position[0] - mat.size[0] / 2 }), [mat]);
+  const caseId = build.case && isTieredModel(build.case.modelPath) ? build.case.id : null;
+  const pcShift = useMemo(() => {
+    const shell = caseMountsFor(caseId).shell;
+    const [x, z] = pcShiftOn(top, [(shell.max[0] - shell.min[0]) / 2, (shell.max[2] - shell.min[2]) / 2]);
+    return [x, 0, z] as const;
+  }, [top, caseId]);
 
   return (
     <>
-      <Piece k="mat" animated={animated} unroll={MAT_PIVOT}>
-        <DeskMat />
+      <Piece k="mat" animated={animated} unroll={matPivot}>
+        <DeskMat layout={mat} />
       </Piece>
-      {monitor && <Monitor key={monitor.id} product={monitor} paint={paints.monitor} animated={animated} />}
+      {monitor && <Monitor key={monitor.id} product={monitor} paint={paints.monitor} animated={animated} arm={monitorArm} />}
       {keyboard && (
         <Piece k="keyboard" animated={animated} from={[0, 0.08, 0.3]}>
           <ProductModel key={keyboard.id} product={keyboard} axis={0} paint={paints.keyboard} position={KEYBOARD.position} />
@@ -339,7 +368,9 @@ export function SetupItems({ build, finish, animated = false, pcRig }: { build: 
       )}
       {build.case && (
         <Piece k="pcCase" animated={animated} from={[0.45, 0, 0.05]}>
-          <SetupPC build={build} finish={finish} rig={pcRig ?? (animated ? 'external' : 'fixed')} />
+          <group position={[...pcShift]}>
+            <SetupPC build={build} finish={finish} rig={pcRig ?? (animated ? 'external' : 'fixed')} />
+          </group>
         </Piece>
       )}
     </>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="480" height="480">
+  <title>BitLab team seal (in-house drawing, CC0) — replaceable placeholder</title>
+  <defs>
+    <path id="t" d="M120 120 m-87 0 a87 87 0 1 1 174 0 a87 87 0 1 1 -174 0" />
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n" />
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" result="d" />
+      <feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="1" seed="3" result="m" />
+      <feColorMatrix in="m" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.9 1.75" result="mask" />
+      <feComposite in="d" in2="mask" operator="in" />
+    </filter>
+  </defs>
+  <g filter="url(#rough)" opacity="0.9">
+    <g fill="none" stroke="#2443b8">
+      <circle cx="120" cy="120" r="113" stroke-width="5" />
+      <circle cx="120" cy="120" r="105" stroke-width="1.6" />
+      <circle cx="120" cy="120" r="70" stroke-width="2.4" />
+      <circle cx="120" cy="120" r="65" stroke-width="0.9" />
+    </g>
+    <text font-family="Arial, 'Segoe UI', sans-serif" font-size="16.5" font-weight="700" fill="#2443b8">
+      <textPath href="#t" startOffset="0" textLength="541" lengthAdjust="spacing">BitLab · Маралым · Меруерт · Аружан · Нұрдәулет ·</textPath>
+    </text>
+    <g transform="translate(80.00 72.00) scale(1.25)" fill="none" stroke="#2443b8" stroke-linecap="round">
+    <path d="M22 13v35" stroke-width="7" />
+    <circle cx="33.5" cy="37.5" r="10.5" stroke-width="7" />
+    <circle cx="45.5" cy="17.5" r="5.5" fill="#2443b8" stroke="none" />
+  </g>
+    <g fill="#2443b8">
+      <path transform="translate(90 160) scale(0.55)" d="M0 -10 L2.9 -3.1 L10 -3.1 L4.3 1.2 L6.4 8.1 L0 4 L-6.4 8.1 L-4.3 1.2 L-10 -3.1 L-2.9 -3.1Z" />
+      <path transform="translate(150 160) scale(0.55)" d="M0 -10 L2.9 -3.1 L10 -3.1 L4.3 1.2 L6.4 8.1 L0 4 L-6.4 8.1 L-4.3 1.2 L-10 -3.1 L-2.9 -3.1Z" />
+      <path transform="translate(120 162) scale(0.8)" d="M0 -10 L2.9 -3.1 L10 -3.1 L4.3 1.2 L6.4 8.1 L0 4 L-6.4 8.1 L-4.3 1.2 L-10 -3.1 L-2.9 -3.1Z" />
+    </g>
+  </g>
+</svg>

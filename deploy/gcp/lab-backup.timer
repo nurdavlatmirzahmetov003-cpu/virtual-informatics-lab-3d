@@ -1,0 +1,12 @@
+# Runs lab-backup.service every night at 03:30 (the VM's time zone), and at the
+# next boot if the VM was off at that time.
+[Unit]
+Description=Virtual informatics lab: daily database backup
+
+[Timer]
+OnCalendar=*-*-* 03:30:00
+Persistent=true
+RandomizedDelaySec=10m
+
+[Install]
+WantedBy=timers.target

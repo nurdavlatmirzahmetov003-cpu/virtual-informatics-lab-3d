@@ -24,7 +24,7 @@
   grid-template-columns: 380px 1fr auto;
   grid-template-rows: auto 1fr auto;
   gap: var(--space-4);
-  padding: calc(var(--topbar-h) + var(--space-3)) var(--gutter) var(--space-5);
+  padding: calc(var(--topbar-h) + var(--space-3)) var(--gutter-right) calc(var(--space-5) + env(safe-area-inset-bottom, 0px)) var(--gutter-left);
   pointer-events: none;
 }
 
@@ -44,8 +44,10 @@
 
 .panel {
   --zone: var(--accent);
+  position: relative;
   grid-column: 1;
-  grid-row: 1;
+  /* all rows (V4 §11): a tall zone text must not stretch the first row and push the zone map off a 768 px screen */
+  grid-row: 1 / -1;
   align-self: start;
   display: grid;
   gap: var(--space-3);
@@ -121,6 +123,7 @@
 
 /* device panel / catalog: right column under the tools */
 .side {
+  position: relative;
   grid-column: 3;
   grid-row: 1 / 4;
   /* below the tool buttons that share the column */
@@ -180,7 +183,144 @@
   padding: var(--space-3);
 }
 
-.minimap svg {
+/* opens from its corner (the tab's place); a fade with reduced motion */
+.minimap {
+  position: relative;
+  transform-origin: bottom right;
+  animation: mapIn 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+}
+
+@keyframes mapIn {
+  from {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+}
+
+.mapFold {
+  /* on the panel's corner, outside the zone list */
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: rgb(var(--panel-rgb) / 0.9);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.mapFold::before {
+  /* a 44 px hit area round the small button */
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+.mapFold:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+/* the folded map: a round BitLab tab in the same corner, with a soft glow */
+.mapTab {
+  grid-column: 3;
+  grid-row: 3;
+  align-self: end;
+  justify-self: end;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 0.35);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.35), transparent 60%), linear-gradient(135deg, #2fc8f2, #5f7bff 55%, #a95cf5);
+  box-shadow: 0 0 0 4px rgb(95 123 255 / 0.18), 0 10px 26px -8px rgb(95 123 255 / 0.85);
+  cursor: pointer;
+  animation: mapTabIn 0.3s ease-out both, mapGlow 3.2s ease-in-out 0.3s infinite;
+}
+
+.mapTab svg {
+  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.25));
+}
+
+.mapTab:hover,
+.mapTab:focus-visible {
+  transform: scale(1.06);
+}
+
+.mapTab:focus-visible,
+.mapFold:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* the name, as a tooltip pill to the left of the tab */
+.mapTabLabel {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgb(var(--panel-rgb) / 0.95);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(6px, -50%);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+
+.mapTab:hover .mapTabLabel,
+.mapTab:focus-visible .mapTabLabel {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+@keyframes mapTabIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes mapGlow {
+  50% {
+    box-shadow: 0 0 0 7px rgb(95 123 255 / 0.12), 0 10px 30px -6px rgb(169 92 245 / 0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .minimap {
+    animation: fadeOnly 0.2s ease-out both;
+  }
+
+  .mapTab {
+    animation: fadeOnly 0.2s ease-out both;
+  }
+
+  .mapTab:hover,
+  .mapTab:focus-visible {
+    transform: none;
+  }
+}
+
+@keyframes fadeOnly {
+  from {
+    opacity: 0;
+  }
+}
+
+.minimap > svg {
   width: 210px;
   height: auto;
   overflow: visible;
@@ -328,7 +468,7 @@
   .minimap {
     grid-template-columns: 170px;
   }
-  .minimap svg {
+  .minimap > svg {
     width: 170px;
   }
   .zoneList {
@@ -339,6 +479,19 @@
 @media (max-width: 1100px) {
   .side {
     width: min(380px, 44vw);
+  }
+  /* V4 §11: tablets — the tools are icons (the catalog's name is in its tooltip) and the
+     left column gives way, so the whole tool row fits at 768 px; the mouse hint is for desktops */
+  .overlay {
+    grid-template-columns: minmax(0, 340px) minmax(0, 1fr) auto;
+  }
+  .btnLabel,
+  .hint {
+    display: none;
+  }
+  .textBtn:has(.btnLabel) {
+    width: 44px;
+    padding: 0;
   }
 }
 
@@ -380,17 +533,29 @@
     grid-column: 2;
     grid-row: 1;
   }
-  .minimap {
+  .minimap,
+  .mapTab {
     grid-column: 1;
     grid-row: 1;
     justify-self: start;
     align-self: start;
+  }
+  .minimap {
     padding: var(--space-2);
+    transform-origin: top left;
+  }
+  .mapTab {
+    width: 48px;
+    height: 48px;
+  }
+  .mapTabLabel {
+    right: auto;
+    left: calc(100% + 10px);
   }
   .minimap {
     grid-template-columns: 120px;
   }
-  .minimap svg {
+  .minimap > svg {
     width: 120px;
   }
   .hint,
@@ -398,7 +563,7 @@
     display: none;
   }
   .textBtn:has(.btnLabel) {
-    width: 40px;
+    width: 44px;
     padding: 0;
   }
   .loading {
@@ -406,3 +571,55 @@
     bottom: 46%;
   }
 }
+
+/* V4 §6: folding the panels (components/panel/Foldable) */
+.panelFold {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.panel .eyebrow {
+  padding-right: 40px;
+}
+
+.panelTab {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  justify-self: start;
+}
+
+/* on the panel's left edge, clear of its own close button */
+.sideFold {
+  position: absolute;
+  top: 68px;
+  left: -42px;
+}
+
+.sideTab {
+  grid-column: 3;
+  grid-row: 2;
+  align-self: start;
+  justify-self: end;
+}
+
+@media (max-width: 760px) {
+  /* phones: the zone panel lives at the bottom, so its tab does too — clear of the map and the tools at the top
+     (bottom right: the Bit button holds the bottom left) */
+  .panelTab {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    align-self: end;
+    justify-self: end;
+  }
+
+  /* the device panel fills the screen: its fold button goes inside, beside the close button */
+  .sideFold {
+    top: 14px;
+    right: 62px;
+    left: auto;
+    z-index: 1;
+  }
+}
+

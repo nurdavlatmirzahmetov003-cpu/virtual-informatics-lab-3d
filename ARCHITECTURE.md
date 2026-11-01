@@ -437,3 +437,57 @@ legacy/                     ескі ES-module прототип (python http.ser
 29. **Algorithm Lab.** `src/labs/AlgorithmLab/` — алгоритмдер кәдімгі цикл ретінде жазылған, `recorder.ts` әр `push`-та массивті/стекті/есептегіштерді көшіріп, өзгерген айнымалыларды және көрсеткіштерді (`pointerVars`) есептейді. Нәтиже — `Run { steps, result }`; UI тек индексті жылжытады (`usePlayer`), сондықтан артқа қадам тегін. Элементтердің тұрақты `id`-і бар: `ArrayView` бағандарды id бойынша рендерлеп, `left` CSS transition арқылы ауыстырады. Псевдокод пен түсініктемелер — locale кілттері (`algorithms.code.<id>.l<n>`, `algorithms.notes.<id>.<event>`). `quizzes.ts` — seed бойынша қайталанатын нұсқалар (mulberry32) + `Exercise<QuizWork>` → `services/grading`.
 30. **Logic Lab.** `src/labs/LogicLab/` — схема = `nodes` (input/gate/output) + `wires` (from → to.port). Әр кірісте бір ғана сым (жаңасы ескісін ауыстырады); цикл рұқсат, бірақ `cycleNodes` (Tarjan SCC) оны тауып, мәнін `null` етеді. `evaluate` мәндерді сұраныс бойынша есептейді (ашық кіріс → `null`). Бағалау `combinations()` × `evaluate()` арқылы мінез-құлықты салыстырады, тек Y-ке әсер ететін гейттердің толықтығын тексереді. UI `pages/Labs/LogicLab/`: `GateShape` (ANSI жолдары), `geometry` (пиндер, сым қисығы), `Board` (pointer capture, draft ref), `TruthTable`, `SidePanel`. Жарқырау сүзгісі `userSpaceOnUse` — көлденең сымның биіктігі 0 болғанда да көрінеді.
 31. **PC Assembly Lab.** Логика `src/labs/AssemblyLab/` (steps — тәуелділік графы мен мақсат слоттары; session — `place()` таза функциясы; exercise). Күй `store/assemblyLabStore.ts` (сахна мен панельге ортақ; бағалау мен progress жазу action ішінде). 3D `scenes/AssemblyLab/`: `layout.ts` — барлық әлем координаттары, тақтаның үш позасы (тақта → төсеніш → корпус), `targetPosition()`; `Draggable` — камераға қараған мақсат жазықтығында сүйреу, өз raycast-ы + window тыңдаушылары (R3F pointer capture-қа тәуелсіз), босатқанда курсор нүктесі бойынша `resolveTarget`; орнатылған бөлшек 420 мс ішінде орнына отырып, «егіз» нұсқасына (PCCase бөлігі не тақта баласы) береді; `Guides` — тұрақты mount болған елес пен жарқыл (Html түбірлері рендер кезінде алынбайды); `LabRig` — `pcRig` (жасырын бөліктер, кабельдер, қосылу анимациясы) мен on-demand көлеңке. Дыбыс `lib/audio/sfx.ts` (WebAudio, `settingsStore.soundEnabled`).
+
+## V4 — «Нақты жабдық, тірі зертхана» (0.38, тармақ `feature/v4-real-hardware`)
+
+62. **Жүйелік блоктың бекіту жүйесі (V4 §1).**
+    - Әр бөлшектің қай жерге бекітілетіні деректе сипатталады: `scenes/DeskScene/pc/mounts.ts`, `caseMounts.ts`, `fits.ts` (якорь, бағыт, слот). Үш сахна да (басты бет, Setup Studio, құрастыру) сол деректі қолданады.
+    - Сегіз BitLab корпусы: `caseDesigns.ts` → `scripts/blender/make-showcase.py`.
+    - `test:pc-fit` тексереді: әр корпус × аналық плата × салқындатқыш × видеокарта × қуат блогы комбинациясында якорьдің ауытқуы 1 мм-ден, бұрышы 0,5°-тан аспайды. Бөлшектер корпус ішінде, бір-біріне кірмейді.
+    - `test:pc-visual`: компьютер төрт бұрыштан сақталған эталон суреттермен салыстырылады.
+63. **Басты бет (V4 §2).**
+    - Әр модель +Z бағытына қарайды: импорт кезінде алдыңғы жағы түзетіледі, оны `test:orientation` тексереді.
+    - Түс өңдеуі (ACES fit) материал шейдерлерінің ішінде жасалады, сондықтан Low мен Medium-да бөлек өту жоқ.
+    - Бөлме безендіруі мен роботтар: `scenes/DeskScene/hero/`. Заттардың бір-біріне кірмейтінін `test:hero-scene` тексереді.
+    - Жүргізушінің сөзі `heroPresence.line` арқылы беріледі: телефонда ол 3D көпіршік емес, тақырыптың астындағы DOM карточкасы болып шығады (V4 §11).
+64. **Зертхананың орналасуы және роботтардың стилі (V4 §3).** Сахна жеке бұрышқа көшірілді. Аймақтар арасындағы жолдар мен аймақ белгілерінің экранда бір-бірін жаппайтынын `test:lab` тексереді. Роботтардың бәрі бір жиыннан жасалады: `scenes/LabSpace/robots/robotKit.ts`.
+65. **Біздің роботтар (V4 §4).**
+    - Деректер: `data/robots/roster.ts` (10 робот), `yard.ts` (11-аймақ), `tips.ts` (69 кеңес, kk/ru/en).
+    - Аулада жүру: `lib/robots/grid.ts` (A* жол табу) және `life.ts` (күн тәртібі: жұмыс, зарядталу, ойын).
+    - Экономика: `services/robots/economy.ts`. Тиын әрқашан XP-дан есептеледі, ешқайда жазылмайды.
+    - Сервер: `server/robots.ts` (`/api/robots/me`, `008_robots`). Сақталған күйді сервер өзінің XP-сымен тексереді.
+    - Беті: `/robots`.
+66. **Зертханалардың ортақ қаңқасы (V4 §5).**
+    - `components/lab/LabLayout.tsx`: құралдар, жұмыс аймағы және тапсырма панелі; панельдер шетке жиналады.
+    - `TaskGuide.tsx`: Биттің амандасуы мен елес курсормен қадамдап көрсету.
+    - `test:lab-overlap`: ешбір мәтін жабылмайды не қиылмайды (5.2).
+67. **Жиналатын панельдер (V4 §6).** `components/panel/foldState.ts`:
+    - бүктелген күйі әр панель үшін есте сақталады;
+    - Alt+I және толық экран режимі де жұмыс істейді;
+    - мазмұн өзгергенде оқылмаған нүкте шығады; сілтеме ашқан алғашқы мазмұн жаңалық болып саналмайды (V4 §11).
+    - `test:panel-cover` 3D басқару элементтерінің жабылмайтынын тексереді.
+68. **Бүйір мәзір (V4 §7).** `components/layout/SiteMenu.tsx`: экранның шетінен шығатын панель, екінші деңгейлі беттер мен баптаулар осында. `test:site-menu` тексереді.
+69. **Сертификат пен демо режим (V4 §8).**
+    - Мөрлер өзіміз жасаған SVG: `scripts/certificate-seals.mjs` → `public/certificate/`.
+    - `services/demo/mode.ts`: `?demo=1` сессиясы `DATA_NAMESPACE`-ті ауыстырады. Прогресс, роботтар және V4 §11-ден бастап Setup Studio жинағы демода бөлек сақталады.
+70. **Жетістіктер (V4 §9).** `components/achievements/BadgeMedal.tsx` (SVG медаль, сирегіне қарай жиегі), `UnlockCeremony.tsx`. XP сирегіне қарай беріледі, оны `test:achievements` тексереді.
+71. **Биттің дауысы (V4 §10).**
+    - Ортақ анықтамалық: `services/bit/voicePrefs.ts` — 6 дауыс (тыңдау сынағынан өткендер), 3 мәнер, 3 жылдамдық, эмоция.
+    - Сервер: `server/bitVoice.ts` дауыс, мәнер және эмоция бойынша сөйлейді; кэш кілті `ttsKey(voice, lang, text, {style, emotion})`, ал 0.37-нің кілттері өзгерген жоқ.
+    - Жылдамдықты браузер өзі қолданады: `HTMLAudioElement.preservesPitch`, сондықтан квота қосымша жұмсалмайды.
+    - Баптаулар: `bitStore.profile`. Аккаунтқа кірген оқушыда `server/bitPrefs.ts` (`/api/bit/voice/me`, `009_bit_voice`), қонақта браузерде сақталады.
+    - Квота таусылса, `useVoiceStore.notice = 'quota'`: кэштегі сөйлемдер ойнай береді, ал қалғанын браузердің дауысы оқиды.
+72. **Бейімделгіш дизайн (V4 §11).**
+    - Бит батырмасы басқару элементін жаппайды (`components/bit/useStepAside.ts`): алдымен бос биіктікке, бағаны толы болса бүйір панельдің жанына жылжиды. Ол орналасқан жерді өзгертпейді, тек ығысады.
+    - Сенсорлы экранда 44 px ережесі: `global.css`, `@media (pointer: coarse)`. Одан босату үшін `data-compact` атрибуты бар.
+    - Сенсорлы экранда 3D сахнаны екі саусақпен жылжытуға болады: `components/3d/touchPan.ts`, ал `keepNear` нысанды ұстап тұрады.
+    - Safe area: `viewport-fit=cover`, `--safe-top`, `--gutter-left`, `--gutter-right`.
+    - `test:responsive` (`scripts/responsive-audit.mjs`): 33 бет × 7 өлшем, демо профиль.
+73. **AI провайдер ұясы (V4 §12.1).**
+    - `server/providers/index.ts`: `selectProvider()` (`BIT_PROVIDER=gemini|openai`).
+    - `server/providers/openai.ts`: чат (SSE), сөйлеу (PCM 24 kHz), тану.
+    - `bit.ts` пен `bitVoice.ts` алдымен таңдалған провайдерге жүгінеді, сәтсіз болса Gemini жауап береді. OpenAI жазбалары кэште бөлек кілтпен сақталады.
+74. **Google Cloud (V4 §12.2).**
+    - `deploy/gcp/`: дерекқор үшін persistent disk, `setup-vm.sh`, күнделікті бэкап (`npm run server:backup`, systemd timer).
+    - `.gitattributes` Linux файлдарын LF күйінде сақтайды.
+    - Нұсқаулық: [DEPLOY_GCP.md](DEPLOY_GCP.md).

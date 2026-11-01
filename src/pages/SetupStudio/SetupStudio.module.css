@@ -533,6 +533,7 @@
 .colorDot[data-color='silver'] { background: #b9bdc4; }
 .colorDot[data-color='grey'] { background: #8a8f98; }
 .colorDot[data-color='wood'] { background: #8b5e3c; }
+.colorDot[data-color='pink'] { background: #f2bfd2; }
 
 .cardFoot {
   display: flex;
@@ -738,7 +739,10 @@
   margin: var(--space-2) 0 0;
   padding: 0;
   border-radius: var(--radius-md);
-  overflow: hidden;
+  /* V4 §11: on a short laptop screen the panel shrinks the list; it scrolls (it only clipped, hiding the last parts) */
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
   background: var(--border);
   list-style: none;
 }
@@ -997,5 +1001,13 @@
   .stepper button[aria-current='step'] {
     font-size: 0.72rem;
     gap: 5px;
+  }
+}
+
+/* V4 §11: on touch screens the camera buttons keep a 44 px target when their labels hide */
+@media (pointer: coarse) {
+  .viewTools button {
+    min-width: 44px;
+    justify-content: center;
   }
 }

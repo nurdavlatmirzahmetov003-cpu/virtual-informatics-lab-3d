@@ -74,11 +74,9 @@ export function Palette({ network, actions, svgRef }: { network: Network; action
   const GhostIcon = ghost && Math.hypot(ghost.x - ghost.startX, ghost.y - ghost.startY) > 6 ? DEVICE_ICONS[ghost.type] : null;
 
   return (
-    <aside className={styles.palette} aria-label={t('network.palette.title')}>
-      <header>
-        <h2>{t('network.palette.title')}</h2>
-        <p>{full ? t('network.palette.full', { max: MAX_DEVICES }) : t('network.palette.hint')}</p>
-      </header>
+    // the frame, title and folding come from LabLayout (V4 §5.1)
+    <div className={styles.palette}>
+      <p className={styles.paletteHint}>{full ? t('network.palette.full', { max: MAX_DEVICES }) : t('network.palette.hint')}</p>
       <ul>
         {DEVICE_TYPES.map((type) => {
           const Icon = DEVICE_ICONS[type];
@@ -87,6 +85,7 @@ export function Palette({ network, actions, svgRef }: { network: Network; action
               <button
                 type="button"
                 className={styles.paletteItem}
+                data-guide-item={type}
                 style={{ ['--tone' as string]: DEVICE_TONE[type] }}
                 disabled={full}
                 onPointerDown={(e) => start(e, type)}
@@ -119,6 +118,6 @@ export function Palette({ network, actions, svgRef }: { network: Network; action
           </div>,
           document.body,
         )}
-    </aside>
+    </div>
   );
 }

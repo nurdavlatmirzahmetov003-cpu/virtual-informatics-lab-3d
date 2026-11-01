@@ -72,14 +72,26 @@ export function SetupAssemblyTimeline({ build, ready, reduced, runId, skipToken,
     });
     let t = reduced ? 0.2 : 0.9; // hold on the empty desk first
     let shot: CameraStateName = 'ASSEMBLY_START';
+    const starts: Record<string, number> = {};
     steps.forEach((step, i) => {
       if (!reduced && step.shot !== shot) {
         // glide to the next station; the piece starts as the camera arrives
-        tl.to(assemblyRig.camera, { ...shotValues(step.shot), duration: 1.3, ease: 'power2.inOut' }, t);
-        t += 0.85;
+        const via = CAMERA_STATES[step.shot].via ?? CAMERA_STATES[shot].via;
+        if (via) {
+          // around the case, not through it: out to the waypoint, then in to the shot; the aim turns over the whole move
+          const { px, py, pz, tx, ty, tz } = shotValues(step.shot);
+          tl.to(assemblyRig.camera, { px: via[0], py: via[1], pz: via[2], duration: 0.9, ease: 'power1.in' }, t);
+          tl.to(assemblyRig.camera, { px, py, pz, duration: 0.9, ease: 'power2.out' }, t + 0.9);
+          tl.to(assemblyRig.camera, { tx, ty, tz, duration: 1.8, ease: 'power2.inOut' }, t);
+          t += 1.5;
+        } else {
+          tl.to(assemblyRig.camera, { ...shotValues(step.shot), duration: 1.3, ease: 'power2.inOut' }, t);
+          t += 0.85;
+        }
         shot = step.shot;
       }
       tl.call(() => callbacks.current.onStep?.({ index: i + 1, total: steps.length, id: step.id }), undefined, t);
+      starts[step.id] = t;
       const d = step.duration * speed;
       for (const target of step.targets) tweenTarget(tl, target, t, d, step.ease);
       t += d * 0.85 + 0.12 * speed;
@@ -90,6 +102,12 @@ export function SetupAssemblyTimeline({ build, ready, reduced, runId, skipToken,
     tl.to(assemblyRig, { light: 0.85, duration: 2 * speed + 0.2, ease: 'power1.inOut' }, t + 0.2);
 
     timeline.current = tl;
+    // read-only measuring hook (dev only): pause and jump to a step for screenshots and visual checks
+    if (import.meta.env.DEV) {
+      const debug = window as unknown as { __vil3d?: Record<string, unknown> };
+      const at = (id: string): number | undefined => starts[id];
+      debug.__vil3d = { ...debug.__vil3d, assembly: { steps: steps.map((s) => s.id), duration: tl.duration(), seek: (x: number | string, into = 1) => { const s = typeof x === 'string' ? at(x) : x; if (s === undefined) return false; tl.pause(); tl.seek(typeof x === 'string' ? s + into : s, false); return tl.time(); } } };
+    }
     return () => {
       tl.kill();
       timeline.current = null;

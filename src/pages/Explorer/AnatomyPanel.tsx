@@ -3,6 +3,8 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { anatomyItem, itemsIn, type AnatomyId } from '@/data/hardware/anatomy';
 import { useT } from '@/hooks/useT';
 import { useAnatomyStore } from '@/store/anatomyStore';
+import { FoldButton } from '@/components/panel/Foldable';
+import type { Fold } from '@/components/panel/foldState';
 import { AnatomyDetails } from './AnatomyDetails';
 import { AnatomyQuiz } from './AnatomyQuiz';
 import { itemKey } from './anatomyText';
@@ -11,7 +13,7 @@ import styles from './ExplorerPage.module.css';
 type Tab = 'info' | 'quiz';
 
 /** Info panel of the focused device (mount with `key={id}` so tabs reset per device). */
-export function AnatomyPanel({ id }: { id: AnatomyId }) {
+export function AnatomyPanel({ id, fold }: { id: AnatomyId; fold: Fold }) {
   const t = useT();
   const [tab, setTab] = useState<Tab>('info');
   const select = useAnatomyStore((s) => s.select);
@@ -26,6 +28,7 @@ export function AnatomyPanel({ id }: { id: AnatomyId }) {
         <span className={styles.eyebrow}>
           {t(`anatomy.categories.${item.category}`)} · {t('anatomy.counter', { index: index + 1, total: siblings.length })}
         </span>
+        <FoldButton fold={fold} side="right" />
         <button type="button" className={styles.iconButton} onClick={() => select(null)} aria-label={t('anatomy.close')}>
           <X size={16} aria-hidden="true" />
         </button>

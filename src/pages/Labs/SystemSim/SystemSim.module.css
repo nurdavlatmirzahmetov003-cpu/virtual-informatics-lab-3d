@@ -122,15 +122,6 @@
   color: #05070d;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr) minmax(280px, 340px);
-  gap: var(--space-4);
-  max-width: 1400px;
-  margin: 0 auto;
-  align-items: start;
-}
-
 .left,
 .right {
   display: grid;
@@ -138,15 +129,20 @@
 }
 
 /* build */
-.buildPanel,
-.fix,
-.instruments {
+.fix {
   display: grid;
   gap: 10px;
   padding: var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg, 18px);
   background: rgb(var(--panel-rgb) / 0.85);
+}
+
+/* inside the lab layout's own framed panels (V4 §6): no second frame */
+.buildPanel,
+.instruments {
+  display: grid;
+  gap: 10px;
 }
 
 .blockTitle {
@@ -644,7 +640,8 @@
 
 .meters {
   display: grid;
-  grid-template-columns: 110px 1fr;
+  /* in the narrow lab panel the thermometer and the power meter stack: neither label is ever cut or covered */
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   align-items: stretch;
 }
@@ -654,6 +651,7 @@
   align-items: center;
   gap: 4px;
   color: var(--text-muted);
+  letter-spacing: 0.08em;
 }
 
 .thermo {
@@ -857,31 +855,7 @@
   }
 }
 
-@media (max-width: 1180px) {
-  .grid {
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
-  }
-
-  .left {
-    grid-column: 1 / -1;
-    grid-row: 2;
-  }
-}
-
 @media (max-width: 760px) {
-  .grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .left {
-    grid-row: auto;
-  }
-
-  /* the monitor first: what happens matters more than the parts list */
-  .center {
-    order: -1;
-  }
-
   .page {
     padding-left: 16px;
     padding-right: 16px;

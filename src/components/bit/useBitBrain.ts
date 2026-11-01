@@ -75,7 +75,7 @@ export function useBitBrain() {
   // one voice for the site: a language switch silences it and changes the browser fallback voice
   useEffect(() => {
     bitVoice.stop();
-    bitVoice.language = language;
+    bitVoice.setLanguage(language);
     let alive = true;
     void voicesReady().then(() => {
       if (!alive) return;

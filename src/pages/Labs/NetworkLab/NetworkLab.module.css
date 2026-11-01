@@ -122,13 +122,6 @@
 
 /* ---------------------------------------------------------------- layout */
 
-.lab {
-  display: grid;
-  grid-template-columns: 188px minmax(0, 1fr) 360px;
-  gap: var(--space-4);
-  align-items: start;
-}
-
 .stage {
   position: relative;
   display: grid;
@@ -145,22 +138,11 @@
 /* ---------------------------------------------------------------- palette */
 
 .palette {
-  position: sticky;
-  top: calc(var(--topbar-h) + var(--space-3));
   display: grid;
   gap: var(--space-3);
-  padding: var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
 }
 
-.palette header h2 {
-  font-size: var(--fs-sm);
-  font-weight: 700;
-}
-
-.palette header p {
+.paletteHint {
   font-size: var(--fs-xs);
   color: var(--text-dim);
 }
@@ -228,10 +210,9 @@
 
 .paletteText small {
   font-size: 0.68rem;
+  line-height: 1.35;
   color: var(--text-dim);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 .ghost {
@@ -720,15 +701,8 @@
 /* ---------------------------------------------------------------- side panel */
 
 .side {
-  position: sticky;
-  top: calc(var(--topbar-h) + var(--space-3));
   display: grid;
-  max-height: calc(100dvh - var(--topbar-h) - var(--space-5));
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  overflow: hidden;
-  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-3);
 }
 
 .sideTabs {
@@ -768,9 +742,6 @@
   display: grid;
   gap: var(--space-3);
   align-content: start;
-  padding: var(--space-4);
-  overflow-y: auto;
-  overscroll-behavior: contain;
 }
 
 /* task */
@@ -1179,18 +1150,6 @@
 
 /* ---------------------------------------------------------------- responsive */
 
-@media (max-width: 1280px) {
-  .lab {
-    grid-template-columns: 168px minmax(0, 1fr);
-  }
-
-  .side {
-    grid-column: 1 / -1;
-    position: static;
-    max-height: none;
-  }
-}
-
 @media (max-width: 900px) {
   .modes {
     grid-template-columns: repeat(5, minmax(170px, 1fr));
@@ -1201,14 +1160,6 @@
 
   .modeCard {
     scroll-snap-align: start;
-  }
-
-  .lab {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .palette {
-    position: static;
   }
 
   .palette ul {

@@ -678,34 +678,67 @@
   filter: drop-shadow(0 0 6px var(--x-ok));
 }
 
+.stackWrap {
+  display: grid;
+  gap: 8px;
+}
+
 .stack {
   display: flex;
+  gap: 2px;
+  height: 14px;
   overflow: hidden;
   border-radius: var(--radius-sm);
-  font-size: 0.72rem;
 }
 
 .stack span {
   flex-basis: 0;
-  min-width: 70px;
-  padding: 6px 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--on-accent);
-  font-weight: 700;
+  min-width: 6px;
 }
 
-.stack [data-part='prop'] {
-  background: var(--x-accent);
+.stackLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
 }
 
-.stack [data-part='routers'] {
-  background: var(--violet);
+.stackLegend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.stack [data-part='access'] {
-  background: var(--x-warm);
+.stackLegend li::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--part);
+}
+
+.stackLegend b {
+  color: var(--text);
+}
+
+[data-part='prop'] {
+  --part: var(--x-accent);
+}
+
+[data-part='routers'] {
+  --part: var(--violet);
+}
+
+[data-part='access'] {
+  --part: var(--x-warm);
+}
+
+.stack span[data-part] {
+  background: var(--part);
 }
 
 /* ------------------------------------------------------------ binary */

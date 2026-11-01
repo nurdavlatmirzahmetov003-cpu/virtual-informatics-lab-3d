@@ -6,8 +6,11 @@
  * ([PLACEHOLDER] entries) for the GLB replacements.
  */
 import { useEffect, useState } from 'react';
+import { useThree } from '@react-three/fiber';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { EnvironmentLighting } from '@/components/3d/EnvironmentLighting';
+import { useQualityPreset } from '@/hooks/useQualityPreset';
+import { useVividGrade } from '@/lib/three/grade';
 import { sceneFocus } from '@/lib/three/sceneFocus';
 import { Desk } from './models/Desk';
 import { DeskMat } from './models/DeskMat';
@@ -19,10 +22,12 @@ import { showcaseBuild } from '@/lib/studio/showcase';
 import { ExploreCamera } from './ExploreCamera';
 import { ShadowSync } from './ShadowSync';
 import { StoryCamera } from './StoryCamera';
+import { HeroCompanions } from './hero/HeroCompanions';
 import { LivingSetup } from './hero/LivingSetup';
 import { HERO_LOOKS } from './hero/looks';
 import { StoryDevices } from './hero/StoryDevices';
 import { Decor } from './models/Decor';
+import { GamingCorner } from './models/GamingCorner';
 
 RectAreaLightUniformsLib.init();
 
@@ -33,23 +38,33 @@ export default function DeskScene() {
   const exploring = usePcStore((s) => s.mode === 'explore');
   const [look, setLook] = useState(0);
 
+  const gl = useThree((s) => s.gl);
+  const preset = useQualityPreset();
+  // Low (phones, weak GPUs) keeps the plain look: the grade's per-pixel cost does not fit its FPS budget
+  useVividGrade(preset.level !== 'low');
   useEffect(() => {
     sceneFocus.enabled = true;
+    // the hero monitors hang on an arm: their own stands are clipped away
+    gl.localClippingEnabled = true;
     return () => {
       sceneFocus.enabled = false;
+      gl.localClippingEnabled = false;
     };
-  }, []);
+  }, [gl]);
 
   return (
     <>
-      <EnvironmentLighting hdri={HDRI} environmentIntensity={0.55} intensity={1} shadowExtent={1.25} fog={[3.5, 11]} />
+      <EnvironmentLighting hdri={HDRI} environmentIntensity={0.55} intensity={1} shadowExtent={1.25} shadowSoftness={4} fog={[3.5, 11]} />
       <StoryCamera />
       {exploring && <ExploreCamera />}
       <ShadowSync />
       <Room />
       <Desk surface={HERO_LOOKS[look].desk} />
       <Decor />
+      {/* the corner is the first decoration to go: Low and Medium keep their FPS budget without it (V4 §2.3) */}
+      {preset.postprocessing && <GamingCorner />}
       <LivingSetup onLook={setLook} />
+      <HeroCompanions look={look} />
       <StoryDevices>
         <DeskMat />
         <Monitor />

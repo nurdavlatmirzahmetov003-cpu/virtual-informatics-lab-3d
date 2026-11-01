@@ -9,7 +9,9 @@ import styles from './Captions.module.css';
 export function Captions() {
   const speaking = useVoiceStore((s) => s.speaking);
   const sentence = useVoiceStore((s) => s.sentence);
-  if (!speaking || !sentence) return null;
+  // a robot's tip has its own subtitle (components/robots/RobotTipCaption)
+  const robotTip = useVoiceStore((s) => s.owner === 'robot-tip');
+  if (!speaking || !sentence || robotTip) return null;
   return (
     <div className={styles.captions} role="status" aria-live="polite">
       <p>{sentence}</p>

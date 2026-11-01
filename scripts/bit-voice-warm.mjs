@@ -6,6 +6,9 @@
  *
  *   npm run bit:voice-warm            all three languages
  *   npm run bit:voice-warm -- kk      one language
+ *   npm run bit:voice-warm -- kk --voice=Leda --style=friend
+ *                                     another of Bit's voices / styles (V4 §10;
+ *                                     default: the server's voice, teacher)
  *
  * Stops when every speech model's quota is used up (free tier: ~10 requests a
  * day per model); run it again later — what is cached is skipped.
@@ -15,12 +18,14 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadEnv } from '../server/env.ts';
 import { createBitVoice, ttsKey, DEFAULT_TTS_VOICE } from '../server/bitVoice.ts';
+import { isBitVoice, isVoiceStyle } from '../src/services/bit/voicePrefs.ts';
 import { sentencesOf } from '../src/services/bit/voice.ts';
 import { speechChunks } from '../src/services/bit/text.ts';
 import { BRAND } from '../src/config/brand.ts';
 
 loadEnv();
 const langs = process.argv.slice(2).filter((a) => ['kk', 'ru', 'en'].includes(a));
+const arg = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const LANGS = langs.length ? langs : ['kk', 'ru', 'en'];
 const fill = (s) => s.replace(/\{brand\}/g, BRAND.name);
 
@@ -43,7 +48,12 @@ if (!voice.configured) {
   process.exit(1);
 }
 const cacheDir = process.env.BIT_VOICE_CACHE_DIR?.trim() || join(process.cwd(), 'data', 'voice-cache');
-const voiceName = process.env.GEMINI_TTS_VOICE?.trim() || DEFAULT_TTS_VOICE;
+const voiceName = isBitVoice(arg('voice')) ? arg('voice') : process.env.GEMINI_TTS_VOICE?.trim() || DEFAULT_TTS_VOICE;
+const style = isVoiceStyle(arg('style')) ? arg('style') : 'teacher';
+if ((arg('voice') && !isBitVoice(arg('voice'))) || (arg('style') && !isVoiceStyle(arg('style')))) {
+  console.error('Unknown --voice or --style (see src/services/bit/voicePrefs.ts)');
+  process.exit(1);
+}
 const server = createServer(async (req, res) => {
   if (!(await voice(req, res))) {
     res.writeHead(404);
@@ -59,11 +69,11 @@ let stopped = false;
 for (const lang of LANGS) {
   const pieces = [...new Set((await texts(lang)).flatMap((t) => speechChunks(sentencesOf(t))))];
   for (const text of pieces) {
-    if (existsSync(join(cacheDir, `${ttsKey(voiceName, lang, text)}.pcm.gz`))) {
+    if (existsSync(join(cacheDir, `${ttsKey(voiceName, lang, text, { style })}.pcm.gz`))) {
       had++;
       continue;
     }
-    const r = await fetch(`${base}/api/ai/bit/tts`, { method: 'POST', body: JSON.stringify({ text, lang }) });
+    const r = await fetch(`${base}/api/ai/bit/tts`, { method: 'POST', body: JSON.stringify({ text, lang, voice: voiceName, style }) });
     if (r.status === 503) {
       stopped = true;
       break;

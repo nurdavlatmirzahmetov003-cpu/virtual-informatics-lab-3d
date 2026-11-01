@@ -9,7 +9,11 @@
 services:
   lab:
     build: .
+    image: virtual-informatics-lab:latest
     restart: unless-stopped
+    # a tiny init as PID 1: `docker compose stop` ends Node at once and cleanly (SQLite closes its journal)
+    init: true
+    stop_grace_period: 20s
     env_file: .env
     environment:
       HOST: 0.0.0.0
@@ -18,6 +22,7 @@ services:
       STATIC_DIR: dist
       DB_FILE: /data/lab.db
       BACKUP_DIR: /data/backups
+      BIT_VOICE_CACHE_DIR: /data/voice-cache
       COOKIE_SECURE: 'true'
       # only Caddy can reach this container, and it sets X-Forwarded-For itself
       TRUST_PROXY: all

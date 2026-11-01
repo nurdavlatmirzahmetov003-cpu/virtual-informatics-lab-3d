@@ -2,9 +2,12 @@
  * Cause & Effect Lab (V2-7): build a PC, power it on and watch what a
  * missing or wrong part does; in the task, find and fix a broken PC.
  */
+import { LabLayout } from '@/components/lab/LabLayout';
+import { TaskGuide, type DemoStep } from '@/components/lab/TaskGuide';
+import { guideEl, pressGuide } from '@/components/lab/guideDom';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Flame, Info, Lightbulb, Play, Power, RotateCcw, Shuffle, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, Cpu, Flame, Gauge, Info, Lightbulb, Play, Power, RotateCcw, Shuffle, Volume2, VolumeX } from 'lucide-react';
 import { GradeReportCard } from '@/components/grading/GradeReportCard';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
@@ -31,7 +34,8 @@ function BuildPanel({ build, onChange, base }: { build: Build; onChange: (b: Bui
   const t = useT();
   return (
     <section className={styles.buildPanel} aria-labelledby="sim-build">
-      <h2 id="sim-build" className={styles.blockTitle}>
+      {/* the lab panel shows this title; kept for screen readers (the section is labelled by it) */}
+      <h2 id="sim-build" className="visually-hidden">
         {t('sim.build')}
       </h2>
       {BUILD_KEYS.map((k) => (
@@ -53,7 +57,7 @@ function BuildPanel({ build, onChange, base }: { build: Build; onChange: (b: Bui
 function FixPanel({ fault, build, onNext, onReset }: { fault: FaultId; build: Build; onNext: () => void; onReset: () => void }) {
   const t = useT();
   const [cause, setCause] = useState<FaultId | null>(null);
-  const [hinted, setHinted] = useState(false);
+  const [hinted, setHinted] = useState(0);
   const [attempt, setAttempt] = useState(() => startAttempt(FIX_EXERCISE.id));
   const [report, setReport] = useState<GradeReport | null>(null);
   const changed = changesBetween(FAULTS[fault], build);
@@ -79,19 +83,19 @@ function FixPanel({ fault, build, onNext, onReset }: { fault: FaultId; build: Bu
           </label>
         ))}
       </fieldset>
-      {hinted && (
-        <p className={styles.hint}>
-          <Lightbulb size={15} aria-hidden="true" /> {t('sim.task.hint')}
+      {[t('sim.task.hintStart'), t('sim.task.hint'), t(key(`sim.task.hintFault.${fault}`))].slice(0, hinted).map((text, i) => (
+        <p key={i} className={styles.hint}>
+          <Lightbulb size={15} aria-hidden="true" /> <b>{t('labGuide.hintLevel', { n: i + 1 })}.</b> {text}
         </p>
-      )}
+      ))}
       <p className={styles.changed}>{t('sim.task.changed', { n: changed })}</p>
       <div className={styles.actions}>
         <button
           type="button"
           className={styles.secondary}
-          disabled={hinted}
+          disabled={hinted >= 3}
           onClick={() => {
-            setHinted(true);
+            setHinted((n) => n + 1);
             setAttempt((a) => ({ ...a, hintsUsed: a.hintsUsed + 1 }));
           }}
         >
@@ -135,6 +139,22 @@ export default function SystemSimPage() {
   const running = view.phase !== 'off';
   const canLoad = view.phase === 'desktop' || (view.phase === 'load' && !!view.run && view.shown >= view.run.samples.length);
 
+  // V4 §5.3: the sandbox shown through its own buttons (power, "Game" load, run)
+  const simDemo = (): DemoStep[] => [
+    { say: t('labGuide.sim.s1'), target: () => document.querySelector('[data-guide="power"]')?.closest('section, div') ?? null },
+    { say: t('labGuide.sim.s2'), target: guideEl('power'), run: pressGuide('power'), hold: 4200 },
+    {
+      say: t('labGuide.sim.s3'),
+      target: guideEl('load-game'),
+      run: () => {
+        pressGuide('load-game')();
+        window.setTimeout(pressGuide('run'), 500);
+      },
+      hold: 4500,
+    },
+    { say: t('labGuide.sim.s4'), target: () => document.querySelector('[role="radiogroup"]') },
+  ];
+
   return (
     <div className={styles.page}>
       <header className={styles.head}>
@@ -169,8 +189,15 @@ export default function SystemSimPage() {
         </p>
       </header>
 
-      <div className={styles.grid}>
-        <div className={styles.left}>
+      {/* V4 §6: the build (palette), the computer (workspace) and the gauges (panel) on the shared lab layout */}
+      <LabLayout
+        id="sim"
+        widths={[320, 340]}
+        palette={{
+          title: t('panels.simBuild'),
+          icon: <Cpu size={16} aria-hidden="true" />,
+          content: (
+            <div className={styles.left}>
           <BuildPanel build={build} onChange={setBuild} base={base} />
           {mode === 'fix' && (
             <FixPanel
@@ -184,8 +211,11 @@ export default function SystemSimPage() {
               onReset={() => setBuild(FAULTS[fault])}
             />
           )}
-        </div>
-
+            </div>
+          ),
+        }}
+        panel={{ title: t('panels.simGauges'), icon: <Gauge size={16} aria-hidden="true" />, content: <Instruments build={build} view={view} /> }}
+      >
         <div className={styles.center}>
           {mode === 'fix' && (
             <p className={styles.taskBanner}>
@@ -193,19 +223,26 @@ export default function SystemSimPage() {
               {t('sim.task.short')}
             </p>
           )}
+          <TaskGuide
+            id={`sim:${mode}`}
+            title={t('sim.title')}
+            text={mode === 'fix' ? t('sim.task.short') : t('labGuide.simText')}
+            demo={mode === 'fix' ? undefined : simDemo}
+            onDemoEnd={() => running && powerOff()}
+          />
           <Monitor build={build} view={view} />
           <div className={styles.controls}>
-            <button type="button" className={styles.powerBtn} data-on={running} onClick={running ? powerOff : powerOn}>
+            <button type="button" className={styles.powerBtn} data-on={running} onClick={running ? powerOff : powerOn} data-guide="power">
               <Power size={18} aria-hidden="true" /> {running ? t('sim.controls.off') : t('sim.controls.power')}
             </button>
             <div className={styles.seg} role="radiogroup" aria-label={t('sim.controls.workload')}>
               {WORKLOADS.map((w) => (
-                <button key={w} type="button" role="radio" aria-checked={view.workload === w} onClick={() => setWorkload(w)}>
+                <button key={w} type="button" role="radio" aria-checked={view.workload === w} onClick={() => setWorkload(w)} data-guide={`load-${w}`}>
                   {t(`sim.workloads.${w}`)}
                 </button>
               ))}
             </div>
-            <button type="button" className={styles.primary} disabled={!canLoad} onClick={startLoad}>
+            <button type="button" className={styles.primary} disabled={!canLoad} onClick={startLoad} data-guide="run">
               {view.workload === 'game' ? <Flame size={16} aria-hidden="true" /> : <Play size={16} aria-hidden="true" />} {t('sim.controls.run')}
             </button>
             <button type="button" className={styles.icon} aria-pressed={sound} onClick={() => setSound(!sound)} title={t('sim.controls.sound')} aria-label={t('sim.controls.sound')}>
@@ -213,11 +250,7 @@ export default function SystemSimPage() {
             </button>
           </div>
         </div>
-
-        <div className={styles.right}>
-          <Instruments build={build} view={view} />
-        </div>
-      </div>
+      </LabLayout>
     </div>
   );
 }

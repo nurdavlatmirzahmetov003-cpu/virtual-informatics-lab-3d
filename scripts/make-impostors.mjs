@@ -8,8 +8,8 @@
  *   npm run lab:impostors  # [-- http://localhost:5173]
  */
 import { spawn } from 'node:child_process';
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, rmSync, writeFileSync } from 'node:fs';
+import { newProfile, track } from './lib/cdp.mjs';
 import path from 'node:path';
 import sharp from 'sharp';
 
@@ -18,8 +18,9 @@ const root = path.resolve(import.meta.dirname, '..');
 const PORT = 9334;
 const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', '/usr/bin/google-chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'].find(existsSync);
 if (!CHROME) throw new Error('Chrome/Edge not found');
-const profile = mkdtempSync(path.join(tmpdir(), 'vil3d-imp-'));
+const profile = newProfile('vil3d-imp-');
 const chrome = spawn(CHROME, ['--headless=new', `--remote-debugging-port=${PORT}`, `--user-data-dir=${profile}`, '--window-size=2200,1400', '--ignore-gpu-blocklist', '--enable-gpu', '--use-angle=d3d11', 'about:blank'], { stdio: 'ignore' });
+track(chrome, profile);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let wsUrl;
 for (let i = 0; i < 50 && !wsUrl; i++) {

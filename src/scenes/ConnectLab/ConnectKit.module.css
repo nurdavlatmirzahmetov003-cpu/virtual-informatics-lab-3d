@@ -18,6 +18,16 @@
   transition: transform 0.15s ease, background 0.15s ease;
 }
 
+/* a fingertip's worth of hit area around the ring on touch screens, never reaching the next socket (--reach, rings.ts) */
+@media (pointer: coarse) {
+  .port::before {
+    content: '';
+    position: absolute;
+    inset: calc(var(--reach, 6px) * -1 - 2px);
+    border-radius: 50%;
+  }
+}
+
 .port[data-taken='true'] {
   border-color: rgb(74 222 128 / 0.9);
   box-shadow: 0 0 0 2px rgb(10 14 24 / 0.5), 0 0 8px rgb(74 222 128 / 0.5);

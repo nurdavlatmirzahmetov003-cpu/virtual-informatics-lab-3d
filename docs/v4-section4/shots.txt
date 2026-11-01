@@ -1,0 +1,40 @@
+robots-page-375-light.jpg: ready=false hscroll=false
+lab-yard-375-light.jpg: ready=true hscroll=false
+robots-page-768-light.jpg: ready=false hscroll=false
+lab-yard-768-light.jpg: ready=true hscroll=false
+robots-page-1280-light.jpg: ready=false hscroll=false
+lab-yard-1280-light.jpg: ready=true hscroll=false
+robots-page-1366-light.jpg: ready=false hscroll=false
+lab-yard-1366-light.jpg: ready=true hscroll=false
+robots-page-1920-light.jpg: ready=false hscroll=false
+lab-yard-1920-light.jpg: ready=true hscroll=false
+robots-page-375-dark.jpg: ready=false hscroll=false
+lab-yard-375-dark.jpg: ready=true hscroll=false
+robots-page-768-dark.jpg: ready=false hscroll=false
+lab-yard-768-dark.jpg: ready=true hscroll=false
+robots-page-1280-dark.jpg: ready=false hscroll=false
+lab-yard-1280-dark.jpg: ready=true hscroll=false
+robots-page-1366-dark.jpg: ready=false hscroll=false
+lab-yard-1366-dark.jpg: ready=true hscroll=false
+robots-page-1920-dark.jpg: ready=false hscroll=false
+lab-yard-1920-dark.jpg: ready=true hscroll=false
+charging reached: true
+{"match":false,"states":["guide:rest:35","cleaner:rest:24","cargo:charging:16","presenter:charging:71","assembler:waking:100","teacher:rest:32","guard:waking:100","inspector:work:85","librarian:rest:34","coach:charging:45"]}
+lab-yard-charging-1366-light.jpg: ready=true hscroll=false
+lab-yard-charging-zoom-light.jpg (zoomed)
+match reached: true
+{"match":true,"states":["guide:play:81","cleaner:play:79","cargo:toPlay:53","presenter:play:44","assembler:work:38","teacher:toPlay:75","guard:work:39","inspector:work:23","librarian:toGarage:0","coach:play:48"]}
+lab-yard-football-1366-light.jpg: ready=true hscroll=false
+lab-yard-football-zoom-light.jpg (zoomed)
+wardrobe control found: true
+robots-wardrobe-1366-light.jpg: ready=false hscroll=false
+charging reached: true
+{"match":false,"states":["guide:charging:64","cleaner:rest:44","cargo:charging:46","presenter:rest:34","assembler:charging:42","teacher:toGarage:20","guard:rest:30","inspector:charging:34","librarian:charging:53","coach:charging:92"]}
+lab-yard-charging-1366-dark.jpg: ready=true hscroll=false
+lab-yard-charging-zoom-dark.jpg (zoomed)
+match reached: true
+{"match":true,"states":["guide:work:42","cleaner:play:92","cargo:work:45","presenter:play:77","assembler:play:46","teacher:play:56","guard:play:72","inspector:play:47","librarian:work:44","coach:work:38"]}
+lab-yard-football-1366-dark.jpg: ready=true hscroll=false
+lab-yard-football-zoom-dark.jpg (zoomed)
+wardrobe control found: true
+robots-wardrobe-1366-dark.jpg: ready=false hscroll=false

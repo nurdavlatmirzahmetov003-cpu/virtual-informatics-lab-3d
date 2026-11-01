@@ -22,7 +22,7 @@ import { STUDIO_HDRI } from '@/scenes/SetupStudio/setupShared';
 import { Draggable } from './Draggable';
 import { SETTLE_MS, dragState } from './dragState';
 import { Guides } from './Guides';
-import { BOARD_PARTS, CASE, DRIVE_BAY, TRAY, VISUAL_CENTER, boardOffset, boardPose, stepRotation } from './layout';
+import { AT, BOARD_PARTS, CASE, DRIVE_BAY, INST, TRAY, VISUAL_CENTER, boardOffset, boardPose, stepRotation } from './layout';
 import { AntiStaticMat, CableBundle, TrayPad } from './props';
 
 const tk = (key: string) => key as TranslationKey;
@@ -48,10 +48,10 @@ function BoardContents({ build }: { build: ResolvedBuild }) {
   });
   return (
     <>
-      <HardwarePart id="motherboard" fallback={null} product={build.motherboard} />
+      <HardwarePart id="motherboard" inst={INST} at={AT.motherboard.toArray()} product={build.motherboard} />
       {BOARD_PARTS.map((p) => (
         <group key={p} ref={(g) => void (refs.current[p] = g)} position={boardOffset(p)} visible={false}>
-          <HardwarePart id={p} fallback={null} product={productOf(build, p)} />
+          <HardwarePart id={p} inst={INST} at={AT[p].toArray()} product={productOf(build, p)} />
         </group>
       ))}
     </>
@@ -157,13 +157,13 @@ export default function AssemblyLabScene() {
   const name = (s: StepId) => t(tk(`pcLab.steps.${s}.part`));
 
   const content: Partial<Record<StepId, ReactNode>> = {
-    cpu: <HardwarePart id="cpu" fallback={null} product={build.cpu} />,
-    cooler: <HardwarePart id="cooler" fallback={null} product={build.cooling} />,
-    ram: <HardwarePart id="ram" fallback={null} product={build.ram} />,
-    nvme: <HardwarePart id="ssd" fallback={null} product={build.ssd} />,
-    psu: <HardwarePart id="psu" fallback={null} product={build.psu} />,
-    gpu: <HardwarePart id="gpu" fallback={null} product={build.gpu} />,
-    fans: <HardwarePart id="fans" fallback={null} />,
+    cpu: <HardwarePart id="cpu" inst={INST} at={AT.cpu.toArray()} product={build.cpu} />,
+    cooler: <HardwarePart id="cooler" inst={INST} at={AT.cooler.toArray()} product={build.cooling} />,
+    ram: <HardwarePart id="ram" inst={INST} at={AT.ram.toArray()} product={build.ram} />,
+    nvme: <HardwarePart id="ssd" inst={INST} at={AT.ssd.toArray()} product={build.ssd} />,
+    psu: <HardwarePart id="psu" inst={INST} at={AT.psu.toArray()} product={build.psu} />,
+    gpu: <HardwarePart id="gpu" inst={INST} at={AT.gpu.toArray()} product={build.gpu} />,
+    fans: <HardwarePart id="fans" inst={INST} at={AT.fans.toArray()} />,
     storage: <Product product="dev-hdd" />,
     cables: <CableBundle />,
   };

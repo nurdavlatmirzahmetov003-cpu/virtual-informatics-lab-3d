@@ -119,6 +119,18 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | Product | Source model | Author | Licence | Changes |
 |---|---|---|---|---|
 | `case-bitlab-aero` (0.37) | — жобаның өз моделі, `scripts/blender/make-bitlab-aero.py` примитивтерден құрады | BitLab | CC0 (өз жұмысымыз) | ақ корпус, 230×470×450 мм, ішкі орналасу сахна якорьлеріне дәл сай; 4 материал (4 draw call); 19 port/slot маркері; әйнегі сахнаның процедуралық панелі |
+| `case-bitlab-panorama` (V4) | — жобаның өз моделі, `scripts/blender/make-showcase.py` (`src/scenes/DeskScene/pc/caseDesigns.ts` деректерінен) | BitLab | CC0 (өз жұмысымыз) | ақ екі камералы панорамалық корпус, 310×464×460 мм; алды мен сол жағы шыны (бұрышында тірек жоқ); 10 желдеткіш орны; түстері vertex colour-ға пісірілген (5 draw call); 5,2k △ |
+| `case-bitlab-panorama-black`, `case-bitlab-blossom` (V4 §1.4) | — өз моделі, `make-showcase.py` (сол дизайн жазбасы) | BitLab | CC0 | Panorama корпусының қара (күңгірт шыны) және пастель-қызғылт нұсқалары; 5,2k △ |
+| `case-bitlab-tower` (V4 §1.4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | күміс-сұр толық мұнара, 335×575×500 мм, E-ATX, бүйірде 4 желдеткіш; 5,2k △ |
+| `case-bitlab-cube` (V4 §1.4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | mATX / ITX шыны куб, 290×400×440 мм; 5,2k △ |
+| `case-bitlab-core`, `case-bitlab-flow`, `case-bitlab-grove` (V4 §1.4) | — өз моделі, `make-showcase.py` (классикалық бір камералы схема) | BitLab | CC0 | қуат блогы қаптамасы бар, бүйірі шыны mid-tower корпустар: Core — тұтас алдыңғы панель мен жарық жолағы, Flow — қара торлы алдыңғы панель, Grove — тордың үстінде емен тақталар; 3,2–4,3k △, 3–4 draw call |
+| `fan-bitlab-120-black` (V4 §1.4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | қара рамалы 120 мм ARGB желдеткіш; 6,5k △ |
+| `fan-bitlab-120` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | 120×120×25 мм ARGB желдеткіш: рама, жарық сақинасы, айналатын қалақтар (`rotor`); 6,5k △ |
+| `mb-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` + `showcase-textures.mjs` | BitLab | CC0 | ақ ATX аналық плата 305×244 мм, AM5 сокет, 4 DIMM, PCIe x16, M.2; дәл слот маркерлері және артқы I/O порттары; 6,3k △ |
+| `gpu-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | ақ үш желдеткішті видеокарта 322×128×58 мм, «BITLAB AERO» жазуы, ARGB жолағы, 3 айналатын желдеткіш; 7,8k △ |
+| `ram-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | ақ DDR5 RGB жад 133×44 мм; 0,6k △ |
+| `cool-bitlab-aero-360`, `rad-bitlab-360` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | ақ AIO помпасы (айна қақпақ, ARGB сақина) және 360 мм радиатор; 2,7k + 0,8k △ |
+| `psu-bitlab-aero` (V4) | — өз моделі, `make-showcase.py` | BitLab | CC0 | ақ ATX қоректендіру блогы 150×86×160 мм, модульді коннекторлар; 3,5k △ |
 | `case-corsair-4000d-airflow` | [Corsair 4000D PC Case](https://sketchfab.com/3d-models/corsair-4000d-pc-case-bc15e007d6634579bc0e8ffdf238e665) | SzaBa | CC BY 4.0 | canonical pose, real size 230×450×470 mm, 1 logo/helper/hidden meshes removed, 19 port/slot markers |
 | `case-deepcool-cc560-v2` | [Corsair 4000D PC Case](https://sketchfab.com/3d-models/corsair-4000d-pc-case-bc15e007d6634579bc0e8ffdf238e665) | SzaBa | CC BY 4.0 | canonical pose, real size 230×450×470 mm, 1 logo/helper/hidden meshes removed, finish recoloured, 19 port/slot markers |
 | `case-fractal-north` | [Corsair 4000D x Fractal North](https://sketchfab.com/3d-models/crosair-4000d-x-fractal-north-8366a780be1e4ef2bd9098ac4dd7a02d) | tavanth | CC BY 4.0 | canonical pose, real size 230×450×470 mm, 2 logo/helper/hidden meshes removed, 19 port/slot markers |
@@ -218,6 +230,18 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 | `dev-usb-a-cable` | [USB cable](https://sketchfab.com/3d-models/usb-cable-e2d9a8d59e7245f99ffa14e5f9784c3e) | ABSTRACT_DUCK | CC BY 4.0 | pose as downloaded, coiled, 300 mm across |
 | `dev-usb-c-cable` | [USB-C Charging Cable (Type-C – Type-C)](https://sketchfab.com/3d-models/usb-c-charging-cable-type-c-type-c-39cb1374a9c24cfa815f8efe86a14f61) | alessandroparca | CC BY 4.0 | pose as downloaded, 250 mm across |
 
+### Басты бет бөлмесі (V4 §2, 2026-10-26) — файл емес, кодпен құрылады
+Барлығы — жобаның өз жұмысы, CC0. Сыртқы модель немесе текстура қосылған жоқ.
+
+| Нәрсе | Қайда | Лицензия | Ескерту |
+|---|---|---|---|
+| Сәлем беретін Бит (үстелде) | `src/scenes/LabSpace/robots/robotKit.ts` (`bit` түрі), `src/scenes/DeskScene/hero/HeroCompanions.tsx` | CC0 (өз жұмысымыз) | робот жинағынан, 1 м өлшемде құрылып 0,17 есе кішірейтілген; 5 draw call |
+| Жүргізуші робот (BitLab футболкасы) | `robotKit.ts` (`presenter` түрі, 0.37), `HeroCompanions.tsx` | CC0 | сөз көпіршігі — canvas текстура, kk/ru/en |
+| Монстера (үстелде және еденде) | `src/scenes/DeskScene/models/Plants.tsx` | CC0 | тесігі бар жапырақ пішіні (ShapeGeometry), instanced; глазурьлі керамика құмыра (LatheGeometry); 4 draw call |
+| Ойын үстелі, RGB жолақ, кресло | `src/scenes/DeskScene/models/GamingCorner.tsx`, `src/scenes/SetupStudio/Chair.tsx` | CC0 | материал бойынша біріктірілген |
+| Монитор кронштейні | `src/scenes/DeskScene/models/MonitorArm.tsx` | CC0 | мониторлардың өз тұғыры clipping plane-мен жасырылады |
+| Үстел шамы, LED жолақтар, жақтаулы плакаттар, кубок, кабель науасы | `src/scenes/DeskScene/models/Decor.tsx`, `Desk.tsx` | CC0 | плакаттар 768×1086 canvas |
+
 ### Тікелей ойындар (V2-11b, 2026-10-17)
 Жаңа ассет жоқ. QR — өз кодтауышымыз (`src/lib/qr`), иконалар — бар `lucide-react` (ISC). WebSocket тәуелділіксіз (`node:http`, `node:crypto`).
 
@@ -293,6 +317,9 @@ Hero сахнасындағы перифериялар мен ПК бөлшек�
 `src/scenes/DeskScene/pc/LiquidCooler.tsx`: жоба ішінде жасалған AIO помпа, түтіктер және радиатор геометриясы. Желдеткіштері бұрын лицензияланған Lian Li `fan_frame.glb`/`fan_rotor.glb`-ні қайта қолданады; бастапқы автор мен CC BY 4.0 attribution `/credits` бетінде сақталған. Белгілі бір брендтің дәл геометриясы деп көрсетілмейді.
 
 three (MIT), @react-three/fiber/drei/postprocessing (MIT), postprocessing (Zlib), gsap (Standard "no charge" license — https://gsap.com/standard-license), zustand (MIT), react / react-router (MIT), lucide-react (ISC).
+
+## Сертификат мөрлері (V4 §8.2) — `public/certificate/`
+- `seal-team.svg` (ММАН командасының дөңгелек мөрі), `seal-brand.svg` (BitLab брендтік мөрі), `signature-team.svg` (қолтаңба үлгісі) — өзіміздің жұмысымыз, CC0. `node scripts/certificate-seals.mjs` арқылы салынады. «Курс аяқталды» голографиялық стикері — кодтағы SVG (`src/pages/Certificate/HoloSticker.tsx`). Бәрі ауыстырылатын үлгілер: жолдары `src/config/brand.ts`-те.
 
 ## Legacy ассеттер (`legacy/assets`, `legacy/textures`) — тек мұрағат
 - `legacy/assets/*.jpg` — пайдаланушы фотолары, дереккөзі белгісіз → жаңа қосымшада ҚОЛДАНЫЛМАЙДЫ.

@@ -83,6 +83,11 @@ test('every product model the site uses has a pipeline config (and vice versa)',
   // BitLab's own models (data/hardware/house.ts, 0.37)
   const house = readFileSync(path.join(import.meta.dirname, '..', 'src', 'data', 'hardware', 'house.ts'), 'utf8');
   for (const m of house.matchAll(/products\/([a-z0-9-]+)\.glb/g)) own.add(m[1]);
+  // V4 showcase hardware is modelled by scripts/blender/make-showcase.py, not by the import pipeline
+  const showcase = readFileSync(path.join(import.meta.dirname, 'blender', 'make-showcase.py'), 'utf8');
+  const designs = readFileSync(path.join(import.meta.dirname, '..', 'src', 'scenes', 'DeskScene', 'pc', 'caseDesigns.ts'), 'utf8');
+  const modelled = new Set([...showcase.matchAll(/export\("([a-z0-9-]+)"\)/g), ...designs.matchAll(/id: '(case-[a-z0-9-]+)'/g)].map((m) => m[1]));
+  for (const id of modelled) own.delete(id);
   // lab devices (`dev-*`) and teardown parts (`td-*`), 2026-10
   for (const f of sourceFiles(path.join(import.meta.dirname, '..', 'src'))) for (const m of readFileSync(f, 'utf8').matchAll(/['"]((?:dev|td)-[a-z0-9-]+)['"]/g)) own.add(m[1]);
   assert.deepEqual([...own].sort(), [...configs].sort());

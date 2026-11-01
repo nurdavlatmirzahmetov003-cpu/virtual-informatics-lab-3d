@@ -15,7 +15,8 @@
  *   …the classroom routes in classroomRoutes.ts (V2-9), the admin panel in
  *   adminRoutes.ts (V2-10), leaderboards / contests in gameRoutes.ts (V2-11a)
  *   the Games arena in arcade.ts and feedback / contact / certificates in
- *   feedback.ts (0.36).
+ *   feedback.ts (0.36), the robots' saves in robots.ts (V4 §4.4),
+ *   Bit's voice settings per student in bitPrefs.ts (V4 §10).
  *
  * Every state-changing request needs the session's CSRF token in
  * `x-csrf-token` and, when the browser sends one, an allowed Origin.
@@ -36,6 +37,8 @@ import { classroomRoutes } from './classroomRoutes';
 import { adminRoutes } from './adminRoutes';
 import { gameRoutes } from './gameRoutes';
 import { arcadeRoutes } from './arcade';
+import { robotsRoutes } from './robots';
+import { bitPrefsRoutes } from './bitPrefs';
 import { feedbackRoutes } from './feedback';
 import { LiveHub } from './live/hub';
 import { liveRoutes, liveUpgrade } from './live/routes';
@@ -125,6 +128,8 @@ export function createApp({
   const classroom = classroomRoutes({ ...deps, joinLimiter, settings });
   const game = gameRoutes({ ...deps, settings });
   const arcade = arcadeRoutes({ ...deps, settings });
+  const robots = robotsRoutes(deps);
+  const bitPrefs = bitPrefsRoutes(deps);
   const feedback = feedbackRoutes({ ...deps, userOf: (ctx) => (ctx as Ctx).user });
   const hub = new LiveHub({ db, now, anonymous: () => settings().leaderboardAnonymous });
   const live = liveRoutes({ ...deps, hub });
@@ -224,6 +229,8 @@ export function createApp({
     if (await classroom(ctx, method, path)) return;
     if (await game(ctx, method, path)) return;
     if (await arcade(ctx, method, path)) return;
+    if (await robots(ctx, method, path)) return;
+    if (await bitPrefs(ctx, method, path)) return;
     if (await feedback(ctx, method, path)) return;
     if (await live(ctx, method, path)) return;
     if (await adminPanel(ctx, method, path)) return;

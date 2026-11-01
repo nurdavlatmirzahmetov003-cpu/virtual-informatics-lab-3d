@@ -6,7 +6,11 @@ data/
 node_modules/
 dist/
 assets-src/
-docs/defense/
+docs/
+dev/
+legacy/
+test-results/
+.tmp/
 .git/
 .claude/
 .vscode/

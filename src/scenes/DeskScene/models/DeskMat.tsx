@@ -3,9 +3,13 @@ import { useDisposable } from '@/hooks/useDisposable';
 import { roundedSlab, tubeAlong } from '@/lib/three/geometry';
 import { fabricTexture } from '@/lib/three/proceduralTextures';
 import { MAT } from '../layout';
+import { DEFAULT_DESK_TOP, matOn, type MatLayout } from '../deskFit';
 
-export function DeskMat() {
-  const [w, d] = MAT.size;
+const HOUSE = matOn(DEFAULT_DESK_TOP);
+
+/** `layout`: where the mat lies on the desk in use (deskFit.ts); default: the house desk. */
+export function DeskMat({ layout = HOUSE }: { layout?: MatLayout }) {
+  const [w, d] = layout.size;
   const res = useDisposable(() => {
     const r = 0.018;
     const inset = 0.0025;
@@ -34,7 +38,7 @@ export function DeskMat() {
   }, [w, d]);
 
   return (
-    <group position={[...MAT.position]}>
+    <group position={[...layout.position]}>
       <mesh geometry={res.slab} receiveShadow>
         <meshStandardMaterial
           color="#121419"

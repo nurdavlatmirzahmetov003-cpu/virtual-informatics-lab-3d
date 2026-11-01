@@ -20,7 +20,8 @@ import { route, type Vec3 } from '@/lib/teardown/timeline';
 import { showcaseBuild } from '@/lib/studio/showcase';
 import { TEARDOWNS } from '@/data/teardown/teardowns';
 import { Chassis } from '@/scenes/DeskScene/pc/Chassis';
-import { BOARD_FACE, CPU, D, FAN, FRONT_FANS, GPU, H, MB, PSU, RAM, SSD, W } from '@/scenes/DeskScene/pc/constants';
+import { showcaseInstalled } from '@/lib/studio/showcaseInstall';
+import { D, FAN, H, MB, W } from '@/scenes/DeskScene/pc/constants';
 import { HardwarePart } from '@/scenes/DeskScene/pc/HardwareParts';
 import type { PartId } from '@/scenes/DeskScene/pc/parts';
 import { pcRig } from '@/scenes/DeskScene/pc/pcRig';
@@ -38,24 +39,34 @@ const OUT = -0.07; // pull straight out of the slot through the open side
 
 const sub = (a: Vec3, b: Vec3): Vec3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 
-function boardPart(at: Vec3, rest: Vec3, label: Vec3, clear = 0.1): PartMotion {
+const INST = showcaseInstalled();
+const placed = (id: Exclude<PartId, 'fans'>) => INST[id === 'cooler' ? 'cooler' : id]!;
+const AT = (id: Exclude<PartId, 'fans'>): Vec3 => placed(id).p;
+/** Resting place on the bench of a part laid flat: its back (half its height above the board) on the bench. */
+const flatRest = (id: Exclude<PartId, 'fans'>, x: number, z: number): Vec3 => [x, REST + placed(id).size[0] / 2, z];
+
+function boardPart(id: Exclude<PartId, 'fans'>, rest: Vec3, label: Vec3, clear = 0.1): PartMotion {
+  const at = AT(id);
   return { at, path: route([OUT, 0, 0], sub(rest, at), clear), turn: FLAT, label };
 }
 
-/** Installed poses (from the PC layout) and resting places on the bench. */
+const intake = INST.fans.filter((f) => f.group !== 'rear');
+const FANS_AT: Vec3 = [0, 1, 2].map((k) => intake.reduce((sum, f) => sum + f.p[k], 0) / Math.max(1, intake.length)) as unknown as Vec3;
+
+/** Installed poses (from the mounting system) and resting places on the bench. */
 const MOTION: Record<string, PartMotion> = {
   // the glass slides off sideways and stands to the left of the case
   panel: { at: [-W / 2 - 0.004, 0, 0], path: [[-0.07, 0, 0], [-0.07, 0, -0.74]], label: [-0.01, H / 2 - 0.05, 0] },
-  gpu: boardPart([BOARD_FACE, GPU.y, GPU.z0], [-0.42, REST, -0.6], [-0.03, 0, 0.12]),
-  ram: boardPart([BOARD_FACE, RAM.y, RAM.z], [-0.7, REST, 0.11], [-0.035, 0, 0.02]),
-  cooler: { at: [BOARD_FACE, CPU.y, CPU.z], path: route([-0.04, 0, 0], sub([-0.6, REST - 0.0105, 0.27], [BOARD_FACE, CPU.y, CPU.z]), 0.12), turn: FLAT, label: [-0.17, 0, 0] },
-  cpu: boardPart([BOARD_FACE, CPU.y, CPU.z], [-0.7, REST, -0.26], [-0.02, 0, 0]),
-  ssd: boardPart([BOARD_FACE, SSD.y, SSD.z], [-0.7, REST, -0.08], [-0.01, 0, 0]),
-  // the PSU slides out of the back of its shroud and is set down behind the case
-  psu: { at: [PSU.x, PSU.y, PSU.z], path: [[0, 0, -0.33], [0, -0.018, -0.33]], label: [0, PSU.h / 2 + 0.03, 0] },
+  gpu: boardPart('gpu', flatRest('gpu', -0.42, -0.6), [-0.03, 0, 0.12]),
+  ram: boardPart('ram', flatRest('ram', -0.7, 0.11), [-0.035, 0, 0.02]),
+  cooler: { at: AT('cooler'), path: route([-0.04, 0, 0], sub(flatRest('cooler', -0.6, 0.27), AT('cooler')), 0.12), turn: FLAT, label: [-0.17, 0, 0] },
+  cpu: boardPart('cpu', flatRest('cpu', -0.7, -0.26), [-0.02, 0, 0]),
+  ssd: boardPart('ssd', flatRest('ssd', -0.7, -0.08), [-0.01, 0, 0]),
+  // the PSU slides out of the back of its bay and is set down behind the case
+  psu: { at: AT('psu'), path: [[0, 0, -0.33], [0, REST + placed('psu').size[1] / 2 - AT('psu')[1], -0.33]], label: [0, placed('psu').size[1] / 2 + 0.03, 0] },
   // the fan column comes out of the front and stands beside it
-  fans: { at: [FRONT_FANS.x, 0, FRONT_FANS.z], path: [[0, 0, 0.26], [0, FLOOR + 0.18, 0.26]], label: [0, 0.22, 0.03] },
-  motherboard: boardPart([MB.x, MB.y, MB.z], [-0.42, REST, -0.05], [-0.05, MB.h / 2 - 0.03, 0], 0.16),
+  fans: { at: FANS_AT, path: [[0, 0, 0.26], [0, FLOOR + 0.18 - FANS_AT[1], 0.26]], label: [0, 0.22, 0.03] },
+  motherboard: boardPart('motherboard', flatRest('motherboard', -0.42, -0.05), [-0.05, MB.h / 2 - 0.03, 0], 0.16),
 };
 
 /** Glass side panel (the chassis' own glass stays hidden while it is out). */
@@ -102,13 +113,13 @@ export default function SystemUnitTeardown() {
     // glass side towards the camera, front of the case to the right
     <group rotation-y={Math.PI / 2} position-y={-FLOOR}>
       <RigSync />
-      <Chassis tex={tex} fan={{ frame: res.fanFrame, blades: res.fanBlades }} rgb={res.rgb} product={build.case} />
+      <Chassis tex={tex} fan={{ frame: res.fanFrame, blades: res.fanBlades }} rgb={res.rgb} product={build.case} mounts={INST.mounts} />
       {ORDER.map((id, i) => (
         <TeardownPart key={id} id={id} index={i} name={name(id)} motion={MOTION[id]}>
           {id === 'panel' ? (
             <GlassPanel />
           ) : (
-            <HardwarePart id={id as PartId} fallback={null} product={id === 'fans' ? build.case : build[PRODUCT_OF[id as Exclude<PartId, 'fans'>]]} />
+            <HardwarePart id={id as PartId} inst={INST} at={MOTION[id].at} product={id === 'fans' ? build.case : build[PRODUCT_OF[id as Exclude<PartId, 'fans'>]]} />
           )}
         </TeardownPart>
       ))}

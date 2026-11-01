@@ -156,7 +156,8 @@ export function Draggable({ step, rest, rotation, center, handOver, grabbable, l
       </group>
       {/* always mounted: unmounting an Html root mid-render makes React complain */}
       <Html position={[0, 0.07, 0]} center zIndexRange={[4, 0]} style={{ pointerEvents: 'none' }}>
-        <span ref={labelRef} className={styles.label} data-hinted={hinted} data-hidden={!grabbable}>
+        {/* pinned in the scene: data-overlay, so the lab-overlap check treats it as part of the 3D view */}
+        <span ref={labelRef} className={styles.label} data-hinted={hinted} data-hidden={!grabbable} data-overlay>
           {label}
         </span>
       </Html>

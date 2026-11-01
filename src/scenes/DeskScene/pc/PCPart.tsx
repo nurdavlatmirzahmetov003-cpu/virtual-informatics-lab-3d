@@ -8,25 +8,55 @@ import type { TranslationKey } from '@/lib/i18n';
 import { activePart, usePcStore } from '@/store/pcStore';
 import { useStoryStore } from '@/store/storyStore';
 import { CHAPTER_INDEX } from '../chapters';
-import { PART_INDEX, type PartDef } from './parts';
+import { explodeOffset, PART_INDEX, type PartDef } from './parts';
 import { pcRig } from './pcRig';
+import { pathOffset, type EntryPath } from './mounts';
+import { playSfx } from '@/lib/audio/sfx';
 import styles from '@/components/3d/Hotspot.module.css';
 
 const HIGHLIGHT = new Color('#38d6f5');
 const tint = new Color();
 const DIM = 0.72; // how much non-active parts darken
+/** Fallback approach when the mounting system gave none (case-local offset). */
+const INSTALL_FROM: EntryPath = { entry: [-0.22, 0, 0] };
+/** Extra drift while the part is still outside the case: it arrives from above and towards the viewer. */
+const DRIFT_X = [-0.12, 0.07, 0.05] as const;
+const DRIFT_Z = [0, 0.05, -0.14] as const;
+const smooth = (x: number) => x * x * (3 - 2 * x);
+
+/**
+ * Installing offset for progress `e` (1 waiting … 0 seated): from a drifting
+ * start outside the case to the entry point, then the straight approach onto
+ * the anchor (mounts.ts pathOffset; the last half of the move).
+ */
+function installOffset(path: EntryPath, e: number, out: [number, number, number]) {
+  if (e <= 0.5) return pathOffset(path, e / 0.5, out);
+  pathOffset(path, 1, out);
+  const t = smooth((e - 0.5) / 0.5);
+  const d = path.entry[2] !== 0 && path.entry[0] === 0 ? DRIFT_Z : DRIFT_X;
+  out[0] += d[0] * t;
+  out[1] += d[1] * t;
+  out[2] += d[2] * t;
+  return out;
+}
+
+type V3 = readonly [number, number, number];
+const ORIGIN: V3 = [0, 0, 0];
 
 /**
  * Wraps one PC component: drives its exploded position, highlights it when
  * active (others dim), and makes it clickable with a numbered hotspot.
+ * `at`: where the mounting system installed it (centre of its box, case-local).
  */
-export function PCPart({ def, children, enabled = true }: { def: PartDef; children: ReactNode; enabled?: boolean }) {
+export function PCPart({ def, at = ORIGIN, children, enabled = true }: { def: PartDef; at?: V3; children: ReactNode; enabled?: boolean }) {
   const t = useT();
   const group = useRef<Group>(null);
   const records = useRef<MatRecord[]>([]);
   const assetVersion = useRef(-1);
   const metadata = useMemo(() => ({ pcPart: true, assetVersion: 0 }), []);
-  const fx = useRef({ hi: 0, dim: 0 });
+  const fx = useRef({ hi: 0, dim: 0, flash: 0, last: 1 });
+  const path = useRef<[number, number, number]>([0, 0, 0]);
+  const explode = useRef<[number, number, number]>([0, 0, 0]);
   const mode = usePcStore((s) => s.mode);
   const device = usePcStore((s) => s.selectedDevice);
   const chapter = useStoryStore((s) => s.chapter);
@@ -53,17 +83,30 @@ export function PCPart({ def, children, enabled = true }: { def: PartDef; childr
     g.visible = !pcRig.hidden.has(def.id);
     const e = pcRig.parts?.[def.id] ?? pcRig.explode;
     const installing = pcRig.parts !== null;
-    const scale = installing ? 1 : 1 + ((def.magnify ?? 1) - 1) * e;
-    g.scale.setScalar(scale);
-    // Magnify around the visual centre, keeping the hotspot and fly-to target aligned.
-    const move = installing ? [-0.22, 0.035, 0.025] : def.explode;
-    g.position.set(def.anchor[0] + move[0] * e + def.center[0] * (1 - scale), def.anchor[1] + move[1] * e + def.center[1] * (1 - scale), def.anchor[2] + move[2] * e + def.center[2] * (1 - scale));
+    // magnified around its own centre (the group origin), so the hotspot and fly-to target stay aligned
+    g.scale.setScalar(installing ? 1 : 1 + ((def.magnify ?? 1) - 1) * e);
+    // read each frame: the layout depends on the build on screen (pcRig.explodeAs, pcRig.entry)
+    if (installing) {
+      const o = installOffset(pcRig.entry[def.id] ?? INSTALL_FROM, e, path.current);
+      g.position.set(at[0] + o[0], at[1] + o[1], at[2] + o[2]);
+      // seated: a click and a short glow
+      if (fx.current.last > 0.004 && e <= 0.004 && g.visible) {
+        fx.current.flash = 1;
+        playSfx('snap');
+      }
+      fx.current.last = e;
+    } else {
+      const move = (explode.current = explodeOffset(def, at));
+      g.position.set(at[0] + move[0] * e, at[1] + move[1] * e, at[2] + move[2] * e);
+      fx.current.last = 0;
+    }
     // GLBs resolve asynchronously after this wrapper mounts.
     const newlyLoaded = records.current.length === 0 || assetVersion.current !== g.userData.assetVersion;
     if (newlyLoaded) { records.current = captureMaterials(g); assetVersion.current = g.userData.assetVersion; }
 
     const active = enabled ? activePart() : null;
-    const goalHi = active === def.id ? 1 : 0;
+    fx.current.flash = Math.max(0, fx.current.flash - Math.min(delta, 0.1) * 2.2);
+    const goalHi = Math.max(active === def.id ? 1 : 0, fx.current.flash * 3);
     const goalDim = active && active !== def.id ? 1 : 0;
     const s = fx.current;
     const k = 1 - Math.exp(-Math.min(delta, 0.1) * 8);
@@ -113,7 +156,7 @@ export function PCPart({ def, children, enabled = true }: { def: PartDef; childr
     >
       {children}
       {interactive && (
-        <Html position={[...def.center]} center zIndexRange={[5, 0]} className={styles.anchor}>
+        <Html position={[0, 0, 0]} center zIndexRange={[5, 0]} className={styles.anchor}>
           <button
             type="button"
             className={styles.hotspot}

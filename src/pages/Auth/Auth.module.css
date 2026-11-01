@@ -427,3 +427,57 @@
     overflow-x: auto;
   }
 }
+
+/* V4 §8.4: the demo profile for the defence */
+.demo {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding-top: var(--space-3, 12px);
+  border-top: 1px dashed var(--border);
+  text-align: center;
+}
+
+.demo small {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.demoButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid color-mix(in srgb, var(--warning) 60%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--warning) 16%, transparent);
+  color: var(--text);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.demoButton:hover {
+  background: color-mix(in srgb, var(--warning) 26%, transparent);
+}
+
+.demoButton:focus-visible,
+.linkButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.notice .linkButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}

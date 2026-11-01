@@ -402,3 +402,52 @@
     animation: none;
   }
 }
+
+/* ------------------------------------------------------------ V4 §6: folding (components/panel/Foldable) */
+
+.head {
+  padding-right: calc(var(--space-4) + 40px);
+}
+
+.headFold {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+}
+
+.panelFold {
+  position: static;
+  align-self: flex-end;
+  flex: none;
+  /* its own row above the guide card, so it never sits on the card's close button */
+  margin-bottom: calc(-1 * var(--space-1));
+}
+
+.headTab,
+.panelTab {
+  position: absolute;
+  z-index: var(--z-overlay);
+  top: calc(var(--topbar-h) + var(--space-3));
+}
+
+.headTab {
+  left: var(--gutter);
+}
+
+.panelTab {
+  right: var(--gutter);
+}
+
+/* the steps folded: the controls hint centres under the whole bench */
+.stage[data-panel='folded'] .controls {
+  transform: translateX(-50%);
+}
+
+@media (max-width: 960px) {
+  .headTab,
+  .panelTab {
+    position: static;
+    max-width: calc(100% - 2 * var(--gutter));
+    margin: var(--space-3) var(--gutter) 0;
+  }
+}

@@ -11,6 +11,7 @@ import { CatmullRomCurve3, Group, Mesh, Plane, Raycaster, TubeGeometry, Vector2,
 import type { PortKind } from '@/labs/ConnectLab';
 import { useConnectLabStore } from '@/store/connectLabStore';
 import { anchors, carry } from './anchors';
+import { ringReach, ringSizes } from './rings';
 import styles from './ConnectKit.module.css';
 
 // ── sockets ────────────────────────────────────────────────────────────────
@@ -21,6 +22,29 @@ export function PortHotspots({ ids, names, version }: { ids: readonly string[]; 
   const plugged = useConnectLabStore((s) => s.plugs[s.task === 'wifi' ? 'ethernet' : s.task].plugged);
   const taken = useMemo(() => new Set(Object.values(plugged)), [plugged]);
   void version;
+  // seen from afar, sockets a centimetre apart would overlap: each ring shrinks to fit (set straight on the element, no re-render)
+  const rings = useRef(new Map<string, HTMLButtonElement>());
+  const camera = useThree((s) => s.camera);
+  const size = useThree((s) => s.size);
+  const tmp = useMemo(() => new Vector3(), []);
+  useFrame(() => {
+    const shown = ids.filter((id) => anchors.has(id) && rings.current.has(id));
+    const points = shown.map((id) => {
+      tmp.copy(anchors.get(id)!.pos).project(camera);
+      return [(tmp.x * 0.5 + 0.5) * size.width, (-tmp.y * 0.5 + 0.5) * size.height] as const;
+    });
+    const sizes = ringSizes(points);
+    const reach = ringReach(points, sizes);
+    sizes.forEach((px, i) => {
+      const el = rings.current.get(shown[i])!;
+      const v = `${px}px`;
+      if (el.style.width !== v) {
+        el.style.width = v;
+        el.style.height = v;
+      }
+      el.style.setProperty('--reach', `${reach[i]}px`);
+    });
+  });
   return (
     <>
       {ids.map((id) => {
@@ -29,8 +53,14 @@ export function PortHotspots({ ids, names, version }: { ids: readonly string[]; 
         return (
           <Html key={id} position={a.pos.clone().addScaledVector(a.out, 0.004).toArray()} center zIndexRange={[30, 0]} className={styles.anchor}>
             <button
+              ref={(el) => {
+                if (el) rings.current.set(id, el);
+                else rings.current.delete(id);
+              }}
               type="button"
               className={styles.port}
+              // sockets sit a finger apart: a 44 px target each would cover the next (V4 §11); the ring grows its own hit area
+              data-compact
               data-carrying={carrying !== null}
               data-taken={taken.has(id)}
               data-port={id}

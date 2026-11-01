@@ -106,13 +106,6 @@
 
 /* ------------------------------------------------------------ layout */
 
-.visualizer {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: var(--space-4);
-  align-items: start;
-}
-
 .stage {
   display: grid;
   gap: var(--space-3);
@@ -124,8 +117,6 @@
 }
 
 .side {
-  position: sticky;
-  top: calc(var(--topbar-h) + var(--space-3));
   display: grid;
   gap: var(--space-3);
 }
@@ -990,12 +981,8 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .visualizer {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
+  /* the panel sits under the workspace here: its cards side by side */
   .side {
-    position: static;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   }
 }

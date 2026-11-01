@@ -1,44 +1,15 @@
 /**
- * Where every PC part sits (V2-2b, 0.37): the fits ModelLoader applies to the
- * part and case models. Pure data, shared by the 3D components and by
- * scripts/pc-fit.test.mjs, which checks every case × part combination.
+ * Case model fits and the measured interiors of the 0.37 catalog cases. Where
+ * each part goes is decided by the mounting system (mounts.ts, caseMounts.ts);
+ * the interiors below are what the old cases' mounts are derived from.
  */
 import type { ModelFit } from '@/lib/three/fit';
-import { BOARD_FACE, D, H, MB, SSD, W } from './constants';
-import type { PartId } from './parts';
+import { D, H, MB, W } from './constants';
 
 type Fit = ModelFit;
-export const fits: Record<Exclude<PartId, 'fans'>, Fit> = {
-  motherboard: { axis: 1, size: 0.305, rotation: [0, -Math.PI / 2, 0], offset: [-0.024, 0, 0] },
-  cpu: { axis: 1, size: 0.04, rotation: [0, -Math.PI / 2, 0], offset: [-0.003, 0, 0] },
-  cooler: { axis: 0, size: 0.148, rotation: [0, 0, -Math.PI / 2], offset: [-0.078, 0, 0.01] },
-  ram: { axis: 1, size: 0.133, rotation: [Math.PI / 2, 0, Math.PI / 2], offset: [-0.029, 0, 0] },
-  gpu: { axis: 2, size: 0.323, rotation: [0, -Math.PI / 2, 0], offset: [-0.07, 0, 0.1615] },
-  ssd: { axis: 2, size: 0.08, rotation: [0, -Math.PI / 2, 0], offset: [-0.002, 0, 0] },
-  psu: { axis: 0, size: 0.15 },
-};
-export const files = { motherboard: 'motherboard_x570', cpu: 'cpu_am4', cooler: 'cooler_tower', ram: 'ram_rgb', gpu: 'gpu_triple_fan', ssd: 'ssd_m2', psu: 'psu' };
 export const fanFit: Fit = { axis: 0, size: 0.12, rotation: [Math.PI / 2, 0, 0] };
 export const rotorFit: Fit = { axis: 0, size: 0.0935, rotation: [Math.PI / 2, 0, 0] };
 
-/**
- * Per-product models (V2-2b) are real size in a canonical pose (component side
- * up, see scripts/blender/configs/products): a quarter turn about Z lays them
- * against the board (component side −X, top edge up, I/O / bracket at the back).
- * `pin x max` puts the back of the part on its anchor, the offset is the height
- * of the socket / slot it sits in.
- */
-export const ON_BOARD = [0, 0, Math.PI / 2] as const;
-export const productFits: Record<Exclude<PartId, 'fans'>, Fit> = {
-  // ATX and mATX share the top edge and the I/O edge
-  motherboard: { axis: 1, rotation: ON_BOARD, pin: { x: 'max', y: 'max', z: 'min' }, offset: [0, MB.h / 2, -MB.d / 2] },
-  cpu: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.004, 0, 0] },
-  cooler: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.0105, 0, 0] },
-  ram: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.002, 0, 0] },
-  gpu: { axis: 1, rotation: ON_BOARD, pin: { x: 'max', z: 'min' }, offset: [-0.004, 0, 0] },
-  ssd: { axis: 1, rotation: ON_BOARD, pin: { x: 'max' }, offset: [-0.001, 0, 0] },
-  psu: { axis: 0 },
-};
 /** Where a 2.5″ SATA drive goes (x, z; height from the case's shroud, see sataFitFor), not in the M.2 slot. */
 export const SATA_AT = [-W / 2 + 0.07, -H / 2 + 0.098, D / 2 - 0.13] as const;
 
@@ -99,20 +70,6 @@ export const caseInterior = (caseId?: string | null): CaseInterior => (caseId &&
 
 /** Gap kept between a part and the panel it rests on. */
 const REST = 0.001;
-
-/** PSU anchor (PSU in constants.ts) → how far the PSU drops or rises to stand on this case's floor. */
-export function psuFit(interior: CaseInterior, psuAnchorY: number, own: boolean): Fit {
-  const lift = interior.floor + REST - psuAnchorY;
-  return own ? { axis: 0, pin: { y: 'min' }, offset: [0, lift, 0] } : { axis: 0, size: 0.15, align: 'floor', offset: [0, lift, 0] };
-}
-
-/** A 2.5″ SATA drive lies flat on the PSU shroud, in front of the board (on the floor if there is no shroud). */
-export function sataFitFor(interior: CaseInterior): Fit {
-  const y = (interior.shroud?.top ?? interior.floor) + REST;
-  // fully on the shroud: its front edge 5 mm behind the shroud's front edge
-  const z = Math.min(D / 2 - 0.13, (interior.shroud?.z[1] ?? interior.front - 0.02) - 0.055);
-  return { axis: 0, align: 'floor', offset: [SATA_AT[0] - BOARD_FACE, y - SSD.y, z - SSD.z] };
-}
 
 /**
  * Front intake fans: as many 120 mm fans as fit between the shroud (where it

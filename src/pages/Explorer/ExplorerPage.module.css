@@ -43,6 +43,7 @@
 }
 
 .intro {
+  position: relative;
   grid-column: 1;
   grid-row: 1;
   display: grid;
@@ -518,3 +519,59 @@
 .quizDetails[open] summary {
   margin-bottom: var(--space-4);
 }
+
+/* V4 §6: folding (components/panel/Foldable) */
+.introFold {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.intro .eyebrow {
+  padding-right: 40px;
+}
+
+/* folded: only the tab and the switches, no card behind them */
+.intro[data-folded] {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  justify-items: start;
+}
+
+.panelTab {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: start;
+  justify-self: end;
+}
+
+.panelHead {
+  gap: var(--space-2);
+}
+
+.panelHead > :first-child {
+  flex: 1;
+}
+
+/* V4 §6: on narrow screens the part sheet sits above the device chips, not over them,
+   and the chips start right of the Bit button (bottom left) */
+@media (max-width: 959px) {
+  .itemList {
+    left: calc(var(--space-3) + 62px);
+  }
+
+  .panel {
+    bottom: calc(var(--space-3) + 60px);
+  }
+}
+
+/* V4 §11: touch screens have 44 px chips (and the strip's scrollbar): the sheet sits higher still */
+@media (max-width: 959px) and (pointer: coarse) {
+  .panel {
+    bottom: calc(var(--space-3) + 76px);
+  }
+}
+

@@ -85,6 +85,10 @@
   --space-7: 48px;
   --space-8: 72px;
   --gutter: clamp(16px, 4vw, 48px);
+  /* V4 §11: the page runs under a phone's notch and home bar (viewport-fit=cover); the chrome keeps clear of them */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --gutter-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  --gutter-right: max(var(--gutter), env(safe-area-inset-right, 0px));
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -103,7 +107,7 @@
 
   /* the bar itself; --topbar-h also covers the admin's site banner (V2-10) when one is shown */
   --topbar-base: 64px;
-  --topbar-h: calc(var(--topbar-base) + var(--banner-h, 0px));
+  --topbar-h: calc(var(--topbar-base) + var(--banner-h, 0px) + var(--safe-top));
   --z-canvas: 0;
   --z-overlay: 10;
   --z-topbar: 50;

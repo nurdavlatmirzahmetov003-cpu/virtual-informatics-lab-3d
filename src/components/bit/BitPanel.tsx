@@ -19,6 +19,7 @@ import { recordRequest, recordingSupported, type Recording } from '@/services/bi
 import { bitVoice, useVoiceStore } from '@/services/bit/voice';
 import { BitFace, type BitMood } from './BitFace';
 import { useBitBrain } from './useBitBrain';
+import { VoiceSettings } from './VoiceSettings';
 import styles from './Bit.module.css';
 
 const ACTIONS = ['tour', 'open', 'lesson', 'build'] as const;
@@ -35,6 +36,8 @@ export default function BitPanel({ hidden = false }: { hidden?: boolean }) {
   const queued = useBitStore((s) => s.queued);
   const side = useBitStore((s) => s.dock.side);
   const speaking = useVoiceStore((s) => s.speaking);
+  const quota = useVoiceStore((s) => s.notice === 'quota');
+  const [settings, setSettings] = useState(false);
   const [text, setText] = useState('');
   const [listening, setListening] = useState<false | 'browser' | 'server'>(false);
   const [transcribing, setTranscribing] = useState(false);
@@ -211,7 +214,10 @@ export default function BitPanel({ hidden = false }: { hidden?: boolean }) {
       aria-modal="false"
       aria-labelledby="bit-title"
       onKeyDown={(e) => {
-        if (e.key === 'Escape') minimize();
+        if (e.key === 'Escape') {
+          if (settings) setSettings(false);
+          else minimize();
+        }
       }}
     >
       <header className={styles.head}>
@@ -226,7 +232,7 @@ export default function BitPanel({ hidden = false }: { hidden?: boolean }) {
           {caps.tts && <span className={styles.voiceBadge}>{t('bit.geminiVoice')}</span>}
         </div>
         <div className={styles.tools}>
-          <button type="button" className={styles.tool} aria-pressed={voice} onClick={() => (voice ? (stopAll(), useBitStore.getState().setVoice(false)) : useBitStore.getState().setVoice(true))} title={voice ? t('bit.voiceOn') : t('bit.voiceOff')} aria-label={voice ? t('bit.voiceOn') : t('bit.voiceOff')}>
+          <button type="button" className={styles.tool} aria-pressed={settings} aria-expanded={settings} onClick={() => setSettings(!settings)} title={`${t('bit.voiceSettings.title')} · ${voice ? t('bit.voiceOn') : t('bit.voiceOff')}`} aria-label={`${t('bit.voiceSettings.title')} · ${voice ? t('bit.voiceOn') : t('bit.voiceOff')}`}>
             {voice ? <Volume2 size={17} /> : <VolumeX size={17} />}
           </button>
           {canListen && (
@@ -291,7 +297,7 @@ export default function BitPanel({ hidden = false }: { hidden?: boolean }) {
         </div>
       )}
 
-      {(note || (voice && voiceNote)) && <p className={styles.note}>{note ?? (voiceNote === 'approx' ? t('bit.voiceApprox') : t('bit.noVoice'))}</p>}
+      {(note || (voice && (quota || voiceNote))) && <p className={styles.note}>{note ?? (quota ? t('bit.quota') : voiceNote === 'approx' ? t('bit.voiceApprox') : t('bit.noVoice'))}</p>}
 
       <form className={styles.compose} onSubmit={onSubmit}>
         <textarea
@@ -327,6 +333,7 @@ export default function BitPanel({ hidden = false }: { hidden?: boolean }) {
           <Send size={17} />
         </button>
       </form>
+      {settings && <VoiceSettings onClose={() => setSettings(false)} geminiVoice={caps.tts} />}
     </section>
   );
 }

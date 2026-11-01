@@ -652,3 +652,32 @@
     animation: none;
   }
 }
+
+/* V4 §6: the side panel folds (components/panel/Foldable) */
+.page[data-folded] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.side {
+  position: relative;
+}
+
+.sideFold {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+}
+
+.sideTab {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 2;
+}
+
+/* phones: the top bar adds a second row (its links) over the stage — the tab goes below it */
+@media (max-width: 720px) {
+  .sideTab {
+    top: calc(52px + var(--space-2));
+  }
+}

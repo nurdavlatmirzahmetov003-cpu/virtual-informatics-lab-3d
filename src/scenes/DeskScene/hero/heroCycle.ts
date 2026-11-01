@@ -7,8 +7,12 @@ import type { PieceKey } from '@/scenes/SetupStudio/assembly/assemblyRig';
  */
 export const HERO_ORDER: readonly PieceKey[] = ['mat', 'monitorStand', 'monitor', 'pcCase', 'keyboard', 'mouse', 'speakers', 'headsetStand', 'headset'];
 
-/** 0 = the hero setup is on the desk, 1 = the story's devices are. Written by LivingSetup, read every frame. */
-export const heroPresence = { away: 0, look: 0, ready: false };
+/**
+ * 0 = the hero setup is on the desk, 1 = the story's devices are. Written by
+ * LivingSetup, read every frame. `line` is what the presenter says about the
+ * look on the desk (HeroCompanions): phones show it as a card (StoryOverlay).
+ */
+export const heroPresence = { away: 0, look: 0, ready: false, line: '' };
 
 export const HERO_TIMING = {
   /** Gap between two pieces arriving. */

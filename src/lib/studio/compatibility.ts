@@ -2,6 +2,7 @@ import type { HardwareCategory } from '@/data/hardware/types';
 import { REQUIRED_CATEGORIES } from '@/data/studio/options';
 import type { ResolvedBuild } from './build';
 import { estimatePower } from './power';
+import { caseMountsFor, installBuild } from '@/scenes/DeskScene/pc/mounts';
 
 export type IssueCode =
   | 'missing'
@@ -14,7 +15,8 @@ export type IssueCode =
   | 'coolerSocket'
   | 'coolerTooTall'
   | 'radiatorTooBig'
-  | 'coolerWeak';
+  | 'coolerWeak'
+  | 'coolerBlocksGpu';
 
 /** `error`: the PC cannot be built or will not work; `warning`: it works with a drawback. */
 export type IssueSeverity = 'error' | 'warning';
@@ -110,6 +112,14 @@ export function checkCompatibility(build: ResolvedBuild): CompatIssue[] {
     const maxRadiator = pcCase.compatibility.maxRadiatorMm;
     if (radiator && maxRadiator && radiator > maxRadiator) {
       issues.push({ code: 'radiatorTooBig', severity: 'error', categories: ['cooling', 'case'], params: { cooler: name(cooling), radiator, case: name(pcCase), max: maxRadiator } });
+    }
+  }
+
+  // what the mounting system finds when it actually puts the parts together (V4 §1.2)
+  if (cooling && board && gpu && cpu && !cooling.compatibility.radiatorMm) {
+    const inst = installBuild(caseMountsFor(pcCase?.id), build);
+    if (inst.skipped.cooler === 'clearance') {
+      issues.push({ code: 'coolerBlocksGpu', severity: 'warning', categories: ['cooling', 'motherboard', 'gpu'], params: { cooler: name(cooling), board: name(board), gpu: name(gpu) } });
     }
   }
 

@@ -2,12 +2,19 @@
  * Bit the assistant: whether the panel is open, the conversation, and the
  * guided walk in progress (site tour or lesson). Small on purpose — it is in
  * the main bundle so any page can open Bit; the panel and its texts load on
- * first use. Only the voice preferences are saved.
+ * first use. Only the voice preferences are saved: in this browser for a
+ * guest, on the server for a signed-in student (V4 §10, server/bitPrefs.ts),
+ * so the same voice follows them to another computer.
  */
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { STORAGE_KEYS, STORAGE_VERSIONS, safeStorage } from '@/lib/storage';
 import type { LessonId } from '@/services/bit/lessons';
+import { DEFAULT_VOICE_PREFS, normalizeVoicePrefs, type VoicePrefs } from '@/services/bit/voicePrefs';
+import { bitVoice } from '@/services/bit/voice';
+import { call } from '@/services/auth/api';
+import { useAuthStore } from './authStore';
+import { useSettingsStore } from './settingsStore';
 
 export type BitSource = 'faq' | 'ai' | 'local';
 
@@ -38,8 +45,12 @@ interface BitState {
   guide: BitGuide | null;
   /** A request to run as soon as the panel is ready (openBit('…') from a page or the robot). */
   queued: string | null;
-  /** Speak answers aloud. */
+  /** Auto-read: speak answers, guides and cheers aloud by themselves (the Listen buttons always speak). */
   voice: boolean;
+  /** Which voice, style, speed and emotion (V4 §10). */
+  profile: VoicePrefs;
+  /** Where the voice settings live right now. */
+  prefsSync: 'local' | 'saving' | 'saved' | 'offline';
   /** Listen again after every spoken answer, hands-free. */
   conversation: boolean;
   openBit: (prompt?: string) => void;
@@ -54,6 +65,9 @@ interface BitState {
   setGuide: (g: BitGuide | null) => void;
   clear: () => void;
   setVoice: (on: boolean) => void;
+  setProfile: (patch: Partial<VoicePrefs>) => void;
+  /** Loads a signed-in student's voice settings (a guest keeps this browser's). */
+  loadPrefs: () => Promise<void>;
   setConversation: (on: boolean) => void;
 }
 
@@ -61,7 +75,8 @@ let seq = 0;
 const MAX_MESSAGES = 60;
 
 const memory = new Map<string, string>();
-const storage = createJSONStorage<Pick<BitState, 'voice' | 'conversation' | 'dock'>>(
+type Saved = Pick<BitState, 'voice' | 'conversation' | 'dock' | 'profile'>;
+const storage = createJSONStorage<Saved>(
   () =>
     safeStorage() ?? {
       getItem: (k) => memory.get(k) ?? null,
@@ -70,9 +85,31 @@ const storage = createJSONStorage<Pick<BitState, 'voice' | 'conversation' | 'doc
     },
 );
 
+let pendingSave: ReturnType<typeof setTimeout> | null = null;
+
 export const useBitStore = create<BitState>()(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      /** A signed-in student's settings go to the server shortly after the last change. */
+      const savePrefs = () => {
+        const { user, csrf } = useAuthStore.getState();
+        if (!user || !csrf) {
+          set({ prefsSync: 'local' });
+          return;
+        }
+        set({ prefsSync: 'saving' });
+        if (pendingSave) clearTimeout(pendingSave);
+        pendingSave = setTimeout(async () => {
+          pendingSave = null;
+          try {
+            await call('/api/bit/voice/me', { method: 'PUT', body: { prefs: { ...get().profile, autoRead: get().voice } }, csrf: useAuthStore.getState().csrf ?? csrf });
+            set({ prefsSync: 'saved' });
+          } catch {
+            set({ prefsSync: 'offline' });
+          }
+        }, 400);
+      };
+      return {
       open: false,
       mini: false,
       dock: { side: 'left', y: 1 },
@@ -80,6 +117,8 @@ export const useBitStore = create<BitState>()(
       guide: null,
       queued: null,
       voice: true,
+      profile: DEFAULT_VOICE_PREFS,
+      prefsSync: 'local',
       conversation: false,
       openBit: (prompt) => set({ open: true, mini: false, queued: prompt?.trim() || get().queued }),
       close: () => set({ open: false, mini: false }),
@@ -99,22 +138,62 @@ export const useBitStore = create<BitState>()(
       update: (id, patch) => set((s) => ({ messages: s.messages.map((m) => (m.id === id ? { ...m, ...patch } : m)) })),
       setGuide: (guide) => set({ guide }),
       clear: () => set({ messages: [], guide: null }),
-      setVoice: (voice) => set({ voice }),
+      setVoice: (voice) => {
+        set({ voice });
+        savePrefs();
+      },
+      setProfile: (patch) => {
+        set({ profile: normalizeVoicePrefs({ ...get().profile, ...patch }) });
+        savePrefs();
+      },
+      loadPrefs: async () => {
+        if (!useAuthStore.getState().user) {
+          set({ prefsSync: 'local' });
+          return;
+        }
+        try {
+          const r = await call<{ prefs: (VoicePrefs & { autoRead?: boolean }) | null }>('/api/bit/voice/me');
+          // never saved on the server: this browser's choice becomes the account's
+          if (!r.prefs) {
+            savePrefs();
+            return;
+          }
+          set({ profile: normalizeVoicePrefs(r.prefs), voice: r.prefs.autoRead !== false, prefsSync: 'saved' });
+        } catch {
+          set({ prefsSync: 'offline' });
+        }
+      },
       setConversation: (conversation) => set({ conversation }),
-    }),
+      };
+    },
     {
       name: STORAGE_KEYS.bit,
       version: STORAGE_VERSIONS.bit,
       storage,
-      partialize: ({ voice, conversation, dock }) => ({ voice, conversation, dock }),
+      partialize: ({ voice, conversation, dock, profile }) => ({ voice, conversation, dock, profile }),
       migrate: (persisted) => {
-        const raw = (persisted ?? {}) as Partial<Pick<BitState, 'voice' | 'conversation' | 'dock'>>;
+        const raw = (persisted ?? {}) as Partial<Saved>;
         const dock: BitDock = raw.dock && (raw.dock.side === 'left' || raw.dock.side === 'right') && typeof raw.dock.y === 'number' ? { side: raw.dock.side, y: Math.min(1, Math.max(0, raw.dock.y)) } : { side: 'left', y: 1 };
-        return { voice: raw.voice !== false, conversation: raw.conversation === true, dock };
+        return { voice: raw.voice !== false, conversation: raw.conversation === true, dock, profile: normalizeVoicePrefs(raw.profile) };
       },
+      // a saved profile from another version is cleaned on the way in
+      merge: (persisted, current) => ({ ...current, ...(persisted as Partial<Saved>), profile: normalizeVoicePrefs((persisted as Partial<Saved> | undefined)?.profile) }),
     },
   ),
 );
 
 /** Open Bit from anywhere (the robot in the lab, a page button), optionally with a request. */
 export const openBit = (prompt?: string) => useBitStore.getState().openBit(prompt);
+
+// Bit speaks with the chosen voice everywhere (the chat, the panels, the robots)
+bitVoice.prefs = useBitStore.getState().profile;
+useBitStore.subscribe((s) => {
+  bitVoice.prefs = s.profile;
+});
+// signing in loads the student's voice; signing out keeps this browser's
+useAuthStore.subscribe((s, prev) => {
+  if (s.user?.id !== prev.user?.id && s.status !== 'loading') void useBitStore.getState().loadPrefs();
+});
+// Bit speaks only the site language (the KK / RU / EN switch): a switch stops it and drops the old queue
+bitVoice.setLanguage(useSettingsStore.getState().language);
+useSettingsStore.subscribe((s) => bitVoice.setLanguage(s.language));

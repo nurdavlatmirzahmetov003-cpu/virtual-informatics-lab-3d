@@ -248,7 +248,7 @@ const en: BitContent = {
   tourIntro: 'Great, let’s walk through the site together! I will stop in every section and tell you what you can do there. To move on, press “Next” or say “next”.',
   tour: {
     home: 'This is the home page with a 3D desk. Scroll down and the computer comes apart, telling you about each of its parts.',
-    lab: 'This is the 3D lab, our big classroom. It has ten zones: PC building, networks, peripherals, the BitLab stage and more. Click a zone and the camera flies there; click a device to turn it around and see it from every side.',
+    lab: 'This is the 3D lab, our big classroom. It has eleven zones: PC building, networks, peripherals, the BitLab stage, the robots’ yard and more. Click a zone and the camera flies there; click a device to turn it around and see it from every side.',
     explorer: 'In Anatomy every device is shown close up: its name, what it is for and its key specs. Each one ends with a short three-question test.',
     labs: 'This is the list of labs: PC assembly, networks, algorithms, logic, experiments, cable connections and cause and effect. Every task is graded automatically.',
     studio: 'In Setup Studio you pick a purpose and a budget and build your own computer. The studio checks that the parts fit together. Tell me “build a PC for 500,000 tenge” and I will help.',
@@ -312,7 +312,7 @@ const en: BitContent = {
       'When you are done, the summary page shows the price and specs of your build. Tell me “build a PC for 400,000 tenge” and I will suggest my own version.',
     ],
     lab: [
-      'Welcome to the 3D lab! The hall has ten zones, each with real devices. First let us fly to the workstation: here are the computer, the monitor and the peripherals.',
+      'Welcome to the 3D lab! The hall has eleven zones, each with real devices. First let us fly to the workstation: here are the computer, the monitor and the peripherals.',
       'Now to the assembly bench. Look, the processor is lit up, and the panel on the right says what it does. Turn the model with your mouse and look at it from every side.',
       'This is the network zone. I am showing you the router: it links the network of a home or school to the internet. The Test tab in the panel lets you check yourself.',
       'Finally, look at the showcase in the middle, with the most powerful devices. Click any device and ask me a question; the Overview button shows the whole hall.',

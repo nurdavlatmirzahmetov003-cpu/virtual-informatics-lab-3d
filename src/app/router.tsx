@@ -5,6 +5,7 @@ import { AppShell } from '@/components/layout/AppShell';
 
 // Every page is its own chunk: a lab's scene code loads only when visited.
 const HomePage = lazy(() => import('@/pages/Home/HomePage'));
+const RobotsPage = lazy(() => import('@/pages/Robots/RobotsPage'));
 const LabsPage = lazy(() => import('@/pages/Labs/LabsPage'));
 const SetupStudioPage = lazy(() => import('@/pages/SetupStudio/SetupStudioPage'));
 const SetupSummaryPage = lazy(() => import('@/pages/SetupStudio/SetupSummaryPage'));
@@ -34,6 +35,8 @@ const GamePlayPage = lazy(() => import('@/pages/Games/GamePlayPage'));
 const FeedbackPage = lazy(() => import('@/pages/Feedback/FeedbackPage'));
 const CertificatePage = lazy(() => import('@/pages/Certificate/CertificatePage'));
 const CertificateCheckPage = lazy(() => import('@/pages/Certificate/CheckPage'));
+const CertificatePreviewPage = lazy(() => import('@/pages/Certificate/PreviewPage'));
+const AchievementsPage = lazy(() => import('@/pages/Achievements/AchievementsPage'));
 const LivePage = lazy(() => import('@/pages/Live/LivePage'));
 const PrivacyPage = lazy(() => import('@/pages/Privacy/PrivacyPage'));
 const PathPage = lazy(() => import('@/pages/Path/PathPage'));
@@ -69,11 +72,14 @@ export const router = createBrowserRouter([
       { path: 'feedback', element: <FeedbackPage /> },
       { path: 'certificate', element: <CertificatePage /> },
       { path: 'certificate/check/:code', element: <CertificateCheckPage /> },
+      { path: 'certificate/preview', element: <CertificatePreviewPage /> },
       { path: 'credits', element: <CreditsPage /> },
       { path: 'privacy', element: <PrivacyPage /> },
       { path: 'path', element: <PathPage /> },
       { path: 'progress/report', element: <ReportPage /> },
+      { path: 'achievements', element: <AchievementsPage /> },
       { path: 'identify', element: <IdentifyPage /> },
+      { path: 'robots', element: <RobotsPage /> },
       { path: 'remote', element: <RemotePage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'teacher', element: <TeacherHome /> },

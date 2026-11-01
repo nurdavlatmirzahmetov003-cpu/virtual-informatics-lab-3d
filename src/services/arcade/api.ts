@@ -5,7 +5,7 @@
  */
 import { call } from '@/services/auth/api';
 import { ARCADE_GAMES, newSeed, scoreRun, type ArcadeGame, type ArcadeResult } from '@/labs/Arcade';
-import { STORAGE_NAMESPACE, safeStorage } from '@/lib/storage';
+import { DATA_NAMESPACE, safeStorage } from '@/lib/storage';
 import { useAuthStore } from '@/store/authStore';
 
 export interface Run {
@@ -45,7 +45,7 @@ export interface Boards {
   school: { id: string; name: string } | null;
 }
 
-const LOCAL_KEY = `${STORAGE_NAMESPACE}:arcade`;
+const LOCAL_KEY = `${DATA_NAMESPACE}:arcade`;
 
 /** Local records (guest / offline), per game. */
 export function localBests(): Partial<Record<ArcadeGame, number>> {

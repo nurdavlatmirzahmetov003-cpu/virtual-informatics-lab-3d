@@ -6,12 +6,14 @@
  *
  *   task        50 × best percent (incomplete tries count too)
  *   clean       +10 for a completed 100 % without mistakes or hints
- *   badge       +100 per achievement the history earns
+ *   badge       +100 / 150 / 250 / 400 per achievement the history earns,
+ *               by its rarity (bronze / silver / gold / legendary, V4 §9)
  *   daily       +20 per daily item, +40 for all three
  *   weekly      +75 per weekly goal
  */
 // direct modules, not the index: the server imports this file and the index pulls in browser storage
 import { ACHIEVEMENT_IDS, evaluateAchievements } from '@/services/progress/achievements';
+import { badgeXp } from '@/services/progress/rarity';
 import { TASKS } from '@/services/progress/catalog';
 import { dailyHistory, weeklyHistory } from '@/services/progress/challenges';
 import { rebuild } from '@/services/progress/records';
@@ -43,7 +45,9 @@ export function computeXp(attempts: readonly AttemptRecord[], until = Infinity):
     const b = ex.best;
     if (b.status === 'completed' && b.percent === 100 && b.errors === 0 && b.hints === 0) clean += XP.clean;
   }
-  const badges = evaluateAchievements(summarize(snap), list).filter((x) => x.unlocked).length * XP.badge;
+  const badges = evaluateAchievements(summarize(snap), list)
+    .filter((x) => x.unlocked)
+    .reduce((n, x) => n + badgeXp(x.id), 0);
   const daily = dailyHistory(list).reduce((n, d) => n + d.done * XP.dailyItem + (d.complete ? XP.dailyAll : 0), 0);
   const weekly = weeklyHistory(list).reduce((n, w) => n + w.done * XP.weeklyGoal, 0);
   return { tasks, clean, badges, daily, weekly, total: tasks + clean + badges + daily + weekly };
@@ -76,4 +80,4 @@ export function levelOf(xp: number): LevelInfo {
 }
 
 /** The most a student can reach from tasks and badges alone (for context on the results page). */
-export const MAX_TASK_XP = TASKS.length * (XP.task + XP.clean) + ACHIEVEMENT_IDS.length * XP.badge;
+export const MAX_TASK_XP = TASKS.length * (XP.task + XP.clean) + ACHIEVEMENT_IDS.reduce((n, id) => n + badgeXp(id), 0);

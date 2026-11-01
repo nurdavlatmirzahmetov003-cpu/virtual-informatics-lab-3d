@@ -107,3 +107,64 @@
   color: var(--danger);
   font-weight: 700;
 }
+
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.secondary:hover {
+  border-color: var(--accent);
+}
+
+.previewLink {
+  margin: var(--space-6) 0 0;
+}
+
+.previewLink a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.demoNote {
+  color: var(--warning);
+  font-weight: 700;
+}
+
+.kindSwitch {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+}
+
+.kindSwitch button {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.kindSwitch .kindOn {
+  background: var(--gradient-accent);
+  color: #fff;
+}

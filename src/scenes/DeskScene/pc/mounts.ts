@@ -1,0 +1,332 @@
+/**
+ * The data-driven mounting system (V4 §1.2). Every case has named mounts
+ * (motherboard standoffs, PSU bay, expansion slots, fan and radiator
+ * positions); every motherboard model has its slot anchors (CPU socket,
+ * DIMMs, PCIe x16, M.2 — measured from the model's slot markers, see
+ * scripts/extract-mounts.mjs); every part has an attach point (CPU base,
+ * cooler base, a card's gold fingers, a stick's edge, a PSU's back and
+ * bottom). `installBuild` aligns each attach point with its target, so a part
+ * always lands where its board or case says, whatever the combination.
+ *
+ * Pure data and maths: the 3D scenes (home hero, exploded view, Setup Studio,
+ * PC Assembly Lab) and scripts/pc-fit.test.mjs all call it.
+ *
+ * Frame: case-local metres, origin = centre of the case box, −X glass side,
+ * +Y up, +Z front. Boards stand on the tray with their component side −X,
+ * top edge +Y and I/O edge −Z; cards and sticks are perpendicular to them.
+ */
+import { PART_GEOMETRY } from '@/data/hardware/partGeometry.generated';
+import type { PartGeometry, Vec3 } from '@/data/hardware/mountTypes';
+import type { HardwareItem } from '@/data/hardware/types';
+import { CASE_MOUNTS, LEGACY_MOUNTS, type CaseMounts, type FanMount } from './caseMounts';
+
+export type { CaseMounts, FanMount, Vec3 };
+
+/** A quarter turn about Z lays a board, card or stick model against the tray (component side −X). */
+export const ON_BOARD = [0, 0, Math.PI / 2] as const;
+
+/** A column of 120 mm fans along Y facing +Z (device displays in the 3D lab). */
+export const fanColumn = (ys: readonly number[], z = 0): FanMount[] => ys.map((y) => ({ p: [0, y, z], n: [0, 0, -1], group: 'front', size: 0.12 }));
+
+/** How far above the back of the PCB each part's contact face sits (PCB 1.6 mm + the socket / slot it rests in). */
+export const SEAT = { socket: 0.0048, dimm: 0.0028, pcie: 0.0048, m2: 0.0018 } as const;
+/** Gap kept under a part that stands on a panel. */
+const PSU_REST = 0.001;
+/** 2 sticks go in A2/B2 (slots 2 and 4), as every board manual says. */
+const DIMM_FOR: Record<number, readonly number[]> = { 1: [2], 2: [2, 4], 3: [1, 2, 4], 4: [1, 2, 3, 4] };
+
+export interface Box3Like {
+  min: Vec3;
+  max: Vec3;
+}
+
+/** Where one part is in the case: the centre of its bounding box, plus the box itself. */
+export interface Placement {
+  /** Centre of the part's bounding box (models are centred by ModelLoader). */
+  p: Vec3;
+  size: Vec3;
+  /** The target anchor this part was aligned to, and its own attach point (both case-local; equal when installed). */
+  target: Vec3;
+  attach: Vec3;
+  /** Euler turn applied to the model on top of its installed pose (a PSU on its side). */
+  r?: Vec3;
+}
+
+export interface RamPlacement extends Placement {
+  /** Centre of every stick, relative to `p`. */
+  sticks: readonly Vec3[];
+  /** One stick's box size. */
+  stick: Vec3;
+  /** DIMM slot numbers used (1-based). */
+  slots: readonly number[];
+}
+
+export interface CoolerPlacement extends Placement {
+  /** The case could not take this air cooler (too tall): an AIO is shown instead. */
+  liquid: boolean;
+  /** AIO: radiator centre, its long axis and the side its fans blow from. */
+  radiator?: { p: Vec3; along: Vec3; normal: Vec3; mm: number };
+}
+
+export interface Installed {
+  mounts: CaseMounts;
+  motherboard: Placement | null;
+  cpu: Placement | null;
+  cooler: CoolerPlacement | null;
+  ram: RamPlacement | null;
+  gpu: Placement | null;
+  ssd: Placement | null;
+  psu: Placement | null;
+  /** Case fans (radiator positions are left free when an AIO uses them). */
+  fans: readonly FanMount[];
+  /** Where the power cables plug in (case-local): the 24-pin and CPU EPS headers, the card's power socket. */
+  ports: { atx24?: Vec3; eps8?: Vec3; gpuPower?: Vec3 };
+  /** Why a chosen part is not drawn (it would not fit this case). */
+  skipped: Partial<Record<'motherboard' | 'gpu' | 'cooler', 'formFactor' | 'length' | 'height' | 'clearance'>>;
+}
+
+const add = (a: Vec3, b: Vec3): Vec3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const sub = (a: Vec3, b: Vec3): Vec3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const r = (v: number) => Math.round(v * 1e6) / 1e6;
+const round = (v: Vec3): Vec3 => [r(v[0]), r(v[1]), r(v[2])];
+
+export function geometryOf(modelPath: string | undefined): PartGeometry | null {
+  return (modelPath && PART_GEOMETRY[modelPath]) || null;
+}
+
+/** Mounts of a case model; cases without their own data use the scene's reference mid-tower. */
+export function caseMountsFor(caseId?: string | null): CaseMounts {
+  return (caseId && CASE_MOUNTS[caseId]) || LEGACY_MOUNTS;
+}
+
+export function boxOf(pl: Pick<Placement, 'p' | 'size'>): Box3Like {
+  const h: Vec3 = [pl.size[0] / 2, pl.size[1] / 2, pl.size[2] / 2];
+  return { min: sub(pl.p, h), max: add(pl.p, h) };
+}
+
+/** Placement that puts `attach` (relative to the part's box centre) on `target`. */
+function align(geo: PartGeometry, attach: Vec3, target: Vec3): Placement {
+  const p = round(sub(target, attach));
+  return { p, size: geo.size, target: round(target), attach: round(add(p, attach)) };
+}
+
+/** A part's contact face centre: the +X side of its box (the side facing the board). */
+const backFace = (geo: PartGeometry): Vec3 => [geo.size[0] / 2, 0, 0];
+
+export interface BuildParts {
+  motherboard?: HardwareItem;
+  cpu?: HardwareItem;
+  cooling?: HardwareItem;
+  ram?: HardwareItem;
+  gpu?: HardwareItem;
+  ssd?: HardwareItem;
+  psu?: HardwareItem;
+}
+
+/** Number of sticks in a RAM kit ("… (2 × 16 GB)"). */
+export const stickCount = (ram?: HardwareItem) => Math.min(4, Math.max(1, Number(ram?.model.match(/\((\d+)\s*[×x]/)?.[1] ?? 2)));
+export const isSata = (ssd?: HardwareItem) => !!ssd && /SATA/.test(ssd.model);
+
+/**
+ * Installs every chosen part in `mounts`. Parts without a measured model
+ * (procedural stand-ins) return null and keep their own placement.
+ */
+export function installBuild(mounts: CaseMounts, build: BuildParts): Installed {
+  const out: Installed = { mounts, motherboard: null, cpu: null, cooler: null, ram: null, gpu: null, ssd: null, psu: null, fans: mounts.fans, ports: {}, skipped: {} };
+  const board = geometryOf(build.motherboard?.modelPath);
+  const ff = build.motherboard?.compatibility.formFactor;
+  if (board && ff && mounts.formFactors.includes(ff)) {
+    // the PCB's top-rear corner (back face) on the case's reference standoff
+    const corner = mounts.board.corner;
+    const p = round([corner[0] - board.size[0] / 2, corner[1] - board.size[1] / 2, corner[2] + board.size[2] / 2]);
+    out.motherboard = { p, size: board.size, target: corner, attach: corner };
+  } else if (board) out.skipped.motherboard = 'formFactor';
+
+  const mb = out.motherboard;
+  /** A board anchor in case space, its height replaced by the seat height above the PCB back. */
+  const slot = (name: string, seat: number): Vec3 | null => {
+    const a = board?.anchors[name];
+    if (!mb || !a) return null;
+    return [mb.p[0] + board!.size[0] / 2 - seat, mb.p[1] + a[1], mb.p[2] + a[2]];
+  };
+
+  const cpu = geometryOf(build.cpu?.modelPath);
+  const socket = slot('socket_cpu_1', SEAT.socket);
+  if (cpu && socket) out.cpu = align(cpu, cpu.anchors.base ?? backFace(cpu), socket);
+
+  const cooler = geometryOf(build.cooling?.modelPath);
+  const liquidMm = build.cooling?.compatibility.radiatorMm;
+  if (out.cpu && (cooler || liquidMm)) {
+    const cpuTop: Vec3 = [out.cpu.p[0] - out.cpu.size[0] / 2, socket![1], socket![2]];
+    // an air cooler must clear the glass: the case's max cooler height is measured from the board's back
+    const room = mounts.board.corner[0] - mounts.main.min[0];
+    const tooTall = !!cooler && !liquidMm && coolerHeight(out.cpu, cooler, mounts) > room;
+    if (cooler && !liquidMm && !tooTall) out.cooler = { ...align(cooler, cooler.anchors.base ?? backFace(cooler), cpuTop), liquid: false };
+    else {
+      if (tooTall) out.skipped.cooler = 'height';
+      out.cooler = liquidOn(out.cpu, socket!, mounts, liquidMm, liquidMm ? cooler : null);
+    }
+  }
+
+  const ram = geometryOf(build.ram?.modelPath);
+  if (ram && mb) {
+    const slots = DIMM_FOR[stickCount(build.ram)];
+    const at = slots.map((n) => slot(`slot_dimm_${n}`, SEAT.dimm)).filter((v): v is Vec3 => !!v);
+    if (at.length) {
+      const centres = at.map((t) => sub(t, backFace(ram)));
+      const lo = centres.reduce((m, c) => [Math.min(m[0], c[0]), Math.min(m[1], c[1]), Math.min(m[2], c[2])] as Vec3);
+      const hi = centres.reduce((m, c) => [Math.max(m[0], c[0]), Math.max(m[1], c[1]), Math.max(m[2], c[2])] as Vec3);
+      const p = round([(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, (lo[2] + hi[2]) / 2]);
+      const size: Vec3 = [ram.size[0] + hi[0] - lo[0], ram.size[1] + hi[1] - lo[1], ram.size[2] + hi[2] - lo[2]];
+      out.ram = { p, size, target: at[0], attach: round(add(centres[0], backFace(ram))), sticks: centres.map((c) => round(sub(c, p))), stick: ram.size, slots };
+    }
+  }
+
+  const gpu = geometryOf(build.gpu?.modelPath);
+  const pcie = slot('slot_pcie_x16_1', SEAT.pcie);
+  if (gpu && pcie) {
+    const fingers = gpu.anchors.slot_pcie_x16_1 ?? [gpu.size[0] / 2, 0, -gpu.size[2] / 4];
+    const placed = align(gpu, fingers, pcie);
+    const front = placed.p[2] + gpu.size[2] / 2;
+    if (front > mounts.gpuClearZ) out.skipped.gpu = 'length';
+    else out.gpu = placed;
+  }
+
+  // a tower cooler that would sit on the card (a wide cooler over a high first slot): the AIO takes its place
+  if (out.cooler && !out.cooler.liquid && out.gpu && overlaps(boxOf(out.cooler), boxOf(out.gpu))) {
+    out.skipped.cooler = 'clearance';
+    out.cooler = liquidOn(out.cpu!, socket!, mounts);
+  }
+
+  const ssd = geometryOf(build.ssd?.modelPath);
+  if (ssd && isSata(build.ssd)) {
+    const d = mounts.drive;
+    out.ssd = { p: round([d[0], d[1] + ssd.size[1] / 2 + PSU_REST, d[2]]), size: ssd.size, target: d, attach: d };
+  } else if (ssd) {
+    const m2 = slot('slot_m2_1', SEAT.m2);
+    if (m2) out.ssd = align(ssd, backFace(ssd), m2);
+  }
+
+  const psu = geometryOf(build.psu?.modelPath);
+  if (psu) {
+    const bay = mounts.psu;
+    const turned = mounts.psuRotation ? turnedSize(psu.size, mounts.psuRotation) : psu.size;
+    const geo = { ...psu, size: turned };
+    // back against the bay's rear wall, standing on its floor, centred across it
+    const target: Vec3 = [(bay.min[0] + bay.max[0]) / 2, bay.min[1] + PSU_REST, bay.min[2]];
+    out.psu = { ...align(geo, [0, -turned[1] / 2, -turned[2] / 2], target), r: mounts.psuRotation };
+  }
+
+  // cable ends: on top of each header, and on the card's top edge
+  const header = (name: string, h: number) => slot(name, h);
+  out.ports.atx24 = header('header_24pin_1', 0.017) ?? undefined;
+  out.ports.eps8 = header('header_eps_8pin_1', 0.015) ?? undefined;
+  if (out.gpu && gpu) {
+    const a = gpu.anchors.header_gpu_power_1 ?? [-gpu.size[0] / 2, gpu.size[1] / 2 - 0.02, gpu.size[2] * 0.2];
+    out.ports.gpuPower = round(add(out.gpu.p, a));
+  }
+
+  if (out.cooler?.liquid && out.cooler.radiator && mounts.radiator) out.fans = mounts.fans.filter((f) => f.group !== mounts.radiator!.replaces);
+  return out;
+}
+
+/** Box size after quarter turns (Euler XYZ, multiples of 90°). */
+function turnedSize(size: Vec3, e: Vec3): Vec3 {
+  let s: [number, number, number] = [size[0], size[1], size[2]];
+  const quarter = (a: number) => Math.round(a / (Math.PI / 2)) % 2 !== 0;
+  if (quarter(e[0])) s = [s[0], s[2], s[1]];
+  if (quarter(e[1])) s = [s[2], s[1], s[0]];
+  if (quarter(e[2])) s = [s[1], s[0], s[2]];
+  return s;
+}
+
+const overlaps = (a: Box3Like, b: Box3Like, tol = 0.001) => [0, 1, 2].every((k) => Math.min(a.max[k], b.max[k]) - Math.max(a.min[k], b.min[k]) > tol);
+
+/** AIO pump block on the CPU, its radiator at the case's radiator mount. */
+function liquidOn(cpu: Placement, socket: Vec3, mounts: CaseMounts, radiatorMm?: number, own?: PartGeometry | null): CoolerPlacement {
+  const cpuTop: Vec3 = [cpu.p[0] - cpu.size[0] / 2, socket[1], socket[2]];
+  const rad = mounts.radiator;
+  const mm = Math.min(radiatorMm ?? 360, rad?.maxMm ?? 0);
+  // an AIO with its own pump model sits on its measured base; otherwise a generic pump block
+  const pump: Vec3 = own?.size ?? [0.03, 0.06, 0.06];
+  const base: Vec3 = own?.anchors.base ?? [pump[0] / 2, 0, 0];
+  return {
+    p: round(sub(cpuTop, base)),
+    size: pump,
+    target: round(cpuTop),
+    attach: round(cpuTop),
+    liquid: true,
+    radiator: rad && mm ? { p: rad.p, along: rad.along, normal: rad.normal, mm } : undefined,
+  };
+}
+
+/** Height of an air cooler above the board's back, when seated on `cpu`. */
+function coolerHeight(cpu: Placement, cooler: PartGeometry, mounts: CaseMounts) {
+  return mounts.board.corner[0] - (cpu.p[0] - cpu.size[0] / 2 - cooler.size[0]);
+}
+
+/** Bounding boxes of every installed part in case space (each RAM stick on its own). */
+export function installedBoxes(inst: Installed): Array<{ id: string; box: Box3Like }> {
+  const list: Array<{ id: string; box: Box3Like }> = [];
+  for (const id of ['motherboard', 'cpu', 'cooler', 'gpu', 'ssd', 'psu'] as const) {
+    const pl = inst[id];
+    if (pl) list.push({ id, box: boxOf(pl) });
+  }
+  if (inst.ram) for (const [i, s] of inst.ram.sticks.entries()) list.push({ id: `ram${inst.ram.slots[i]}`, box: boxOf({ p: add(inst.ram.p, s), size: inst.ram.stick }) });
+  return list;
+}
+
+/** Part groups that fly in during the assembly (parts.ts PartId). */
+export type EntryPart = 'motherboard' | 'cpu' | 'cooler' | 'ram' | 'gpu' | 'ssd' | 'psu' | 'fans';
+
+/** Fan groups the builder installs in the assembly; the others (exhaust, and a dual chamber's side fans) ship with the case. */
+export const isIntakeFan = (f: FanMount) => f.group === 'bottom' || f.group === 'front';
+
+/** A part's approach: the long straight move from `entry` (offset from its seat), then, if given, a short last slide from `last`. */
+export interface EntryPath {
+  entry: Vec3;
+  last?: Vec3;
+}
+
+/**
+ * Where each part waits before its straight move into place (V4 §1.3): just
+ * outside the open glass side at its own height and depth, so the slide along
+ * the mount normal (−X → +X) crosses nothing installed before it; the PSU
+ * comes in from the back through the rear-panel opening. The board travels
+ * 16 mm towards the front, past the rear fan, and its I/O then slides back
+ * into the rear panel, the way a board goes in.
+ */
+export function entryPaths(inst: Installed): Partial<Record<EntryPart, EntryPath>> {
+  const glass = inst.mounts.main.min[0] - 0.02;
+  const rear = inst.mounts.shell.min[2] - 0.02;
+  const out: Partial<Record<EntryPart, EntryPath>> = {};
+  for (const id of ['motherboard', 'cpu', 'cooler', 'ram', 'gpu', 'ssd'] as const) {
+    const pl = inst[id];
+    if (pl) out[id] = { entry: [Math.min(-0.04, glass - (pl.p[0] + pl.size[0] / 2)), 0, 0] };
+  }
+  if (out.motherboard) out.motherboard.last = [0, 0, BOARD_SLIDE];
+  if (inst.psu) out.psu = { entry: [0, 0, Math.min(-0.05, rear - (inst.psu.p[2] + inst.psu.size[2] / 2))] };
+  const intake = inst.fans.filter(isIntakeFan);
+  if (intake.length) out.fans = { entry: [Math.min(-0.05, glass - Math.max(...intake.map((f) => f.p[0] + f.size / 2))), 0, 0] };
+  return out;
+}
+
+/** The board's last slide towards the rear panel (m). */
+const BOARD_SLIDE = 0.016;
+/** Share of the approach taken by the last slide. */
+const LAST_SHARE = 0.3;
+
+/** Offset along a part's approach at `t` (0 seated … 1 at the entry point). */
+export function pathOffset(path: EntryPath, t: number, out: [number, number, number] = [0, 0, 0]): [number, number, number] {
+  const { entry, last } = path;
+  if (!last) {
+    out[0] = entry[0] * t;
+    out[1] = entry[1] * t;
+    out[2] = entry[2] * t;
+    return out;
+  }
+  const a = Math.min(1, t / LAST_SHARE);
+  const b = Math.max(0, (t - LAST_SHARE) / (1 - LAST_SHARE));
+  for (let k = 0; k < 3; k++) out[k] = last[k] * a + entry[k] * b;
+  return out;
+}

@@ -6,15 +6,18 @@
  * drawn once per language (crisp, never mirrored).
  */
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { CanvasTexture, Color, Matrix4, Quaternion, ShapeGeometry, SRGBColorSpace, Vector3, type Group, type InstancedMesh } from 'three';
+import { AdditiveBlending, CanvasTexture, Color, Matrix4, Quaternion, ShapeGeometry, SRGBColorSpace, Vector3, type Group, type InstancedMesh, type Object3D, type SpotLight } from 'three';
 import { useDisposable } from '@/hooks/useDisposable';
+import { useQualityPreset } from '@/hooks/useQualityPreset';
 import { useT } from '@/hooks/useT';
 import { useTheme } from '@/hooks/useTheme';
 import { BRAND } from '@/config/brand';
 import { canvasFontsReady, FONT_HERO } from '@/lib/fonts';
 import { roundedRectShape, roundedSlab } from '@/lib/three/geometry';
 import { mergeStatic } from '@/lib/three/mergeStatic';
-import { BACKDROP_ORDER, DESK_TOP } from '../layout';
+import { BACKDROP_ORDER, DESK_PLANT, LAMP } from '../layout';
+import { Robot } from '@/scenes/LabSpace/robots/Robot';
+import { Monstera } from './Plants';
 
 const WALL = -0.92;
 const LOGO_URL = `${import.meta.env.BASE_URL}${BRAND.logo}`;
@@ -113,11 +116,19 @@ function NeonSign() {
   );
 }
 
+const POSTER_MOUNT = 0.035;
+const POSTER_FRAME = 0.02;
+
 function Poster({ variant, position, size }: { variant: 'brand' | 'bits'; position: [number, number, number]; size: [number, number] }) {
   const t = useT();
   const title = t(variant === 'brand' ? 'home.decor.posterBrand' : 'home.decor.posterBits');
   const caption = t(variant === 'brand' ? 'home.decor.posterBrandSub' : 'home.decor.posterBitsSub');
-  const map = useCanvasTexture(512, 724, (ctx, w, h, logo) => {
+  // drawn on a 512 × 724 layout, stored at 1.5× so the print stays crisp close up (V4 §2.2)
+  const map = useCanvasTexture(768, 1086, (ctx, cw, _ch, logo) => {
+    ctx.save();
+    ctx.scale(cw / 512, cw / 512);
+    const w = 512;
+    const h = 724;
     if (variant === 'brand') {
       const g = ctx.createLinearGradient(0, 0, w, h);
       g.addColorStop(0, '#2fc8f2');
@@ -172,18 +183,23 @@ function Poster({ variant, position, size }: { variant: 'brand' | 'bits'; positi
     ctx.font = `500 26px ${FONT_HERO}`;
     ctx.fillStyle = 'rgba(255,255,255,0.82)';
     wrap(ctx, caption, w - 90).slice(0, 3).forEach((line, i) => ctx.fillText(line, w / 2, (variant === 'brand' ? 575 : 648) + i * 34));
+    ctx.restore();
   }, [variant, title, caption]);
   const [pw, ph] = size;
   return (
     <group position={position}>
-      {/* thin black frame and the print */}
+      {/* oak frame, a white mount round the print, the print */}
       <mesh castShadow>
-        <boxGeometry args={[pw + 0.03, ph + 0.03, 0.02]} />
-        <meshStandardMaterial color="#15171c" roughness={0.5} metalness={0.3} />
+        <boxGeometry args={[pw + 2 * (POSTER_MOUNT + POSTER_FRAME), ph + 2 * (POSTER_MOUNT + POSTER_FRAME), 0.026]} />
+        <meshStandardMaterial color="#c9a77c" roughness={0.6} />
       </mesh>
-      <mesh position-z={0.0105}>
+      <mesh position-z={0.0132}>
+        <planeGeometry args={[pw + 2 * POSTER_MOUNT, ph + 2 * POSTER_MOUNT]} />
+        <meshStandardMaterial color="#f6f4ef" roughness={0.9} />
+      </mesh>
+      <mesh position-z={0.0136}>
         <planeGeometry args={[pw, ph]} />
-        <meshStandardMaterial map={map} roughness={0.7} />
+        <meshStandardMaterial map={map} roughness={0.55} />
       </mesh>
     </group>
   );
@@ -234,7 +250,6 @@ function Pot({ radius, height, color }: { radius: number; height: number; color:
   );
 }
 
-const FLOOR_LEAVES: [number, number] = [0.45, 1.25];
 const SHELF_LEAVES: [number, number] = [-0.06, 0.12];
 const TRAIL_LEAVES: [number, number] = [-0.22, 0.08];
 
@@ -308,32 +323,53 @@ function Shelf({ position, width }: { position: [number, number, number]; width:
 
 /* ── lamp and rug ────────────────────────────────────────── */
 
-function DeskLamp() {
+const LAMP_METAL = { color: '#e8e9ec', roughness: 0.32, metalness: 0.35 } as const;
+
+/**
+ * Architect lamp (V4 §2.1): built facing +Z like every model — the lower arm
+ * leans back, the upper arm reaches forward over the desk and the shade
+ * looks down at the keyboard. On High and up a warm spot lights the desk
+ * (one more light in every lit shader is too much for Low and Medium).
+ */
+function DeskLamp({ light }: { light: boolean }) {
+  const spot = useRef<SpotLight>(null);
+  const aim = useRef<Object3D>(null);
+  useLayoutEffect(() => {
+    if (spot.current && aim.current) spot.current.target = aim.current;
+  }, [light]);
   return (
-    <group position={[-0.8, DESK_TOP, -0.3]} rotation-y={0.5}>
-      <mesh position-y={0.008} castShadow>
-        <cylinderGeometry args={[0.065, 0.07, 0.016, 32]} />
-        <meshStandardMaterial color="#e8e9ec" roughness={0.35} metalness={0.2} />
+    <group position={[...LAMP.position]} rotation-y={LAMP.yaw}>
+      <mesh position-y={0.009} castShadow>
+        <cylinderGeometry args={[0.07, 0.076, 0.018, 40]} />
+        <meshStandardMaterial {...LAMP_METAL} />
       </mesh>
-      <group position-y={0.016} rotation-z={-0.35}>
+      <group position-y={0.018} rotation-x={-0.15}>
         <mesh position-y={0.17} castShadow>
-          <cylinderGeometry args={[0.007, 0.007, 0.34, 12]} />
-          <meshStandardMaterial color="#e8e9ec" roughness={0.35} metalness={0.2} />
+          <cylinderGeometry args={[0.0075, 0.0075, 0.34, 14]} />
+          <meshStandardMaterial {...LAMP_METAL} />
         </mesh>
-        <group position-y={0.34} rotation-z={1.75}>
-          <mesh position-y={0.13} castShadow>
-            <cylinderGeometry args={[0.006, 0.006, 0.26, 12]} />
-            <meshStandardMaterial color="#e8e9ec" roughness={0.35} metalness={0.2} />
+        <group position-y={0.34} rotation-x={1.35}>
+          {/* elbow */}
+          <mesh>
+            <sphereGeometry args={[0.014, 16, 12]} />
+            <meshStandardMaterial color="#2b2f3a" roughness={0.4} metalness={0.5} />
           </mesh>
-          <group position-y={0.27} rotation-z={-2.1}>
-            <mesh castShadow>
-              <coneGeometry args={[0.06, 0.09, 28, 1, true]} />
-              <meshStandardMaterial color="#e8e9ec" roughness={0.35} metalness={0.2} side={2} />
+          <mesh position-y={0.17} castShadow>
+            <cylinderGeometry args={[0.0065, 0.0065, 0.34, 14]} />
+            <meshStandardMaterial {...LAMP_METAL} />
+          </mesh>
+          {/* the head: its axis (+Y) points up and back, so the shade opens down and forward */}
+          <group position-y={0.34} rotation-x={-1.45}>
+            <mesh position-y={-0.05} castShadow>
+              <coneGeometry args={[0.065, 0.1, 32, 1, true]} />
+              <meshStandardMaterial {...LAMP_METAL} side={2} />
             </mesh>
-            <mesh position-y={-0.03}>
-              <sphereGeometry args={[0.024, 16, 10]} />
-              <meshBasicMaterial color="#fff3d6" toneMapped={false} />
+            <mesh position-y={-0.094} rotation-x={Math.PI / 2}>
+              <circleGeometry args={[0.06, 32]} />
+              <meshBasicMaterial color="#fff1cc" toneMapped={false} side={2} />
             </mesh>
+            <object3D ref={aim} position={[0, -1.1, 0]} />
+            {light && <spotLight ref={spot} position-y={-0.09} color="#ffd9a0" intensity={2.2} distance={1.4} angle={0.75} penumbra={0.85} decay={1.6} />}
           </group>
         </group>
       </group>
@@ -383,17 +419,46 @@ function Rug() {
 
 /* ── room ────────────────────────────────────────────────── */
 
+/** Where the slat panel (models/Room.tsx) has its edges, for the LED strips. */
+const SLAT_PANEL = { width: 2.06, top: 2.292, bottom: 0.168 };
+
+/** A vertical fade (bright at the strip, gone 20 cm away) for the LED wash. */
+function useGlowTexture() {
+  return useDisposable(() => {
+    const c = document.createElement('canvas');
+    c.width = 4;
+    c.height = 128;
+    const ctx = c.getContext('2d')!;
+    const g = ctx.createLinearGradient(0, 0, 0, 128);
+    g.addColorStop(0, 'rgba(255,255,255,0)');
+    g.addColorStop(0.5, 'rgba(255,255,255,0.9)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 4, 128);
+    const t = new CanvasTexture(c);
+    t.colorSpace = SRGBColorSpace;
+    return t;
+  }, []);
+}
+
 export function Decor() {
+  const preset = useQualityPreset();
+  const glow = useGlowTexture();
+  // Low and Medium keep the room, the robots and the plants; the small props cost them their FPS budget (V4 §2.3)
+  const rich = preset.postprocessing;
+  // the wash is two big transparent planes: only where the post chain runs (High, Ultra)
+  const wash = preset.postprocessing;
   const books = useMemo(() => ['#5f7bff', '#2fc8f2', '#f4f6fb', '#a95cf5'], []);
   const root = useRef<Group>(null);
   // ~40 small meshes would cost as many draw calls a frame: one per material instead
-  useLayoutEffect(() => (root.current ? mergeStatic(root.current) : undefined), []);
+  useLayoutEffect(() => (root.current ? mergeStatic(root.current) : undefined), [rich]);
   return (
+    <>
     <group ref={root}>
       <Rug />
       <NeonSign />
-      <Poster variant="brand" position={[1.4, 1.5, WALL - 0.015]} size={[0.46, 0.65]} />
-      <Poster variant="bits" position={[1.95, 1.44, WALL - 0.015]} size={[0.42, 0.594]} />
+      <Poster variant="brand" position={[1.42, 1.52, WALL - 0.013]} size={[0.4, 0.566]} />
+      <Poster variant="bits" position={[1.97, 1.47, WALL - 0.013]} size={[0.36, 0.509]} />
 
       {/* left shelf: books, the Bit figurine, a small plant */}
       <Shelf position={[-0.6, 1.44, WALL + 0.09]} width={0.56} />
@@ -423,17 +488,46 @@ export function Decor() {
         <meshStandardMaterial color="#5f7bff" roughness={0.35} metalness={0.1} />
       </mesh>
 
-      {/* tall floor plant on the right of the desk (the left is the headline's) */}
-      <group position={[1.25, 0, -0.55]}>
-        <Pot radius={0.15} height={0.34} color="#eeece6" />
-        <mesh position-y={0.62} castShadow>
-          <cylinderGeometry args={[0.012, 0.016, 0.6, 8]} />
-          <meshStandardMaterial color="#5b4a33" roughness={0.9} />
+      <DeskLamp light={preset.areaLights} />
+      {/* soft LED strips along the top and the foot of the slat panel */}
+      {[SLAT_PANEL.top, SLAT_PANEL.bottom].map((y) => (
+        <mesh key={y} position={[0, y, WALL - 0.008]}>
+          <boxGeometry args={[SLAT_PANEL.width, 0.01, 0.012]} />
+          <meshBasicMaterial color="#b9ecff" toneMapped={false} />
         </mesh>
-        <Leaves count={26} seed={3} spread={0.32} height={FLOOR_LEAVES} size={0.17} droop={0.2} color="#3a7f4c" />
-      </group>
-
-      <DeskLamp />
+      ))}
+      {/* the trophy on the right shelf */}
+      {rich && <group position={[0.84, 1.653, WALL + 0.09]}>
+        <mesh position-y={0.012} castShadow>
+          <boxGeometry args={[0.04, 0.024, 0.04]} />
+          <meshStandardMaterial color="#2b2f3a" roughness={0.5} />
+        </mesh>
+        <mesh position-y={0.05} castShadow>
+          <cylinderGeometry args={[0.006, 0.006, 0.05, 10]} />
+          <meshStandardMaterial color="#e8b84a" roughness={0.25} metalness={0.9} />
+        </mesh>
+        <mesh position-y={0.09} castShadow>
+          <cylinderGeometry args={[0.026, 0.012, 0.045, 20]} />
+          <meshStandardMaterial color="#e8b84a" roughness={0.25} metalness={0.9} />
+        </mesh>
+      </group>}
     </group>
+    {/* the wash of the LED strips on the wall: a soft additive gradient, no light */}
+    {wash && [SLAT_PANEL.top, SLAT_PANEL.bottom].map((y, i) => (
+      <mesh key={y} position={[0, y, WALL - 0.02]} renderOrder={2}>
+        <planeGeometry args={[SLAT_PANEL.width + 0.3, i === 0 ? 0.4 : 0.28]} />
+        <meshBasicMaterial map={glow} color="#7fd8ff" transparent opacity={0.55} blending={AdditiveBlending} depthWrite={false} toneMapped={false} />
+      </mesh>
+    ))}
+    {/* a little robot figure on the right shelf, beside the trailing plant */}
+    {rich && (
+      <group position={[0.63, 1.653, WALL + 0.1]} rotation-y={-0.3} scale={0.085}>
+        <Robot kind="bit" accent="#a95cf5" glow="#ffb35c" name="shelf-figure" />
+      </group>
+    )}
+    {/* instanced plants stay out of the merged group: their own two draw calls each */}
+    <Monstera height={1.0} pot={[0.15, 0.32]} potColor="#eeece6" leaves={10} seed={3} position={[2.95, 0, -0.62]} yaw={0.4} />
+    <Monstera height={0.3} pot={[0.05, 0.085]} potColor="#d9dde6" leaves={7} seed={11} position={DESK_PLANT} yaw={-0.6} />
+    </>
   );
 }

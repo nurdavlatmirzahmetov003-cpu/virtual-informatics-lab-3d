@@ -126,6 +126,12 @@ test('certificates: only for a finished course, commendation from 90 %, one code
     assert.equal(check.status, 200);
     assert.equal(check.body.certificate.name, 'Әлия Нұрланқызы');
     assert.equal((await s.call('/api/certificates/BL-NOPE-NOPE')).status, 404);
+    // V4 §8.4: a demo or sample code never verifies, and real codes are never demo ones
+    const demo = await s.call('/api/certificates/DEMO-ABCD-EFGH');
+    assert.equal(demo.status, 404);
+    assert.equal(demo.body.error, 'demo');
+    assert.equal((await s.call('/api/certificates/demo-abcd-efgh')).body.error, 'demo');
+    assert.ok(!issued.code.startsWith('DEMO-'));
   } finally {
     await s.close();
   }

@@ -29,7 +29,7 @@ function Loaded({ onLoaded }: { onLoaded: () => void }) {
  * its textures are uploaded and its shaders compiled right away, so when it
  * takes over it only becomes visible — no remount, no hitch at the swap.
  */
-function LookSlot({ look, active, still, boundary, onLoaded }: { look: HeroLook; active: boolean; still: boolean; boundary: boolean; onLoaded: () => void }) {
+function LookSlot({ look, active, still, arm, boundary, onLoaded }: { look: HeroLook; active: boolean; still: boolean; arm: boolean; boundary: boolean; onLoaded: () => void }) {
   const group = useRef<Group>(null);
   const { gl, camera, scene } = useThree();
   const warm = useCallback(() => {
@@ -47,12 +47,12 @@ function LookSlot({ look, active, still, boundary, onLoaded }: { look: HeroLook;
     <group ref={group} visible={active} matrixWorldAutoUpdate={active}>
       {boundary ? (
         <Suspense fallback={null}>
-          <SetupItems build={look.build} finish={look.finish} animated={!still} pcRig="auto" />
+          <SetupItems build={look.build} finish={look.finish} animated={!still} pcRig="auto" monitorArm={arm} />
           <Loaded key={active ? 'shown' : 'warm'} onLoaded={active ? onLoaded : warm} />
         </Suspense>
       ) : (
         <>
-          <SetupItems build={look.build} finish={look.finish} animated={!still} pcRig="auto" />
+          <SetupItems build={look.build} finish={look.finish} animated={!still} pcRig="auto" monitorArm={arm} />
           <Loaded key={active ? 'shown' : 'warm'} onLoaded={active ? onLoaded : warm} />
         </>
       )}
@@ -65,6 +65,8 @@ export function LivingSetup({ onLook }: { onLook: (look: number) => void }) {
   const preset = useQualityPreset();
   // phones and weak GPUs keep one look: three sets of models would not fit their memory
   const still = reduced || preset.lodBias >= 2;
+  // the monitor arm clips each monitor's own stand away: that per-pixel clip does not fit Low's budget (V4 §2.3)
+  const arm = preset.level !== 'low';
   const [look, setLook] = useState(0);
   const loaded = useRef(-1);
   // the first look loads with the scene (the loader waits for it); later looks load on their own
@@ -130,7 +132,7 @@ export function LivingSetup({ onLook }: { onLook: (look: number) => void }) {
       <group ref={stillGroup}>
         {HERO_LOOKS.map((l, i) =>
           i === look || (!still && i === nextIndex && readyLook === look) ? (
-            <LookSlot key={l.id} look={l} active={i === look} still={still} boundary={!(first && i === look)} onLoaded={onLoaded} />
+            <LookSlot key={l.id} look={l} active={i === look} still={still} arm={arm} boundary={!(first && i === look)} onLoaded={onLoaded} />
           ) : null,
         )}
       </group>

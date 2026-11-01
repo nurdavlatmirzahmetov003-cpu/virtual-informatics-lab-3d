@@ -4,10 +4,12 @@
  */
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff, LogIn, ServerOff } from 'lucide-react';
+import { Eye, EyeOff, LogIn, LogOut, ServerOff, Sparkles } from 'lucide-react';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useT } from '@/hooks/useT';
 import type { TranslationKey } from '@/lib/i18n';
+import { DEMO_ACTIVE } from '@/lib/storage';
+import { enterDemo, exitDemo } from '@/services/demo/mode';
 import { useAuthStore } from '@/store/authStore';
 import { homeOf } from './roles';
 import styles from './Auth.module.css';
@@ -90,13 +92,29 @@ export default function LoginPage() {
           </p>
         )}
 
-        <button type="submit" className={styles.primary} disabled={busy}>
+        {DEMO_ACTIVE && (
+          <p className={styles.notice} role="status">
+            {t('demo.signInBlocked')}{' '}
+            <button type="button" className={styles.linkButton} onClick={() => exitDemo('/login')}>
+              <LogOut size={15} aria-hidden="true" /> {t('demo.exit')}
+            </button>
+          </p>
+        )}
+        <button type="submit" className={styles.primary} disabled={busy || DEMO_ACTIVE}>
           <LogIn size={17} aria-hidden="true" /> {busy ? t('auth.signingIn') : t('auth.signIn')}
         </button>
         <p className={styles.small}>{t('auth.noAccount')}</p>
         <Link to="/labs" className={styles.guest}>
           {t('auth.guest')}
         </Link>
+        {!DEMO_ACTIVE && (
+          <div className={styles.demo}>
+            <button type="button" className={styles.demoButton} onClick={() => void enterDemo('/progress')}>
+              <Sparkles size={17} aria-hidden="true" /> {t('demo.enter')}
+            </button>
+            <small>{t('demo.enterHint')}</small>
+          </div>
+        )}
       </form>
     </AuthShell>
   );

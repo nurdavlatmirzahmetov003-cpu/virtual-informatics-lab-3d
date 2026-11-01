@@ -15,16 +15,16 @@ import { CHROME, openChrome, startPreview } from './lib/cdp.mjs';
 const root = path.resolve(import.meta.dirname, '..');
 const built = existsSync(path.join(root, 'dist/index.html'));
 
-test('every lab sign, banner, poster and logo can be seen; no screen logo is mirrored', { skip: !built ? 'run npm run build first' : !CHROME ? 'no Chrome/Edge' : false, timeout: 180000 }, async () => {
+test('every lab sign, banner, poster and logo can be seen, zone signs never overlap; no screen logo is mirrored', { skip: !built ? 'run npm run build first' : !CHROME ? 'no Chrome/Edge' : false, timeout: 180000 }, async () => {
   const preview = await startPreview(root);
   const chrome = await openChrome();
   try {
     for (const theme of ['light', 'dark']) {
       await chrome.navigate(`${preview.base}/credits`);
       await chrome.waitFor('document.readyState === "complete"');
-      await chrome.evaluate(`(() => { const k = 'vil3d:settings'; const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":2}'); s.state = { ...s.state, theme: '${theme}', qualityMode: 'low' }; localStorage.setItem(k, JSON.stringify(s)); })()`);
+      await chrome.evaluate(`(() => { const k = 'vil3d:settings'; const s = JSON.parse(localStorage.getItem(k) || '{"state":{},"version":3}'); s.state = { ...s.state, theme: '${theme}', qualityMode: 'low' }; localStorage.setItem(k, JSON.stringify(s)); })()`);
       await chrome.navigate(`${preview.base}/lab?debug`);
-      await chrome.waitFor('!!window.__vil3d?.ready?.() && !!window.__labAudit', 90000);
+      await chrome.waitFor('!!window.__vil3d?.ready?.() && !!window.__labAudit && !!window.__labSignOverlap', 90000);
       // posters and signs draw their text into canvases once the fonts are in
       await new Promise((r) => setTimeout(r, 2500));
       const rows = await chrome.evaluate('JSON.stringify(window.__labAudit())').then(JSON.parse);
@@ -32,6 +32,9 @@ test('every lab sign, banner, poster and logo can be seen; no screen logo is mir
       assert.ok([...names].filter((n) => n.startsWith('zone-sign:')).length >= 9, `${theme}: every zone sign is tagged (${[...names].join(', ')})`);
       const hidden = rows.filter((r) => r.visible < r.total - 1).map((r) => `${r.name} from ${r.from}: ${r.visible}/${r.total} visible, hidden by ${r.hiddenBy}`);
       assert.deepEqual(hidden, [], `${theme} theme`);
+      // V4 §3.1: zone signs never cover each other — from the overview and from every zone's camera stop
+      const clashes = await chrome.evaluate('JSON.stringify(window.__labSignOverlap())').then(JSON.parse);
+      assert.deepEqual(clashes.map((c) => `${c.a} × ${c.b} from ${c.from}`), [], `${theme}: zone signs overlap`);
     }
     // screens: every zone opened in turn so its full models (and their wallpapers) are on
     for (const zone of ['workstation', 'peripherals', 'print_media', 'mobile', 'showcase']) {

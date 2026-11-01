@@ -3,6 +3,7 @@
  */
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { showcaseBuild } from '../src/lib/studio/showcase.ts';
 import { readFileSync } from 'node:fs';
 import { HERO_ORDER, HERO_TIMING, LOOK_SECONDS, easeOutBack, lookAt, piecePresence } from '../src/scenes/DeskScene/hero/heroCycle.ts';
 import { HERO_LOOKS } from '../src/scenes/DeskScene/hero/looks.ts';
@@ -68,7 +69,14 @@ test('the devices change from look to look; the parts inside stay the same', () 
     const ids = new Set(HERO_LOOKS.map((l) => l.build[c].id));
     if (c !== 'speakers' || ids.size > 1) assert.equal(ids.size, HERO_LOOKS.length, `${c}: ${[...ids].join(', ')}`);
   }
-  for (const c of INSIDE) assert.equal(new Set(HERO_LOOKS.map((l) => l.build[c].id)).size, 1, c);
+  // V4: the white look is the showcase build (its own white case and internals); black and RGB share the gaming internals
+  const [white, ...others] = HERO_LOOKS;
+  const showcase = showcaseBuild();
+  for (const c of INSIDE) {
+    assert.equal(white.build[c].id, showcase[c].id, `white ${c} is the showcase part`);
+    assert.equal(new Set(others.map((l) => l.build[c].id)).size, 1, c);
+  }
+  assert.equal(white.build.case.id, 'case-bitlab-panorama');
 });
 
 /** Draw calls of a GLB: primitives of every mesh, times the nodes that use it. */

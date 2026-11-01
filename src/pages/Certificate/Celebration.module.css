@@ -1,0 +1,238 @@
+/* V4 §8.3: the course-completion celebration (above everything, Bit's button too) */
+
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-loader) + 10);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  gap: var(--space-4);
+  padding: 64px 16px 24px;
+  overflow-y: auto;
+  background:
+    radial-gradient(70% 60% at 50% 40%, rgb(95 123 255 / 0.35), transparent 70%),
+    rgb(8 12 32 / 0.82);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  animation: fadeIn 0.4s ease-out both;
+}
+
+.canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.close {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+  cursor: pointer;
+}
+
+.close:focus-visible,
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 3px solid #ffc15c;
+  outline-offset: 2px;
+}
+
+/* Bit pops up, then steps aside (smaller) for the certificate */
+.bit {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(640px, 100%);
+  animation: pop 0.7s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  transition: transform 0.5s ease;
+}
+
+.bit[data-stage='bit'] {
+  transform: scale(1.15);
+}
+
+.face {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2fc8f2, #5f7bff 55%, #a95cf5);
+  box-shadow: 0 0 0 6px rgb(255 255 255 / 0.15), 0 18px 40px -10px rgb(95 123 255 / 0.8);
+  color: #fff;
+  animation: bob 2.4s ease-in-out 0.7s infinite;
+}
+
+.bubble {
+  margin: 0;
+  padding: 14px 18px;
+  border-radius: 18px 18px 18px 4px;
+  background: #fff;
+  color: #141a33;
+  font-size: var(--fs-base, 1rem);
+  line-height: 1.45;
+  box-shadow: 0 16px 40px -18px rgb(0 0 0 / 0.6);
+}
+
+.bubble b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.25em;
+  background: linear-gradient(135deg, #12aee6, #5470ff 55%, #a55cf5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cert {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  /* the sheet, Bit and the buttons fit on one screen */
+  width: min(880px, 100%, (100svh - 300px) * 297 / 210);
+  min-width: min(300px, 100%);
+  animation: rise 0.8s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+.shine {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+/* one sweep of light across the new certificate */
+.shine::after {
+  content: '';
+  position: absolute;
+  inset: -20% auto -20% -40%;
+  width: 30%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.75), transparent);
+  transform: skewX(-18deg);
+  animation: sweep 1.4s ease-in-out 0.5s both;
+  pointer-events: none;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary {
+  border: 0;
+  background: linear-gradient(135deg, #2fc8f2, #5f7bff 55%, #a95cf5);
+  color: #fff;
+  box-shadow: 0 12px 28px -12px rgb(95 123 255 / 0.9);
+}
+
+.primary:disabled {
+  opacity: 0.5;
+}
+
+.secondary {
+  border: 1px solid rgb(255 255 255 / 0.45);
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: translateY(80px) scale(0.4);
+  }
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-6px) rotate(-3deg);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.92);
+  }
+}
+
+@keyframes sweep {
+  from {
+    left: -40%;
+  }
+  to {
+    left: 120%;
+  }
+}
+
+@media (max-width: 600px) {
+  .bit {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .bit[data-stage='bit'] {
+    transform: none;
+  }
+
+  .bubble {
+    border-radius: 18px;
+  }
+}
+
+/* reduced motion: a simple fade, nothing moves */
+.root[data-calm] .bit,
+.root[data-calm] .face,
+.root[data-calm] .cert,
+.root[data-calm] .shine::after {
+  animation: none;
+  transform: none;
+}
+
+.root[data-calm] .shine::after {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    animation-duration: 0.2s;
+  }
+}

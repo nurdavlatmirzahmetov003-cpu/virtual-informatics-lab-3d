@@ -26,3 +26,30 @@ export const ACHIEVEMENT_ICONS: Record<AchievementId, LucideIcon> = {
   fixer: Wrench,
   speedrun: Gauge,
 };
+
+/** V4 §9: the enamel colour in the middle of each medal (by subject). */
+export const ACHIEVEMENT_HUE: Record<AchievementId, string> = {
+  firstStep: '#22c55e',
+  firstComputer: '#3b82f6',
+  perfectBuild: '#06b6d4',
+  hardwareExpert: '#6366f1',
+  networkMaster: '#0ea5e9',
+  algorithmExplorer: '#f59e0b',
+  logicEngineer: '#a855f7',
+  experimenter: '#14b8a6',
+  lab100: '#ef4444',
+  selfMade: '#ec4899',
+  persistent: '#64748b',
+  allRounder: '#8b5cf6',
+  halfway: '#10b981',
+  graduate: '#2563eb',
+  honors: '#d946ef',
+  streak3: '#f97316',
+  streak7: '#eab308',
+  dailyFive: '#84cc16',
+  weeklyHero: '#f43f5e',
+  teardownPro: '#0d9488',
+  connector: '#38bdf8',
+  fixer: '#78716c',
+  speedrun: '#facc15',
+};

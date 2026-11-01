@@ -25,6 +25,7 @@ import type { Role, UserRow } from './users';
 import { createRouter, type RouteCtx } from './router';
 import { loadProgress } from './progress';
 import { summarize } from '@/services/progress/summary';
+import { CODE_ALPHABET, isDemoCode } from '@/services/certificate/codes';
 
 export interface FeedbackDeps {
   db: Db;
@@ -74,7 +75,7 @@ export function eligibility(db: Db, user: UserRow) {
 
 /** BL-XXXX-XXXX: no look-alike letters (0/O, 1/I), hard to guess. */
 function certificateCode() {
-  const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const abc = CODE_ALPHABET;
   const b = randomBytes(8);
   const s = [...b].map((x) => abc[x % abc.length]).join('');
   return `BL-${s.slice(0, 4)}-${s.slice(4)}`;
@@ -188,6 +189,8 @@ export function feedbackRoutes({ db, now, requireUser, checkCsrf, userOf }: Feed
     json(ctx.res, 200, { certificates: rows.map(certJson), progress: u.role === 'student' ? eligibility(db, u) : null });
   });
   on('GET', '/api/certificates/:code', (ctx, p) => {
+    // V4 §8.4: demo and sample sheets never verify
+    if (isDemoCode(p.code)) throw new HttpError(404, 'demo');
     const row = db.prepare('SELECT * FROM certificates WHERE code = ?').get(p.code.toUpperCase().slice(0, 20)) as CertRow | undefined;
     if (!row) throw new HttpError(404, 'notFound');
     json(ctx.res, 200, { certificate: certJson(row) });

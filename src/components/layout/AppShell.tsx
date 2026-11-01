@@ -8,6 +8,7 @@ import { useSceneStatus } from '@/store/sceneStatusStore';
 import { AchievementToaster } from '@/components/achievements/AchievementToaster';
 import { BitLauncher } from '@/components/bit/BitLauncher';
 import { Captions } from '@/components/bit/Captions';
+import { RobotTipCaption } from '@/components/robots/RobotTipCaption';
 import { useAuthStore } from '@/store/authStore';
 import { setLiveEvents } from '@/services/live/events';
 import { useSiteStore } from '@/store/siteStore';
@@ -67,6 +68,7 @@ export function AppShell() {
       <AchievementToaster />
       <BitLauncher />
       {a11y.captions && <Captions />}
+      <RobotTipCaption />
     </>
   );
 }
